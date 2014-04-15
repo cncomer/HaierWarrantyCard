@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item type="id" name="model_my_card" />
+    <item type="id" name="model_install" />
+    <item type="id" name="model_repair" />
+    <item type="id" name="model_feedback" />
+</resources>

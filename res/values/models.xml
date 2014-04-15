@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="model_my_card">我的保修卡</string>
+    <string name="model_install">预约安装</string>
+    <string name="model_repair">预约维修</string>
+    <string name="model_feedback">一键评价</string>
+</resources>

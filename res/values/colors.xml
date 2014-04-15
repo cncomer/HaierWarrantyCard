@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="light_gray">#ffe5e5e5</color>
+    <color name="light_black">#ff2e3543</color>
+    <drawable name="button_black">#ff1c1c1c</drawable>
+    <drawable name="button_black_on">#ff717171</drawable>
+    
+    <drawable name="button_pink">#ffff5065</drawable>
+    <drawable name="button_pink_on">#fff5acb5</drawable>
+</resources>

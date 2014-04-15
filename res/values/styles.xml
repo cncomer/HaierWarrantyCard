@@ -1,0 +1,77 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!--
+        Base application theme, dependent on API level. This theme is replaced
+        by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
+    -->
+    <style name="AppBaseTheme" parent="android:Theme.Light">
+        <!--
+            Theme customizations available in newer API levels can go in
+            res/values-vXX/styles.xml, while customizations related to
+            backward-compatibility can go here.
+        -->
+    </style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+    
+     <style name="AppTheme.NoTitleBar">
+       <item name="android:windowNoTitle">true</item>
+    </style>
+    
+    
+    
+    <style name="DashboardWidgetImage">
+        <item name="android:clickable">true</item>
+        <item name="android:layout_width">46dip</item>
+        <item name="android:layout_height">46dip</item>
+        <item name="android:layout_marginBottom">8dip</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+    
+     <style name="ProductInfo">
+        <item name="android:layout_width">80dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">4dip</item>
+        <item name="android:textColor">#ff716e6e</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    
+     <style name="ProductInfoInput">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:background">@drawable/edit_text_holo_light</item>
+    </style>
+    
+     <style name="ProductInfoInput.Repair">
+        <item name="android:enabled">false</item>
+        <item name="android:background">@null</item>
+    </style>
+    
+      <style name="ProductInfo.Repair">
+        <item name="android:layout_width">95dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">4dip</item>
+        <item name="android:textColor">#ff716e6e</item>
+        <item name="android:singleLine">true</item>
+    </style>
+    
+      <style name="DefaultShapeButton">
+        <item name="android:background">@drawable/default_black_btn</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="android:paddingLeft">10dip</item>
+        <item name="android:paddingRight">10dip</item>
+        <item name="android:paddingRight">10dip</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_height">@dimen/default_color_button_height</item>
+        <item name="android:layout_width">wrap_content</item>
+    </style>
+    
+      <style name="DefaultShapeButton.Red">
+        <item name="android:background">@drawable/default_pink_btn</item>
+    </style>
+    
+</resources>

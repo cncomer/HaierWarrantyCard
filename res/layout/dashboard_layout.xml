@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.bestjoy.app.haierwarrantycard.ui.DashboardLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:weightSum="1"
+    android:gravity="center"
+    android:orientation="horizontal" >
+    
+    <LinearLayout 
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
+        <ImageView android:id="@+id/button_new_card"
+            style="@style/DashboardWidgetImage"
+            android:src="@drawable/dashboard_new_card_btn"/>
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ff80a8e3"
+            android:textSize="10sp"
+            android:text="@string/button_new_card"/>
+    </LinearLayout>
+    
+    <View android:layout_width="0dip"
+        android:layout_weight="0.5"
+        android:layout_height="fill_parent"/>
+    
+    <LinearLayout 
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
+        <ImageView android:id="@+id/button_my_card"
+            style="@style/DashboardWidgetImage"
+            android:src="@drawable/dashboard_my_card_btn"/>
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ff80a8e3"
+            android:textSize="10sp"
+            android:text="@string/button_my_card"/>
+    </LinearLayout>
+    
+    <View android:layout_width="0dip"
+        android:layout_weight="0.5"
+        android:layout_height="fill_parent"/>
+    
+    <LinearLayout 
+        android:layout_width="wrap_content"
+        android:orientation="vertical"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
+        <ImageView android:id="@+id/button_repair"
+            style="@style/DashboardWidgetImage"
+            android:src="@drawable/dashboard_repair_btn"/>
+        <TextView android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="#ff80a8e3"
+            android:textSize="10sp"
+            android:text="@string/button_repair"/>
+    </LinearLayout>
+
+</com.bestjoy.app.haierwarrantycard.ui.DashboardLayout>

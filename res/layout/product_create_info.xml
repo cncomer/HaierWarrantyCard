@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+    <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center_vertical"
+	    android:orientation="horizontal" >
+	    <TextView style="@style/ProductInfo"
+	        android:text="@string/product_type"/>
+	    <EditText android:id="@+id/product_type_input"
+	        style="@style/ProductInfoInput"
+	        android:hint="@string/product_debug_placeholder"/>
+	</LinearLayout>
+	
+    <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center_vertical"
+	    android:orientation="horizontal" >
+	    <TextView style="@style/ProductInfo"
+	        android:text="@string/product_brand"/>
+	    <EditText android:id="@+id/product_brand_input"
+	        android:hint="@string/product_debug_placeholder"
+	        style="@style/ProductInfoInput"/>
+	</LinearLayout>
+	
+    <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center_vertical"
+	    android:orientation="horizontal" >
+	    <TextView style="@style/ProductInfo"
+	        android:text="@string/product_model"/>
+	    <EditText android:id="@+id/product_model_input"
+	        android:hint="@string/product_debug_placeholder"
+	        style="@style/ProductInfoInput"/>
+	</LinearLayout>
+
+    
+    <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center_vertical"
+	    android:orientation="horizontal" >
+	    <TextView style="@style/ProductInfo"
+	        android:text="@string/product_sn"/>
+	    <EditText android:id="@+id/product_sn_input"
+	        android:hint="@string/product_debug_placeholder"
+	        style="@style/ProductInfoInput"/>
+	</LinearLayout>
+	
+    <LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:gravity="center_vertical"
+	    android:orientation="horizontal" >
+	    <TextView style="@style/ProductInfo"
+	        android:text="@string/product_tel"/>
+	    <EditText android:id="@+id/product_tel_input"
+	        android:hint="@string/product_debug_placeholder"
+	        style="@style/ProductInfoInput"/>
+	</LinearLayout>
+</LinearLayout>
