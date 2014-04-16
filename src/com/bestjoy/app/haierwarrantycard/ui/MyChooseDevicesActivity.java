@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.Intents;
@@ -26,11 +27,12 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity {
 			return ;
 		}
 		setContentView(R.layout.activity_choose_devices);
+		getSupportActionBar().setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
 		String title = getIntent().getStringExtra(Intents.EXTRA_NAME);
 		if (!TextUtils.isEmpty(title)) {
 			setTitle(title);
 		}
-		DebugChooseDevicesAdapter.addAdapter(this, (ListView) findViewById(R.id.listview), getIntent().getIntExtra(Intents.EXTRA_TYPE, R.id.model_my_card));
+//		DebugChooseDevicesAdapter.addAdapter(this, (ListView) findViewById(R.id.listview), getIntent().getIntExtra(Intents.EXTRA_TYPE, R.id.model_my_card));
 	}
 	
 	public static void startIntent(Context context, Bundle bundle) {

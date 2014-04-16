@@ -12,6 +12,9 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
@@ -27,9 +30,12 @@ public abstract class BaseActionbarActivity extends SherlockActivity {
 	private Context mContext;
 	
 	public void onCreate(Bundle savedInstanceState) {
-		setTheme(R.style.AppBaseTheme); //Used for theme switching in samples
 		super.onCreate(savedInstanceState);
+//		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		//abs__home
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setDisplayShowHomeEnabled(false);
+		
 		DebugUtils.logD(TAG, "onCreate()");
 		if (!checkIntent(getIntent())) {
 			finish();
@@ -174,4 +180,19 @@ public abstract class BaseActionbarActivity extends SherlockActivity {
    		}
    		return super.onCreateDialog(id);
    	}
+       
+       @Override
+       public boolean onCreateOptionsMenu(Menu menu) {
+           SubMenu subMenu1 = menu.addSubMenu(R.string.menu_more);
+           subMenu1.add(R.string.menu_login);
+           subMenu1.add(R.string.menu_register);
+           subMenu1.add(R.string.menu_setting);
+           subMenu1.add(R.string.menu_help);
+           subMenu1.add(R.string.menu_about);
+
+           MenuItem subMenu1Item = subMenu1.getItem();
+           subMenu1Item.setIcon(R.drawable.ic_menu_moreoverflow_normal_holo_light);
+           subMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+           return super.onCreateOptionsMenu(menu);
+       }
 }

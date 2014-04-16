@@ -5,19 +5,6 @@
     android:background="#ffffffff"
     android:layout_gravity="center"
     android:orientation="vertical" >
-    <ImageView android:layout_width="fill_parent"
-        android:layout_height="@dimen/title_logo_height"
-        android:id="@+id/title_logo"
-        android:scaleType="centerCrop"
-        android:src="@drawable/top"
-        />
-    <include layout="@layout/common_button_title"/>
-    
-    <View android:background="@color/light_gray"
-        android:layout_width="fill_parent"
-        android:layout_height="1dip"
-        android:layout_marginTop="5dip"/>
-    
     <ListView android:id="@+id/listview"
         android:layout_width="fill_parent"
         android:layout_height="0dip"

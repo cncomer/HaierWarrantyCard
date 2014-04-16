@@ -1,5 +1,6 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
@@ -22,7 +23,7 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
 
-public class MainActivity extends SherlockActivity {
+public class MainActivity extends BaseActionbarActivity {
 	private LinearLayout mDotsLayout;
 	private ViewPager mAdsViewPager;
 	private boolean mAdsViewPagerIsScrolling = false;
@@ -42,10 +43,11 @@ public class MainActivity extends SherlockActivity {
 	private static final int DEFAULT_MAX_ADS_SIZE = 3;
 
 	@Override
-	protected void onCreate(Bundle savedInstanceState) {
+	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		this.getSupportActionBar().setDisplayShowHomeEnabled(false);
-		this.getSupportActionBar().setDisplayShowTitleEnabled(false);
+		getSupportActionBar().setDisplayShowHomeEnabled(false);
+		getSupportActionBar().setDisplayShowTitleEnabled(false);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 		setContentView(R.layout.activity_main);
 		mDotsLayout = (LinearLayout) findViewById(R.id.dots);
 		mAdsViewPager = (ViewPager) findViewById(R.id.adsViewPager);
@@ -153,21 +155,10 @@ public class MainActivity extends SherlockActivity {
 		}
 		
 	}
-	
-	
-	 @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        SubMenu subMenu1 = menu.addSubMenu(R.string.menu_more);
-        subMenu1.add(R.string.menu_login);
-        subMenu1.add(R.string.menu_register);
-        subMenu1.add(R.string.menu_setting);
-        subMenu1.add(R.string.menu_help);
-        subMenu1.add(R.string.menu_about);
 
-        MenuItem subMenu1Item = subMenu1.getItem();
-        subMenu1Item.setIcon(R.drawable.ic_menu_moreoverflow_normal_holo_light);
-        subMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-        return super.onCreateOptionsMenu(menu);
-    }
+	@Override
+	protected boolean checkIntent(Intent intent) {
+		return true;
+	}
 
 }

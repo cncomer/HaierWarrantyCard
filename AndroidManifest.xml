@@ -26,24 +26,19 @@
         
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.NewCardActivity"
-            android:theme="@style/AppTheme.NoTitleBar"
             android:label="@string/button_new_card" />
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.MyCardActivity"
-            android:theme="@style/AppTheme.NoTitleBar"
             android:label="@string/button_my_card" />
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.RepairActivity"
-            android:theme="@style/AppTheme.NoTitleBar"
             android:label="@string/button_repair" />
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.LoginActivity"
-            android:theme="@style/AppTheme.NoTitleBar"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:label="@string/activity_title_login" />
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.MyChooseDevicesActivity"
-            android:theme="@style/AppTheme.NoTitleBar"
             android:configChanges="orientation"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
