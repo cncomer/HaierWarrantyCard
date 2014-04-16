@@ -4,23 +4,25 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener{
+public class MainActivity extends SherlockActivity {
 	private LinearLayout mDotsLayout;
 	private ViewPager mAdsViewPager;
 	private boolean mAdsViewPagerIsScrolling = false;
@@ -42,6 +44,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		this.getSupportActionBar().setDisplayShowHomeEnabled(false);
+		this.getSupportActionBar().setDisplayShowTitleEnabled(false);
 		setContentView(R.layout.activity_main);
 		mDotsLayout = (LinearLayout) findViewById(R.id.dots);
 		mAdsViewPager = (ViewPager) findViewById(R.id.adsViewPager);
@@ -52,7 +56,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 		mAdsViewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			@Override
 			public void onPageSelected(int position) {
-				// TODO 增加动画效果
 				if (mCurrentPagerIndex != position) {
 					mDotsViews[mCurrentPagerIndex].setImageDrawable(mDotDrawableArray[0]);
 					mDotsViews[position].setImageDrawable(mDotDrawableArray[1]);
@@ -67,7 +70,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 			
 			@Override
 			public void onPageScrollStateChanged(int state) {
-				mAdsViewPagerIsScrolling  = state == 1;//表示在滑动
+				mAdsViewPagerIsScrolling  = state == 1;//锟斤拷示锟节伙拷锟斤拷
 				
 			}
 		});
@@ -76,14 +79,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 		
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-	
-	
 	private void initDots(int count){
 		LayoutInflater flater = this.getLayoutInflater();
 		if (mDotDrawableArray == null) {
@@ -159,9 +154,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 		
 	}
 	
-	@Override
-	public void onClick(View v) {
-		
-	}
+	
+	 @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        SubMenu subMenu1 = menu.addSubMenu(R.string.menu_more);
+        subMenu1.add(R.string.menu_login);
+        subMenu1.add(R.string.menu_register);
+        subMenu1.add(R.string.menu_setting);
+        subMenu1.add(R.string.menu_help);
+        subMenu1.add(R.string.menu_about);
+
+        MenuItem subMenu1Item = subMenu1.getItem();
+        subMenu1Item.setIcon(R.drawable.ic_menu_moreoverflow_normal_holo_light);
+        subMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        return super.onCreateOptionsMenu(menu);
+    }
 
 }

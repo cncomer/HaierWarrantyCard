@@ -15,7 +15,7 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.MainActivity"
-            android:theme="@style/AppTheme.NoTitleBar"
+            android:theme="@style/AppTheme.MainActivityActionBar"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

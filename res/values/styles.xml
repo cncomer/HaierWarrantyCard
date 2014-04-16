@@ -12,16 +12,29 @@
         -->
     </style>
 
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
-    </style>
-    
      <style name="AppTheme.NoTitleBar">
        <item name="android:windowNoTitle">true</item>
     </style>
     
+     <style name="AppTheme" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:windowFullscreen">true</item>
+    </style>
+     <style name="AppTheme.MainActivityActionBar">
+        <item name="actionBarStyle">@style/Widget.Styled.MainActivityActionBar</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.MainActivityActionBar</item>
+    </style>
+    <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="background">@color/light_black</item>
+        <item name="android:background">@color/light_black</item>
+    </style>
     
+    <style name="Widget.Styled.MainActivityActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <item name="background">@drawable/top1</item>
+        <item name="android:background">@drawable/top1</item>
+        <item name="height">@dimen/title_logo_height</item>
+    </style>
     
     <style name="DashboardWidgetImage">
         <item name="android:clickable">true</item>
@@ -63,7 +76,6 @@
         <item name="android:background">@drawable/default_black_btn</item>
         <item name="android:textColor">#ffffffff</item>
         <item name="android:paddingLeft">10dip</item>
-        <item name="android:paddingRight">10dip</item>
         <item name="android:paddingRight">10dip</item>
         <item name="android:textStyle">bold</item>
         <item name="android:layout_height">@dimen/default_color_button_height</item>

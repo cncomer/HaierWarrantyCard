@@ -11,7 +11,7 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.Intents;
 
-public class MyChooseDevicesActivity extends CommonButtonTitleActivity {
+public class MyChooseDevicesActivity extends BaseActionbarActivity {
 	private static final String TAG = "MyChooseDevicesActivity";
 
 	@Override
