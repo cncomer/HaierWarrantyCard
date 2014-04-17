@@ -19,7 +19,7 @@
      <style name="AppTheme" parent="Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
-        <item name="android:windowFullscreen">true</item>
+        <!--  item name="android:windowFullscreen">true</item-->
         <item name="android:windowNoTitle">true</item>
     </style>
      <style name="AppTheme.MainActivityActionBar">
@@ -27,12 +27,10 @@
         <item name="android:actionBarStyle">@style/Widget.Styled.MainActivityActionBar</item>
     </style>
     <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
-        <item name="background">@color/action_bar_black</item>
-        <item name="android:background">@color/action_bar_black</item>
+        <!--  item name="background">@color/action_bar_black</item-->
+        <!--   name="android:background">@color/action_bar_black</item-->
         <item name="actionButtonStyle">@style/Widget.Sherlock.ActionButton</item>
         <item name="android:actionButtonStyle">@style/Widget.Sherlock.ActionButton</item>
-        <item name="android:homeAsUpIndicator">@drawable/top_arrow_left_btn</item>
-        <item name="homeAsUpIndicator">@drawable/top_arrow_left_btn</item>
     </style>
     
     <style name="Widget.Styled.MainActivityActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
@@ -102,4 +100,12 @@
         <item name="android:background">@drawable/default_pink_btn</item>
     </style>
     
+      <style name="TextAppearance.Switch" parent="@*android:style/TextAppearance.Holo.Widget.Switch">
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="TextAppearance.PagerTabs" parent="@android:style/TextAppearance.DeviceDefault.Small">
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

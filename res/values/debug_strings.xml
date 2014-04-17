@@ -49,4 +49,10 @@
            <item>@drawable/device_kongtiao</item>
        </integer-array>
        
+       <string-array name="debug_homes">
+           <item>上海的家</item>
+           <item>昆明的家</item>
+           <item>公司</item>
+       </string-array>
+       
 </resources>

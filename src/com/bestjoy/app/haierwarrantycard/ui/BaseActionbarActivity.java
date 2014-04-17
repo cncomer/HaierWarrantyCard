@@ -10,14 +10,16 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.app.TaskStackBuilder;
 
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.ImageHelper;
 
@@ -183,16 +185,54 @@ public abstract class BaseActionbarActivity extends SherlockActivity {
        
        @Override
        public boolean onCreateOptionsMenu(Menu menu) {
-           SubMenu subMenu1 = menu.addSubMenu(R.string.menu_more);
-           subMenu1.add(R.string.menu_login);
-           subMenu1.add(R.string.menu_register);
-           subMenu1.add(R.string.menu_setting);
-           subMenu1.add(R.string.menu_help);
-           subMenu1.add(R.string.menu_about);
-
-           MenuItem subMenu1Item = subMenu1.getItem();
-           subMenu1Item.setIcon(R.drawable.ic_menu_moreoverflow_normal_holo_light);
-           subMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    	   MenuHandlerUtils.onCreateOptionsMenu(menu);
+//           SubMenu subMenu1 = menu.addSubMenu(R.string.menu_more);
+//           subMenu1.add(0, R.string.menu_login, 0, R.string.menu_login);
+//           subMenu1.add(0, R.string.menu_register, 0, R.string.menu_register);
+//           subMenu1.add(0, R.string.menu_setting, 0, R.string.menu_setting);
+//           subMenu1.add(0, R.string.menu_help, 0, R.string.menu_help);
+//           subMenu1.add(0, R.string.menu_about, 0, R.string.menu_about);
+//
+//           MenuItem subMenu1Item = subMenu1.getItem();
+//           subMenu1Item.setIcon(R.drawable.ic_menu_moreoverflow_normal_holo_light);
+//           subMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
            return super.onCreateOptionsMenu(menu);
        }
+       
+       @Override
+       public boolean onOptionsItemSelected(MenuItem item) {
+           switch (item.getItemId()) {
+           // Respond to the action bar's Up/Home button
+           case android.R.id.home:
+        	   Intent upIntent = NavUtils.getParentActivityIntent(this);
+        	   if (upIntent == null) {
+        		   // If we has configurated parent Activity in AndroidManifest.xml, we just finish current Activity.
+        		   finish();
+        		   return true;
+        	   }
+               if (NavUtils.shouldUpRecreateTask(this, upIntent)) {
+                   // This activity is NOT part of this app's task, so create a new task
+                   // when navigating up, with a synthesized back stack.
+                   TaskStackBuilder.create(this)
+                           // Add all of this activity's parents to the back stack
+                           .addNextIntentWithParentStack(upIntent)
+                           // Navigate up to the closest parent
+                           .startActivities();
+               } else {
+                   // This activity is part of this app's task, so simply
+                   // navigate up to the logical parent activity.
+                   NavUtils.navigateUpTo(this, upIntent);
+               }
+               return true;
+               default :
+            	   return MenuHandlerUtils.onOptionsItemSelected(item);
+           }
+
+       }
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		return super.onPrepareOptionsMenu(menu);
+	}
+       
 }

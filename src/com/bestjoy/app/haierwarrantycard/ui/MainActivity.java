@@ -22,6 +22,7 @@ import com.actionbarsherlock.view.SubMenu;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
+import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
 
 public class MainActivity extends BaseActionbarActivity {
 	private LinearLayout mDotsLayout;
@@ -80,6 +81,14 @@ public class MainActivity extends BaseActionbarActivity {
 		ModleSettings.addModelsAdapter(this, (ListView) findViewById(R.id.listview));
 		
 	}
+	
+	 @Override
+     public boolean onCreateOptionsMenu(Menu menu) {
+  	     boolean result = super.onCreateOptionsMenu(menu);
+  	     MenuItem subMenu1Item = menu.findItem(R.string.menu_more);
+  	     subMenu1Item.setIcon(R.drawable.abs__ic_menu_moreoverflow_normal_holo_light);
+         return result;
+     }
 
 	private void initDots(int count){
 		LayoutInflater flater = this.getLayoutInflater();
