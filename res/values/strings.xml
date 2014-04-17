@@ -14,6 +14,7 @@
     <string name="button_login">"注册/登陆"</string>
      <string name="button_close">关闭</string>
       <string name="button_save">保存</string>
+      <string name="button_next">下一步</string>
        <string name="button_confirm">新建保修卡</string>
     
     <string name="msg_unsupport_operation">"该功能暂不支持"</string>
@@ -72,7 +73,7 @@
        <string name="usr_repwd_hint">请再次输入你的密码</string>
        <string name="usr_tel_hint">输入你的手机号</string>
     
-    <string name="activity_title_choose_device_general">我的保修卡</string>
+    <string name="activity_title_choose_device_general">选择设备</string>
     <string name="activity_title_choose_device_install">请先选择你要预约安装的产品</string>
     <string name="activity_title_choose_device_repair">请先选择你要预约维修的产品</string>
     <string name="activity_title_repair">预约维修</string>
@@ -92,4 +93,15 @@
     <string name="menu_help">帮助</string>
     <string name="menu_about">关于</string>
 
+    <string name="register_tips">输入手机号码，点击“获取验证码”后，系统会自动下发一条默认密码短信</string>
+    <string name="title_get_usr_validate">获取验证码</string>
+    <string name="title_agree_protocol">同意，注册协议</string>
+    <string name="address">地址</string>
+    <string name="province">省</string>
+    <string name="city">市</string>
+    <string name="district">区</string>
+    <string name="name">姓名</string>
+    <string name="button_register">确认注册</string>
+    <string name="input_province_tips">请先选择省份</string>
+    <string name="input_city_tips">请先选择城市</string>
 </resources>

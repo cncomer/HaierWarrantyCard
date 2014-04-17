@@ -42,7 +42,21 @@
             android:configChanges="orientation"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
-            android:label="@string/activity_title_choose_device_general"/>
+            android:label="@string/activity_title_choose_device_general" />
+        <activity
+            android:name="com.bestjoy.app.haierwarrantycard.ui.RegisterActivity"
+            android:theme="@style/AppTheme.NoTitleBar"
+            android:configChanges="orientation"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:label="@string/activity_title_choose_device_general" />
+        <activity
+            android:name="com.bestjoy.app.haierwarrantycard.ui.RegisterConfirmActivity"
+            android:theme="@style/AppTheme.NoTitleBar"
+            android:configChanges="orientation"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:label="@string/activity_title_choose_device_general" />
         
     </application>
 

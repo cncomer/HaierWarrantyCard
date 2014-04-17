@@ -7,9 +7,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 
 public class LoginActivity extends CommonButtonTitleActivity {
 	private static final String TAG = "NewCardActivity";
+
+	private Button mRegisterButton;
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
@@ -23,13 +26,21 @@ public class LoginActivity extends CommonButtonTitleActivity {
 			return ;
 		}
 		setContentView(R.layout.activity_login_20140415);
-		
+		this.initViews();
 	}
 	
 	
+	private void initViews() {
+		mRegisterButton = (Button) findViewById(R.id.button_register);
+		mRegisterButton.setOnClickListener(this);
+	}
+
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()) {
+			case R.id.button_register:
+				RegisterConfirmActivity.startIntent(this);
+				break;
 			default:
 				super.onClick(v);
 		}

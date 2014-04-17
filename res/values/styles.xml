@@ -73,6 +73,29 @@
         <item name="android:background">@drawable/edit_text_holo_light</item>
     </style>
     
+     <style name="ProductInfoInputNew">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:background">@drawable/edit_text_holo_light</item>
+    </style>
+
+     <style name="ProductInfoInputValidate">
+        <item name="android:layout_width">100dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:background">@drawable/edit_text_holo_light</item>
+    </style>
+
+     <style name="ProductInfoInputPlace">
+        <item name="android:layout_width">70dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@drawable/edit_text_holo_light</item>
+    </style>
+
      <style name="ProductInfoInput.Repair">
         <item name="android:enabled">false</item>
         <item name="android:background">@null</item>
@@ -108,4 +131,8 @@
         <item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
     </style>
+	<style name="AnimationPreview">
+		<item name="android:windowEnterAnimation">@anim/fade_in</item>
+		<item name="android:windowExitAnimation">@anim/fade_out</item>
+	</style>
 </resources>
