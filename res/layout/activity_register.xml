@@ -123,7 +123,7 @@
                 android:layout_marginBottom="60dip"
                 android:background="@drawable/default_black_btn"
                 android:gravity="center"
-                android:text="@string/button_register"
+                android:text="@string/button_register_confirm"
                 android:textColor="#ffffffff"
                 android:layout_marginTop="20dip"
                 android:textSize="18sp" />

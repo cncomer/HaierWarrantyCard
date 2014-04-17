@@ -36,7 +36,9 @@
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.LoginActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"
-            android:label="@string/title_new_user_register" />
+            android:excludeFromRecents="true"
+            android:label="@string/title_login" />
+        
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.MyChooseDevicesActivity"
             android:configChanges="orientation"
@@ -45,18 +47,16 @@
             android:label="@string/activity_title_choose_device_general" />
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.RegisterConfirmActivity"
-            android:theme="@style/AppTheme.NoTitleBar"
             android:configChanges="orientation"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
-            android:label="@string/activity_title_choose_device_general" />
+            android:label="@string/title_new_user_register" />
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.RegisterActivity"
-            android:theme="@style/AppTheme.NoTitleBar"
             android:configChanges="orientation"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
-            android:label="@string/activity_title_choose_device_general" />
+            android:label="@string/title_new_user_register" />
         
         <provider android:name="com.bestjoy.app.haierwarrantycard.database.BjnoteProvider"
             android:exported="true"

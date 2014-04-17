@@ -5,7 +5,6 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     
-    <string name="title_login">新用户注册</string>
     <string name="button_register">新用户注册</string>
     <string name="button_new_card">新建保修卡</string>
     <string name="button_my_card">我的保修卡</string>
@@ -81,6 +80,7 @@
     <string name="activity_title_choose_device_feedback">选择设备</string>
     
     <string name="title_over_deadline">过保</string>
+    <string name="title_login">用户登录</string>
     <string name="title_new_user_register">新用户注册</string>
     <string name="product_deadline_placeholder">999天</string>
     
@@ -99,7 +99,7 @@
     <string name="city">市</string>
     <string name="district">区</string>
     <string name="name">姓名</string>
-    <string name="button_register">确认注册</string>
+    <string name="button_register_confirm">确认注册</string>
     <string name="input_province_tips">请先选择省份</string>
     <string name="input_city_tips">请先选择城市</string>
      <string name="choose_address">选择地址</string>
