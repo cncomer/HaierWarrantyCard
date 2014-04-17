@@ -246,7 +246,8 @@ public abstract class BaseActionbarActivity extends SherlockActivity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		return super.onPrepareOptionsMenu(menu);
+		boolean result = MenuHandlerUtils.onPrepareOptionsMenu(menu, this);
+		return result | super.onPrepareOptionsMenu(menu);
 	}
        
 }

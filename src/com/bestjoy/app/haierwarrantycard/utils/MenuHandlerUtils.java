@@ -6,6 +6,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.LoginActivity;
 import com.bestjoy.app.haierwarrantycard.ui.RegisterActivity;
 
@@ -44,7 +45,13 @@ public class MenuHandlerUtils {
         return false;
     }
     
-    public static boolean onPrepareOptionsMenu(Menu menu) {
-		return false;
+    public static boolean onPrepareOptionsMenu(Menu menu, Context context) {
+    	//如果已经登陆了，那么我们不再显示登录菜单
+//    	if (HaierAccountManager.getInstance().hasLoginned()) {
+//    		menu.findItem(R.string.menu_login).setVisible(false);
+//    	} else {
+//    		menu.findItem(R.string.menu_login).setVisible(true);
+//    	}
+		return true;
 	}
 }
