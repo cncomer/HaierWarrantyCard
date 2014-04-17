@@ -1,9 +1,13 @@
 package com.bestjoy.app.haierwarrantycard.utils;
 
+import android.content.Context;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.ui.LoginActivity;
+import com.bestjoy.app.haierwarrantycard.ui.RegisterActivity;
 
 public class MenuHandlerUtils {
 	
@@ -20,12 +24,14 @@ public class MenuHandlerUtils {
         subMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
     }
     
-    public static boolean onOptionsItemSelected(MenuItem item) {
+    public static boolean onOptionsItemSelected(MenuItem item, Context context) {
         switch (item.getItemId()) {
         // Respond to the action bar's Up/Home button
         case R.string.menu_login:
+        	LoginActivity.startIntent(context);
      	   break;
         case R.string.menu_register:
+        	RegisterActivity.startIntent(context);
       	   break;
         case R.string.menu_setting:
       	   break;

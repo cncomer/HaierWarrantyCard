@@ -5,6 +5,7 @@ import java.io.File;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -56,6 +57,10 @@ public abstract class BaseActionbarActivity extends SherlockActivity {
 	
 	public static final int DIALOG_DATA_NOT_CONNECTED = 10006;//数据连接不可用
 	public static final int DIALOG_MOBILE_TYPE_CONFIRM = 10007;//
+	
+	
+	public static final int DIALOG_PROGRESS = 10008;
+	private ProgressDialog mProgressDialog;
 	/**
 	 * @param uri 选择的图库的图片的Uri
 	 * @return
@@ -179,9 +184,18 @@ public abstract class BaseActionbarActivity extends SherlockActivity {
    			 //add by chenkai, 20131201, add network check
    	      case DIALOG_DATA_NOT_CONNECTED:
    	    	  return ComConnectivityManager.getInstance().onCreateNoNetworkDialog();
+   	      case DIALOG_PROGRESS:
+   	    	  mProgressDialog = new ProgressDialog(this);
+   	    	  mProgressDialog.setMessage(getString(R.string.msg_progressdialog_wait));
+   	    	  mProgressDialog.setCancelable(false);
+   	    	  return mProgressDialog;
    		}
    		return super.onCreateDialog(id);
    	}
+       
+       protected ProgressDialog getProgressDialog() {
+    	   return mProgressDialog;
+       }
        
        @Override
        public boolean onCreateOptionsMenu(Menu menu) {
@@ -225,7 +239,7 @@ public abstract class BaseActionbarActivity extends SherlockActivity {
                }
                return true;
                default :
-            	   return MenuHandlerUtils.onOptionsItemSelected(item);
+            	   return MenuHandlerUtils.onOptionsItemSelected(item, this);
            }
 
        }

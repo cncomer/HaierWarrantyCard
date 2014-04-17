@@ -6,7 +6,12 @@
     android:background="#ffffffff"
     android:orientation="vertical" >
 
-    <include layout="@layout/common_button_title" />
+    <ImageView
+        android:id="@+id/title_logo"
+        android:layout_width="@dimen/login_title_logo_width"
+        android:layout_height="@dimen/login_title_logo_height"
+        android:scaleType="fitCenter"
+        android:src="@drawable/login_top_title" />
 
     <ScrollView
         android:layout_width="fill_parent"
@@ -109,12 +114,6 @@
                     style="@style/ProductInfoInput"
                     android:hint="@string/usr_repwd_hint" />
             </LinearLayout>
-            <View
-                android:layout_width="fill_parent"
-                android:layout_height="1dip"
-                android:layout_marginTop="30dip"
-                android:layout_marginBottom="30dip"
-                android:background="@color/light_gray" />
 
             <Button
                 android:id="@+id/button_save"
@@ -126,6 +125,7 @@
                 android:gravity="center"
                 android:text="@string/button_register"
                 android:textColor="#ffffffff"
+                android:layout_marginTop="20dip"
                 android:textSize="18sp" />
         </LinearLayout>
     </ScrollView>

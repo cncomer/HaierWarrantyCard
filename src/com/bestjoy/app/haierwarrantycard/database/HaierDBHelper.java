@@ -14,6 +14,7 @@ public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
   private static final int DB_VERSION = 1;
   private static final String DB_NAME = "haier.db";
+  public static final String ID = "_id";
  
   public static final String TABLE_NAME_MY_CARD = "mycard";
   public static final String FLAG_DELETED = "deleted";
@@ -54,6 +55,44 @@ private static final String TAG = "HaierDBHelper";
   public static final String HOME_NAME = "name";
   public static final String HOME_WHERE = "where";
   public static final String HOME_DEFAULT = "isDefault";
+  public static final String MODIFIED = "modified";
+  /**我的家TAB位置,用户可以调整顺序*/
+  public static final String POSITION = "position";
+  
+  //devices table
+  public static final String TABLE_NAME_DEVICES = "devices";
+  /**所属家*/
+  public static final String REF_HOME_ID = "home";
+  /**设别名称*/
+  public static final String DEVICE_NAME = "name";
+  /**设备类别，比如大类是电视剧*/
+  public static final String DEVICE_TYPE = "type";
+  /**品牌*/
+  public static final String DEVICE_BRAND = "brand";
+  /**商品编号*/
+  public static final String DEVICE_SERIAL = "serial";
+  /**型号*/
+  public static final String DEVICE_MODEL = "model";
+  /**售后电话*/
+  public static final String DEVICE_SOLD_TEL = "tel";
+  /**购买价格*/
+  public static final String DEVICE_COST = "cost";
+  /**购买日期*/
+  public static final String DEVICE_BUY_DATE = "buyDate";
+  /**购买途径*/
+  public static final String DEVICE_BUY_WHERE = "buyWhere";
+  /**延保时间*/
+  public static final String DEVICE_BUY_EXTENDED = "buyExtended";
+  /**整机保修*/
+  public static final String DEVICE_WARRANTY_PERIOD = "warranty_period";
+  /**配件保修*/
+  public static final String DEVICE_COMPONENT_WARRANTY_PERIOD = "component_warranty_period";
+  /**延保单位*/
+  public static final String DEVICE_BUY_EXTENDED_COMPANY = "extendedCommany";
+  /**延保单位电话*/
+  public static final String DEVICE_BUY_EXTENDED_COPMANY_TEL = "extendedCommanyTel";
+  
+  //这里是设备表的扩展，如遥控器
   
   
   public HaierDBHelper(Context context) {
@@ -102,8 +141,10 @@ private static final String TAG = "HaierDBHelper";
    
        // Create Account table
   	   createAccountTable(sqLiteDatabase);
-  		//Create Home table
-  		createHomeTable(sqLiteDatabase);
+  		//Create Homes table
+  		createHomesTable(sqLiteDatabase);
+  		// Create devices table
+  		createDevicesTable(sqLiteDatabase);
   	    // Create repair card table.
   		createCardTable(sqLiteDatabase);
 //  		createTriggerForMyCardTable(sqLiteDatabase);
@@ -172,7 +213,7 @@ private static final String TAG = "HaierDBHelper";
 	  createTriggerForAccountTable(sqLiteDatabase);
   }
   
-  private void createHomeTable(SQLiteDatabase sqLiteDatabase) {
+  private void createHomesTable(SQLiteDatabase sqLiteDatabase) {
 	  sqLiteDatabase.execSQL(
 	            "CREATE TABLE " + TABLE_NAME_HOMES + " (" +
 	            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
@@ -180,7 +221,32 @@ private static final String TAG = "HaierDBHelper";
 	            HOME_WHERE + " TEXT, " +
 	            HOME_NAME + " TEXT, " +
 	            HOME_DEFAULT + " INTEGER NOT NULL DEFAULT 1, " +
+	            POSITION + " INTEGER NOT NULL DEFAULT 1, " +
+	            MODIFIED + " TEXT, " +
 	            CONTACT_DATE + " TEXT" +
+	            ");");
+  }
+  
+  private void createDevicesTable(SQLiteDatabase sqLiteDatabase) {
+	  sqLiteDatabase.execSQL(
+	            "CREATE TABLE " + TABLE_NAME_DEVICES + " (" +
+	            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+	            REF_HOME_ID + " TEXT, " +
+	            DEVICE_TYPE + " TEXT, " +
+	            DEVICE_NAME + " TEXT, " +
+	            DEVICE_BRAND + " TEXT, " +
+	            DEVICE_MODEL + " TEXT, " +
+	            DEVICE_SERIAL + " TEXT, " +
+	            DEVICE_SOLD_TEL + " TEXT, " +
+	            DEVICE_BUY_DATE + " TEXT, " +
+	            DEVICE_COST + " TEXT, " +
+	            DEVICE_BUY_WHERE + " TEXT, " +
+	            DEVICE_BUY_EXTENDED + " TEXT, " +
+	            DEVICE_BUY_EXTENDED_COMPANY + " TEXT, " +
+	            DEVICE_BUY_EXTENDED_COPMANY_TEL + " TEXT, " +
+	            DEVICE_WARRANTY_PERIOD + " TEXT, " +
+	            DEVICE_COMPONENT_WARRANTY_PERIOD + " TEXT, " +
+	            MODIFIED + " TEXT" +
 	            ");");
   }
   

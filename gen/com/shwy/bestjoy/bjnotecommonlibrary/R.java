@@ -8,39 +8,39 @@ package com.shwy.bestjoy.bjnotecommonlibrary;
 
 public final class R {
 	public static final class array {
-		public static final int monthOfYear = 0x7f0b0000;
-		public static final int phoneClickableSpan = 0x7f0b0001;
+		public static final int monthOfYear = 0x7f0d0000;
+		public static final int phoneClickableSpan = 0x7f0d0001;
 	}
 	public static final class drawable {
 		public static final int ic_launcher = 0x7f02008f;
 	}
 	public static final class id {
-		public static final int checkbox = 0x7f040064;
-		public static final int title = 0x7f040042;
+		public static final int checkbox = 0x7f06006c;
+		public static final int title = 0x7f060044;
 	}
 	public static final class layout {
-		public static final int dialog_use_mobile_confirm = 0x7f030022;
+		public static final int dialog_use_mobile_confirm = 0x7f030024;
 	}
 	public static final class string {
-		public static final int app_name = 0x7f09000d;
-		public static final int call_text = 0x7f09000f;
-		public static final int dialog_no_network_message = 0x7f09001c;
-		public static final int dialog_no_network_title = 0x7f09001b;
-		public static final int dialog_use_mobile_checkbox = 0x7f09001a;
-		public static final int dialog_use_mobile_message = 0x7f090019;
-		public static final int dialog_use_mobile_title = 0x7f090018;
-		public static final int friday = 0x7f090014;
-		public static final int monday = 0x7f090010;
-		public static final int msg_intent_failed = 0x7f090017;
-		public static final int saturday = 0x7f090015;
-		public static final int sms_text = 0x7f09000e;
-		public static final int sunday = 0x7f090016;
-		public static final int thursday = 0x7f090013;
-		public static final int tuesday = 0x7f090011;
-		public static final int wenesday = 0x7f090012;
+		public static final int app_name = 0x7f0b000d;
+		public static final int call_text = 0x7f0b000f;
+		public static final int dialog_no_network_message = 0x7f0b001c;
+		public static final int dialog_no_network_title = 0x7f0b001b;
+		public static final int dialog_use_mobile_checkbox = 0x7f0b001a;
+		public static final int dialog_use_mobile_message = 0x7f0b0019;
+		public static final int dialog_use_mobile_title = 0x7f0b0018;
+		public static final int friday = 0x7f0b0014;
+		public static final int monday = 0x7f0b0010;
+		public static final int msg_intent_failed = 0x7f0b0017;
+		public static final int saturday = 0x7f0b0015;
+		public static final int sms_text = 0x7f0b000e;
+		public static final int sunday = 0x7f0b0016;
+		public static final int thursday = 0x7f0b0013;
+		public static final int tuesday = 0x7f0b0011;
+		public static final int wenesday = 0x7f0b0012;
 	}
 	public static final class style {
-		public static final int AppBaseTheme = 0x7f0a0059;
-		public static final int AppTheme = 0x7f0a005a;
+		public static final int AppBaseTheme = 0x7f0c0059;
+		public static final int AppTheme = 0x7f0c005a;
 	}
 }

@@ -12,6 +12,9 @@
      <dimen name="title_logo_height">60dip</dimen>
     <dimen name="title_scan_height">50dip</dimen>
     
+    <dimen name="login_title_logo_height">98dip</dimen>
+    <dimen name="login_title_logo_width">480dip</dimen>
+    
     
     <dimen name="title_my_product_left_margin">15dip</dimen>
      <dimen name="title_my_product_right_margin">15dip</dimen>

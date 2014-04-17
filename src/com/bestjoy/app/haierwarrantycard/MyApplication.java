@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
 
+import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DateUtils;
@@ -25,17 +26,17 @@ public class MyApplication extends Application{
 		mInstance = this;
 		// init all preference default values.
 //		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-		//³õÊ¼»¯Éè±¸¹¤¾ßÀà£¬ÓÃÓÚµÃµ½Éè±¸ÐÅÏ¢
+		//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½à£¬ï¿½ï¿½ï¿½ÚµÃµï¿½ï¿½è±¸ï¿½ï¿½Ï¢
 		DevicesUtils.getInstance().setContext(this);
 		DeviceStorageUtils.getInstance().setContext(this);
-//		//³õÊ¼»¯ÕËºÅ¹ÜÀíÆ÷
+//		//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ËºÅ¹ï¿½ï¿½ï¿½ï¿½ï¿½
 //		BjnoteAccountsManager.getInstance().setContext(this);
 //		IncomingCallCallbackImp.getInstance().setContext(this);
 //		OutgoingCallCallbackImp.getInstance().setContext(this);
 //		IncomingSmsCallbackImp.getInstance().setContext(this);
 //		initMonitorService();
 //		ModuleSettings.getInstance().setContext(this);
-		//³õÊ¼»¯ÕÕÆ¬¹ÜÀí¶ÔÏó,ÏÖÔÚÓÉPhotoManagerService¸ºÔðÎ¬»¤
+		//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Æ¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½PhotoManagerServiceï¿½ï¿½ï¿½ï¿½Î¬ï¿½ï¿½
 //		PhotoManagerUtils.getInstance().setContext(this);
 //		startService(PhotoManagerService.getServiceIntent(this));
 		
@@ -50,10 +51,12 @@ public class MyApplication extends Application{
 //		ContactBackupManager.getInstance().setContext(this);
 //		
 //		Contact.init(this);
-		//add by chenkai, 20131201, Ôö¼ÓÍøÂç×´Ì¬¹ÜÀíÆ÷
+		//add by chenkai, 20131201, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		ComConnectivityManager.getInstance().setContext(this);
 		
 		BitmapUtils.getInstance().setContext(this);
+		
+		HaierAccountManager.getInstance().setContext(this);
 	}
 	
 	public synchronized static MyApplication getInstance() {
@@ -63,7 +66,7 @@ public class MyApplication extends Application{
 	@Override
 	public void onTerminate() {
 		super.onTerminate();
-		//add by chenkai, 20131201, Ôö¼ÓÍøÂç×´Ì¬¹ÜÀíÆ÷
+		//add by chenkai, 20131201, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		ComConnectivityManager.getInstance().endConnectivityMonitor();
 	}
 	
