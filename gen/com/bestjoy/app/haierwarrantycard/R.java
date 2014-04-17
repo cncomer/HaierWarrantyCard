@@ -1260,31 +1260,32 @@ containing a value of this type.
          */
         public static final int abs__shareactionprovider_share_with_application=0x7f0b0007;
         public static final int action_settings=0x7f0b0021;
-        public static final int activity_title_choose_device_feedback=0x7f0b0062;
-        public static final int activity_title_choose_device_general=0x7f0b005d;
-        public static final int activity_title_choose_device_install=0x7f0b005e;
-        public static final int activity_title_choose_device_repair=0x7f0b005f;
-        public static final int activity_title_install=0x7f0b0061;
-        public static final int activity_title_repair=0x7f0b0060;
+        public static final int activity_title_choose_device_feedback=0x7f0b0061;
+        public static final int activity_title_choose_device_general=0x7f0b005c;
+        public static final int activity_title_choose_device_install=0x7f0b005d;
+        public static final int activity_title_choose_device_repair=0x7f0b005e;
+        public static final int activity_title_install=0x7f0b0060;
+        public static final int activity_title_repair=0x7f0b005f;
         public static final int address=0x7f0b006f;
         public static final int app_name=0x7f0b000d;
-        public static final int button_ask_online=0x7f0b0052;
-        public static final int button_call_repair=0x7f0b0051;
-        public static final int button_close=0x7f0b0029;
-        public static final int button_confirm=0x7f0b002c;
-        public static final int button_login=0x7f0b0028;
-        public static final int button_my_card=0x7f0b0026;
-        public static final int button_new_card=0x7f0b0025;
-        public static final int button_next=0x7f0b002b;
-        public static final int button_qa=0x7f0b0050;
-        public static final int button_register=0x7f0b0024;
-        public static final int button_repair=0x7f0b0027;
-        public static final int button_save=0x7f0b002a;
-        public static final int button_speek=0x7f0b0053;
+        public static final int button_ask_online=0x7f0b0051;
+        public static final int button_call_repair=0x7f0b0050;
+        public static final int button_close=0x7f0b0028;
+        public static final int button_confirm=0x7f0b002b;
+        public static final int button_login=0x7f0b0027;
+        public static final int button_my_card=0x7f0b0025;
+        public static final int button_new_card=0x7f0b0024;
+        public static final int button_next=0x7f0b002a;
+        public static final int button_qa=0x7f0b004f;
+        public static final int button_register=0x7f0b0023;
+        public static final int button_register_confirm=0x7f0b0074;
+        public static final int button_repair=0x7f0b0026;
+        public static final int button_save=0x7f0b0029;
+        public static final int button_speek=0x7f0b0052;
         public static final int call_text=0x7f0b000f;
-        public static final int choose_address=0x7f0b0076;
+        public static final int choose_address=0x7f0b0077;
         public static final int city=0x7f0b0071;
-        public static final int dialog_msg_media_unmounted=0x7f0b002f;
+        public static final int dialog_msg_media_unmounted=0x7f0b002e;
         public static final int dialog_no_network_message=0x7f0b001c;
         public static final int dialog_no_network_title=0x7f0b001b;
         public static final int dialog_use_mobile_checkbox=0x7f0b001a;
@@ -1293,18 +1294,18 @@ containing a value of this type.
         public static final int district=0x7f0b0072;
         public static final int friday=0x7f0b0014;
         public static final int hello_world=0x7f0b0022;
-        public static final int input_city_tips=0x7f0b0075;
-        public static final int input_province_tips=0x7f0b0074;
+        public static final int input_city_tips=0x7f0b0076;
+        public static final int input_province_tips=0x7f0b0075;
         public static final int menu_about=0x7f0b006b;
-        public static final int menu_bill_edit=0x7f0b0034;
-        public static final int menu_bill_show=0x7f0b0035;
-        public static final int menu_goods_capture=0x7f0b0037;
-        public static final int menu_goods_preview=0x7f0b0036;
+        public static final int menu_bill_edit=0x7f0b0033;
+        public static final int menu_bill_show=0x7f0b0034;
+        public static final int menu_goods_capture=0x7f0b0036;
+        public static final int menu_goods_preview=0x7f0b0035;
         public static final int menu_help=0x7f0b006a;
         public static final int menu_login=0x7f0b0067;
         public static final int menu_more=0x7f0b0066;
-        public static final int menu_picture_camera=0x7f0b0033;
-        public static final int menu_picture_gallery=0x7f0b0032;
+        public static final int menu_picture_camera=0x7f0b0032;
+        public static final int menu_picture_gallery=0x7f0b0031;
         public static final int menu_register=0x7f0b0068;
         public static final int menu_setting=0x7f0b0069;
         public static final int model_feedback=0x7f0b0020;
@@ -1313,58 +1314,58 @@ containing a value of this type.
         public static final int model_repair=0x7f0b001f;
         public static final int monday=0x7f0b0010;
         public static final int msg_intent_failed=0x7f0b0017;
-        public static final int msg_no_sdcard=0x7f0b002e;
-        public static final int msg_progressdialog_wait=0x7f0b0077;
-        public static final int msg_unsupport_operation=0x7f0b002d;
+        public static final int msg_no_sdcard=0x7f0b002d;
+        public static final int msg_progressdialog_wait=0x7f0b0078;
+        public static final int msg_unsupport_operation=0x7f0b002c;
         public static final int name=0x7f0b0073;
-        public static final int product_bill=0x7f0b0043;
-        public static final int product_bill_desc=0x7f0b004a;
-        public static final int product_brand=0x7f0b003d;
-        public static final int product_buy_cost=0x7f0b0045;
-        public static final int product_buy_date=0x7f0b0044;
-        public static final int product_buy_delay_componey=0x7f0b0048;
-        public static final int product_buy_delay_time=0x7f0b0047;
-        public static final int product_buy_entry=0x7f0b0046;
-        public static final int product_deadline=0x7f0b004c;
+        public static final int product_bill=0x7f0b0042;
+        public static final int product_bill_desc=0x7f0b0049;
+        public static final int product_brand=0x7f0b003c;
+        public static final int product_buy_cost=0x7f0b0044;
+        public static final int product_buy_date=0x7f0b0043;
+        public static final int product_buy_delay_componey=0x7f0b0047;
+        public static final int product_buy_delay_time=0x7f0b0046;
+        public static final int product_buy_entry=0x7f0b0045;
+        public static final int product_deadline=0x7f0b004b;
         public static final int product_deadline_placeholder=0x7f0b0065;
-        public static final int product_debug_placeholder=0x7f0b0049;
-        public static final int product_model=0x7f0b003e;
-        public static final int product_sn=0x7f0b003f;
-        public static final int product_tel=0x7f0b0041;
-        public static final int product_time=0x7f0b0040;
-        public static final int product_type=0x7f0b003c;
-        public static final int product_where=0x7f0b0042;
+        public static final int product_debug_placeholder=0x7f0b0048;
+        public static final int product_model=0x7f0b003d;
+        public static final int product_sn=0x7f0b003e;
+        public static final int product_tel=0x7f0b0040;
+        public static final int product_time=0x7f0b003f;
+        public static final int product_type=0x7f0b003b;
+        public static final int product_where=0x7f0b0041;
         public static final int province=0x7f0b0070;
         public static final int register_tips=0x7f0b006c;
         public static final int saturday=0x7f0b0015;
         public static final int sms_text=0x7f0b000e;
         public static final int sunday=0x7f0b0016;
-        public static final int text_call=0x7f0b0031;
-        public static final int text_sms=0x7f0b0030;
+        public static final int text_call=0x7f0b0030;
+        public static final int text_sms=0x7f0b002f;
         public static final int thursday=0x7f0b0013;
         public static final int title_agree_protocol=0x7f0b006e;
         public static final int title_get_usr_validate=0x7f0b006d;
-        public static final int title_login=0x7f0b0023;
-        public static final int title_more_message=0x7f0b004f;
-        public static final int title_my_product=0x7f0b003b;
-        public static final int title_my_product_deadline=0x7f0b004b;
-        public static final int title_my_product_repair=0x7f0b004d;
+        public static final int title_login=0x7f0b0063;
+        public static final int title_more_message=0x7f0b004e;
+        public static final int title_my_product=0x7f0b003a;
+        public static final int title_my_product_deadline=0x7f0b004a;
+        public static final int title_my_product_repair=0x7f0b004c;
         public static final int title_new_user_register=0x7f0b0064;
-        public static final int title_over_deadline=0x7f0b0063;
-        public static final int title_scan_button=0x7f0b003a;
-        public static final int title_scan_desc1=0x7f0b0038;
-        public static final int title_scan_desc2=0x7f0b0039;
-        public static final int title_unit_day_format=0x7f0b004e;
+        public static final int title_over_deadline=0x7f0b0062;
+        public static final int title_scan_button=0x7f0b0039;
+        public static final int title_scan_desc1=0x7f0b0037;
+        public static final int title_scan_desc2=0x7f0b0038;
+        public static final int title_unit_day_format=0x7f0b004d;
         public static final int tuesday=0x7f0b0011;
-        public static final int usr_name=0x7f0b0054;
-        public static final int usr_name_hint=0x7f0b0059;
-        public static final int usr_pwd=0x7f0b0055;
-        public static final int usr_pwd_hint=0x7f0b005a;
-        public static final int usr_repwd=0x7f0b0056;
-        public static final int usr_repwd_hint=0x7f0b005b;
-        public static final int usr_tel=0x7f0b0057;
-        public static final int usr_tel_hint=0x7f0b005c;
-        public static final int usr_validate=0x7f0b0058;
+        public static final int usr_name=0x7f0b0053;
+        public static final int usr_name_hint=0x7f0b0058;
+        public static final int usr_pwd=0x7f0b0054;
+        public static final int usr_pwd_hint=0x7f0b0059;
+        public static final int usr_repwd=0x7f0b0055;
+        public static final int usr_repwd_hint=0x7f0b005a;
+        public static final int usr_tel=0x7f0b0056;
+        public static final int usr_tel_hint=0x7f0b005b;
+        public static final int usr_validate=0x7f0b0057;
         public static final int wenesday=0x7f0b0012;
     }
     public static final class style {
@@ -1387,16 +1388,11 @@ containing a value of this type.
             res/values-vXX/styles.xml, while customizations related to
             backward-compatibility can go here.
         
-
-        Base application theme for API 14+. This theme completely replaces
-        AppBaseTheme from BOTH res/values/styles.xml and
-        res/values-v11/styles.xml on API 14+ devices.
-    
- API 14 theme customizations can go here. 
          */
         public static final int AppBaseTheme=0x7f0c0059;
         /**  Application theme. 
  All customizations that are NOT specific to a particular API-level can go here. 
+  item name="android:windowFullscreen">true</item
          */
         public static final int AppTheme=0x7f0c005a;
         public static final int AppTheme_MainActivityActionBar=0x7f0c005c;
