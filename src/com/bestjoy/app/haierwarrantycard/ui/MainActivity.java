@@ -72,7 +72,7 @@ public class MainActivity extends BaseActionbarActivity {
 			
 			@Override
 			public void onPageScrollStateChanged(int state) {
-				mAdsViewPagerIsScrolling  = state == 1;//��ʾ�ڻ���
+				mAdsViewPagerIsScrolling  = state == 1;
 				
 			}
 		});
