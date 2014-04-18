@@ -107,4 +107,9 @@
      <string name="choose_address">选择地址</string>
     
     <string name="msg_progressdialog_wait">操作处理中，请稍后....</string>
+    
+    <string name="my_home">我的家</string>
+    <string name="parent_home">父母家</string>
+    <string name="parent_home2">岳父母家</string>
+    <string name="address_pcs">省/市</string>
 </resources>

@@ -95,7 +95,7 @@
 		    <TextView android:layout_marginTop="8dip"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:text="@string/my_home" />
+		        android:text="@string/parent_home" />
             
             <LinearLayout
 			    android:layout_width="match_parent"
@@ -150,7 +150,7 @@
 		    <TextView android:layout_marginTop="8dip"
 		        android:layout_width="wrap_content"
 		        android:layout_height="wrap_content"
-		        android:text="@string/my_home" />
+		        android:text="@string/parent_home2" />
             
             <LinearLayout
 			    android:layout_width="match_parent"
