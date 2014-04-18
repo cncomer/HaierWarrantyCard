@@ -24,7 +24,7 @@ import com.shwy.bestjoy.utils.ImageHelper;
 
 public abstract class CommonButtonTitleActivity extends FragmentActivity implements View.OnClickListener{
     private static final String TAG = "CommonButtonTitleActivity";
-    /**ProgressBar¶ÔÏó*/
+    /**ProgressBarï¿½ï¿½ï¿½ï¿½*/
 	protected ProgressBar mRefreshing;
 	protected ImageView mBackBtn;
 	protected TextView mTitle;
@@ -50,14 +50,14 @@ public abstract class CommonButtonTitleActivity extends FragmentActivity impleme
 	
 	public static final int DIALOG_PICTURE_CHOOSE_CONFIRM = 10002;
 	//add by chenkai, 20131208, for updating check
-	/**°µÊ¾Ã»ÓÐSD¿¨£¬ÒªÇóÓÃ»§È·ÈÏ*/
+	/**ï¿½ï¿½Ê¾Ã»ï¿½ï¿½SDï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½Ã»ï¿½È·ï¿½ï¿½*/
 	protected static final int DIALOG_MEDIA_UNMOUNTED = 10003;
 	
-	public static final int DIALOG_DATA_NOT_CONNECTED = 10006;//µ±Ç°Ã»ÓÐÍøÂç¶Ô»°¿ò
-	public static final int DIALOG_MOBILE_TYPE_CONFIRM = 10007;//´´½¨ÕýÔÚÊ¹ÓÃÒÆ¶¯ÍøÂçÌáÊ¾¶Ô»°¿ò
+	public static final int DIALOG_DATA_NOT_CONNECTED = 10006;//ï¿½ï¿½Ç°Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô»ï¿½ï¿½ï¿½
+	public static final int DIALOG_MOBILE_TYPE_CONFIRM = 10007;//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½Æ¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Ô»ï¿½ï¿½ï¿½
 	/**
-	 * Í¼¿â»ñÈ¡µ½ÁËÕÕÆ¬
-	 * @param uri ·µ»Ø»ñÈ¡µ½µÄÍ¼Æ¬µÄUri
+	 * Í¼ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¬
+	 * @param uri ï¿½ï¿½ï¿½Ø»ï¿½È¡ï¿½ï¿½ï¿½ï¿½Í¼Æ¬ï¿½ï¿½Uri
 	 * @return
 	 */
 	protected void onPickFromGalleryFinish(Uri uri) {
@@ -86,7 +86,7 @@ public abstract class CommonButtonTitleActivity extends FragmentActivity impleme
 	}
 	/**
 	 * pick avator by camera
-	 * @param savedFile ±£´æÕÕÆ¬µÄÂ·¾¶
+	 * @param savedFile ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¬ï¿½ï¿½Â·ï¿½ï¿½
 	 */
     protected void pickFromCamera(File savedFile) {
     	if (!MyApplication.getInstance().hasExternalStorage()) {
@@ -111,7 +111,7 @@ public abstract class CommonButtonTitleActivity extends FragmentActivity impleme
 	}
 	/**
 	 * pick avator by camera
-	 * @param savedFile ±£´æÕÕÆ¬µÄÂ·¾¶
+	 * @param savedFile ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¬ï¿½ï¿½Â·ï¿½ï¿½
 	 */
     protected void pickFromCamera(File savedFile, int questCode) {
     	if (!MyApplication.getInstance().hasExternalStorage()) {
@@ -131,10 +131,10 @@ public abstract class CommonButtonTitleActivity extends FragmentActivity impleme
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK) {
 			if (CurrentPictureGalleryRequest == requestCode) {
-				//Í¼¿â»ñÈ¡µ½ÁËÕÕÆ¬
+				//Í¼ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¬
 				onPickFromGalleryFinish(data.getData());
 			} else if (CurrentPictureCameraRequest == requestCode) {
-				//Ïà»ú·µ»ØÁËÕÕÆ¬
+				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¬
 				onPickFromCameraFinish();
 				
 			}

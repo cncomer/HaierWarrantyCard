@@ -6,7 +6,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.bestjoy.app.haierwarrantycard.R;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.LoginActivity;
 import com.bestjoy.app.haierwarrantycard.ui.RegisterActivity;
 

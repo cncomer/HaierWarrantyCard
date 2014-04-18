@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/address" />
+    <EditText     
+        android:id="@+id/edit_province"    
+                 style="@style/ProductInfoInputPlace" 
+    	android:inputType="none"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/province" />
+    <EditText     
+        android:id="@+id/edit_city"
+                 style="@style/ProductInfoInputPlace"
+    	android:inputType="none"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/city" />
+    <EditText     
+        android:id="@+id/edit_district"
+                 style="@style/ProductInfoInputPlace"
+    	android:inputType="none"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/district" />
+</LinearLayout>

@@ -64,6 +64,13 @@
         <item name="android:textColor">#ff716e6e</item>
         <item name="android:singleLine">true</item>
     </style>
+    <style name="PeopleInfo">
+        <item name="android:layout_width">80dip</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">4dip</item>
+        <item name="android:textColor">@color/light_green</item>
+        <item name="android:singleLine">true</item>
+    </style>
     
      <style name="ProductInfoInput">
         <item name="android:layout_width">fill_parent</item>
