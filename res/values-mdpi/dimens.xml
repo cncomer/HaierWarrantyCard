@@ -27,5 +27,9 @@
      
      <dimen name="product_preview_avator_width">70dip</dimen>
      <dimen name="product_preview_avator_height">70dip</dimen>
+     
+     <dimen name="province_textsize">12sp</dimen>
+     <dimen name="province_vertical_space">30dip</dimen>
+     <dimen name="province_columnWidth">80dip</dimen>
 
 </resources>

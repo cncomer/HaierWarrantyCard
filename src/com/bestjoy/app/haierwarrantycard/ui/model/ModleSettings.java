@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.ui.InstallActivity;
 import com.bestjoy.app.haierwarrantycard.ui.MyChooseDevicesActivity;
 import com.bestjoy.app.haierwarrantycard.ui.NewCardActivity;
 import com.bestjoy.app.haierwarrantycard.ui.RepairActivity;
@@ -105,23 +106,29 @@ public class ModleSettings {
 			switch(id) {
 			case R.id.model_my_card:
 				bundle.putString(Intents.EXTRA_NAME, _context.getString(R.string.activity_title_choose_device_general));
+				if (HaierAccountManager.getInstance().hasWarrantyCards()) {
+					MyChooseDevicesActivity.startIntent(_context, bundle);
+				} else {
+					NewCardActivity.startIntent(_context, bundle);
+				}
 				break;
 			case R.id.model_install:
 				bundle.putString(Intents.EXTRA_NAME, _context.getString(R.string.activity_title_choose_device_install));
+				InstallActivity.startIntnet(_context);
 				break;
 			case R.id.model_repair:
 				//bundle.putString(Intents.EXTRA_NAME, _context.getString(R.string.activity_title_choose_device_repair));
 				//break;
-				RepairActivity.startIntnet(_context);
+				if (HaierAccountManager.getInstance().hasWarrantyCards()) {
+					MyChooseDevicesActivity.startIntent(_context, bundle);
+				} else {
+					RepairActivity.startIntent(_context, bundle);
+				}
 				return;
 			case R.id.model_feedback:
 				return;
 			}
-			if (HaierAccountManager.getInstance().hasWarrantyCards()) {
-				MyChooseDevicesActivity.startIntent(_context, bundle);
-			} else {
-				NewCardActivity.startIntent(_context, bundle);
-			}
+			
 			
 		}
 		

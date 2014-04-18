@@ -35,7 +35,11 @@
             android:label="@string/button_my_card" />
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.RepairActivity"
-            android:label="@string/button_repair" />
+            android:label="@string/activity_title_repair" />
+        <activity
+            android:name="com.bestjoy.app.haierwarrantycard.ui.InstallActivity"
+            android:label="@string/activity_title_install" />
+        
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.LoginActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"

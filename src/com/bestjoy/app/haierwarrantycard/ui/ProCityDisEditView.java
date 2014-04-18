@@ -89,7 +89,7 @@ public class ProCityDisEditView implements OnTouchListener {
 		mDisEditView.setInputType(InputType.TYPE_NULL);
 		mDisEditView.setOnTouchListener(this);
 		
-		database = SQLiteDatabase.openOrCreateDatabase(HaierDBHelper.DB_DEVICE_NAME, null);
+		database = SQLiteDatabase.openOrCreateDatabase(mContext.getDatabasePath(HaierDBHelper.DB_DEVICE_NAME), null);
 		
 		popupView = ((Activity) mContext).getLayoutInflater().inflate(R.layout.layout_popupwindow, null);
 		
@@ -120,6 +120,8 @@ public class ProCityDisEditView implements OnTouchListener {
 			switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					mEditMode = MODE_PROVINCE;
+//					mSqlProvince = "select * from T_Province where proID = '" + mProID + "'";
+					mSqlProvince = "select * from T_Province";
 					mCursor = database.rawQuery(mSqlProvince, null);
 					mAdapter = new AddressAdapter(mCursor);
 					gridView.setAdapter(mAdapter);
@@ -148,7 +150,7 @@ public class ProCityDisEditView implements OnTouchListener {
 					break;
 				case MotionEvent.ACTION_UP:
 					if (mProName != null) {
-						mPopupWindow = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, 100, true);
+						mPopupWindow = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, 300, true);
 						mPopupWindow.setAnimationStyle(R.style.AnimationPreview);  
 						mPopupWindow.setTouchable(true);
 						mPopupWindow.setOutsideTouchable(true);
@@ -174,7 +176,7 @@ public class ProCityDisEditView implements OnTouchListener {
 					break;
 				case MotionEvent.ACTION_UP:
 					if (mCityName != null) {
-						mPopupWindow = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, 100, true);
+						mPopupWindow = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, 300, true);
 						mPopupWindow.setAnimationStyle(R.style.AnimationPreview);  
 						mPopupWindow.setTouchable(true);
 						mPopupWindow.setOutsideTouchable(true);
@@ -232,31 +234,29 @@ public class ProCityDisEditView implements OnTouchListener {
 		}
 
 		public View getView(int position, View convertView, ViewGroup parent) {
+			ViewHolder viewHolder = null;
 			if (convertView == null) {
 				convertView = mInflater.inflate(R.layout.grid_item, null);
-				convertView.setLayoutParams(new GridView.LayoutParams(70, 40));
+				viewHolder = new ViewHolder();
+				viewHolder._title = (TextView) convertView;
+				convertView .setTag(viewHolder);
+			} else {
+				viewHolder = (ViewHolder) convertView.getTag();
 			}
-			
 			if(mEditMode == MODE_PROVINCE) {
 				if (position < cursor.getCount()) {
 					cursor.moveToPosition(position);
-					TextView tv = (TextView)convertView.findViewById(R.id.item);
-					tv.setText(cursor.getString(cursor.getColumnIndex(HaierDBHelper.DEVICE_PRO_NAME)));
-					tv.setTextColor(Color.RED);
+					viewHolder._title.setText(cursor.getString(cursor.getColumnIndex(HaierDBHelper.DEVICE_PRO_NAME)));
 				}
 			} else if(mEditMode == MODE_CITY) {
 				if (position < cursor.getCount() && mProName != null) {
 					cursor.moveToPosition(position);
-					TextView tv = (TextView)convertView.findViewById(R.id.item);
-					tv.setText(cursor.getString(cursor.getColumnIndex(HaierDBHelper.DEVICE_CITY_NAME)));
-					tv.setTextColor(Color.RED);
+					viewHolder._title.setText(cursor.getString(cursor.getColumnIndex(HaierDBHelper.DEVICE_CITY_NAME)));
 				}
 			} else if (mEditMode == MODE_DISTRICT) {
 				if (position < cursor.getCount() && mCityName != null) {
 					cursor.moveToPosition(position);
-					TextView tv = (TextView)convertView.findViewById(R.id.item);
-					tv.setText(cursor.getString(cursor.getColumnIndex(HaierDBHelper.DEVICE_DIS_NAME)));
-					tv.setTextColor(Color.RED);
+					viewHolder._title.setText(cursor.getString(cursor.getColumnIndex(HaierDBHelper.DEVICE_DIS_NAME)));
 				}
 			}
 			return convertView;
@@ -264,7 +264,7 @@ public class ProCityDisEditView implements OnTouchListener {
 		}
 
 		public int getCount() {
-			return cursor.getCount();
+			return cursor != null ? cursor.getCount() :0;
 		}
 
 		public Object getItem(int position) {
@@ -274,5 +274,9 @@ public class ProCityDisEditView implements OnTouchListener {
 		public long getItemId(int position) {
 			return position;
 		}
+	}
+	
+	private static class ViewHolder {
+		private TextView _title;
 	}
 }

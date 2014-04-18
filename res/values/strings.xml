@@ -119,6 +119,6 @@
     <string name="date">日期</string>
     <string name="time">时间</string>
     <string name="error_des">故障描述</string>
-    <string name="button_repair">预约</string>
+    <string name="button_yuyue_repair">预约</string>
     
 </resources>

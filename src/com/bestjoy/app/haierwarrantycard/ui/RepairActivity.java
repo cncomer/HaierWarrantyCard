@@ -208,6 +208,11 @@ private String readStringFromInputStream(InputStream inputStream)
 		context.startActivity(intent);
 	}
 	
+	public static void startIntent(Context context, Bundle bundle) {
+		Intent intent = new Intent(context, RepairActivity.class);
+		if (bundle != null) intent.putExtras(bundle);
+		context.startActivity(intent);
+	}
 	public static Intent createIntnet(Context context) {
 		return new Intent(context, RepairActivity.class);
 	}

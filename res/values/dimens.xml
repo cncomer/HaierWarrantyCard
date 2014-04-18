@@ -32,6 +32,10 @@
      <dimen name="choose_device_slidingmenu_offset">25dip</dimen>
      <dimen name="choose_device_choose_slidingmenu_offset">30dip</dimen>
       <dimen name="shadow_width">15dp</dimen>
+      
+      <dimen name="province_textsize">14sp</dimen>
+     <dimen name="province_vertical_space">20dip</dimen>
+     <dimen name="province_columnWidth">120dip</dimen>
      
 
 </resources>

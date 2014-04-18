@@ -10,7 +10,7 @@
     <RelativeLayout 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#ff52c141"
+        android:background="#ff58b0ed"
         android:padding="8dip"
         android:orientation="horizontal">
         <ImageView android:layout_width="36dip"
@@ -116,37 +116,6 @@
                 android:clickable="true"
                 android:text="@string/button_ask_online"
                 android:textColor="#fff95462" />
-
-            <EditText
-                android:id="@+id/product_ask_online_input"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dip"
-                android:background="@color/light_gray"
-                android:gravity="left|top"
-                android:maxHeight="300dip"
-                android:maxLength="1024"
-                android:minLines="4" />
-
-            <LinearLayout
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dip"
-                android:gravity="center"
-                android:orientation="horizontal" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/ic_voice" />
-
-                <Button
-                    android:id="@+id/button_speak"
-                    style="@style/DefaultShapeButton.Red"
-                    android:layout_width="180dip"
-                    android:layout_marginLeft="10dip"
-                    android:text="@string/button_speek" />
-            </LinearLayout>
 
 
             <Button
