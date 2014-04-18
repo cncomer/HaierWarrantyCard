@@ -88,7 +88,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements On
 		mDisEditView.setInputType(InputType.TYPE_NULL);
 		mDisEditView.setOnTouchListener(this);
 		
-		database = SQLiteDatabase.openOrCreateDatabase(HaierDBHelper.DB_DEVICE_NAME, null);;
+		database = SQLiteDatabase.openOrCreateDatabase(getDatabasePath(HaierDBHelper.DB_DEVICE_NAME), null);;
 		mSqlProvince = "select * from T_Province";
 		mSqlCity = "select * from T_City";
 		mSqlDistrict = "select * from T_District";
