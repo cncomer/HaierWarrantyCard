@@ -15,9 +15,10 @@ public class InstallFileUtils {
 	public static boolean installDatabaseFiles(Context context, String fileName) {
 		 File file = context.getDatabasePath(fileName);
 		 boolean success = true;
-		 if (!file.exists()) {
+		 if (!file.exists() || file.isDirectory()) {
+			 file.delete();
 			  DebugUtils.logD(TAG, "installDatabaseFiles " + fileName);
-			  file.mkdirs();
+			  file.getParentFile().mkdirs();
 			  InputStream is = null;
 			  FileOutputStream fos = null;
 			  try {
