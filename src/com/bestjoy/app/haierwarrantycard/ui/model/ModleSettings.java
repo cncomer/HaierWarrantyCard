@@ -12,7 +12,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.MyChooseDevicesActivity;
+import com.bestjoy.app.haierwarrantycard.ui.NewCardActivity;
 import com.shwy.bestjoy.utils.Intents;
 
 public class ModleSettings {
@@ -112,7 +114,12 @@ public class ModleSettings {
 			case R.id.model_feedback:
 				return;
 			}
-			MyChooseDevicesActivity.startIntent(_context, bundle);
+			if (HaierAccountManager.getInstance().hasWarrantyCards()) {
+				MyChooseDevicesActivity.startIntent(_context, bundle);
+			} else {
+				NewCardActivity.startIntent(_context, bundle);
+			}
+			
 		}
 		
 	}

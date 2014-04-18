@@ -7,7 +7,9 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
+import com.bestjoy.app.haierwarrantycard.utils.InstallFileUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.DeviceStorageUtils;
@@ -57,6 +59,8 @@ public class MyApplication extends Application{
 		BitmapUtils.getInstance().setContext(this);
 		
 		HaierAccountManager.getInstance().setContext(this);
+		
+		InstallFileUtils.installDatabaseFiles(MyApplication.this, HaierDBHelper.DB_DEVICE_NAME);
 	}
 	
 	public synchronized static MyApplication getInstance() {

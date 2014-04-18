@@ -29,5 +29,8 @@
      
      <dimen name="product_preview_avator_width">70dip</dimen>
      <dimen name="product_preview_avator_height">70dip</dimen>
+     <dimen name="choose_device_slidingmenu_offset">25dip</dimen>
+      <dimen name="shadow_width">15dp</dimen>
+     
 
 </resources>

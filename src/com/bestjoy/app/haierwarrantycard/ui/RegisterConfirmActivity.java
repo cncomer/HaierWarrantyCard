@@ -2,6 +2,7 @@ package com.bestjoy.app.haierwarrantycard.ui;
 
 import com.actionbarsherlock.view.Menu;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 
 import android.content.Context;
@@ -30,7 +31,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.Toast;
 
-import com.bestjoy.app.haierwarrantycard.utils.SQLiteDatabaseHelper;
 
 public class RegisterConfirmActivity extends BaseActionbarActivity implements OnTouchListener{
 	private static final String TAG = "RegisterActivity";
@@ -88,7 +88,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements On
 		mDisEditView.setInputType(InputType.TYPE_NULL);
 		mDisEditView.setOnTouchListener(this);
 		
-		database = SQLiteDatabaseHelper.openDatabase(this);
+		database = SQLiteDatabase.openOrCreateDatabase(HaierDBHelper.DB_DEVICE_NAME, null);;
 		mSqlProvince = "select * from T_Province";
 		mSqlCity = "select * from T_City";
 		mSqlDistrict = "select * from T_District";

@@ -18,38 +18,39 @@ import android.text.TextUtils;
 
 import com.shwy.bestjoy.utils.DebugUtils;
 
-public class BjnoteProvider extends ContentProvider{
-	private static final String TAG = "BjnoteProvider";
+public class DeviceProvider extends ContentProvider{
+	private static final String TAG = "DeviceProvider";
 	private SQLiteDatabase mContactDatabase;
 	private String[] mTables = new String[]{
-			HaierDBHelper.TABLE_NAME_ACCOUNTS,
-			HaierDBHelper.TABLE_NAME_HOMES,
-			HaierDBHelper.TABLE_NAME_DEVICES,
+			HaierDBHelper.TABLE_NAME_DEVICE_DALEI,
+			HaierDBHelper.TABLE_NAME_DEVICE_XIAOLEI,
+			HaierDBHelper.TABLE_NAME_DEVICE_PINPAI,
 //			ContactsDBHelper.TABLE_NAME_MYLIFE_CONSUME,
 	};
 	private static final int BASE = 8;
 	
-	private static final int ACCOUNT = 0x0000;
-	private static final int ACCOUNT_ID = 0x0001;
+	private static final int DALEI = 0x0000;
+	private static final int DALEI_ID = 0x0001;
 	
-	private static final int HOME = 0x0100;
-	private static final int HOME_ID = 0x0101;
+	private static final int XIAOLEI = 0x0100;
+	private static final int XIAOLEI_ID = 0x0101;
 	
-	private static final int DEVICE = 0x0200;
-	private static final int DEVICE_ID = 0x0201;
+	private static final int PINPAI = 0x0200;
+	private static final int PINPAI_ID = 0x0201;
 	
 	private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 	 static {
 	        // URI matching table
 	        UriMatcher matcher = sURIMatcher;
-	        matcher.addURI(BjnoteContent.AUTHORITY, "accounts", ACCOUNT);
-	        matcher.addURI(BjnoteContent.AUTHORITY, "accounts/#", ACCOUNT_ID);
+
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "dalei", DALEI);
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "dalei/#", DALEI_ID);
 	        
-	        matcher.addURI(BjnoteContent.AUTHORITY, "homes", HOME);
-	        matcher.addURI(BjnoteContent.AUTHORITY, "homes/#", HOME_ID);
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "xialei", XIAOLEI);
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "xiaolei/#", XIAOLEI_ID);
 	        
-	        matcher.addURI(BjnoteContent.AUTHORITY, "devices", DEVICE);
-	        matcher.addURI(BjnoteContent.AUTHORITY, "devices/#", DEVICE_ID);
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "pinpai", PINPAI);
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "pinpai/#", PINPAI_ID);
 	        
 	        //TODO 增加
 	 }
@@ -60,9 +61,7 @@ public class BjnoteProvider extends ContentProvider{
             return mContactDatabase;
         }
 
-
-        HaierDBHelper helper = new HaierDBHelper(context);
-        mContactDatabase = helper.getWritableDatabase();
+        mContactDatabase = SQLiteDatabase.openOrCreateDatabase(HaierDBHelper.DB_DEVICE_NAME, null);
         mContactDatabase.setLockingEnabled(true);
         return mContactDatabase;
 	}
@@ -88,19 +87,19 @@ public class BjnoteProvider extends ContentProvider{
     
     private void notifyChange(int match) {
     	Context context = getContext();
-    	Uri notify = BjnoteContent.CONTENT_URI;
+    	Uri notify = BjnoteContent.DEVICE_CONTENT_URI;
     	switch(match) {
-    	case ACCOUNT:
-    	case ACCOUNT_ID:
-    		notify = BjnoteContent.Accounts.CONTENT_URI;
+    	case DALEI:
+    	case DALEI_ID:
+    		notify = BjnoteContent.DaLei.CONTENT_URI;
     		break;
-		case HOME:
-		case HOME_ID:
-			notify = BjnoteContent.Homes.CONTENT_URI;
+		case XIAOLEI:
+		case XIAOLEI_ID:
+			notify = BjnoteContent.XiaoLei.CONTENT_URI;
 			break;
-		case DEVICE:
-		case DEVICE_ID:
-			notify = BjnoteContent.HomeDevices.CONTENT_URI;
+		case PINPAI:
+		case PINPAI_ID:
+			notify = BjnoteContent.PinPai.CONTENT_URI;
 			break;
     	}
     	ContentResolver resolver = context.getContentResolver();
@@ -118,12 +117,12 @@ public class BjnoteProvider extends ContentProvider{
         DebugUtils.logProvider(TAG, "delete data from table " + table);
         int count = 0;
         switch(match) {
-	        case ACCOUNT:
-	    	case ACCOUNT_ID:
-			case HOME:
-			case HOME_ID:
-			case DEVICE:
-			case DEVICE_ID:
+	        case DALEI:
+	    	case DALEI_ID:
+			case XIAOLEI:
+			case XIAOLEI_ID:
+			case PINPAI:
+			case PINPAI_ID:
         	count = db.delete(table, buildSelection(match, uri, selection), selectionArgs);
         }
         if (count >0) notifyChange(match);
@@ -138,37 +137,22 @@ public class BjnoteProvider extends ContentProvider{
 	@Override
 	public Uri insert(Uri uri, ContentValues values) {
 		 int match = findMatch(uri, "insert");
+		 String table = mTables[match>>BASE];
+		 switch(match) {
+		 	case DALEI:
+	    	case DALEI_ID:
+			case XIAOLEI:
+			case XIAOLEI_ID:
+			case PINPAI:
+			case PINPAI_ID:
+				//不支持新增更新操作
+				DebugUtils.logProvider(TAG, "ignore insert values into table " + table);
+				return null;
+		 }
          Context context = getContext();
-
          // See the comment at delete(), above
          SQLiteDatabase db = getDatabase(context);
-         String table = mTables[match>>BASE];
          DebugUtils.logProvider(TAG, "insert values into table " + table);
-//         switch(match) {
-//	         case MY_CARD:
-//	         case MY_CARD_ID:
-//	         case RECEIVED_CONTACT:
-//	         case RECEIVED_CONTACT_ID:
-//	         case EXCHANGE_TOPIC:
-//	     	 case EXCHANGE_TOPIC_ID:
-//	     	 case EXCHANGE_TOPIC_LIST:
-//	     	 case EXCHANGE_TOPIC_LIST_ID:
-//	     	 case CIRCLE_TOPIC:
-//			 case CIRCLE_TOPIC_ID:
-//			 case CIRCLE_TOPIC_LIST:
-//			 case CIRCLE_TOPIC_LIST_ID:
-//			 case CIRCLE_MEMBER_DETAIL:
-//			 case CIRCLE_MEMBER_DETAIL_ID:
-//			 case ACCOUNT:
-//			 case ACCOUNT_ID:
-//			 case FEEDBACK:
-//			 case FEEDBACK_ID:
-//			 case QUANPHOTO:
-//			 case QUANPHOTO_ID:
-//			 case ZHT:
-//			 case ZHT_ID:
-//	     		break;
-//         }
          //Insert 操作不允许设置_id字段，如果有的话，我们需要移除
          if (values.containsKey(HaierDBHelper.ID)) {
       		values.remove(HaierDBHelper.ID);
@@ -192,12 +176,12 @@ public class BjnoteProvider extends ContentProvider{
          DebugUtils.logProvider(TAG, "query table " + table);
          Cursor result = null;
          switch(match) {
-	         case ACCOUNT:
-	     	 case ACCOUNT_ID:
-	 		 case HOME:
-	 		 case HOME_ID:
-	 		 case DEVICE:
-	 		 case DEVICE_ID:
+         	case DALEI:
+         	case DALEI_ID:
+         	case XIAOLEI:
+         	case XIAOLEI_ID:
+         	case PINPAI:
+         	case PINPAI_ID:
         	     result = db.query(table, projection, selection, selectionArgs, null, null, sortOrder);
          }
 		return result;
@@ -207,21 +191,23 @@ public class BjnoteProvider extends ContentProvider{
 	public int update(Uri uri, ContentValues values, String selection,
 			String[] selectionArgs) {
 		int match = findMatch(uri, "update");
-        Context context = getContext();
-        
-        SQLiteDatabase db = getDatabase(context);
         String table = mTables[match>>BASE];
-        DebugUtils.logProvider(TAG, "update data for table " + table);
         int count = 0;
         switch(match) {
-	        case ACCOUNT:
-	    	case ACCOUNT_ID:
-			case HOME:
-			case HOME_ID:
-			case DEVICE:
-			case DEVICE_ID:
-        	    count = db.update(table, values, buildSelection(match, uri, selection), selectionArgs);
+	 	case DALEI:
+    	case DALEI_ID:
+		case XIAOLEI:
+		case XIAOLEI_ID:
+		case PINPAI:
+		case PINPAI_ID:
+			//不支持新增更新操作
+			DebugUtils.logProvider(TAG, "ignore update values into table " + table);
+			return 0;
         }
+        Context context = getContext();
+        SQLiteDatabase db = getDatabase(context);
+        DebugUtils.logProvider(TAG, "update data for table " + table);
+        count = db.update(table, values, buildSelection(match, uri, selection), selectionArgs);
         if (count >0) notifyChange(match);
 		return count;
 	}
@@ -229,9 +215,9 @@ public class BjnoteProvider extends ContentProvider{
 	private String buildSelection(int match, Uri uri, String selection) {
 		long id = -1;
 		switch(match) {
-	    	case ACCOUNT_ID:
-			case HOME_ID:
-			case DEVICE_ID:
+	    	case DALEI_ID:
+			case XIAOLEI_ID:
+			case PINPAI_ID:
 			try {
 				id = ContentUris.parseId(uri);
 			} catch(java.lang.NumberFormatException e) {

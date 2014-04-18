@@ -21,6 +21,7 @@ public class HaierAccount {
 		HaierDBHelper.ACCOUNT_TEL,
 		HaierDBHelper.ACCOUNT_PWD,
 		HaierDBHelper.ACCOUNT_CARD_COUNT,
+		HaierDBHelper.ACCOUNT_HOME_COUNT,
 	};
 	
 	private static final int KEY_ID = 0;
@@ -28,6 +29,8 @@ public class HaierAccount {
 	private static final int KEY_NAME = 2;
 	private static final int KEY_TEL = 3;
 	private static final int KEY_PWD = 4;
+	private static final int KEY_CARD_COUNT = 5;
+	private static final int KEY_HOME_COUNT = 6;
 	
 	private static final String WHERE_DEFAULT = HaierDBHelper.ACCOUNT_DEFAULT + "=1";
 	
@@ -36,6 +39,8 @@ public class HaierAccount {
 	public String mAccountName;
 	public String mAccountTel;
 	public String mAccountPwd;
+	public int mAccountCardCount;
+	public int mAccountHomeCount;
 	
 	private List<Home> mAccountHomes = new LinkedList<Home>();
 
@@ -69,6 +74,8 @@ public class HaierAccount {
 				haierAccount.mAccountName = c.getString(KEY_NAME);
 				haierAccount.mAccountTel = c.getString(KEY_TEL);
 				haierAccount.mAccountPwd = c.getString(KEY_PWD);
+				haierAccount.mAccountCardCount = c.getInt(KEY_CARD_COUNT);
+				haierAccount.mAccountHomeCount = c.getInt(KEY_HOME_COUNT);
 			}
 		}
 		

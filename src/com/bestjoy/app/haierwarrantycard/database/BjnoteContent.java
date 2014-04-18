@@ -5,13 +5,17 @@ import android.net.Uri;
 
 public class BjnoteContent {
 
-	public static final String AUTHORITY = "com.bestjoy.app.haierwarrantycard.provider";
+	public static final String AUTHORITY = "com.bestjoy.app.haierwarrantycard.provider.BjnoteProvider";
     // The notifier authority is used to send notifications regarding changes to messages (insert,
     // delete, or update) and is intended as an optimization for use by clients of message list
     // cursors (initially, the email AppWidget).
-    public static final String NOTIFIER_AUTHORITY = "com.bestjoy.app.haierwarrantycard.notify";
+    public static final String NOTIFIER_AUTHORITY = "com.bestjoy.app.haierwarrantycard.notify.BjnoteProvider";
 
     public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY);
+    
+    public static final String DEVICE_AUTHORITY = "com.bestjoy.app.haierwarrantycard.provider.DeviceProvider";
+    public static final String DEVICE_NOTIFIER_AUTHORITY = "com.bestjoy.app.haierwarrantycard.notify.DeviceProvider";
+    public static final Uri DEVICE_CONTENT_URI = Uri.parse("content://" + DEVICE_AUTHORITY);
     
     // All classes share this
     public static final String RECORD_ID = "_id";
@@ -37,8 +41,20 @@ public class BjnoteContent {
     public static class Homes extends BjnoteContent{
     	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.CONTENT_URI, "homes");
     }
-    
-    public static class Devices extends BjnoteContent{
+    /**我的保修卡设备*/
+    public static class HomeDevices extends BjnoteContent{
     	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.CONTENT_URI, "devices");
+    }
+    
+    public static class DaLei extends BjnoteContent{
+    	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.DEVICE_CONTENT_URI, "dalei");
+    }
+    
+    public static class XiaoLei extends BjnoteContent{
+    	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.DEVICE_CONTENT_URI, "xiaolei");
+    }
+    
+    public static class PinPai extends BjnoteContent{
+    	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.DEVICE_CONTENT_URI, "pinpai");
     }
 }

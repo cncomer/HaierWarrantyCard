@@ -1,10 +1,10 @@
 package com.bestjoy.app.haierwarrantycard.database;
 
-import com.shwy.bestjoy.utils.DebugUtils;
-
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+
+import com.shwy.bestjoy.utils.DebugUtils;
 
 /**
  * @author Sean Owen
@@ -12,7 +12,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 1;
+  private static final int DB_VERSION = 2;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -44,6 +44,7 @@ private static final String TAG = "HaierDBHelper";
   public static final String ACCOUNT_NAME = CONTACT_NAME;
   public static final String ACCOUNT_PWD = CONTACT_PASSWORD;
   public static final String ACCOUNT_CARD_COUNT = "card_count";
+  public static final String ACCOUNT_HOME_COUNT = "home_count";
 
   public static final String ACCOUNT_PHONES = "phones";
 
@@ -62,7 +63,7 @@ private static final String TAG = "HaierDBHelper";
   //devices table
   public static final String TABLE_NAME_DEVICES = "devices";
   /**所属家*/
-  public static final String REF_HOME_ID = "home";
+  public static final String REF_HOME_ID = "home_id";
   /**设别名称*/
   public static final String DEVICE_NAME = "name";
   /**设备类别，比如大类是电视剧*/
@@ -94,6 +95,24 @@ private static final String TAG = "HaierDBHelper";
   
   //这里是设备表的扩展，如遥控器
   
+  
+  //设备数据库
+  public static final String DB_DEVICE_NAME = "device.db";
+  public static final String TABLE_NAME_DEVICE_DALEI = "DaLei";
+  public static final String DEVICE_DALEI_NAME = "Name";
+  public static final String DEVICE_DALEI_ID = "ID";
+  
+  public static final String TABLE_NAME_DEVICE_XIAOLEI = "XiaoLei";
+  public static final String DEVICE_XIALEI_DID = "DID";
+  public static final String DEVICE_XIALEI_XID = "XID";
+  public static final String DEVICE_XIALEI_NAME = "XName";
+  
+  public static final String TABLE_NAME_DEVICE_PINPAI = "PinPai";
+  public static final String DEVICE_PINPAI_XID = "XID";
+  public static final String DEVICE_PINPAI_PID = "PID";
+  public static final String DEVICE_PINPAI_NAME = "PName";
+  public static final String DEVICE_PINPAI_PINYIN = "PinYin";
+  public static final String DEVICE_PINPAI_CODE = "Code";
   
   public HaierDBHelper(Context context) {
     super(context, DB_NAME, null, DB_VERSION);
@@ -145,45 +164,31 @@ private static final String TAG = "HaierDBHelper";
   		createHomesTable(sqLiteDatabase);
   		// Create devices table
   		createDevicesTable(sqLiteDatabase);
-  	    // Create repair card table.
-  		createCardTable(sqLiteDatabase);
 //  		createTriggerForMyCardTable(sqLiteDatabase);
 
   		
   }
   
-  private void createCardTable(SQLiteDatabase sqLiteDatabase) {
-	  sqLiteDatabase.execSQL(
-	            "CREATE TABLE " + TABLE_NAME_MY_CARD + " (" +
-	            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-	            CARD_ACCOUNT_MD + " INTEGER  NOT NULL DEFAULT 0 CONSTRAINT fk_accounts_id REFERENCES accounts(account_pmd), " +
-	            CARD_ACCOUNT_PWD + " TEXT, " +
-	            CONTACT_NAME + " TEXT, " +
-	            CONTACT_TEL + " TEXT, " +
-	            CONTACT_BID + " TEXT, " +
-	            CONTACT_EMAIL + " TEXT, " +
-	            CONTACT_ADDRESS + " TEXT, " +
-	            CONTACT_ORG + " TEXT, " +
-	            CONTACT_DATE + " TEXT, " +
-	            CONTACT_PASSWORD + " TEXT, " +
-	            CONTACT_NOTE + " TEXT, " +
-	            CONTACT_TYPE + " TEXT, " +
-	            CONTACT_HAS_PHOTO + " INTEGER NOT NULL DEFAULT 0, " +
-	            CONTACT_TITLE + " TEXT" +
-	            ");");
-  }
-  
-  
-  
-  private void createTriggerForMyCardTable(SQLiteDatabase sqLiteDatabase) {
-	  String sql = "CREATE TRIGGER insert_contact_mycard" + " AFTER INSERT " + " ON " + TABLE_NAME_MY_CARD + 
-			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET card_count = card_count+1 WHERE _id = new.account_pmd; END;";
-	  sqLiteDatabase.execSQL(sql);
-	  
-	  sql = "CREATE TRIGGER delete_contact_mycard" + " AFTER DELETE " + " ON " + TABLE_NAME_MY_CARD + 
-			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET card_count = card_count-1 WHERE _id = old.account_pmd; END;";
-	  sqLiteDatabase.execSQL(sql);
-  }
+//  private void createCardTable(SQLiteDatabase sqLiteDatabase) {
+//	  sqLiteDatabase.execSQL(
+//	            "CREATE TABLE " + TABLE_NAME_MY_CARD + " (" +
+//	            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+//	            CARD_ACCOUNT_MD + " INTEGER  NOT NULL DEFAULT 0 CONSTRAINT fk_accounts_id REFERENCES accounts(account_pmd), " +
+//	            CARD_ACCOUNT_PWD + " TEXT, " +
+//	            CONTACT_NAME + " TEXT, " +
+//	            CONTACT_TEL + " TEXT, " +
+//	            CONTACT_BID + " TEXT, " +
+//	            CONTACT_EMAIL + " TEXT, " +
+//	            CONTACT_ADDRESS + " TEXT, " +
+//	            CONTACT_ORG + " TEXT, " +
+//	            CONTACT_DATE + " TEXT, " +
+//	            CONTACT_PASSWORD + " TEXT, " +
+//	            CONTACT_NOTE + " TEXT, " +
+//	            CONTACT_TYPE + " TEXT, " +
+//	            CONTACT_HAS_PHOTO + " INTEGER NOT NULL DEFAULT 0, " +
+//	            CONTACT_TITLE + " TEXT" +
+//	            ");");
+//  }
   
   private void createTriggerForAccountTable(SQLiteDatabase sqLiteDatabase) {
 	  String sql = "CREATE TRIGGER insert_account" + " BEFORE INSERT " + " ON " + TABLE_NAME_ACCOUNTS + 
@@ -196,6 +201,35 @@ private static final String TAG = "HaierDBHelper";
 	  
   }
   
+  private void createTriggerForHomeTable(SQLiteDatabase sqLiteDatabase) {
+	  String sql = "CREATE TRIGGER insert_home_update_account" + " AFTER INSERT " + " ON " + TABLE_NAME_HOMES + 
+			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET home_count = home_count+1 WHERE _id = new.account_id; END;";
+	  sqLiteDatabase.execSQL(sql);
+	  
+	  sql = "CREATE TRIGGER delete_home_update_account" + " AFTER DELETE " + " ON " + TABLE_NAME_HOMES + 
+			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET home_count = home_count-1 WHERE _id = old.account_id; END;";
+	  sqLiteDatabase.execSQL(sql);
+	
+  }
+  
+  private void createTriggerForDeviceTable(SQLiteDatabase sqLiteDatabase) {
+	  String sql = "CREATE TRIGGER insert_device_update_account" + " AFTER INSERT " + " ON " + TABLE_NAME_DEVICES + 
+			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET card_count = card_count+1 WHERE _id = new.account_id; END;";
+	  sqLiteDatabase.execSQL(sql);
+	  
+	  sql = "CREATE TRIGGER delete_device_update_account" + " AFTER DELETE " + " ON " + TABLE_NAME_DEVICES + 
+			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET card_count = card_count-1 WHERE _id = old.account_id; END;";
+	  sqLiteDatabase.execSQL(sql);
+	  
+	  sql = "CREATE TRIGGER insert_device_update_home" + " AFTER INSERT " + " ON " + TABLE_NAME_DEVICES + 
+	  " BEGIN UPDATE " + TABLE_NAME_HOMES + " SET card_count = card_count+1 WHERE _id = new.home_id; END;";
+	  sqLiteDatabase.execSQL(sql);
+		
+	  sql = "CREATE TRIGGER delete_device_update_home" + " AFTER DELETE " + " ON " + TABLE_NAME_DEVICES + 
+			  " BEGIN UPDATE " + TABLE_NAME_HOMES + " SET card_count = card_count-1 WHERE _id = old.home_id; END;";
+	  sqLiteDatabase.execSQL(sql);
+  }
+  
   private void createAccountTable(SQLiteDatabase sqLiteDatabase) {
 	  sqLiteDatabase.execSQL(
 	            "CREATE TABLE " + TABLE_NAME_ACCOUNTS + " (" +
@@ -205,6 +239,7 @@ private static final String TAG = "HaierDBHelper";
 	            ACCOUNT_PWD + " TEXT, " +
 	            ACCOUNT_DEFAULT + " INTEGER NOT NULL DEFAULT 1, " +
 	            ACCOUNT_CARD_COUNT + " INTEGER NOT NULL DEFAULT 0, " +
+	            ACCOUNT_HOME_COUNT + " INTEGER NOT NULL DEFAULT 0, " +
 	            ACCOUNT_NAME + " TEXT, " +
 	            ACCOUNT_PHONES  + " TEXT, " +
 	            ACCOUNT_HAS_PHOTO + " INTEGER NOT NULL DEFAULT 0, " +
@@ -225,13 +260,15 @@ private static final String TAG = "HaierDBHelper";
 	            MODIFIED + " TEXT, " +
 	            CONTACT_DATE + " TEXT" +
 	            ");");
+	  createTriggerForHomeTable(sqLiteDatabase);
   }
   
   private void createDevicesTable(SQLiteDatabase sqLiteDatabase) {
 	  sqLiteDatabase.execSQL(
 	            "CREATE TABLE " + TABLE_NAME_DEVICES + " (" +
 	            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-	            REF_HOME_ID + " TEXT, " +
+	            REF_ACCOUNT_ID + " TEXT, " +  //账户id
+	            REF_HOME_ID + " TEXT, " +     //家id
 	            DEVICE_TYPE + " TEXT, " +
 	            DEVICE_NAME + " TEXT, " +
 	            DEVICE_BRAND + " TEXT, " +
@@ -248,6 +285,7 @@ private static final String TAG = "HaierDBHelper";
 	            DEVICE_COMPONENT_WARRANTY_PERIOD + " TEXT, " +
 	            MODIFIED + " TEXT" +
 	            ");");
+	  createTriggerForDeviceTable(sqLiteDatabase);
   }
   
   private void addTextColumn(SQLiteDatabase sqLiteDatabase, String table, String column) {
@@ -263,5 +301,4 @@ private static final String TAG = "HaierDBHelper";
   public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 	  DebugUtils.logD(TAG, "onUpgrade oldVersion " + oldVersion + " newVersion " + newVersion);
   }
-
 }

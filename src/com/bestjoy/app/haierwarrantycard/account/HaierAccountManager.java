@@ -23,5 +23,12 @@ public class HaierAccountManager {
 		return mHaierAccount != null && mHaierAccount.mAccountId > 0;
 	}
 	
+	public boolean hasWarrantyCards() {
+		return mHaierAccount != null && mHaierAccount.mAccountCardCount > 0;
+	}
+	
+	public boolean hasHomes() {
+		return mHaierAccount != null && mHaierAccount.mAccountHomeCount > 0;
+	}
 
 }

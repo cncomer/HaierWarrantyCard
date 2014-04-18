@@ -90,6 +90,8 @@
     <string name="menu_setting">设置</string>
     <string name="menu_help">帮助</string>
     <string name="menu_about">关于</string>
+    <string name="menu_search">搜索</string>
+    <string name="menu_choose">选择</string>
 
     <string name="register_tips">输入手机号码，点击“获取验证码”后，系统会自动下发一条默认密码短信</string>
     <string name="title_get_usr_validate">获取验证码</string>

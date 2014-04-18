@@ -6,15 +6,6 @@
     android:layout_gravity="center"
     android:orientation="vertical" >
     
-    <ImageView 
-        android:layout_width="fill_parent"
-        android:layout_height="@dimen/title_logo_height"
-        android:id="@+id/title_logo"
-        android:scaleType="fitXY"
-        android:src="@drawable/top" />
-    
-    <include layout="@layout/common_button_title"/>
-
     <!-- scan layout -->
     <RelativeLayout 
         android:layout_width="fill_parent"

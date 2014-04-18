@@ -60,7 +60,10 @@
         
         <provider android:name="com.bestjoy.app.haierwarrantycard.database.BjnoteProvider"
             android:exported="true"
-            android:authorities="om.bestjoy.app.haierwarrantycard.provider"/>
+            android:authorities="om.bestjoy.app.haierwarrantycard.provider.BjnoteProvider"/>
+        <provider android:name="com.bestjoy.app.haierwarrantycard.database.DeviceProvider"
+            android:exported="true"
+            android:authorities="com.bestjoy.app.haierwarrantycard.provider.DeviceProvider"/>
         
     </application>
 
