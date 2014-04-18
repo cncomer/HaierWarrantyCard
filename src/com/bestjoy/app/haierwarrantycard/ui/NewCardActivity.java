@@ -8,7 +8,6 @@ import android.view.View;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.SearchView;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -56,7 +55,7 @@ public class NewCardActivity extends SlidingFragmentActivity implements View.OnC
 		sm.setShadowDrawable(R.drawable.shadow);
 		sm.setBehindScrollScale(0.25f);
 		sm.setFadeDegree(0.25f);
-		sm.setTouchModeAbove(SlidingMenu.RIGHT);
+//		sm.setTouchModeAbove(SlidingMenu.RIGHT);
 		sm.setMode(SlidingMenu.RIGHT);
 		
 		sm.setOnOpenedListener(this);

@@ -7,7 +7,7 @@ import android.graphics.BitmapFactory;
 
 public class BitmapUtils {
 	
-	private static BitmapUtils mInstance;
+	private static BitmapUtils mInstance = new BitmapUtils();
 	private Context mContext;
 	
 	private BitmapUtils(){};

@@ -55,7 +55,7 @@ public class DeviceProvider extends ContentProvider{
 	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "dalei", DALEI);
 	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "dalei/#", DALEI_ID);
 	        
-	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "xialei", XIAOLEI);
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "xiaolei", XIAOLEI);
 	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "xiaolei/#", XIAOLEI_ID);
 	        
 	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "pinpai", PINPAI);
@@ -79,7 +79,7 @@ public class DeviceProvider extends ContentProvider{
             return mContactDatabase;
         }
 
-        mContactDatabase = SQLiteDatabase.openOrCreateDatabase(HaierDBHelper.DB_DEVICE_NAME, null);
+        mContactDatabase = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(HaierDBHelper.DB_DEVICE_NAME), null);
         mContactDatabase.setLockingEnabled(true);
         return mContactDatabase;
 	}

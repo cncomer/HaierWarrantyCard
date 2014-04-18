@@ -15,11 +15,11 @@ public final class R {
 		public static final int ic_launcher = 0x7f02008f;
 	}
 	public static final class id {
-		public static final int checkbox = 0x7f050074;
-		public static final int title = 0x7f05004b;
+		public static final int checkbox = 0x7f05007f;
+		public static final int title = 0x7f050056;
 	}
 	public static final class layout {
-		public static final int dialog_use_mobile_confirm = 0x7f030025;
+		public static final int dialog_use_mobile_confirm = 0x7f030027;
 	}
 	public static final class string {
 		public static final int app_name = 0x7f0a000d;
