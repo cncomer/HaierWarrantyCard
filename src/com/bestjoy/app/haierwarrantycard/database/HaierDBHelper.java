@@ -3,6 +3,7 @@ package com.bestjoy.app.haierwarrantycard.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Environment;
 
 import com.shwy.bestjoy.utils.DebugUtils;
 
@@ -95,7 +96,6 @@ private static final String TAG = "HaierDBHelper";
   
   //这里是设备表的扩展，如遥控器
   
-  
   //设备数据库
   public static final String DB_DEVICE_NAME = "device.db";
   public static final String TABLE_NAME_DEVICE_DALEI = "DaLei";
@@ -113,6 +113,25 @@ private static final String TAG = "HaierDBHelper";
   public static final String DEVICE_PINPAI_NAME = "PName";
   public static final String DEVICE_PINPAI_PINYIN = "PinYin";
   public static final String DEVICE_PINPAI_CODE = "Code";
+  
+
+  public static final String TABLE_NAME_DEVICE_CITY_ = "T_City";
+  public static final String DEVICE_CITY_ID = "CityID";
+  public static final String DEVICE_CITY_NAME = "CityName";
+  public static final String DEVICE_CITY_PID = "ProID";
+  public static final String DEVICE_CITY_SORT = "CitySort";
+  
+  public static final String TABLE_NAME_DEVICE_DISTRICT_ = "T_District";
+  public static final String DEVICE_DIS_ID = "Id";
+  public static final String DEVICE_DIS_NAME = "DisName";
+  public static final String DEVICE_DIS_CID = "CityID";
+  public static final String DEVICE_DIS_DISSORT = "DisSort";
+  
+  public static final String TABLE_NAME_DEVICE_PROVINCE = "T_Province";
+  public static final String DEVICE_PRO_ID = "ProID";
+  public static final String DEVICE_PRO_NAME = "ProName";
+  public static final String DEVICE_PRO_SORT = "ProSort";
+  public static final String DEVICE_PRO_REMARK = "ProRemark";
   
   public HaierDBHelper(Context context) {
     super(context, DB_NAME, null, DB_VERSION);

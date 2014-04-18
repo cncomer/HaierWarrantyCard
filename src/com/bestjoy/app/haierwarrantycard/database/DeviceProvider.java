@@ -38,6 +38,15 @@ public class DeviceProvider extends ContentProvider{
 	private static final int PINPAI = 0x0200;
 	private static final int PINPAI_ID = 0x0201;
 	
+	private static final int PROVINCE = 0x0300;
+	private static final int PROVINCE_ID = 0x0301;
+
+	private static final int CITY = 0x0400;
+	private static final int CITY_ID = 0x0401;
+
+	private static final int DISTRICT = 0x0500;
+	private static final int DISTRICT_ID = 0x0501;
+	
 	private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 	 static {
 	        // URI matching table
@@ -51,6 +60,15 @@ public class DeviceProvider extends ContentProvider{
 	        
 	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "pinpai", PINPAI);
 	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "pinpai/#", PINPAI_ID);
+
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "province", PROVINCE);
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "province/#", PROVINCE_ID);
+
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "city", CITY);
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "city/#", CITY_ID);
+
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "district", DISTRICT);
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "district/#", DISTRICT_ID);
 	        
 	        //TODO 增加
 	 }
@@ -100,6 +118,15 @@ public class DeviceProvider extends ContentProvider{
 		case PINPAI:
 		case PINPAI_ID:
 			notify = BjnoteContent.PinPai.CONTENT_URI;
+			break;
+		case PROVINCE_ID:
+			notify = BjnoteContent.Province.CONTENT_URI;
+			break;
+		case CITY_ID:
+			notify = BjnoteContent.City.CONTENT_URI;
+			break;
+		case DISTRICT_ID:
+			notify = BjnoteContent.District.CONTENT_URI;
 			break;
     	}
     	ContentResolver resolver = context.getContentResolver();
@@ -182,6 +209,12 @@ public class DeviceProvider extends ContentProvider{
          	case XIAOLEI_ID:
          	case PINPAI:
          	case PINPAI_ID:
+			case PROVINCE:
+			case PROVINCE_ID:
+			case CITY:
+			case CITY_ID:
+			case DISTRICT:
+			case DISTRICT_ID:
         	     result = db.query(table, projection, selection, selectionArgs, null, null, sortOrder);
          }
 		return result;
