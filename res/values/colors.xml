@@ -7,6 +7,6 @@
     <drawable name="button_black">#ff1c1c1c</drawable>
     <drawable name="button_black_on">#ff717171</drawable>
     
-    <drawable name="button_pink">#ffff5065</drawable>
+    <drawable name="button_pink">#ffff7872</drawable>
     <drawable name="button_pink_on">#fff5acb5</drawable>
 </resources>

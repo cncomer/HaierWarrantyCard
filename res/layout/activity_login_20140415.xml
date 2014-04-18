@@ -10,71 +10,78 @@
         android:id="@+id/title_logo"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/login_title_logo_height"
-        android:scaleType="fitCenter"
+        android:scaleType="fitXY"
         android:src="@drawable/login_top_title" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_height="0dip"
+        android:layout_marginLeft="40dip"
+        android:layout_marginRight="40dip"
         android:layout_marginTop="40dip"
-         android:layout_marginLeft="40dip"
-          android:layout_marginRight="40dip"
-        android:orientation="vertical" >
+        android:layout_weight="1.0"
+        android:scrollbars="none" >
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" >
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/ProductInfo"
+                    android:text="@string/usr_tel" />
+
+                <EditText
+                    android:id="@+id/tel"
+                    style="@style/ProductInfoInput"
+                    android:hint="@string/usr_tel_hint" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal" >
+
+                <TextView
+                    style="@style/ProductInfo"
+                    android:text="@string/usr_pwd" />
+
+                <EditText
+                    android:id="@+id/pwd"
+                    style="@style/ProductInfoInput"
+                    android:hint="@string/usr_pwd_hint" />
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/button_login"
+                android:layout_width="156dip"
+                android:layout_height="42dip"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="40dip"
+                android:background="@drawable/default_black_btn"
+                android:gravity="center"
+                android:text="@string/button_login"
+                android:textColor="#ffffffff"
+                android:textSize="18sp" />
 
             <TextView
-                style="@style/ProductInfo"
-                android:text="@string/usr_tel" />
-
-            <EditText
-                android:id="@+id/tel"
-                style="@style/ProductInfoInput"
-                android:hint="@string/usr_tel_hint" />
+                android:id="@+id/button_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dip"
+                android:clickable="true"
+                android:text="@string/button_register"
+                android:textColor="#ffff5065"
+                android:textSize="18sp" />
         </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" >
-
-            <TextView
-                style="@style/ProductInfo"
-                android:text="@string/usr_pwd" />
-
-            <EditText
-                android:id="@+id/pwd"
-                style="@style/ProductInfoInput"
-                android:hint="@string/usr_pwd_hint" />
-        </LinearLayout>
-
-        <Button
-            android:id="@+id/button_login"
-            android:layout_width="156dip"
-            android:layout_height="42dip"
-            android:layout_gravity="center_horizontal"
-            android:background="@drawable/default_black_btn"
-            android:gravity="center"
-            android:layout_marginTop="40dip"
-            android:text="@string/button_login"
-            android:textColor="#ffffffff"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/button_register"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dip"
-            android:layout_gravity="center_horizontal"
-            android:textColor="#ffff5065"
-            android:textSize="18sp"
-            android:clickable="true"
-            android:text="@string/button_register" />
-    </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

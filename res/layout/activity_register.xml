@@ -10,7 +10,7 @@
         android:id="@+id/title_logo"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/login_title_logo_height"
-        android:scaleType="fitCenter"
+        android:scaleType="fitXY"
         android:src="@drawable/login_top_title" />
 
     <ScrollView

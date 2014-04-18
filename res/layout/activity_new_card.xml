@@ -10,7 +10,7 @@
     <RelativeLayout 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="#ff00befc"
+        android:background="@drawable/button_pink"
         android:padding="8dip"
         android:orientation="horizontal">
         <ImageView android:layout_width="36dip"
@@ -42,6 +42,10 @@
            android:layout_width="wrap_content"
            android:layout_marginRight="10dip"
            android:textColor="#ffffffff"
+           android:layout_centerVertical="true"
+            android:padding="6dip"
+            android:textSize="16sp"
+           android:background="@drawable/default_black_btn"
            android:text="@string/title_scan_button"/>
     </RelativeLayout>
     
@@ -162,6 +166,18 @@
 			    <TextView style="@style/ProductInfo"
 			        android:text="@string/product_buy_delay_componey"/>
 			    <EditText android:id="@+id/product_buy_delay_componey"
+			        android:hint="@string/product_debug_placeholder"
+			        style="@style/ProductInfoInput"/>
+			</LinearLayout>
+			
+              <LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:gravity="center_vertical"
+			    android:orientation="horizontal" >
+			    <TextView style="@style/ProductInfo"
+			        android:text="@string/product_buy_delay_componey_tel"/>
+			    <EditText android:id="@+id/product_buy_delay_componey_tel"
 			        android:hint="@string/product_debug_placeholder"
 			        style="@style/ProductInfoInput"/>
 			</LinearLayout>

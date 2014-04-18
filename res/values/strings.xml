@@ -49,6 +49,7 @@
        <string name="product_buy_entry">购买途径</string>
        <string name="product_buy_delay_time">延保时间</string>
        <string name="product_buy_delay_componey">延保单位</string>
+       <string name="product_buy_delay_componey_tel">延保电话</string>
        
        <string name="product_debug_placeholder">XXXXXXXX</string>
        <string name="product_bill_desc">请拍摄发票或收据，作为保修凭据</string>

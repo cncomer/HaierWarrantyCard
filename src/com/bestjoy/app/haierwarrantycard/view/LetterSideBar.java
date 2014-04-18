@@ -92,7 +92,7 @@ public class LetterSideBar extends View {
 			}
 			break;
 		case MotionEvent.ACTION_DOWN:
-			setBackgroundDrawable(new ColorDrawable(0xff000000));
+			setBackgroundDrawable(new ColorDrawable(0xff141414));
 		default:
 			if (oldChoose != c) {
 				if (c >= 0 && c < b.length) {

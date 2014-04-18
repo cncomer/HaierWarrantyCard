@@ -70,6 +70,7 @@ public class ChooseDevicesFragment extends SherlockFragment{
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
+		AsyncTaskUtils.cancelTask(mLoadDataAsyncTask);
 	}
 
 	@Override
@@ -94,6 +95,7 @@ public class ChooseDevicesFragment extends SherlockFragment{
 
 	private LoadDataAsyncTask mLoadDataAsyncTask;
 	public void loadDataAsync() {
+		AsyncTaskUtils.cancelTask(mLoadDataAsyncTask);
 		mProgressBarLayout.setVisibility(View.VISIBLE);
 		AsyncTaskUtils.cancelTask(mLoadDataAsyncTask);
 		mLoadDataAsyncTask = new LoadDataAsyncTask();
