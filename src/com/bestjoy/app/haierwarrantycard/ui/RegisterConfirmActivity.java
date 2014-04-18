@@ -236,7 +236,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements On
 		public View getView(int position, View convertView, ViewGroup parent) {
 			if (convertView == null) {
 				convertView = mInflater.inflate(R.layout.grid_item, null);
-				convertView.setLayoutParams(new GridView.LayoutParams(70, 20));
+				convertView.setLayoutParams(new GridView.LayoutParams(70, 40));
 			}
 			
 			if(mEditMode == MODE_PROVINCE) {
