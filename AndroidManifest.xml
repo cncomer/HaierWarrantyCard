@@ -57,6 +57,12 @@
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:label="@string/title_new_user_register" />
+        <activity
+            android:name="com.bestjoy.app.haierwarrantycard.ui.ChooseAddressActivity"
+            android:configChanges="orientation"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:label="@string/choose_address" />
         
         <provider android:name="com.bestjoy.app.haierwarrantycard.database.BjnoteProvider"
             android:exported="true"
