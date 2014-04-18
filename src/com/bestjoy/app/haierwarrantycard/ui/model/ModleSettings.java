@@ -15,6 +15,7 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.MyChooseDevicesActivity;
 import com.bestjoy.app.haierwarrantycard.ui.NewCardActivity;
+import com.bestjoy.app.haierwarrantycard.ui.RepairActivity;
 import com.shwy.bestjoy.utils.Intents;
 
 public class ModleSettings {
@@ -109,8 +110,10 @@ public class ModleSettings {
 				bundle.putString(Intents.EXTRA_NAME, _context.getString(R.string.activity_title_choose_device_install));
 				break;
 			case R.id.model_repair:
-				bundle.putString(Intents.EXTRA_NAME, _context.getString(R.string.activity_title_choose_device_repair));
-				break;
+				//bundle.putString(Intents.EXTRA_NAME, _context.getString(R.string.activity_title_choose_device_repair));
+				//break;
+				RepairActivity.startIntnet(_context);
+				return;
 			case R.id.model_feedback:
 				return;
 			}

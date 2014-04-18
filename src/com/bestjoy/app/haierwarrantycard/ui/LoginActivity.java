@@ -66,6 +66,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 				if (!TextUtils.isEmpty(tel) && !TextUtils.isEmpty(pwd)) {
 					loginAsync(tel, pwd);
 				}
+				ChooseAddressActivity.startIntent(this);
 				break;
 		}
 		

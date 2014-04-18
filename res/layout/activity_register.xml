@@ -41,39 +41,7 @@
                     android:id="@+id/usr_name"
                     style="@style/ProductInfoInput"/>
             </LinearLayout>
-            <LinearLayout
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:orientation="horizontal">
-			    <TextView
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:text="@string/address" />
-			    <EditText     
-			        android:id="@+id/edit_province"    
-                    style="@style/ProductInfoInputPlace" 
-			    	android:inputType="none"/>
-			    <TextView
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:text="@string/province" />
-			    <EditText     
-			        android:id="@+id/edit_city"
-                    style="@style/ProductInfoInputPlace"
-			    	android:inputType="none"/>
-			    <TextView
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:text="@string/city" />
-			    <EditText     
-			        android:id="@+id/edit_district"
-                    style="@style/ProductInfoInputPlace"
-			    	android:inputType="none"/>
-			    <TextView
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:text="@string/district" />
-			</LinearLayout>
+            <include layout="@layout/pcd_edit_info"/>
 			<LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
