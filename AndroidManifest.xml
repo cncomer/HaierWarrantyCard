@@ -7,9 +7,22 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
-
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    
+	<uses-permission
+		android:name="android.permission.RECORD_AUDIO" />
+	<uses-permission
+		android:name="android.permission.INTERNET" />
+	<uses-permission
+		android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission
+		android:name="android.permission.ACCESS_WIFI_STATE" />
+	<uses-permission
+		android:name="android.permission.CHANGE_NETWORK_STATE" />
+	<uses-permission
+		android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission 
+		android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission 
+		android:name="android.permission.READ_CONTACTS"/>
     <application android:name=".MyApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -35,7 +48,9 @@
             android:label="@string/button_my_card" />
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.RepairActivity"
-            android:label="@string/activity_title_repair" />
+            android:label="@string/activity_title_repair" 
+            android:configChanges="mcc|mnc|locale|touchscreen|keyboard|keyboardHidden|navigation|orientation|fontScale"
+			android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.InstallActivity"
             android:label="@string/activity_title_install" />
