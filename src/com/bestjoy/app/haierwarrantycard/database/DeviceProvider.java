@@ -25,6 +25,9 @@ public class DeviceProvider extends ContentProvider{
 			HaierDBHelper.TABLE_NAME_DEVICE_DALEI,
 			HaierDBHelper.TABLE_NAME_DEVICE_XIAOLEI,
 			HaierDBHelper.TABLE_NAME_DEVICE_PINPAI,
+			HaierDBHelper.TABLE_NAME_DEVICE_PROVINCE,
+			HaierDBHelper.TABLE_NAME_DEVICE_CITY_,
+			HaierDBHelper.TABLE_NAME_DEVICE_DISTRICT_,
 //			ContactsDBHelper.TABLE_NAME_MYLIFE_CONSUME,
 	};
 	private static final int BASE = 8;
