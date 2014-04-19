@@ -1,5 +1,10 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.http.client.ClientProtocolException;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -12,9 +17,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
+import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.account.AccountObject;
+import com.bestjoy.app.haierwarrantycard.account.AccountParser;
+import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
+import com.shwy.bestjoy.utils.NetworkUtils;
 
 public class LoginActivity extends BaseActionbarActivity implements View.OnClickListener{
 	private static final String TAG = "NewCardActivity";
@@ -22,6 +32,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 	private TextView mRegisterButton;
 	private Button mLoginBtn;
 	private EditText mTelInput, mPasswordInput;
+	public static AccountObject mAccountObject;
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
@@ -38,6 +49,12 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 		initViews();
 	}
 	
+	public void onResume() {
+		super.onResume();
+		//每次进来我们都要先清空一下mAccountObject，这个值作为静态变量在各个Activity中传递
+		mAccountObject = null;
+	}
+	
 	
 	private void initViews() {
 		mRegisterButton = (TextView) findViewById(R.id.button_register);
@@ -47,6 +64,9 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 		mLoginBtn.setOnClickListener(this);
 		
 		mTelInput = (EditText) findViewById(R.id.tel);
+		//显示上一次输入的用户号码
+		mTelInput.setText(HaierAccountManager.getInstance().getLastUsrTel());
+		
 		mPasswordInput = (EditText) findViewById(R.id.pwd);
 	}
 	
@@ -64,6 +84,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 				String tel = mTelInput.getText().toString().trim();
 				String pwd = mPasswordInput.getText().toString().trim();
 				if (!TextUtils.isEmpty(tel) && !TextUtils.isEmpty(pwd)) {
+					HaierAccountManager.getInstance().saveLastUsrTel(tel);
 					loginAsync(tel, pwd);
 				}
 				ChooseAddressActivity.startIntent(this);
@@ -87,18 +108,49 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 		mLoginAsyncTask = new LoginAsyncTask();
 		mLoginAsyncTask.execute(param);
 	}
-	private class LoginAsyncTask extends AsyncTask<String, Void, Boolean> {
+	private class LoginAsyncTask extends AsyncTask<String, Void, Void> {
 
+		private static final String URL = "http://115.29.231.29/Haier/login.ashx?";
+		private String mError;
 		@Override
-		protected Boolean doInBackground(String... params) {
-			return true;
+		protected Void doInBackground(String... params) {
+			mError = null;
+			mAccountObject = null;
+			InputStream is = null;
+			StringBuilder sb = new StringBuilder();
+			sb.append("cell=").append(params[0])
+			.append("7&pwd=").append(params[1]);
+			try {
+				is = NetworkUtils.openContectionLocked(URL, sb.toString(), null);
+				mAccountObject = AccountParser.parseJson(is);
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				mError = e.getMessage();
+			} catch (IOException e) {
+				e.printStackTrace();
+				mError = e.getMessage();
+			} finally {
+				NetworkUtils.closeInputStream(is);
+			}
+			return null;
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(Void result) {
 			super.onPostExecute(result);
 			if (mLoginDialog != null) {
 				mLoginDialog.hide();
+			}
+			
+			if (mError != null) {
+				MyApplication.getInstance().showMessage(mError);
+			} else if (mAccountObject != null) {
+				//如果登陆成功
+				if (mAccountObject.isLogined()) {
+					doContinue();
+				} else {
+					MyApplication.getInstance().showMessage(mAccountObject.mStatusMessage);
+				}
 			}
 		}
 
@@ -110,6 +162,13 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 			}
 		}
 		
+	}
+	
+	/**
+	 * 登陆成功后的下一步操作
+	 */
+	private void doContinue() {
+		ChooseAddressActivity.startIntent(this);
 	}
 	
 	

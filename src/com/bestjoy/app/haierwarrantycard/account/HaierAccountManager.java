@@ -1,11 +1,13 @@
 package com.bestjoy.app.haierwarrantycard.account;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 
 public class HaierAccountManager {
 	private static final String TAG = "HaierAccountManager";
-	private HaierAccount mHaierAccount;
+	private AccountObject mHaierAccount;
 	private Context mContext;
+	SharedPreferences mSharedPreferences;
 	private static HaierAccountManager mInstance = new HaierAccountManager();
 	
 	private HaierAccountManager() {}
@@ -17,6 +19,7 @@ public class HaierAccountManager {
 	public void setContext(Context context) {
 		mContext = context; 
 		mHaierAccount = null;
+		mSharedPreferences = mContext.getSharedPreferences(TAG, Context.MODE_PRIVATE);
 	}
 	
 	public boolean hasLoginned() {
@@ -29,6 +32,17 @@ public class HaierAccountManager {
 	
 	public boolean hasHomes() {
 		return mHaierAccount != null && mHaierAccount.mAccountHomeCount > 0;
+	}
+	/**
+	 * 返回上一次登陆时候使用的用户名
+	 * @return
+	 */
+	public String getLastUsrTel() {
+		return mSharedPreferences.getString("lastUserTel", "");
+	}
+	
+    public void saveLastUsrTel(String userName) {
+    	mSharedPreferences.edit().putString("lastUserTel", (userName == null ? "" : userName)).commit();
 	}
 
 }

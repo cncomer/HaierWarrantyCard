@@ -1,0 +1,29 @@
+package com.bestjoy.app.haierwarrantycard.account;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.shwy.bestjoy.utils.InfoInterfaceImpl;
+
+public class HomeParser extends InfoInterfaceImpl{
+	private static final String TAG = "AccountParser";
+	
+	
+	/**
+	 * {"ShenFen":"江苏宝应宝应大道","City":"扬州","QuXian":"江苏宝应宝应大道","DetailAddr":"江苏宝应宝应大道","UID":1,"AID":1}
+	 * @param jsonObject
+	 * @param accountObject
+	 * @throws JSONException
+	 */
+	public static HomeObject parseHomeAddress(JSONObject jsonObject, AccountObject accountObject) throws JSONException {
+		HomeObject homeObject = new HomeObject();
+		homeObject.mHomeProvince = jsonObject.getString("ShenFen");
+		homeObject.mHomeCity = jsonObject.getString("City");
+		homeObject.mHomeDis = jsonObject.getString("QuXian");
+		homeObject.mHomePlaceDetail = jsonObject.getString("DetailAddr");
+		
+		homeObject.mHomeUid = jsonObject.getLong("UID");
+		homeObject.mHomeId = jsonObject.getLong("AID");
+		return homeObject;
+	}
+}
