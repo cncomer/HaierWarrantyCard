@@ -3,9 +3,7 @@ package com.bestjoy.app.haierwarrantycard.ui;
 import android.app.Activity;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.InputType;
 import android.view.Display;
@@ -25,6 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 
 public class ProCityDisEditView implements OnTouchListener {
@@ -36,7 +35,6 @@ public class ProCityDisEditView implements OnTouchListener {
 	private int mProEditViewId;
 	private int mCityEditViewId;
 	private int mDisEditViewId;
-	private SQLiteDatabase database;
 	private View popupView;
 	private PopupWindow mPopupWindow;
 	private GridView gridView;
@@ -48,21 +46,54 @@ public class ProCityDisEditView implements OnTouchListener {
 	private String mCityName;
 	private String mCityID;
 	private String mDisName;
-	private String mDisID;
-	private String mSqlProvince;
-	private String mSqlCity;
-	private String mSqlDistrict;
 	private int mEditMode;
-	private AddressAdapter mAdapter;
+	private AddressAdapter mAddressAdapter;
 	private static final int MODE_PROVINCE = 1;
 	private static final int MODE_CITY = MODE_PROVINCE + 1;
 	private static final int MODE_DISTRICT = MODE_CITY + 1;
 
+	private static final String[] PRO_PROJECTION = new String[]{
+		HaierDBHelper.DEVICE_PRO_ID,
+		HaierDBHelper.DEVICE_PRO_NAME,
+	};
+	
+	private static final String[] CITY_PROJECTION = new String[]{
+		HaierDBHelper.DEVICE_CITY_ID,
+		HaierDBHelper.DEVICE_CITY_NAME,
+		HaierDBHelper.DEVICE_CITY_PID,
+	};
+	
+	private static final String[] DIS_PROJECTION = new String[]{
+		HaierDBHelper.DEVICE_DIS_ID,
+		HaierDBHelper.DEVICE_DIS_NAME,
+		HaierDBHelper.DEVICE_DIS_CID,
+	};
 	public ProCityDisEditView(Context context, int editProvince, int editCity, int editDistrict) {
 		mContext = context;
 		initViews(editProvince, editCity, editDistrict);
+		intiData();
 	}
 	
+	private void intiData() {
+		mAddressAdapter = new AddressAdapter();
+		gridView.setAdapter(mAddressAdapter);
+
+		final Display display = ((Activity) mContext).getWindow()
+				.getWindowManager().getDefaultDisplay();
+		if (display != null) {
+			// 获取屏幕大小
+			screenWidth = display.getWidth();
+			screenHeight = display.getHeight();
+		}
+		int size = screenWidth > screenHeight ? screenWidth : screenHeight;
+		gridView.setHorizontalSpacing(((int) (size * 0.01)));
+		gridView.setVerticalSpacing(((int) (size * 0.01)));
+		gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+		gridView.setNumColumns(GridView.AUTO_FIT);
+		gridView.setColumnWidth(((int) (size * 0.15)));
+		gridView.setOnItemClickListener(gridItemClickListener);
+	}
+
 	public String getProName() {
 		return this.mProName;
 	}
@@ -89,13 +120,11 @@ public class ProCityDisEditView implements OnTouchListener {
 		mDisEditView.setInputType(InputType.TYPE_NULL);
 		mDisEditView.setOnTouchListener(this);
 		
-		database = SQLiteDatabase.openOrCreateDatabase(mContext.getDatabasePath(HaierDBHelper.DB_DEVICE_NAME), null);
-		
 		popupView = ((Activity) mContext).getLayoutInflater().inflate(R.layout.layout_popupwindow, null);
 		
-		mAdapter = new AddressAdapter(mCursor);
+		mAddressAdapter = new AddressAdapter();
 		gridView = (GridView) popupView.findViewById(R.id.gridview);
-		gridView.setAdapter(mAdapter);
+		gridView.setAdapter(mAddressAdapter);
 
 		final Display display = ((Activity) mContext).getWindow().getWindowManager().getDefaultDisplay();
 		if (display != null) {
@@ -120,12 +149,8 @@ public class ProCityDisEditView implements OnTouchListener {
 			switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					mEditMode = MODE_PROVINCE;
-//					mSqlProvince = "select * from T_Province where proID = '" + mProID + "'";
-					mSqlProvince = "select * from T_Province";
-					mCursor = database.rawQuery(mSqlProvince, null);
-					mAdapter = new AddressAdapter(mCursor);
-					gridView.setAdapter(mAdapter);
-					mAdapter.notifyDataSetChanged();
+					mCursor = mContext.getContentResolver().query(BjnoteContent.Province.CONTENT_URI, PRO_PROJECTION, null, null, null);
+					mAddressAdapter.changeAddressData(mCursor);
 					break;
 				case MotionEvent.ACTION_UP:
 					mPopupWindow = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, 300, true);
@@ -141,11 +166,11 @@ public class ProCityDisEditView implements OnTouchListener {
 				case MotionEvent.ACTION_DOWN:
 					mEditMode = MODE_CITY;
 					if (mProName != null) {
-						mSqlCity = "select * from T_City where proID = '" + mProID + "'";
-						mCursor = database.rawQuery(mSqlCity, null);
-						mAdapter = new AddressAdapter(mCursor);
-						gridView.setAdapter(mAdapter);
-						mAdapter.notifyDataSetChanged();
+						mCursor = mContext.getContentResolver().query(
+								BjnoteContent.City.CONTENT_URI, CITY_PROJECTION,
+								HaierDBHelper.DEVICE_PRO_ID + "=?",
+								new String[] { mProID, }, null);
+						mAddressAdapter.changeAddressData(mCursor);
 					}
 					break;
 				case MotionEvent.ACTION_UP:
@@ -167,11 +192,11 @@ public class ProCityDisEditView implements OnTouchListener {
 				case MotionEvent.ACTION_DOWN:
 					mEditMode = MODE_DISTRICT;
 					if (mCityName != null) {
-						mSqlDistrict = "select * from T_District where CityID = '" + mCityID + "'";
-						mCursor = database.rawQuery(mSqlDistrict, null);
-						mAdapter = new AddressAdapter(mCursor);
-						gridView.setAdapter(mAdapter);
-						mAdapter.notifyDataSetChanged();
+						mCursor = mContext.getContentResolver().query(
+								BjnoteContent.District.CONTENT_URI, DIS_PROJECTION,
+								HaierDBHelper.DEVICE_CITY_ID + "=?",
+								new String[] { mCityID, }, null);
+						mAddressAdapter.changeAddressData(mCursor);
 					}
 					break;
 				case MotionEvent.ACTION_UP:
@@ -216,7 +241,6 @@ public class ProCityDisEditView implements OnTouchListener {
 					if (position < mCursor.getCount()) {
 						mCursor.moveToPosition(position);
 						mDisName = mCursor.getString(mCursor.getColumnIndex(HaierDBHelper.DEVICE_DIS_NAME));
-						mDisID = mCursor.getString(mCursor.getColumnIndex(HaierDBHelper.DEVICE_DIS_ID));
 						mDisEditView.setText(mDisName);
 					}
 					break;
@@ -228,11 +252,13 @@ public class ProCityDisEditView implements OnTouchListener {
 		Cursor cursor;
 		LayoutInflater mInflater = null;
 
-		public AddressAdapter(Cursor maps) {
-			this.cursor = maps;
+		public AddressAdapter() {
 			mInflater = LayoutInflater.from(mContext);
 		}
-
+		public void changeAddressData(Cursor cr) {
+			this.cursor = cr;
+			notifyDataSetChanged();
+		}
 		public View getView(int position, View convertView, ViewGroup parent) {
 			ViewHolder viewHolder = null;
 			if (convertView == null) {
