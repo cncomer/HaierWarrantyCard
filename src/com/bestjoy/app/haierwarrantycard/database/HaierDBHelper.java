@@ -13,7 +13,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 2;
+  private static final int DB_VERSION = 3;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -39,7 +39,8 @@ private static final String TAG = "HaierDBHelper";
   
   //account table
   public static final String TABLE_NAME_ACCOUNTS = "accounts";
-  public static final String ACCOUNT_MD = "pmd";
+  /**用户唯一识别码*/
+  public static final String ACCOUNT_MD = "uid";
   public static final String ACCOUNT_DEFAULT = "isDefault";
   public static final String ACCOUNT_TEL = CONTACT_TEL;
   public static final String ACCOUNT_NAME = CONTACT_NAME;
@@ -53,7 +54,9 @@ private static final String TAG = "HaierDBHelper";
   
   //home table
   public static final String TABLE_NAME_HOMES = "homes";
-  public static final String REF_ACCOUNT_ID = "account_id";
+  public static final String REF_ACCOUNT_ID = "uid";
+  /**地址id,每个地址的id,这个目前没用,要是更改地址的话可能会用到*/
+  public static final String HOME_ADDRESS_ID = "aid";
   public static final String HOME_NAME = "name";
   public static final String HOME_WHERE = "where";
   public static final String HOME_DEFAULT = "isDefault";
@@ -272,6 +275,7 @@ private static final String TAG = "HaierDBHelper";
 	            "CREATE TABLE " + TABLE_NAME_HOMES + " (" +
 	            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 	            REF_ACCOUNT_ID + " TEXT, " +
+	            HOME_ADDRESS_ID + " TEXT, " +
 	            HOME_WHERE + " TEXT, " +
 	            HOME_NAME + " TEXT, " +
 	            HOME_DEFAULT + " INTEGER NOT NULL DEFAULT 1, " +

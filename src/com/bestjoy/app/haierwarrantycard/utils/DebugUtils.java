@@ -7,4 +7,8 @@ public class DebugUtils {
 	public static void logD(String tag, String msg) {
 		Log.d(tag, "chenkai " + msg);
 	}
+	
+	public static void logParser(String tag, String msg) {
+		Log.d(tag, "chenkai " + msg);
+	}
 }
