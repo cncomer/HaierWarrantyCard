@@ -3,17 +3,18 @@ package com.bestjoy.app.haierwarrantycard;
 import android.app.Application;
 import android.os.Environment;
 import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
+import com.bestjoy.app.haierwarrantycard.service.PhotoManagerService;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
 import com.bestjoy.app.haierwarrantycard.utils.InstallFileUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.DeviceStorageUtils;
 import com.shwy.bestjoy.utils.DevicesUtils;
+import com.shwy.bestjoy.utils.SecurityUtils.SecurityKeyValuesObject;
 
 public class MyApplication extends Application{
 	
@@ -53,12 +54,15 @@ public class MyApplication extends Application{
 //		ContactBackupManager.getInstance().setContext(this);
 //		
 //		Contact.init(this);
-		//add by chenkai, 20131201, ��������״̬������
+		//add by chenkai, 20131201, 网络监听
 		ComConnectivityManager.getInstance().setContext(this);
 		
 		BitmapUtils.getInstance().setContext(this);
 		
 		HaierAccountManager.getInstance().setContext(this);
+		
+		//add by chenkai, 20140419, 图片异步加载服务
+		startService(PhotoManagerService.getServiceIntent(this));
 		
 		InstallFileUtils.installDatabaseFiles(MyApplication.this, HaierDBHelper.DB_DEVICE_NAME);
 	}
@@ -70,7 +74,6 @@ public class MyApplication extends Application{
 	@Override
 	public void onTerminate() {
 		super.onTerminate();
-		//add by chenkai, 20131201, ��������״̬������
 		ComConnectivityManager.getInstance().endConnectivityMonitor();
 	}
 	
@@ -158,5 +161,18 @@ public class MyApplication extends Application{
 	
 	public void showUnsupportMessage() {
     	showMessage(R.string.msg_unsupport_operation);
+    }
+	
+	//add by chenkai, 20131123, security support begin
+    private SecurityKeyValuesObject mSecurityKeyValuesObject;
+    public SecurityKeyValuesObject getSecurityKeyValuesObject() {
+    	if (mSecurityKeyValuesObject == null) {
+    		//Here, we need to notice.
+    		new Exception("getSecurityKeyValuesObject() return null").printStackTrace();
+    	}
+    	return mSecurityKeyValuesObject;
+    }
+    public void setSecurityKeyValuesObject(SecurityKeyValuesObject securityKeyValuesObject) {
+    	mSecurityKeyValuesObject = securityKeyValuesObject;
     }
 }

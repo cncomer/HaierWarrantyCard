@@ -81,13 +81,18 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 				RegisterActivity.startIntent(this);
 				break;
 			case R.id.button_login:
+				if (true) {
+					LoginConfirmAddressActivity.startIntent(this);
+					return;
+				}
 				String tel = mTelInput.getText().toString().trim();
 				String pwd = mPasswordInput.getText().toString().trim();
 				if (!TextUtils.isEmpty(tel) && !TextUtils.isEmpty(pwd)) {
 					HaierAccountManager.getInstance().saveLastUsrTel(tel);
 					loginAsync(tel, pwd);
+				} else {
+					MyApplication.getInstance().showMessage(R.string.msg_input_usrtel_password);
 				}
-				ChooseAddressActivity.startIntent(this);
 				break;
 		}
 		
@@ -168,7 +173,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 	 * 登陆成功后的下一步操作
 	 */
 	private void doContinue() {
-		ChooseAddressActivity.startIntent(this);
+		LoginConfirmAddressActivity.startIntent(this);
 	}
 	
 	

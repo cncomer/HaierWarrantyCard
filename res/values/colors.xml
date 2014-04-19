@@ -10,4 +10,22 @@
     
     <drawable name="button_pink">#ffff7872</drawable>
     <drawable name="button_pink_on">#fff5acb5</drawable>
+    
+    <color name="default_pop_background">#cf393f4d</color>
+    
+    <color name="viewfinder_laser">#ff07ae22</color>
+  <color name="viewfinder_laser_red">#ffff0000</color>
+  <color name="viewfinder_mask">#60000000</color>
+  <color name="wt">#ffffffff</color>
+  <color name="blk_translucent">#ff999999</color>
+  <color name="blk">#ff000000</color>
+  <color name="index_gray">#ffcccccc</color>
+  <color name="transparent">#00000000</color>
+  <color name="viewfinder_frame">#ffb92d34</color>
+  <color name="possible_result_points">#c0ffff00</color>  
+  <color name="result_image_border">#ffffffff</color>
+  <color name="result_minor_text">#ffc0c0c0</color>
+  <color name="result_points">#c000ff00</color>
+  <color name="result_text">#ffffffff</color>
+  <color name="result_view">#b0000000</color>
 </resources>

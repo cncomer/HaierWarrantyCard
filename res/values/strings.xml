@@ -109,6 +109,7 @@
      <string name="choose_address">选择地址</string>
     
     <string name="msg_progressdialog_wait">操作处理中，请稍后....</string>
+    <string name="msg_input_usrtel_password">请输入你的手机号和密码</string>
     
     <string name="my_home">我的家</string>
     <string name="parent_home">父母家</string>
@@ -127,5 +128,52 @@
     <string name="end_speak">结束说话</string>
     <string name="speak_tips">当前正在说话，音量大小：</string>
     <string name="login_fail">登录失败</string>
+    
+    <string name="title_login_confirm">选择地址</string>
+    
+    <!-- qrcode scan part begin -->
+    <string name="msg_default_status">请将二维码等放置于红框内扫描，注意手勿抖动，勿倾斜</string>
+  <string name="msg_default_status_on">关灯</string>
+  <string name="msg_default_status_off">开灯</string>
+  <string name="msg_default_type">类型</string>
+  <string name="msg_existing_barcode">不存在barcode图片，操作取消</string>
+  <string name="msg_encode_barcode_failed">找不到条码。</string>
+  <string name="msg_encode_contents_failed">不能从已有数据中读取条码。</string>
+   <string name="msg_default_contents">内容</string>
+  <string name="msg_default_format">格式</string>
+  <string name="menu_history">历史</string> 
+  <string name="menu_input">输入名片码</string>
+  <string name="button_google_shopper">谷歌购物</string>
+  <string name="msg_share_explanation">你可以在你的手机屏幕上显示条码，并使用其他手机扫描此条码方式进行分享</string>
+  <string name="msg_share_subject_line">这是我所扫描条码的内容</string>
+   <string name="button_ignore">返回扫描</string>
+  <string name="button_share_by_sms">通过短信分享</string>
+  <string name="button_share_clipboard">分享剪切板</string>
+   <string name="button_share_by_email">通过email分享</string>
+    <string name="result_text">找到纯文本</string>
+    <string name="msg_default_mms_subject">Hi</string>
+    <string name="msg_existing_barcode">不存在barcode图片，操作取消</string>
+  <string name="msg_encode_barcode_failed">找不到条码。</string>
+  <string name="msg_encode_contents_failed">不能从已有数据中读取条码。   </string>
+  <string name="msg_encode_in_progress">正在生成条码\u2026</string>
+  <string name="msg_google_shopper_missing">谷歌购物未安装</string>
+  <string name="msg_install_google_shopper">谷歌购物结合条码扫描价格，评论和不打开浏览器。您想尝试吗？</string>
+  <string name="msg_intent_failed">抱歉，无法打开所需软件。 条码内容可能无效。</string>
+  <string name="msg_local_intent_failed">抱歉，文件无法打开</string>
+  <string name="button_ok">确定</string>
+  <string name="button_cancel">取消</string>
+  <string name="msg_not_our_results">你离开此应用程序。搜索结果，您会看到的都没有涉及这个应用程序</string>
+  <string name="history_clear_one_history_text">删除</string>
+  <string name="history_clear_text">删除历史</string>
+  <string name="history_email_title">条码扫描器历史</string>
+  <string name="history_empty">空的</string>
+  <string name="history_empty_detail">没有条码扫描已记录</string>
+  <string name="history_send">发送历史</string>
+  <string name="history_title">历史</string>
+   <string name="msg_sure">你肯定吗？</string>
+   <string name="msg_save_ok">保存成功</string>
+   <string name="msg_sd_unavailable">SD无法访问...</string>
+    <string name="msg_camera_framework_bug">出错咯，机器人相机出现问题。您可能需要重新启动设备。</string>
+  <!-- qrcode scan part end -->
     
 </resources>

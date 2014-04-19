@@ -37,5 +37,9 @@
      <dimen name="province_vertical_space">20dip</dimen>
      <dimen name="province_columnWidth">120dip</dimen>
      
+     <!-- qrcode scan begin -->
+      <dimen name="barcode_image_view_size">150dip</dimen>
+    <dimen name="preview_image_view_size">60dip</dimen>
+     <!-- qrcode scan end -->
 
 </resources>

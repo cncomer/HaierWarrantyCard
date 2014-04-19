@@ -38,6 +38,9 @@ public class BjnoteProvider extends ContentProvider{
 	private static final int DEVICE = 0x0200;
 	private static final int DEVICE_ID = 0x0201;
 	
+	private static final int SCAN_HISTORY = 0x0300;
+	private static final int SCAN_HISTORY_ID = 0x0301;
+	
 	private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 	 static {
 	        // URI matching table
@@ -50,6 +53,11 @@ public class BjnoteProvider extends ContentProvider{
 	        
 	        matcher.addURI(BjnoteContent.AUTHORITY, "devices", DEVICE);
 	        matcher.addURI(BjnoteContent.AUTHORITY, "devices/#", DEVICE_ID);
+	        
+	        
+	        matcher.addURI(BjnoteContent.AUTHORITY, "scan_history", SCAN_HISTORY);
+	        matcher.addURI(BjnoteContent.AUTHORITY, "scan_history/#", SCAN_HISTORY_ID);
+	        
 	        
 	        //TODO 增加
 	 }
@@ -102,6 +110,10 @@ public class BjnoteProvider extends ContentProvider{
 		case DEVICE_ID:
 			notify = BjnoteContent.HomeDevices.CONTENT_URI;
 			break;
+		case SCAN_HISTORY:
+		case SCAN_HISTORY_ID:
+			notify = BjnoteContent.ScanHistory.CONTENT_URI;
+			break;
     	}
     	ContentResolver resolver = context.getContentResolver();
         resolver.notifyChange(notify, null);
@@ -124,6 +136,8 @@ public class BjnoteProvider extends ContentProvider{
 			case HOME_ID:
 			case DEVICE:
 			case DEVICE_ID:
+			case SCAN_HISTORY:
+			case SCAN_HISTORY_ID:
         	count = db.delete(table, buildSelection(match, uri, selection), selectionArgs);
         }
         if (count >0) notifyChange(match);
@@ -198,6 +212,8 @@ public class BjnoteProvider extends ContentProvider{
 	 		 case HOME_ID:
 	 		 case DEVICE:
 	 		 case DEVICE_ID:
+	 		case SCAN_HISTORY:
+			case SCAN_HISTORY_ID:
         	     result = db.query(table, projection, selection, selectionArgs, null, null, sortOrder);
          }
 		return result;
@@ -220,6 +236,8 @@ public class BjnoteProvider extends ContentProvider{
 			case HOME_ID:
 			case DEVICE:
 			case DEVICE_ID:
+			case SCAN_HISTORY:
+			case SCAN_HISTORY_ID:
         	    count = db.update(table, values, buildSelection(match, uri, selection), selectionArgs);
         }
         if (count >0) notifyChange(match);
@@ -232,6 +250,7 @@ public class BjnoteProvider extends ContentProvider{
 	    	case ACCOUNT_ID:
 			case HOME_ID:
 			case DEVICE_ID:
+			case SCAN_HISTORY_ID:
 			try {
 				id = ContentUris.parseId(uri);
 			} catch(java.lang.NumberFormatException e) {

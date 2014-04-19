@@ -3,7 +3,6 @@ package com.bestjoy.app.haierwarrantycard.database;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.Environment;
 
 import com.shwy.bestjoy.utils.DebugUtils;
 
@@ -13,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 3;
+  private static final int DB_VERSION = 4;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -136,6 +135,16 @@ private static final String TAG = "HaierDBHelper";
   public static final String DEVICE_PRO_SORT = "ProSort";
   public static final String DEVICE_PRO_REMARK = "ProRemark";
   
+  // Qrcode scan part begin
+  public static final String TABLE_SCAN_NAME = "history";
+  public static final String ID_COL = "id";
+  public static final String TEXT_COL = "text";
+  public static final String FORMAT_COL = "format";
+  public static final String DISPLAY_COL = "display";
+  public static final String TIMESTAMP_COL = "timestamp";
+  public static final String DETAILS_COL = "details";
+  // Qrcode scan part end
+  
   public HaierDBHelper(Context context) {
     super(context, DB_NAME, null, DB_VERSION);
   }
@@ -187,6 +196,8 @@ private static final String TAG = "HaierDBHelper";
   		// Create devices table
   		createDevicesTable(sqLiteDatabase);
 //  		createTriggerForMyCardTable(sqLiteDatabase);
+  		// Create scan history
+  		createScanHistory(sqLiteDatabase);
 
   		
   }
@@ -309,6 +320,17 @@ private static final String TAG = "HaierDBHelper";
 	            MODIFIED + " TEXT" +
 	            ");");
 	  createTriggerForDeviceTable(sqLiteDatabase);
+  }
+  
+  private void createScanHistory(SQLiteDatabase sqLiteDatabase) {
+	  sqLiteDatabase.execSQL(
+	            "CREATE TABLE " + TABLE_SCAN_NAME + " (" +
+	            ID_COL + " INTEGER PRIMARY KEY, " +
+	            TEXT_COL + " TEXT, " +
+	            FORMAT_COL + " TEXT, " +
+	            DISPLAY_COL + " TEXT, " +
+	            TIMESTAMP_COL + " INTEGER, " +
+	            DETAILS_COL + " TEXT);");
   }
   
   private void addTextColumn(SQLiteDatabase sqLiteDatabase, String table, String column) {

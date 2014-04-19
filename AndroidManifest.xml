@@ -52,7 +52,15 @@
             android:name="com.bestjoy.app.haierwarrantycard.ui.LoginActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:excludeFromRecents="true"
+            android:screenOrientation="portrait"
+            android:label="@string/title_login_confirm" />
+         <activity
+            android:name="com.bestjoy.app.haierwarrantycard.ui.LoginConfirmAddressActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"
+            android:screenOrientation="portrait"
+            android:excludeFromRecents="true"
             android:label="@string/title_login" />
+        
         
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.MyChooseDevicesActivity"
@@ -86,6 +94,17 @@
             android:exported="true"
             android:authorities="com.bestjoy.app.haierwarrantycard.provider.DeviceProvider"/>
         
+        <!-- android:process=":photoservice" -->
+        <service android:name="com.bestjoy.app.haierwarrantycard.service.PhotoManagerService" >
+            <intent-filter >
+                <action android:name="com.bestjoy.app.haierwarrantycard.service.intent.initphotoservice" />
+            </intent-filter>
+        </service>
+        <service android:name="com.bestjoy.app.haierwarrantycard.service.EmptyService" >
+            <intent-filter >
+                <action android:name="com.bestjoy.app.haierwarrantycard.service.intent.emptyservice" />
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>

@@ -242,21 +242,21 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements On
 			if(mEditMode == MODE_PROVINCE) {
 				if(position < cursor.getCount()) {
 					cursor.moveToPosition(position);
-					TextView tv = (TextView)convertView.findViewById(R.id.item);
+					TextView tv = (TextView)convertView.findViewById(R.id.title);
 					tv.setText(cursor.getString(cursor.getColumnIndex("ProName")));
 					tv.setTextColor(Color.RED);
 				}
 			} else if(mEditMode == MODE_CITY) {
 				if(position < cursor.getCount() && mProName != null) {
 					cursor.moveToPosition(position);
-					TextView tv = (TextView)convertView.findViewById(R.id.item);
+					TextView tv = (TextView)convertView.findViewById(R.id.title);
 					tv.setText(cursor.getString(cursor.getColumnIndex("CityName")));
 					tv.setTextColor(Color.RED);
 				}
 			} else if (mEditMode == MODE_DISTRICT) {
 				if(position < cursor.getCount() && mCityName != null) {
 					cursor.moveToPosition(position);
-					TextView tv = (TextView)convertView.findViewById(R.id.item);
+					TextView tv = (TextView)convertView.findViewById(R.id.title);
 					tv.setText(cursor.getString(cursor.getColumnIndex("DisName")));
 					tv.setTextColor(Color.RED);
 				}

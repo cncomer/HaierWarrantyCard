@@ -69,4 +69,8 @@ public class BjnoteContent {
     public static class District extends BjnoteContent{
     	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.DEVICE_CONTENT_URI, "district");
     }
+    
+    public static class ScanHistory extends BjnoteContent{
+    	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.CONTENT_URI, "scan_history");
+    }
 }
