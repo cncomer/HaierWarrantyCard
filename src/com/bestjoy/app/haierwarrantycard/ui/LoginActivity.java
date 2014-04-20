@@ -129,7 +129,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 			InputStream is = null;
 			StringBuilder sb = new StringBuilder(URL);
 			sb.append("cell=").append(params[0])
-			.append("7&pwd=");
+			.append("&pwd=");
 			try {
 				is = NetworkUtils.openContectionLocked(sb.toString(), params[1], null);
 				mAccountObject = AccountParser.parseJson(is);
