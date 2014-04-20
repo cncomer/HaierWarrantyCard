@@ -126,6 +126,7 @@ public class ModleSettings {
 				}
 				return;
 			case R.id.model_feedback:
+				Intents.openURL(_context, "http://m.rrs.com/rrsm/track/verify.html");
 				return;
 			}
 			
