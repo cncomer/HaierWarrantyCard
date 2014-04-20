@@ -15,6 +15,23 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
+     <uses-permission android:name="android.permission.CALL_PHONE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    
+     <!-- add by chenkai 2012-10-20 for privacy module begin -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
+    <!-- add by chenkai 2012-10-20 for privacy module end -->    
+    
+     <uses-permission android:name="android.permission.PROCESS_OUTGOING_CALLS"></uses-permission>
+     <!-- 允许用户传入号码直接拔号，不需要通过用户界面确认 -->
+     <uses-permission android:name="android.permission.CALL_PHONE"/>
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application android:name=".MyApplication"
         android:allowBackup="true"
@@ -87,9 +104,15 @@
             android:launchMode="singleTop"
             android:label="@string/choose_address" />
         
+        <activity
+            android:name="com.bestjoy.app.haierwarrantycard.ui.CaptureActivity"
+            android:excludeFromRecents="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
+        
         <provider android:name="com.bestjoy.app.haierwarrantycard.database.BjnoteProvider"
             android:exported="true"
-            android:authorities="om.bestjoy.app.haierwarrantycard.provider.BjnoteProvider"/>
+            android:authorities="com.bestjoy.app.haierwarrantycard.provider.BjnoteProvider"/>
         <provider android:name="com.bestjoy.app.haierwarrantycard.database.DeviceProvider"
             android:exported="true"
             android:authorities="com.bestjoy.app.haierwarrantycard.provider.DeviceProvider"/>

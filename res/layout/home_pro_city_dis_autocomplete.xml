@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical" >
+    
+    <EditText android:id="@+id/homeName"
+        android:layout_marginLeft="8dip"
+        style="@style/ProductInfoInputHomePlace"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:hint="@string/my_home" />
+    <LinearLayout android:layout_marginTop="4dip"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/address_pcs" />
+
+        <AutoCompleteTextView
+            android:id="@+id/input_province"
+            android:completionThreshold="1"
+            android:textColor="@color/blk"
+            style="@style/ProductInfoInputHomePlace" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/province" />
+
+        <AutoCompleteTextView
+            android:id="@+id/input_city"
+            android:textColor="@color/blk"
+            android:completionThreshold="1"
+            style="@style/ProductInfoInputHomePlace" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/city" />
+
+        <AutoCompleteTextView
+            android:id="@+id/input_district"
+            android:textColor="@color/blk"
+            android:completionThreshold="1"
+            style="@style/ProductInfoInputHomePlace" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/district" />
+    </LinearLayout>
+
+    <LinearLayout android:layout_marginTop="4dip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/address" />
+
+        <EditText 
+        	style="@style/ProductInfoInput"
+            android:id="@+id/address" />
+    </LinearLayout>
+
+</com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView>

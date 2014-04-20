@@ -39,6 +39,7 @@
 
                 <EditText
                     android:id="@+id/tel"
+                    android:inputType="phone"
                     style="@style/ProductInfoInput"
                     android:hint="@string/usr_tel_hint" />
             </LinearLayout>
@@ -56,6 +57,7 @@
                 <EditText
                     android:id="@+id/pwd"
                     style="@style/ProductInfoInput"
+                    android:inputType="textPassword"
                     android:hint="@string/usr_pwd_hint" />
             </LinearLayout>
 

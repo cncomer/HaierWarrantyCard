@@ -12,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 4;
+  private static final int DB_VERSION = 7;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -57,7 +57,8 @@ private static final String TAG = "HaierDBHelper";
   /**地址id,每个地址的id,这个目前没用,要是更改地址的话可能会用到*/
   public static final String HOME_ADDRESS_ID = "aid";
   public static final String HOME_NAME = "name";
-  public static final String HOME_WHERE = "where";
+  /**详细地址*/
+  public static final String HOME_DETAIL = "home_detail";
   public static final String HOME_DEFAULT = "isDefault";
   public static final String MODIFIED = "modified";
   /**我的家TAB位置,用户可以调整顺序*/
@@ -225,33 +226,33 @@ private static final String TAG = "HaierDBHelper";
   
   private void createTriggerForAccountTable(SQLiteDatabase sqLiteDatabase) {
 	  String sql = "CREATE TRIGGER insert_account" + " BEFORE INSERT " + " ON " + TABLE_NAME_ACCOUNTS + 
-			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET isDefault = 0 WHERE pmd != new.pmd and isDefault = 1; END;";
+			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET isDefault = 0 WHERE uid != new.uid and isDefault = 1; END;";
 	  sqLiteDatabase.execSQL(sql);
 	  
 	  sql = "CREATE TRIGGER update_default_account" + " BEFORE UPDATE OF isDefault " + " ON " + TABLE_NAME_ACCOUNTS + 
-			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET isDefault = 0 WHERE pmd != old.pmd and isDefault = 1; END;";
+			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET isDefault = 0 WHERE uid != old.uid and isDefault = 1; END;";
 	  sqLiteDatabase.execSQL(sql);
 	  
   }
   
   private void createTriggerForHomeTable(SQLiteDatabase sqLiteDatabase) {
 	  String sql = "CREATE TRIGGER insert_home_update_account" + " AFTER INSERT " + " ON " + TABLE_NAME_HOMES + 
-			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET home_count = home_count+1 WHERE _id = new.account_id; END;";
+			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET home_count = home_count+1 WHERE _id = new.uid; END;";
 	  sqLiteDatabase.execSQL(sql);
 	  
 	  sql = "CREATE TRIGGER delete_home_update_account" + " AFTER DELETE " + " ON " + TABLE_NAME_HOMES + 
-			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET home_count = home_count-1 WHERE _id = old.account_id; END;";
+			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET home_count = home_count-1 WHERE _id = old.uid; END;";
 	  sqLiteDatabase.execSQL(sql);
 	
   }
   
   private void createTriggerForDeviceTable(SQLiteDatabase sqLiteDatabase) {
 	  String sql = "CREATE TRIGGER insert_device_update_account" + " AFTER INSERT " + " ON " + TABLE_NAME_DEVICES + 
-			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET card_count = card_count+1 WHERE _id = new.account_id; END;";
+			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET card_count = card_count+1 WHERE _id = new.uid; END;";
 	  sqLiteDatabase.execSQL(sql);
 	  
 	  sql = "CREATE TRIGGER delete_device_update_account" + " AFTER DELETE " + " ON " + TABLE_NAME_DEVICES + 
-			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET card_count = card_count-1 WHERE _id = old.account_id; END;";
+			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET card_count = card_count-1 WHERE _id = old.uid; END;";
 	  sqLiteDatabase.execSQL(sql);
 	  
 	  sql = "CREATE TRIGGER insert_device_update_home" + " AFTER INSERT " + " ON " + TABLE_NAME_DEVICES + 
@@ -287,11 +288,13 @@ private static final String TAG = "HaierDBHelper";
 	            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 	            REF_ACCOUNT_ID + " TEXT, " +
 	            HOME_ADDRESS_ID + " TEXT, " +
-	            HOME_WHERE + " TEXT, " +
 	            HOME_NAME + " TEXT, " +
+	            DEVICE_PRO_NAME + " TEXT, " +
+	            DEVICE_CITY_NAME + " TEXT, " +
+	            DEVICE_DIS_NAME + " TEXT, " +
+	            HOME_DETAIL + " TEXT, " +
 	            HOME_DEFAULT + " INTEGER NOT NULL DEFAULT 1, " +
 	            POSITION + " INTEGER NOT NULL DEFAULT 1, " +
-	            MODIFIED + " TEXT, " +
 	            CONTACT_DATE + " TEXT" +
 	            ");");
 	  createTriggerForHomeTable(sqLiteDatabase);

@@ -175,5 +175,8 @@
    <string name="msg_sd_unavailable">SD无法访问...</string>
     <string name="msg_camera_framework_bug">出错咯，机器人相机出现问题。您可能需要重新启动设备。</string>
   <!-- qrcode scan part end -->
+  
+  
+  <string name="msg_login_confirm_success">登录成功，现在可以开始使用本软件了</string>
     
 </resources>

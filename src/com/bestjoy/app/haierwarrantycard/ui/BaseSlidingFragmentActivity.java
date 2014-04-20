@@ -14,23 +14,27 @@ import android.os.Bundle;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
+import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.ImageHelper;
-
-public abstract class BaseActionbarActivity extends SherlockActivity {
-	private static final String TAG = "BaseActionbarActivity";
+/**
+ * 需要SlidingMenu能力，需要实现继承该类
+ * @author chenkai
+ *
+ */
+public abstract class BaseSlidingFragmentActivity extends SlidingFragmentActivity {
+	private static final String TAG = "BaseSlidingFragmentActivity";
 
 	private static final int CurrentPictureGalleryRequest = 11000;
 	private static final int CurrentPictureCameraRequest = 11001;
 	private int mCurrentPictureRequest;
-	protected Context mContext;
+	private Context mContext;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

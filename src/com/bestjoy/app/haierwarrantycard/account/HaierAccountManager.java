@@ -1,5 +1,6 @@
 package com.bestjoy.app.haierwarrantycard.account;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -44,5 +45,18 @@ public class HaierAccountManager {
     public void saveLastUsrTel(String userName) {
     	mSharedPreferences.edit().putString("lastUserTel", (userName == null ? "" : userName)).commit();
 	}
-
+    
+    public boolean saveAccountObject(ContentResolver cr, AccountObject accountObject) {
+    	
+    	if (mHaierAccount != accountObject) {
+    		boolean success = accountObject.saveInDatebase(cr, null);
+    		if (success) {
+    			mHaierAccount = accountObject;
+    			return true;
+    		}
+    	}
+    	return false;
+    	
+    }
+    
 }

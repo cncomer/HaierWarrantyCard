@@ -108,7 +108,7 @@ public class AccountParser extends InfoInterfaceImpl{
 			int len = addresses.length();
 			HomeObject homeObject = null;
 			for(int index=0; index < len; index++) {
-				homeObject = HomeParser.parseHomeAddress(addresses.getJSONObject(index), accountObject);
+				homeObject = HomeParser.parseHomeAddress(addresses.getJSONObject(index), accountObject, index);
 				if (homeObject != null) {
 					accountObject.mAccountHomes.add(homeObject);
 				}

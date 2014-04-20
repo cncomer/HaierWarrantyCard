@@ -1,8 +1,11 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import java.io.File;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
@@ -15,10 +18,13 @@ import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 
-public class NewCardActivity extends SlidingFragmentActivity implements View.OnClickListener, 
+public class NewCardActivity extends BaseSlidingFragmentActivity implements View.OnClickListener, 
 	SlidingMenu.OnOpenedListener, SlidingMenu.OnClosedListener{
 	private static final String TAG = "NewCardActivity";
-	private Fragment mContent;
+	private NewWarrantyCardFragment mContent;
+	private ChooseDevicesFragment mMenu;
+	//临时的拍摄照片路径
+	private File mBillTempFile, mAvatorTempFile;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -29,11 +35,15 @@ public class NewCardActivity extends SlidingFragmentActivity implements View.OnC
 		
 		
 		if (savedInstanceState != null) {
-			mContent = getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
+			mContent = (NewWarrantyCardFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
+			mMenu = (ChooseDevicesFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mMenu");
 		}
 		
 		if (mContent == null) {
 			mContent = new NewWarrantyCardFragment();
+		}
+		if (mMenu == null) {
+			mMenu = new ChooseDevicesFragment();
 		}
 		
 		// set the Above View
@@ -47,19 +57,20 @@ public class NewCardActivity extends SlidingFragmentActivity implements View.OnC
 		setBehindContentView(R.layout.menu_frame);
 		getSupportFragmentManager()
 		.beginTransaction()
-		.replace(R.id.menu_frame, new ChooseDevicesFragment())
+		.replace(R.id.menu_frame, mMenu)
 		.commit();
 		
 		// customize the SlidingMenu
 		SlidingMenu sm = getSlidingMenu();
-		sm.setBehindOffsetRes(R.dimen.choose_device_slidingmenu_offset);
+//		sm.setBehindOffsetRes(R.dimen.choose_device_slidingmenu_offset);
+//        sm.setAboveOffsetRes(R.dimen.choose_device_slidingmenu_offset);
 		sm.setShadowWidthRes(R.dimen.shadow_width);
 		sm.setShadowDrawable(R.drawable.shadow);
 		sm.setBehindScrollScale(0.25f);
 		sm.setFadeDegree(0.25f);
-//		sm.setTouchModeAbove(SlidingMenu.RIGHT);
 		sm.setMode(SlidingMenu.RIGHT);
-		
+		sm.setTouchModeAbove(SlidingMenu.RIGHT);
+		sm.setBehindOffsetRes(R.dimen.choose_device_choose_slidingmenu_offset);
 		sm.setOnOpenedListener(this);
 		sm.setOnClosedListener(this);
 		
@@ -68,6 +79,14 @@ public class NewCardActivity extends SlidingFragmentActivity implements View.OnC
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		
+		initTempFile();
+		
+	}
+	
+	private void initTempFile() {
+		File tempRootDir = Environment.getExternalStorageDirectory();
+		mBillTempFile = new File(tempRootDir, ".billTemp");
+		mAvatorTempFile = new File(tempRootDir, ".avatorTemp");
 	}
 	
 	
@@ -83,7 +102,7 @@ public class NewCardActivity extends SlidingFragmentActivity implements View.OnC
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.new_card_activity_menu, menu);
-		return super.onCreateOptionsMenu(menu);
+		return true;
 	}
 
 	@Override
@@ -156,6 +175,11 @@ public class NewCardActivity extends SlidingFragmentActivity implements View.OnC
 		Intent intent = new Intent(context, NewCardActivity.class);
 		if (bundle != null) intent.putExtras(bundle);
 		context.startActivity(intent);
+	}
+
+	@Override
+	protected boolean checkIntent(Intent intent) {
+		return true;
 	}
 	
 }

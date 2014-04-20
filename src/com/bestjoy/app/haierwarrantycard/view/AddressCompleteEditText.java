@@ -82,6 +82,8 @@ public class AddressCompleteEditText extends EditText implements Filter.FilterLi
 //	private int screenHeight;
 	
 	private boolean mIsCanFilter = true;
+	
+	private View popWindowView;
 
     public AddressCompleteEditText(Context context) {
         this(context, null);
@@ -104,19 +106,18 @@ public class AddressCompleteEditText extends EditText implements Filter.FilterLi
         mThreshold = a.getInt(R.styleable.AddressCompleteEditText_completionThreshold, 0);
         a.recycle();
         
-        View view = LayoutInflater.from(mContext).inflate(popViewId, null);
-		gridView = (GridView) view.findViewById(R.id.gridview);
+        popWindowView = LayoutInflater.from(mContext).inflate(popViewId, null);
+		gridView = (GridView) popWindowView.findViewById(R.id.gridview);
 
 //		int size = screenWidth > screenHeight ? screenWidth : screenHeight;
 		
-		mPopup = new PopupWindow(view, LayoutParams.MATCH_PARENT, 300, true);
+		mPopup = new PopupWindow(popWindowView, LayoutParams.MATCH_PARENT, 300, false);
 		mPopup.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE);
 		mPopup.setAnimationStyle(R.style.AnimationPreview);  
 		mPopup.setTouchable(true);
 		mPopup.setOutsideTouchable(true);
 		mPopup.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), (Bitmap) null));
 		gridView.setOnItemClickListener(new DropDownItemClickListener());
-		
 
         // Always turn on the auto complete input type flag, since it
         // makes no sense to use this widget without it.

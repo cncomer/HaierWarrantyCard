@@ -177,10 +177,18 @@ public final class HistoryManager {
                         ID_COL_PROJECTION,
                         null, null,
                         HaierDBHelper.TIMESTAMP_COL + " DESC");
-      cursor.move(MAX_ITEMS);
-      while (cursor.moveToNext()) {
-        cr.delete(BjnoteContent.ScanHistory.CONTENT_URI, HaierDBHelper.ID_COL + '=' + cursor.getString(0), null);
+      if (cursor != null) {
+    	  if (cursor.getCount() > MAX_ITEMS) {
+    		  cursor.move(MAX_ITEMS);
+    		  while (cursor.moveToNext()) {
+      	        cr.delete(BjnoteContent.ScanHistory.CONTENT_URI, HaierDBHelper.ID_COL + '=' + cursor.getString(0), null);
+      	   }
+    	 }
+    	  cursor.close();
+    	  
       }
+     
+      
   }
 
   /**

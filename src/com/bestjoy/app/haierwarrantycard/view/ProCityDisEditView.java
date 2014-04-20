@@ -1,32 +1,33 @@
 package com.bestjoy.app.haierwarrantycard.view;
 
+import java.lang.reflect.Field;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import android.widget.AutoCompleteTextView;
 import android.widget.CursorAdapter;
 import android.widget.EditText;
-import android.widget.GridView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 
-public class ProCityDisEditView extends LinearLayout implements AdapterView.OnItemClickListener {
+public class ProCityDisEditView extends LinearLayout{
 	private static final String TAG = "ProCityDisEditView";
+	private HomeObject mHomeObject;
 	private Context mContext;
-	private TextView mHomeName;
-	private AddressCompleteEditText mProEditView;
-	private AddressCompleteEditText mCityEditView;
-	private AddressCompleteEditText mDisEditView;
+	private EditText mHomeName;
+	private AutoCompleteTextView mProEditView;
+	private AutoCompleteTextView mCityEditView;
+	private AutoCompleteTextView mDisEditView;
 	private EditText mAddressEditView;
 	
 	private ContentResolver mCr;
@@ -45,16 +46,32 @@ public class ProCityDisEditView extends LinearLayout implements AdapterView.OnIt
 		mContext = context;
 	}
 	
+	public void updateHomeObject() {
+		if (mHomeObject == null ) {
+			return;
+		}
+		mHomeObject.mHomeProvince = mProEditView.getText().toString();
+		mHomeObject.mHomeCity = mCityEditView.getText().toString();
+		mHomeObject.mHomeDis = mDisEditView.getText().toString();
+		mHomeObject.mHomePlaceDetail = mAddressEditView.getText().toString();
+	}
+	
 	public HomeObject getHomeObject() {
-		HomeObject homeObject = new HomeObject();
-		homeObject.mHomeProvince = mProEditView.getText().toString();
-		homeObject.mHomeCity = mCityEditView.getText().toString();
-		homeObject.mHomeDis = mDisEditView.getText().toString();
-		homeObject.mHomePlaceDetail = mAddressEditView.getText().toString();
-		return homeObject;
+		if (mHomeObject == null ) {
+			mHomeObject = new HomeObject();
+		}
+		mHomeObject.mHomeProvince = mProEditView.getText().toString();
+		mHomeObject.mHomeCity = mCityEditView.getText().toString();
+		mHomeObject.mHomeDis = mDisEditView.getText().toString();
+		mHomeObject.mHomePlaceDetail = mAddressEditView.getText().toString();
+		if (mHomeObject.hasValidateAddress()) {
+			return null;
+		}
+		return mHomeObject;
 	}
 	
 	public void setHomeObject(HomeObject homeObject) {
+		 mHomeObject = homeObject;
 		 initHomeView(homeObject);
 	}
 	
@@ -62,27 +79,45 @@ public class ProCityDisEditView extends LinearLayout implements AdapterView.OnIt
 	protected void onFinishInflate() {
 		super.onFinishInflate();
 		mCr = mContext.getContentResolver();
-		mProEditView = (AddressCompleteEditText) findViewById(R.id.input_province);
-		mCityEditView = (AddressCompleteEditText) findViewById(R.id.input_city);
-		mDisEditView = (AddressCompleteEditText) findViewById(R.id.input_district);
+		mProEditView = (AutoCompleteTextView) findViewById(R.id.input_province);
+		mCityEditView = (AutoCompleteTextView) findViewById(R.id.input_city);
+		mDisEditView = (AutoCompleteTextView) findViewById(R.id.input_district);
 		
-		mProEditView.setOnItemClickListener(this);
+		try {
+			Field feild =  AutoCompleteTextView.class.getDeclaredField("mThreshold");
+			feild.setAccessible(true);
+			feild.set(mProEditView, 0);
+			feild.set(mCityEditView, 0);
+			feild.set(mDisEditView, 0);
+		} catch (NoSuchFieldException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		}
+		
+		mProEditView.setDropDownBackgroundResource(R.color.default_pop_background);
+		mCityEditView.setDropDownBackgroundResource(R.color.default_pop_background);
+		mDisEditView.setDropDownBackgroundResource(R.color.default_pop_background);
+		
 		mProEditView.setAdapter(new AddressAdapter(mContext, MODE_PROVINCE, true));
-		mCityEditView.setOnItemClickListener(this);
 		mCityEditView.setAdapter(new AddressAdapter(mContext, MODE_CITY, true));
 		mDisEditView.setAdapter(new AddressAdapter(mContext, MODE_DISTRICT, true));
-		
-//		mProEditView.setAdapter(new AddressAdapter());
+
 		
 		mAddressEditView = (EditText) findViewById(R.id.address);
-		mHomeName = (TextView) findViewById(R.id.homeName);
+		mHomeName = (EditText) findViewById(R.id.homeName);
 	}
 	
 	private void initHomeView(HomeObject homeObject) {
-		mHomeName.setText(homeObject.mHomeName);
-		mProEditView.setText(homeObject.mHomeProvince, false);
-		mCityEditView.setText(homeObject.mHomeCity, false);
-		mDisEditView.setText(homeObject.mHomeDis, false);
+		if (!TextUtils.isEmpty(homeObject.mHomeName)) {
+			mHomeName.setText(homeObject.mHomeName);
+		}
+		
+		mProEditView.setText(homeObject.mHomeProvince);
+		mCityEditView.setText(homeObject.mHomeCity);
+		mDisEditView.setText(homeObject.mHomeDis);
 		mAddressEditView.setText(homeObject.mHomePlaceDetail);
 	}
 	
@@ -94,6 +129,19 @@ public class ProCityDisEditView extends LinearLayout implements AdapterView.OnIt
 			this.mode = mode;
 		}
 		
+		
+		
+		@Override
+		public View getDropDownView(int position, View convertView,
+				ViewGroup parent) {
+			if (convertView == null) {
+				convertView = LayoutInflater.from(mContext).inflate(R.layout.grid_item, parent, false);
+			}
+			return convertView;
+		}
+
+
+
 		@Override
 		public Cursor runQueryOnBackgroundThread(CharSequence constraint) {
 			String name = null;
@@ -126,21 +174,19 @@ public class ProCityDisEditView extends LinearLayout implements AdapterView.OnIt
 			return super.runQueryOnBackgroundThread(constraint);
 		}
 
-		/**返回name*/
-		public Object getItem(int position) {
-			Cursor c = getCursor();
-			c.moveToPosition(position);
+		@Override
+		public CharSequence convertToString(Cursor cursor) {
+			DebugUtils.logD(TAG, "convertToString");
 			switch(mode){
 			case MODE_PROVINCE:
 			case MODE_CITY:
 			case MODE_DISTRICT:
+				break;
 			}
-			return c.getString(1);
+			return cursor.getString(1);
 		}
 
 		public long getItemId(int position) {
-			Cursor c = getCursor();
-			c.moveToPosition(position);
 			switch(mode){
 			case MODE_PROVINCE:
 				break;
@@ -149,7 +195,7 @@ public class ProCityDisEditView extends LinearLayout implements AdapterView.OnIt
 			case MODE_DISTRICT:
 				break;
 			}
-			return c.getLong(0);
+			return ((Cursor) getItem(position)).getLong(0);
 		}
 
 		@Override
@@ -165,11 +211,5 @@ public class ProCityDisEditView extends LinearLayout implements AdapterView.OnIt
 	
 	private static class ViewHolder {
 		private TextView _title;
-	}
-
-	@Override
-	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		// TODO Auto-generated method stub
-		
 	}
 }

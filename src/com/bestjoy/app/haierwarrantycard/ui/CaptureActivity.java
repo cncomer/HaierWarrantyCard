@@ -119,7 +119,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 		@Override
 		public void onCheckedChanged(CompoundButton buttonView,
 				boolean isChecked) {
-			// TODO Auto-generated method stub
 			if(isChecked)FlashlightManager.enableFlashlight();
 			else FlashlightManager.disableFlashlight();
 			

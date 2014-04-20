@@ -21,7 +21,7 @@ import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 
-public class ChooseDevicesFragment extends SherlockFragment{
+public class ChooseDevicesFragment extends SherlockFragment implements ExpandableListView.OnChildClickListener{
 	private ExpandableListView mExpandableListView;
 	private ExpandableListViewAdapter mExpandableListViewAdapter;
 	
@@ -46,7 +46,7 @@ public class ChooseDevicesFragment extends SherlockFragment{
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.activity_choose_devices, null);
+		View view = inflater.inflate(R.layout.activity_choose_devices_fragment, null);
 		mProgressBarLayout = view.findViewById(R.id.progressbarLayout);
 		mExpandableListView = (ExpandableListView) view.findViewById(R.id.listview);
 		mExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
@@ -64,6 +64,7 @@ public class ChooseDevicesFragment extends SherlockFragment{
 		mExpandableListViewAdapter = new ExpandableListViewAdapter();
 		mExpandableListView.setAdapter(mExpandableListViewAdapter);
 		mExpandableListView.setGroupIndicator(null);
+		mExpandableListView.setOnChildClickListener(this);
 		return view;
 	}
 
@@ -295,6 +296,12 @@ public class ChooseDevicesFragment extends SherlockFragment{
 			
 			return childs;
 		}
+	}
+
+	@Override
+	public boolean onChildClick(ExpandableListView parent, View v,
+			int groupPosition, int childPosition, long id) {
+		return false;
 	}
 
 }

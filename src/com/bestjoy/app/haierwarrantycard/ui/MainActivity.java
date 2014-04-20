@@ -1,5 +1,6 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,14 +16,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
-import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
 
 public class MainActivity extends BaseActionbarActivity {
 	private LinearLayout mDotsLayout;
@@ -168,6 +166,16 @@ public class MainActivity extends BaseActionbarActivity {
 	@Override
 	protected boolean checkIntent(Intent intent) {
 		return true;
+	}
+	/**
+	 * 回到主界面
+	 * @param context
+	 */
+	public static void startActivityForTop(Context context) {
+		Intent intent = new Intent(context, MainActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+		context.startActivity(intent);
 	}
 
 }

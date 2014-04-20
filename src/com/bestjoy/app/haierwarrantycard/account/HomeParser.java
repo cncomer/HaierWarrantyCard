@@ -23,7 +23,20 @@ public class HomeParser extends InfoInterfaceImpl{
 		homeObject.mHomePlaceDetail = jsonObject.getString("DetailAddr");
 		
 		homeObject.mHomeUid = jsonObject.getLong("UID");
-		homeObject.mHomeId = jsonObject.getLong("AID");
+		homeObject.mHomeAid = jsonObject.getLong("AID");
+		return homeObject;
+	}
+	/**
+	 * 
+	 * @param jsonObject
+	 * @param accountObject
+	 * @param position  位置
+	 * @return
+	 * @throws JSONException
+	 */
+	public static HomeObject parseHomeAddress(JSONObject jsonObject, AccountObject accountObject, int position) throws JSONException {
+		HomeObject homeObject = parseHomeAddress(jsonObject, accountObject);
+		homeObject.mHomePosition = position;
 		return homeObject;
 	}
 }

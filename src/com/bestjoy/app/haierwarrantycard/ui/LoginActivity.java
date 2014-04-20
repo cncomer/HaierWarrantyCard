@@ -7,6 +7,7 @@ import org.apache.http.client.ClientProtocolException;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -81,10 +82,6 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 				RegisterActivity.startIntent(this);
 				break;
 			case R.id.button_login:
-				if (true) {
-					LoginConfirmAddressActivity.startIntent(this);
-					return;
-				}
 				String tel = mTelInput.getText().toString().trim();
 				String pwd = mPasswordInput.getText().toString().trim();
 				if (!TextUtils.isEmpty(tel) && !TextUtils.isEmpty(pwd)) {
@@ -105,6 +102,14 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 		mLoginDialog = getProgressDialog();
 		if (mLoginDialog == null) {
 			showDialog(DIALOG_PROGRESS);
+			mLoginDialog = getProgressDialog();
+			mLoginDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+				
+				@Override
+				public void onCancel(DialogInterface dialog) {
+					AsyncTaskUtils.cancelTask(mLoginAsyncTask);
+				}
+			});
 		} else {
 			if (!mLoginDialog.isShowing()) {
 				mLoginDialog.show();
@@ -122,11 +127,11 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 			mError = null;
 			mAccountObject = null;
 			InputStream is = null;
-			StringBuilder sb = new StringBuilder();
+			StringBuilder sb = new StringBuilder(URL);
 			sb.append("cell=").append(params[0])
-			.append("7&pwd=").append(params[1]);
+			.append("7&pwd=");
 			try {
-				is = NetworkUtils.openContectionLocked(URL, sb.toString(), null);
+				is = NetworkUtils.openContectionLocked(sb.toString(), params[1], null);
 				mAccountObject = AccountParser.parseJson(is);
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();

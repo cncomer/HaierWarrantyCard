@@ -2,7 +2,6 @@ package com.bestjoy.app.haierwarrantycard.ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -11,9 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseExpandableListAdapter;
-import android.widget.ExpandableListView;
-import android.widget.TextView;
+import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.bestjoy.app.haierwarrantycard.R;
@@ -22,8 +19,7 @@ import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 
 public class ChooseDevicesPinpaiFragment extends SherlockFragment{
-	private ExpandableListView mExpandableListView;
-	private ExpandableListViewAdapter mExpandableListViewAdapter;
+	private ListView mListView;
 	
 	private static final String[] GROUP_PROJECTION = new String[]{
 		HaierDBHelper.DEVICE_DALEI_ID,
@@ -46,24 +42,9 @@ public class ChooseDevicesPinpaiFragment extends SherlockFragment{
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.activity_choose_devices, null);
+		View view = inflater.inflate(R.layout.activity_choose_devices_pinpai, null);
 		mProgressBarLayout = view.findViewById(R.id.progressbarLayout);
-		mExpandableListView = (ExpandableListView) view.findViewById(R.id.listview);
-		mExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-			@Override
-			public void onGroupExpand(int groupPosition) {
-				//每次只能显示一组group和child
-				for (int i = 0; i < mExpandableListViewAdapter.getGroupCount(); i++) {
-					if (groupPosition != i) {
-						mExpandableListView.collapseGroup(i);
-					}
-				}
-			}
-
-		});
-		mExpandableListViewAdapter = new ExpandableListViewAdapter();
-		mExpandableListView.setAdapter(mExpandableListViewAdapter);
-		mExpandableListView.setGroupIndicator(null);
+		mListView = (ListView) view.findViewById(R.id.listview);
 		return view;
 	}
 
@@ -140,115 +121,11 @@ public class ChooseDevicesPinpaiFragment extends SherlockFragment{
 			super.onPostExecute(result);
 			mProgressBarLayout.setVisibility(View.GONE);
 			mIsLoaded = true;
-			mExpandableListViewAdapter.changeGroupsAndChilds(_groupsList, _childsList);
 		}
 		
 	}
 	
 	
-	private class ExpandableListViewAdapter extends BaseExpandableListAdapter {
-
-		private List<GroupObject> _goupList = new ArrayList<GroupObject>();
-		private HashMap<Long, ArrayList<ChildObject>> _childsList = new HashMap<Long, ArrayList<ChildObject>>();
-		
-		public void changeGroupsAndChilds(List<GroupObject> group, HashMap<Long, ArrayList<ChildObject>> map) {
-			
-			if (_goupList != group) {
-				_goupList.clear();
-				_goupList = group;
-			}
-			if (_childsList != map) {
-				_childsList.clear();
-				_childsList = map;
-			}
-			notifyDataSetChanged();
-		}
-		@Override
-		public Object getChild(int groupPosition, int childPosition) {
-			long groupId = getGroupId(groupPosition);
-			return _childsList.get(groupId).get(childPosition);
-		}
-
-		@Override
-		public long getChildId(int groupPosition, int childPosition) {
-			long groupId = getGroupId(groupPosition);
-			return _childsList.get(groupId).get(childPosition)._xId;
-		}
-
-		@Override
-		public View getChildView(int groupPosition, int childPosition,
-				boolean isLastChild, View convertView, ViewGroup parent) {
-			ChildViewHolder childViewHolder;
-			if (convertView == null) {
-				convertView = LayoutInflater.from(getActivity()).inflate(R.layout.child_textview, parent, false);
-				childViewHolder = new ChildViewHolder();
-				childViewHolder._name = (TextView) convertView;
-				convertView.setTag(childViewHolder);
-			} else {
-				childViewHolder = (ChildViewHolder) convertView.getTag();
-			}
-			childViewHolder._childObject = (ChildObject) getChild(groupPosition, childPosition);
-			childViewHolder._name.setText(childViewHolder._childObject._name);
-			return convertView;
-		}
-
-		@Override
-		public int getChildrenCount(int groupPosition) {
-			long groupId = getGroupId(groupPosition);
-			return _childsList.get(groupId).size();
-		}
-
-		@Override
-		public Object getGroup(int groupPosition) {
-			return _goupList.get(groupPosition);
-		}
-
-		@Override
-		public int getGroupCount() {
-			return _goupList.size();
-		}
-
-		@Override
-		public long getGroupId(int groupPosition) {
-			return _goupList.get(groupPosition)._id ;
-		}
-
-		@Override
-		public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
-			GroupViewHolder groupViewHolder;
-			if (convertView == null) {
-				convertView = LayoutInflater.from(getActivity()).inflate(R.layout.group_textview, parent, false);
-				groupViewHolder = new GroupViewHolder();
-				groupViewHolder._name = (TextView) convertView;
-				convertView.setTag(groupViewHolder);
-			} else {
-				groupViewHolder = (GroupViewHolder) convertView.getTag();
-			}
-			groupViewHolder._groupObject = (GroupObject) getGroup(groupPosition);
-			groupViewHolder._name.setText(groupViewHolder._groupObject._name);
-			return convertView;
-		}
-
-		@Override
-		public boolean hasStableIds() {
-			return false;
-		}
-
-		@Override
-		public boolean isChildSelectable(int groupPosition, int childPosition) {
-			return true;
-		}
-		
-	}
-	
-	private static class GroupViewHolder {
-		private TextView _name;
-		private GroupObject _groupObject;
-	}
-	private static class ChildViewHolder {
-		private TextView _name;
-		private ChildObject _childObject;
-	}
 	
 	private static class GroupObject {
 		private long _id;

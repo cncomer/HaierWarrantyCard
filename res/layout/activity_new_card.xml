@@ -36,7 +36,7 @@
 	            android:text="@string/title_scan_desc2"
 	            android:layout_height="wrap_content"/>
         </LinearLayout>
-       <Button android:id="@+id/title_scan_button"
+       <Button android:id="@+id/button_scan_qrcode"
            android:layout_alignParentRight="true"
            android:layout_height="wrap_content"
            android:layout_width="wrap_content"
@@ -77,13 +77,13 @@
             	android:orientation="horizontal">
                 <TextView style="@style/ProductInfo"
 	        		android:text="@string/product_bill"/>
-	    		<ImageView android:id="@+id/button_scan"
+	    		<ImageView android:id="@+id/button_scan_bill"
 			        android:layout_height="48dip"
 			        android:clickable="true"
 			        android:padding="8dip"
 			        android:scaleType="fitCenter"
 			        android:layout_width="48dip"
-			        android:src="@drawable/ic_camera"/>
+			        android:src="@drawable/ic_camera_black"/>
 	    		<TextView android:textColor="#ff696365"
 	    		    android:text="@string/product_bill_desc"
 	    		    android:textSize="10sp"
@@ -103,19 +103,11 @@
 			    android:orientation="horizontal" >
 			    <TextView style="@style/ProductInfo"
 			        android:text="@string/product_buy_date"/>
-			    <EditText android:id="@+id/product_buy_date"
-			        android:hint="@string/product_debug_placeholder"
-			        android:editable="false"
-			        android:enabled="false"
+			    <TextView android:id="@+id/product_buy_date"
+			        android:clickable="true"
 			        style="@style/ProductInfoInput"/>
 			</LinearLayout>
 			
-            <DatePicker android:id="@+id/date_picker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:calendarViewShown="false"
-                android:layout_marginTop="2dip"
-                android:layout_gravity="center_horizontal"/>
              
             <LinearLayout
 			    android:layout_width="match_parent"
