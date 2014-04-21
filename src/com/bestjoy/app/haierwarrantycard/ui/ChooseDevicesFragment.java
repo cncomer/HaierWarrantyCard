@@ -28,12 +28,14 @@ public class ChooseDevicesFragment extends SherlockFragment implements Expandabl
 	private static final String[] GROUP_PROJECTION = new String[]{
 		HaierDBHelper.DEVICE_DALEI_ID,
 		HaierDBHelper.DEVICE_DALEI_NAME,
+		"_id",
 	};
 	
 	private static final String[] CHILD_PROJECTION = new String[]{
 		HaierDBHelper.DEVICE_XIALEI_DID,
 		HaierDBHelper.DEVICE_XIALEI_XID,
 		HaierDBHelper.DEVICE_XIALEI_NAME,
+		"_id",
 	};
 
 	private View mProgressBarLayout;
