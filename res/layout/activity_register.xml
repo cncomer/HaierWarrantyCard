@@ -41,16 +41,9 @@
                     android:id="@+id/usr_name"
                     style="@style/ProductInfoInput"/>
             </LinearLayout>
-            <include layout="@layout/pcd_edit_info"/>
-			<LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical"
-                android:orientation="horizontal" >
-
-                <EditText
-                    style="@style/ProductInfoInput"/>
-            </LinearLayout>
+		    <include layout="@layout/home_pro_city_dis_autocomplete"
+		        android:id="@+id/home"
+		        android:layout_gravity="center_horizontal"/>
 			<LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -84,7 +77,7 @@
             </LinearLayout>
 
             <Button
-                android:id="@+id/button_save"
+                android:id="@+id/button_save_reg"
                 android:layout_width="156dip"
                 android:layout_height="42dip"
                 android:layout_gravity="center_horizontal"

@@ -179,4 +179,14 @@
   
   <string name="msg_login_confirm_success">登录成功，现在可以开始使用本软件了</string>
     
+  <string name="button_re_vali">重新验证</string>
+  <string name="second">秒</string>
+    <string name="msg_input_usrtel">请输入你的手机号码</string>
+    <string name="msg_input_usr_name">请输入姓名</string>
+    <string name="msg_input_usr_pro">请输入省份</string>
+    <string name="msg_input_usr_city">请输入城市</string>
+    <string name="msg_input_usr_dis">请输入地区</string>
+    <string name="msg_input_usr_place_detail">请输入你的详细地址</string>
+    <string name="msg_input_usr_pwd">请输入密码</string>
+    <string name="msg_input_pwd_not_match_tips">两次密码输入不一致，请重新输入</string>
 </resources>

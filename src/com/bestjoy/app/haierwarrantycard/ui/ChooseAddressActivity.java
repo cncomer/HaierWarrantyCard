@@ -11,10 +11,6 @@ import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 public class ChooseAddressActivity extends BaseActionbarActivity {
 	private static final String TAG = "RegisterActivity";
 
-	private ProCityDisEditView psdEditView1;
-	private ProCityDisEditView psdEditView2;
-	private ProCityDisEditView psdEditView3;
-
 	@Override
 	protected boolean checkIntent(Intent intent) {
 		return true;
@@ -32,12 +28,6 @@ public class ChooseAddressActivity extends BaseActionbarActivity {
 	}
 
 	private void initViews() {
-		psdEditView1 = new ProCityDisEditView(this, R.id.edit_province_1,
-				R.id.edit_city_1, R.id.edit_district_1);
-		psdEditView2 = new ProCityDisEditView(this, R.id.edit_province_2,
-				R.id.edit_city_2, R.id.edit_district_2);
-		psdEditView3 = new ProCityDisEditView(this, R.id.edit_province_3,
-				R.id.edit_city_3, R.id.edit_district_3);
 		
 	}
 	

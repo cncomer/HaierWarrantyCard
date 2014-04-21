@@ -74,6 +74,10 @@ public class ProCityDisEditView extends LinearLayout{
 		 mHomeObject = homeObject;
 		 initHomeView(homeObject);
 	}
+
+	public void setHomeEditVisiable(int visibility) {
+		mHomeName.setVisibility(visibility);
+	}
 	
 	@Override
 	protected void onFinishInflate() {
