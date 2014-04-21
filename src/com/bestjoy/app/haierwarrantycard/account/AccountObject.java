@@ -62,7 +62,11 @@ public class AccountObject implements InfoInterface{
 	/**登陆时候服务器返回的数据*/
 	public String mStatusMessage;
 	
+	/**我的家信息*/
 	public List<HomeObject> mAccountHomes = new LinkedList<HomeObject>();
+	
+	/**我的保修卡信息*/
+	public List<BaoxiuCardObject> mBaoxiuCards = new LinkedList<BaoxiuCardObject>();
 	
 	public boolean isLogined() {
 		return mStatusCode != 0;
@@ -80,9 +84,9 @@ public class AccountObject implements InfoInterface{
 					return null;
 				}
 				haierAccount.mAccountId = Long.parseLong(idStr);
-				DebugUtils.logD(TAG, "getHaierAccountFromDatabase accountId is " + haierAccount.mAccountId);
 				if (haierAccount.mAccountId <= 0) {
-					
+					DebugUtils.logD(TAG, "getHaierAccountFromDatabase accountId is " + haierAccount.mAccountId);
+					return null;
 				}
 				haierAccount.mAccountUid = c.getLong(KEY_MD);
 				haierAccount.mAccountName = c.getString(KEY_NAME);

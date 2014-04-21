@@ -10,7 +10,7 @@ public class HomeParser extends InfoInterfaceImpl{
 	
 	
 	/**
-	 * {"ShenFen":"江苏宝应宝应大道","City":"扬州","QuXian":"江苏宝应宝应大道","DetailAddr":"江苏宝应宝应大道","UID":1,"AID":1}
+	 * {"ShenFen":"江苏宝应宝应大道","City":"扬州","QuXian":"江苏宝应宝应大道","DetailAddr":"江苏宝应宝应大道","UID":1,"AID":1,"Tag": "第一个家"}
 	 * @param jsonObject
 	 * @param accountObject
 	 * @throws JSONException
@@ -24,6 +24,7 @@ public class HomeParser extends InfoInterfaceImpl{
 		
 		homeObject.mHomeUid = jsonObject.getLong("UID");
 		homeObject.mHomeAid = jsonObject.getLong("AID");
+		homeObject.mHomeName = jsonObject.getString("Tag");
 		return homeObject;
 	}
 	/**
