@@ -23,6 +23,12 @@ public class HaierAccountManager {
 		mSharedPreferences = mContext.getSharedPreferences(TAG, Context.MODE_PRIVATE);
 	}
 	
+	public void initAccountObject() {
+		if (mHaierAccount == null) {
+			mHaierAccount = AccountObject.getHaierAccountFromDatabase(mContext);
+		}
+	}
+	
 	public boolean hasLoginned() {
 		return mHaierAccount != null && mHaierAccount.mAccountId > 0;
 	}

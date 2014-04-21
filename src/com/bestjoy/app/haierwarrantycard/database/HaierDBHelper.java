@@ -60,42 +60,43 @@ private static final String TAG = "HaierDBHelper";
   /**详细地址*/
   public static final String HOME_DETAIL = "home_detail";
   public static final String HOME_DEFAULT = "isDefault";
-  public static final String MODIFIED = "modified";
   /**我的家TAB位置,用户可以调整顺序*/
   public static final String POSITION = "position";
   
-  //devices table
-  public static final String TABLE_NAME_DEVICES = "devices";
+  //cards table
+  public static final String TABLE_NAME_DEVICES = "cards";
   /**所属家*/
   public static final String REF_HOME_ID = "home_id";
-  /**设别名称*/
-  public static final String DEVICE_NAME = "name";
+  /**名称*/
+  public static final String CARD_NAME = "name";
   /**设备类别，比如大类是电视剧*/
-  public static final String DEVICE_TYPE = "type";
+  public static final String CARD_TYPE = "LeiXin";
   /**品牌*/
-  public static final String DEVICE_BRAND = "brand";
+  public static final String CARD_PINPAI = "PinPai";
   /**商品编号*/
-  public static final String DEVICE_SERIAL = "serial";
+  public static final String CARD_SERIAL = "SHBianHao";
   /**型号*/
-  public static final String DEVICE_MODEL = "model";
-  /**售后电话*/
-  public static final String DEVICE_SOLD_TEL = "tel";
+  public static final String CARD_MODEL = "XingHao";
+  /**保修电话*/
+  public static final String CARD_BXPhone = "BXPhone";
+  /**发票路径*/
+  public static final String CARD_BILL = "FPaddr";
   /**购买价格*/
-  public static final String DEVICE_COST = "cost";
+  public static final String CARD_PRICE = "BuyPrice";
   /**购买日期*/
-  public static final String DEVICE_BUY_DATE = "buyDate";
+  public static final String CARD_BUT_DATE = "BuyDate";
   /**购买途径*/
-  public static final String DEVICE_BUY_WHERE = "buyWhere";
+  public static final String CARD_BUY_TUJING = "BuyTuJing";
   /**延保时间*/
-  public static final String DEVICE_BUY_EXTENDED = "buyExtended";
+  public static final String CARD_YANBAO_TIME = "YanBaoTime";
+  /**延保单位*/
+  public static final String CARD_YANBAO_TIME_COMPANY = "YanBaoDanWei";
+  /**延保单位电话*/
+  public static final String CARD_YANBAO_TIME_COPMANY_TEL = "YanBaoDanWeiCommanyTel";
   /**整机保修*/
   public static final String DEVICE_WARRANTY_PERIOD = "warranty_period";
   /**配件保修*/
   public static final String DEVICE_COMPONENT_WARRANTY_PERIOD = "component_warranty_period";
-  /**延保单位*/
-  public static final String DEVICE_BUY_EXTENDED_COMPANY = "extendedCommany";
-  /**延保单位电话*/
-  public static final String DEVICE_BUY_EXTENDED_COPMANY_TEL = "extendedCommanyTel";
   
   //这里是设备表的扩展，如遥控器
   
@@ -306,21 +307,21 @@ private static final String TAG = "HaierDBHelper";
 	            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
 	            REF_ACCOUNT_ID + " TEXT, " +  //账户id
 	            REF_HOME_ID + " TEXT, " +     //家id
-	            DEVICE_TYPE + " TEXT, " +
-	            DEVICE_NAME + " TEXT, " +
-	            DEVICE_BRAND + " TEXT, " +
-	            DEVICE_MODEL + " TEXT, " +
-	            DEVICE_SERIAL + " TEXT, " +
-	            DEVICE_SOLD_TEL + " TEXT, " +
-	            DEVICE_BUY_DATE + " TEXT, " +
-	            DEVICE_COST + " TEXT, " +
-	            DEVICE_BUY_WHERE + " TEXT, " +
-	            DEVICE_BUY_EXTENDED + " TEXT, " +
-	            DEVICE_BUY_EXTENDED_COMPANY + " TEXT, " +
-	            DEVICE_BUY_EXTENDED_COPMANY_TEL + " TEXT, " +
+	            CARD_TYPE + " TEXT, " +
+	            CARD_NAME + " TEXT, " +
+	            CARD_PINPAI + " TEXT, " +
+	            CARD_MODEL + " TEXT, " +
+	            CARD_SERIAL + " TEXT, " +
+	            CARD_BXPhone + " TEXT, " +
+	            CARD_BUT_DATE + " TEXT, " +
+	            CARD_PRICE + " TEXT, " +
+	            CARD_BUY_TUJING + " TEXT, " +
+	            CARD_YANBAO_TIME + " TEXT, " +
+	            CARD_YANBAO_TIME_COMPANY + " TEXT, " +
+	            CARD_YANBAO_TIME_COPMANY_TEL + " TEXT, " +
 	            DEVICE_WARRANTY_PERIOD + " TEXT, " +
 	            DEVICE_COMPONENT_WARRANTY_PERIOD + " TEXT, " +
-	            MODIFIED + " TEXT" +
+	            CONTACT_DATE + " TEXT" +
 	            ");");
 	  createTriggerForDeviceTable(sqLiteDatabase);
   }

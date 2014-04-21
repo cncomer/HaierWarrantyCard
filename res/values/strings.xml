@@ -178,6 +178,14 @@
   
   
   <string name="msg_login_confirm_success">登录成功，现在可以开始使用本软件了</string>
+  <string name="msg_login_save_success">账户初始化失败，请再次尝试...</string>
+  <string name="msg_login_dialog_title">账户登录</string>
+   <string name="msg_update_dialog_title">账户更新</string>
+  <string name="msg_login_download_accountinfo_wait">正在载入账户信息....</string>
+  <string name="msg_login_download_addressinfo_wait">正在载入家信息....</string>
+  <string name="msg_login_download_baoxiuinfo_wait">正在载入保修卡信息....</string>
+  <string name="msg_op_canceled">操作取消</string>
+  <string name="msg_op_successed">操作成功</string>
     
   <string name="button_re_vali">重新验证</string>
   <string name="second">秒</string>

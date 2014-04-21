@@ -63,6 +63,9 @@ public class AccountParser extends InfoInterfaceImpl{
 			}
 			//解析address
 			parseAddress(jsonObject, accountObject);
+			
+			//解析保修卡
+			parseBaoxiuCards(jsonObject, accountObject);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -101,7 +104,7 @@ public class AccountParser extends InfoInterfaceImpl{
 	 * @throws JSONException
 	 */
 	public static void parseAddress(JSONObject jsonObject, AccountObject accountObject) throws JSONException {
-		//解析userdata
+		//解析addresses
 		JSONArray addresses = jsonObject.getJSONArray("address");
 		accountObject.mAccountHomes.clear();
 		if (addresses != null) {
@@ -116,4 +119,21 @@ public class AccountParser extends InfoInterfaceImpl{
 			accountObject.mAccountHomeCount = accountObject.mAccountHomes.size();
 		}
 	}
+	
+	public static void parseBaoxiuCards(JSONObject jsonObject, AccountObject accountObject) throws JSONException {
+		//解析baoxiu
+		JSONArray baoxiuCards = jsonObject.getJSONArray(BaoxiuCardObject.JSONOBJECT_NAME);
+		accountObject.mBaoxiuCards.clear();
+		if (baoxiuCards != null) {
+			int len = baoxiuCards.length();
+			BaoxiuCardObject baoxiuCardObject = null;
+			for(int index=0; index < len; index++) {
+				baoxiuCardObject = BaoxiuCardObject.parseBaoxiuCards(baoxiuCards.getJSONObject(index), accountObject);
+				if (baoxiuCardObject != null) {
+					accountObject.mBaoxiuCards.add(baoxiuCardObject);
+				}
+			}
+		}
+	}
+	
 }

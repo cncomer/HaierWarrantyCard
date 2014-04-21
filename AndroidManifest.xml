@@ -107,8 +107,13 @@
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.CaptureActivity"
             android:excludeFromRecents="true"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait"/>
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
+            android:launchMode="singleTop"/>
+        <activity
+            android:name="com.bestjoy.app.haierwarrantycard.ui.LoginOrUpdateAccountDialog"
+            android:excludeFromRecents="true"
+            android:theme="@android:style/Theme.Dialog"
+            android:launchMode="singleTop"/>
         
         <provider android:name="com.bestjoy.app.haierwarrantycard.database.BjnoteProvider"
             android:exported="true"

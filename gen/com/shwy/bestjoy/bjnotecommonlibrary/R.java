@@ -12,14 +12,14 @@ public final class R {
 		public static final int phoneClickableSpan = 0x7f0d0001;
 	}
 	public static final class drawable {
-		public static final int ic_launcher = 0x7f02008f;
+		public static final int ic_launcher = 0x7f020090;
 	}
 	public static final class id {
-		public static final int checkbox = 0x7f060096;
-		public static final int title = 0x7f060066;
+		public static final int checkbox = 0x7f060099;
+		public static final int title = 0x7f060069;
 	}
 	public static final class layout {
-		public static final int dialog_use_mobile_confirm = 0x7f03002b;
+		public static final int dialog_use_mobile_confirm = 0x7f03002c;
 	}
 	public static final class string {
 		public static final int app_name = 0x7f0b000d;
