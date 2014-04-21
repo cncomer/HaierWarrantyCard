@@ -12,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 8;
+  private static final int DB_VERSION = 9;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -26,7 +26,6 @@ private static final String TAG = "HaierDBHelper";
   public static final String ACCOUNT_TEL = "tel";
   public static final String ACCOUNT_NAME = "name";
   public static final String ACCOUNT_PWD = "password";
-  public static final String ACCOUNT_CARD_COUNT = "card_count";
   public static final String ACCOUNT_HOME_COUNT = "home_count";
 
   public static final String ACCOUNT_PHONES = "phones";
@@ -42,6 +41,8 @@ private static final String TAG = "HaierDBHelper";
   /**详细地址*/
   public static final String HOME_DETAIL = "home_detail";
   public static final String HOME_DEFAULT = "isDefault";
+  /**我的家的保修卡个数*/
+  public static final String HOME_CARD_COUNT = "card_count";
   /**我的家TAB位置,用户可以调整顺序*/
   public static final String POSITION = "position";
   
@@ -212,6 +213,17 @@ private static final String TAG = "HaierDBHelper";
 	
   }
   
+  private void createTriggerForBaoxiuCardsTable(SQLiteDatabase sqLiteDatabase) {
+	  String sql = "CREATE TRIGGER insert_cards_update_home" + " AFTER INSERT " + " ON " + TABLE_NAME_CARDS + 
+			  " BEGIN UPDATE " + TABLE_NAME_HOMES + " SET card_count = card_count+1 WHERE aid = new.aid; END;";
+	  sqLiteDatabase.execSQL(sql);
+	  
+	  sql = "CREATE TRIGGER delete_card_update_home" + " AFTER DELETE " + " ON " + TABLE_NAME_CARDS + 
+			  " BEGIN UPDATE " + TABLE_NAME_HOMES + " SET card_count = card_count-1 WHERE aid = old.aid; END;";
+	  sqLiteDatabase.execSQL(sql);
+	
+  }
+  
   
   private void createAccountTable(SQLiteDatabase sqLiteDatabase) {
 	  sqLiteDatabase.execSQL(
@@ -221,7 +233,6 @@ private static final String TAG = "HaierDBHelper";
 	            ACCOUNT_TEL + " TEXT, " +
 	            ACCOUNT_PWD + " TEXT, " +
 	            ACCOUNT_DEFAULT + " INTEGER NOT NULL DEFAULT 1, " +
-	            ACCOUNT_CARD_COUNT + " INTEGER NOT NULL DEFAULT 0, " +
 	            ACCOUNT_HOME_COUNT + " INTEGER NOT NULL DEFAULT 0, " +
 	            ACCOUNT_NAME + " TEXT, " +
 	            ACCOUNT_PHONES  + " TEXT, " +
@@ -238,6 +249,7 @@ private static final String TAG = "HaierDBHelper";
 	            REF_ACCOUNT_ID + " INTEGER, " +
 	            HOME_ADDRESS_ID + " INTEGER, " +
 	            HOME_NAME + " TEXT, " +
+	            HOME_CARD_COUNT + " INTEGER, " +
 	            DEVICE_PRO_NAME + " TEXT, " +
 	            DEVICE_CITY_NAME + " TEXT, " +
 	            DEVICE_DIS_NAME + " TEXT, " +
@@ -273,6 +285,7 @@ private static final String TAG = "HaierDBHelper";
 	            DEVICE_COMPONENT_WARRANTY_PERIOD + " TEXT, " +
 	            DATE + " TEXT" +
 	            ");");
+	  createTriggerForBaoxiuCardsTable(sqLiteDatabase);
   }
   
   private void createScanHistory(SQLiteDatabase sqLiteDatabase) {
@@ -298,15 +311,19 @@ private static final String TAG = "HaierDBHelper";
   @Override
   public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 	  DebugUtils.logD(TAG, "onUpgrade oldVersion " + oldVersion + " newVersion " + newVersion);
-	  if (oldVersion <= 7) {
+	  if (oldVersion <= 8) {
 			sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_ACCOUNTS);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_HOMES);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CARDS);
+		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_SCAN_NAME);
 		    
 		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "insert_account");
 		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "update_default_account");
 		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "insert_home_update_account");
 		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "delete_home_update_account");
+		    
+		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "insert_cards_update_home");
+		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "delete_card_update_home");
 		    onCreate(sqLiteDatabase);
 		    return;
 		} 

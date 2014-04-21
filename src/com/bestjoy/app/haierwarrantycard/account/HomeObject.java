@@ -1,6 +1,8 @@
 package com.bestjoy.app.haierwarrantycard.account;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
@@ -28,6 +30,7 @@ public class HomeObject implements InfoInterface{
 	public long mHomeId;
 	public int mHomePosition;
 	public boolean mIsDefault = false;
+	public int mHomeCardCount;
 	
 	
 	public static final String[] PROVINCE_PROJECTION = new String[]{
@@ -67,13 +70,24 @@ public class HomeObject implements InfoInterface{
 		HaierDBHelper.DEVICE_PRO_NAME,
 		HaierDBHelper.DEVICE_CITY_NAME,
 		HaierDBHelper.DEVICE_DIS_NAME,
-		HaierDBHelper.HOME_DETAIL,
+		HaierDBHelper.HOME_DETAIL,           //6
 		HaierDBHelper.HOME_DEFAULT,
 		HaierDBHelper.POSITION,
-		"_id",
+		HaierDBHelper.ID,
+		HaierDBHelper.HOME_CARD_COUNT,      //10
 	};
 	
-	private static final int KEY_HOME_ADDRESS_ID = 1;
+	public static final int KEY_HOME_UID = 0;
+	public static final int KEY_HOME_AID = 1;
+	public static final int KEY_HOME_NAME = 2;
+	public static final int KEY_HOME_PRO_NAME = 3;
+	public static final int KEY_HOME_CITY_NAME = 4;
+	public static final int KEY_HOME_DIS_NAME = 5;
+	public static final int KEY_HOME_DETAIL = 6;
+	public static final int KEY_HOME_DEFAULT = 7;
+	public static final int KEY_HOME_POSITION = 8;
+	public static final int KEY_HOME_ID = 9;
+	public static final int KEY_HOME_CARD_COUNT = 10;
 	
 	public static long getProvinceId(ContentResolver cr, String provinceName) {
 		if (TextUtils.isEmpty(provinceName)) {
@@ -181,7 +195,7 @@ public class HomeObject implements InfoInterface{
 		Cursor c = cr.query(BjnoteContent.Homes.CONTENT_URI, HOME_PROJECTION, WHERE_HOME_AID_ACCOUNT_UID, new String[]{String.valueOf(uid), String.valueOf(aid)}, null);
 		if (c != null) {
 			if (c.moveToNext()) {
-				id = c.getLong(KEY_HOME_ADDRESS_ID);
+				id = c.getLong(KEY_HOME_AID);
 			}
 			c.close();
 		}
@@ -198,15 +212,53 @@ public class HomeObject implements InfoInterface{
 		return cr.delete(BjnoteContent.Homes.CONTENT_URI, WHERE_HOME_ACCOUNTID, new String[]{String.valueOf(uid)});
 	}
 	
+	public static Cursor getAllHomesCursor(ContentResolver cr, long uid) {
+		return cr.query(BjnoteContent.Homes.CONTENT_URI, HOME_PROJECTION, WHERE_HOME_ACCOUNTID, new String[]{String.valueOf(uid)}, null);
+	}
+	
+	public static List<HomeObject> getAllHomeObjects(ContentResolver cr, long uid) {
+		Cursor c = getAllHomesCursor(cr, uid);
+		List<HomeObject> list = new ArrayList<HomeObject>();
+		if (c != null) {
+			list = new ArrayList<HomeObject>(c.getCount());
+			while(c.moveToNext()) {
+				list.add(getFromHomeSCursor(c));
+			}
+			c.close();
+		}
+		return list;
+	}
+	
+	private static HomeObject getFromHomeSCursor(Cursor c) {
+		HomeObject homeObject = new HomeObject();
+		homeObject.mHomeId = c.getLong(KEY_HOME_ID);
+		homeObject.mHomeUid = c.getLong(KEY_HOME_UID);
+		homeObject.mHomeAid = c.getLong(KEY_HOME_AID);
+		homeObject.mHomeName = c.getString(KEY_HOME_NAME);
+		homeObject.mHomeProvince = c.getString(KEY_HOME_PRO_NAME);
+		homeObject.mHomeCity = c.getString(KEY_HOME_CITY_NAME);
+		homeObject.mHomeDis = c.getString(KEY_HOME_DIS_NAME);
+		homeObject.mHomePlaceDetail = c.getString(KEY_HOME_DETAIL);
+		homeObject.mHomePosition = c.getInt(KEY_HOME_POSITION);
+		homeObject.mHomeCardCount = c.getInt(KEY_HOME_CARD_COUNT);
+		homeObject.mIsDefault = c.getInt(KEY_HOME_DEFAULT) == 1;
+		return homeObject;
+	}
+	
+	public boolean hasBaoxiuCards() {
+		return mHomeCardCount > 0;
+	}
+	
 	/**
 	 * 是否有有效的地址，如果各个字段都是空的，那么我们认为丢弃该家
 	 * @return
 	 */
 	public boolean hasValidateAddress() {
 		return !TextUtils.isEmpty(mHomeName)
-				|| TextUtils.isEmpty(mHomeProvince)
-				|| TextUtils.isEmpty(mHomeCity)
-				|| TextUtils.isEmpty(mHomeDis)
-				|| TextUtils.isEmpty(mHomePlaceDetail);
+				|| !TextUtils.isEmpty(mHomeProvince)
+				|| !TextUtils.isEmpty(mHomeCity)
+				|| !TextUtils.isEmpty(mHomeDis)
+				|| !TextUtils.isEmpty(mHomePlaceDetail);
 	}
+	
 }

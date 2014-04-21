@@ -26,7 +26,6 @@ public class AccountObject implements InfoInterface{
 		HaierDBHelper.ACCOUNT_NAME,
 		HaierDBHelper.ACCOUNT_TEL,
 		HaierDBHelper.ACCOUNT_PWD,
-		HaierDBHelper.ACCOUNT_CARD_COUNT,
 		HaierDBHelper.ACCOUNT_HOME_COUNT,
 	};
 	
@@ -41,8 +40,7 @@ public class AccountObject implements InfoInterface{
 	private static final int KEY_NAME = 2;
 	private static final int KEY_TEL = 3;
 	private static final int KEY_PWD = 4;
-	private static final int KEY_CARD_COUNT = 5;
-	private static final int KEY_HOME_COUNT = 6;
+	private static final int KEY_HOME_COUNT = 5;
 	
 	private static final String WHERE_DEFAULT = HaierDBHelper.ACCOUNT_DEFAULT + "=1";
 	private static final String WHERE_UID = HaierDBHelper.ACCOUNT_MD + "=?";
@@ -52,7 +50,6 @@ public class AccountObject implements InfoInterface{
 	public String mAccountName;
 	public String mAccountTel;
 	public String mAccountPwd;
-	public int mAccountCardCount;
 	public int mAccountHomeCount;
 	
 	
@@ -92,9 +89,9 @@ public class AccountObject implements InfoInterface{
 				haierAccount.mAccountName = c.getString(KEY_NAME);
 				haierAccount.mAccountTel = c.getString(KEY_TEL);
 				haierAccount.mAccountPwd = c.getString(KEY_PWD);
-				haierAccount.mAccountCardCount = c.getInt(KEY_CARD_COUNT);
 				haierAccount.mAccountHomeCount = c.getInt(KEY_HOME_COUNT);
 			}
+		    c.close();
 		}
 		
 		return haierAccount;

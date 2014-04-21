@@ -106,7 +106,7 @@ public class ModleSettings {
 			switch(id) {
 			case R.id.model_my_card:
 				bundle.putString(Intents.EXTRA_NAME, _context.getString(R.string.activity_title_choose_device_general));
-				if (HaierAccountManager.getInstance().hasWarrantyCards()) {
+				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {
 					MyChooseDevicesActivity.startIntent(_context, bundle);
 				} else {
 					NewCardActivity.startIntent(_context, bundle);
@@ -119,7 +119,7 @@ public class ModleSettings {
 			case R.id.model_repair:
 				//bundle.putString(Intents.EXTRA_NAME, _context.getString(R.string.activity_title_choose_device_repair));
 				//break;
-				if (HaierAccountManager.getInstance().hasWarrantyCards()) {
+				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {
 					MyChooseDevicesActivity.startIntent(_context, bundle);
 				} else {
 					RepairActivity.startIntent(_context, bundle);

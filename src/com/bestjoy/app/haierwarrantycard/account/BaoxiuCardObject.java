@@ -1,6 +1,7 @@
 package com.bestjoy.app.haierwarrantycard.account;
 
 import java.util.Date;
+import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -123,6 +124,16 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	 */
 	public static int deleteAllBaoxiuCardsInDatabaseForAccount(ContentResolver cr, long uid) {
 		return cr.delete(BjnoteContent.BaoxiuCard.CONTENT_URI, WHERE_UID, new String[]{String.valueOf(uid)});
+	}
+	/**
+	 * 获取某个账户某个家的全部保修卡数据
+	 * @param cr
+	 * @param uid
+	 * @param aid
+	 * @return
+	 */
+    public static Cursor getAllBaoxiuCardsCursor(ContentResolver cr, long uid, long aid) {
+		return cr.query(BjnoteContent.BaoxiuCard.CONTENT_URI, PROJECTION, WHERE_UID_AND_AID, new String[]{String.valueOf(uid), String.valueOf(aid)}, null);
 	}
 
 	@Override
