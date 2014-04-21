@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
@@ -102,18 +103,12 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	private void registerAsync(String... param) {
 		AsyncTaskUtils.cancelTask(mRegisterAsyncTask);
 		mRegisterDialog = getProgressDialog();
-		if (mRegisterDialog == null) {
-			showDialog(DIALOG_PROGRESS);
-		} else {
-			showDialog(DIALOG_PROGRESS);
-		}
+		showDialog(DIALOG_PROGRESS);
 		mRegisterAsyncTask = new RegisterAsyncTask();
 		mRegisterAsyncTask.execute(param);
 	}
 
 	private class RegisterAsyncTask extends AsyncTask<String, Void, Void> {
-
-		private static final String URL = "http://115.29.231.29/Haier/Register.ashx?";
 		private String mError;
 		private String mStatusCode;
 		private String mStatusMessage;
@@ -122,8 +117,8 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			mError = null;
 			mAccountObject = null;
 			InputStream is = null;
-			StringBuilder sb = new StringBuilder(URL);
-			sb.append("cell=").append(mTel)
+			StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
+			sb.append("Register.ashx?cell=").append(mTel)
 			.append("&UserName=")
 			.append(mName)
 			.append("&Shen=")
@@ -140,7 +135,6 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			DebugUtils.logD("huasong", "sb = " + sb.toString() + " path = " + path);
 			try {
 				is = NetworkUtils.openContectionLocked(sb.toString(), path, null);
-				//mAccountObject = AccountParser.parseJson(is);
 				try {
 					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
 					mStatusCode = jsonObject.getString("StatusCode");
