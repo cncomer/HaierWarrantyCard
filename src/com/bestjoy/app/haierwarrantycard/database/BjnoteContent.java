@@ -42,8 +42,8 @@ public class BjnoteContent {
     	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.CONTENT_URI, "homes");
     }
     /**我的保修卡设备*/
-    public static class HomeDevices extends BjnoteContent{
-    	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.CONTENT_URI, "devices");
+    public static class BaoxiuCard extends BjnoteContent{
+    	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.CONTENT_URI, "baoxiucard");
     }
     
     public static class DaLei extends BjnoteContent{

@@ -130,6 +130,7 @@ public class AccountParser extends InfoInterfaceImpl{
 			for(int index=0; index < len; index++) {
 				baoxiuCardObject = BaoxiuCardObject.parseBaoxiuCards(baoxiuCards.getJSONObject(index), accountObject);
 				if (baoxiuCardObject != null) {
+					DebugUtils.logD(TAG, "find baoxiuCard " + baoxiuCardObject.toString());
 					accountObject.mBaoxiuCards.add(baoxiuCardObject);
 				}
 			}

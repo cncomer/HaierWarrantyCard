@@ -52,8 +52,8 @@ public class BjnoteProvider extends ContentProvider{
 	        matcher.addURI(BjnoteContent.AUTHORITY, "homes", HOME);
 	        matcher.addURI(BjnoteContent.AUTHORITY, "homes/#", HOME_ID);
 	        
-	        matcher.addURI(BjnoteContent.AUTHORITY, "devices", DEVICE);
-	        matcher.addURI(BjnoteContent.AUTHORITY, "devices/#", DEVICE_ID);
+	        matcher.addURI(BjnoteContent.AUTHORITY, "baoxiucard", DEVICE);
+	        matcher.addURI(BjnoteContent.AUTHORITY, "baoxiucard/#", DEVICE_ID);
 	        
 	        
 	        matcher.addURI(BjnoteContent.AUTHORITY, "scan_history", SCAN_HISTORY);
@@ -109,7 +109,7 @@ public class BjnoteProvider extends ContentProvider{
 			break;
 		case DEVICE:
 		case DEVICE_ID:
-			notify = BjnoteContent.HomeDevices.CONTENT_URI;
+			notify = BjnoteContent.BaoxiuCard.CONTENT_URI;
 			break;
 		case SCAN_HISTORY:
 		case SCAN_HISTORY_ID:

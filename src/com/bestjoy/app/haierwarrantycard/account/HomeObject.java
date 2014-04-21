@@ -154,19 +154,19 @@ public class HomeObject implements InfoInterface{
 			values.put(HaierDBHelper.HOME_DEFAULT, 0);
 		}
 		if (id > 0) {
-			DebugUtils.logD(TAG, "saveInDatebase update exsited aid#" + mHomeAid);
 			int update = cr.update(BjnoteContent.Homes.CONTENT_URI, values,  WHERE_HOME_AID_ACCOUNT_UID, new String[]{String.valueOf(mHomeUid), String.valueOf(mHomeAid)});
 			if (update > 0) {
+				DebugUtils.logD(TAG, "saveInDatebase update exsited aid#" + mHomeAid);
 				return true;
 			} else {
 				DebugUtils.logD(TAG, "saveInDatebase failly update exsited aid#" + mHomeAid);
 			}
 		} else {
-			DebugUtils.logD(TAG, "saveInDatebase insert aid#" + mHomeAid);
 			values.put(HaierDBHelper.HOME_ADDRESS_ID, mHomeAid);
 			values.put(HaierDBHelper.REF_ACCOUNT_ID, mHomeUid);
 			Uri uri = cr.insert(BjnoteContent.Homes.CONTENT_URI, values);
 			if (uri != null) {
+				DebugUtils.logD(TAG, "saveInDatebase insert aid#" + mHomeAid);
 				mHomeId = ContentUris.parseId(uri);
 				return true;
 			} else {

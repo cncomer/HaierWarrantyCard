@@ -30,6 +30,9 @@ import android.preference.PreferenceScreen;
  */
 public final class PreferencesActivity extends PreferenceActivity {
 	private final String TOKEN = PreferencesActivity.class.getName();
+	/**程序第一次启动*/
+	public static final String KEY_FIRST_STARTUP = "preferences_first_startup";
+	
 	public static final String KEY_DECODE_1D = "preferences_decode_1D";
 	public static final String KEY_DECODE_QR = "preferences_decode_QR";
 	public static final String KEY_DECODE_DATA_MATRIX = "preferences_decode_Data_Matrix";
