@@ -115,30 +115,39 @@ public class AccountObject implements InfoInterface{
 //		values.put(HaierDBHelper.ACCOUNT_HOME_COUNT, mAccountHomes.size());
 		values.put(HaierDBHelper.CONTACT_DATE, new Date().getTime());
 		if (id > 0) {
-			DebugUtils.logD(TAG, "saveInDatebase update exsited uid#" + mAccountUid);
 			int update = cr.update(BjnoteContent.Accounts.CONTENT_URI, values, WHERE_UID, new String[]{String.valueOf(mAccountUid)});
 			if (update > 0) {
+				DebugUtils.logD(TAG, "saveInDatebase update exsited uid#" + mAccountUid);
 				mAccountId = id;
 				//如果本地已经存在了，那么我们先清空原来就有的Home
 				HomeObject.deleteAllHomesInDatabaseForAccount(cr, mAccountUid);
 				for(HomeObject homeObject : mAccountHomes) {
 					homeObject.saveInDatebase(cr, null);
 				}
+				//同上，删除本地所有的保修卡信息
+				BaoxiuCardObject.deleteAllBaoxiuCardsInDatabaseForAccount(cr, mAccountUid);
+				for(BaoxiuCardObject baoxiuCardObject : mBaoxiuCards) {
+					baoxiuCardObject.saveInDatebase(cr, null);
+				}
 				return true;
 			} else {
 				DebugUtils.logD(TAG, "saveInDatebase failly update exsited uid " + mAccountUid);
 			}
 		} else {
-			DebugUtils.logD(TAG, "saveInDatebase insert uid#" + mAccountUid);
 			//如果没有本地没有账户，那么我们新增的时候增加ACCOUNT_MD字段,并设置为当前默认账户
 			values.put(HaierDBHelper.ACCOUNT_MD, mAccountUid);
 			values.put(HaierDBHelper.ACCOUNT_DEFAULT, 1);
 			Uri uri = cr.insert(BjnoteContent.Accounts.CONTENT_URI, values);
 			if (uri != null) {
+				DebugUtils.logD(TAG, "saveInDatebase insert uid#" + mAccountUid);
 				mAccountId = ContentUris.parseId(uri);
-				//更新我的家数据
+				//新增我的家数据
 				for(HomeObject homeObject : mAccountHomes) {
 					homeObject.saveInDatebase(cr, null);
+				}
+				//新增我的保修卡数据
+				for(BaoxiuCardObject baoxiuCardObject : mBaoxiuCards) {
+					baoxiuCardObject.saveInDatebase(cr, null);
 				}
 				return true;
 			} else {

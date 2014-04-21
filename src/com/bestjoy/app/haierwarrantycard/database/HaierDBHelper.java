@@ -18,7 +18,6 @@ private static final String TAG = "HaierDBHelper";
  
   public static final String TABLE_NAME_MY_CARD = "mycard";
   public static final String FLAG_DELETED = "deleted";
-  public static final String CARD_ID = "_id";
   public static final String CONTACT_NAME="name";
   public static final String CONTACT_TEL="tel";
   public static final String CONTACT_BID="bid";
@@ -66,7 +65,11 @@ private static final String TAG = "HaierDBHelper";
   //cards table
   public static final String TABLE_NAME_DEVICES = "cards";
   /**所属家*/
-  public static final String REF_HOME_ID = "home_id";
+  public static final String CARD_AID = "aid";
+  /**所属账户*/
+  public static final String CARD_UID = "aid";
+  /**保修卡服务器id*/
+  public static final String CARD_BID = "bid";
   /**名称*/
   public static final String CARD_NAME = "name";
   /**设备类别，比如大类是电视剧*/
@@ -80,7 +83,7 @@ private static final String TAG = "HaierDBHelper";
   /**保修电话*/
   public static final String CARD_BXPhone = "BXPhone";
   /**发票路径*/
-  public static final String CARD_BILL = "FPaddr";
+  public static final String CARD_FPaddr = "FPaddr";
   /**购买价格*/
   public static final String CARD_PRICE = "BuyPrice";
   /**购买日期*/
@@ -257,11 +260,11 @@ private static final String TAG = "HaierDBHelper";
 	  sqLiteDatabase.execSQL(sql);
 	  
 	  sql = "CREATE TRIGGER insert_device_update_home" + " AFTER INSERT " + " ON " + TABLE_NAME_DEVICES + 
-	  " BEGIN UPDATE " + TABLE_NAME_HOMES + " SET card_count = card_count+1 WHERE _id = new.home_id; END;";
+	  " BEGIN UPDATE " + TABLE_NAME_HOMES + " SET card_count = card_count+1 WHERE _id = new.aid; END;";
 	  sqLiteDatabase.execSQL(sql);
 		
 	  sql = "CREATE TRIGGER delete_device_update_home" + " AFTER DELETE " + " ON " + TABLE_NAME_DEVICES + 
-			  " BEGIN UPDATE " + TABLE_NAME_HOMES + " SET card_count = card_count-1 WHERE _id = old.home_id; END;";
+			  " BEGIN UPDATE " + TABLE_NAME_HOMES + " SET card_count = card_count-1 WHERE _id = old.aid; END;";
 	  sqLiteDatabase.execSQL(sql);
   }
   
@@ -287,8 +290,8 @@ private static final String TAG = "HaierDBHelper";
 	  sqLiteDatabase.execSQL(
 	            "CREATE TABLE " + TABLE_NAME_HOMES + " (" +
 	            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-	            REF_ACCOUNT_ID + " TEXT, " +
-	            HOME_ADDRESS_ID + " TEXT, " +
+	            REF_ACCOUNT_ID + " INTEGER, " +
+	            HOME_ADDRESS_ID + " INTEGER, " +
 	            HOME_NAME + " TEXT, " +
 	            DEVICE_PRO_NAME + " TEXT, " +
 	            DEVICE_CITY_NAME + " TEXT, " +
@@ -305,14 +308,16 @@ private static final String TAG = "HaierDBHelper";
 	  sqLiteDatabase.execSQL(
 	            "CREATE TABLE " + TABLE_NAME_DEVICES + " (" +
 	            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-	            REF_ACCOUNT_ID + " TEXT, " +  //账户id
-	            REF_HOME_ID + " TEXT, " +     //家id
+	            CARD_UID + " INTEGER, " +  //账户id
+	            CARD_AID + " INTEGER, " +     //家id
+	            CARD_BID + " INTEGER, " +     //保修卡服务器id
 	            CARD_TYPE + " TEXT, " +
 	            CARD_NAME + " TEXT, " +
 	            CARD_PINPAI + " TEXT, " +
 	            CARD_MODEL + " TEXT, " +
 	            CARD_SERIAL + " TEXT, " +
 	            CARD_BXPhone + " TEXT, " +
+	            CARD_FPaddr + " TEXT, " +
 	            CARD_BUT_DATE + " TEXT, " +
 	            CARD_PRICE + " TEXT, " +
 	            CARD_BUY_TUJING + " TEXT, " +

@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.widget.TextView;
 
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
@@ -30,7 +31,6 @@ import com.shwy.bestjoy.utils.NetworkUtils;
  */
 public class LoginOrUpdateAccountDialog extends Activity{
 
-	public static final String SERVICE_URL = "http://115.29.231.29/Haier/login.ashx?";
 	private static final String TAG = "LoginOrUpdateAccountDialog";
 	private AccountObject mAccountObject;
 	private String mTel, mPwd;
@@ -78,8 +78,8 @@ public class LoginOrUpdateAccountDialog extends Activity{
 			_error = null;
 			mAccountObject = null;
 			_is = null;
-			StringBuilder sb = new StringBuilder(SERVICE_URL);
-			sb.append("cell=").append(mTel)
+			StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
+			sb.append("login.ashx?cell=").append(mTel)
 			.append("&pwd=");
 			try {
 				_is = NetworkUtils.openContectionLocked(sb.toString(), mPwd, null);

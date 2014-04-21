@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
@@ -136,7 +137,7 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 	}
 	
 	private class GetYanZhengCodeAsyncTask extends AsyncTask<String, Void, Boolean> {
-		private static final String URL = "http://115.29.231.29/Haier/Register.ashx?";
+		private static final String URL = HaierServiceObject.SERVICE_URL + "/Register.ashx?";
 		@Override
 		protected Boolean doInBackground(String... params) {
 			return true;

@@ -1,11 +1,19 @@
 package com.bestjoy.app.haierwarrantycard.account;
 
+import java.util.Date;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.ContentValues;
+import android.database.Cursor;
+import android.net.Uri;
 
+import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
+import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
+import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.InfoInterfaceImpl;
 /**
  * 保修卡对象
@@ -33,6 +41,7 @@ import com.shwy.bestjoy.utils.InfoInterfaceImpl;
  */
 public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public static final String JSONOBJECT_NAME = "baoxiu";
+	private static final String TAG = "BaoxiuCardObject";
 	public String mLeiXin;
 	public String mPinPai;
 	public String mXingHao;
@@ -44,7 +53,36 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public String mBuyTuJing;
 	public String mYanBaoTime;
 	public String mYanBaoDanWei;
+	/**本地id*/
+	public long mId = -1;
 	public long mUID, mAID, mBID;
+	
+	public static final String[] PROJECTION = new String[]{
+		HaierDBHelper.ID,
+		HaierDBHelper.CARD_TYPE, 
+		HaierDBHelper.CARD_PINPAI,
+		HaierDBHelper.CARD_MODEL,
+		HaierDBHelper.CARD_SERIAL,
+		HaierDBHelper.CARD_BXPhone,
+		HaierDBHelper.CARD_FPaddr,
+		HaierDBHelper.CARD_BUT_DATE,
+		HaierDBHelper.CARD_PRICE,
+		HaierDBHelper.CARD_BUY_TUJING,
+		HaierDBHelper.CARD_YANBAO_TIME,
+		HaierDBHelper.CARD_YANBAO_TIME_COMPANY,
+		HaierDBHelper.CARD_UID,
+		HaierDBHelper.CARD_AID,
+		HaierDBHelper.CARD_BID,              //14
+		HaierDBHelper.CARD_NAME,
+	};
+	
+	public static final int KEY_CARD_BID = 14;
+	
+	public static final String WHERE_UID = HaierDBHelper.CARD_UID + "=?";
+	public static final String WHERE_AID = HaierDBHelper.CARD_AID + "=?";
+	public static final String WHERE_BID = HaierDBHelper.CARD_BID + "=?";
+	public static final String WHERE_UID_AND_AID = WHERE_UID + " and " + WHERE_AID;
+	public static final String WHERE_UID_AND_AID_AND_BID = WHERE_UID_AND_AID + " and " + WHERE_BID;
 	
 	public static BaoxiuCardObject parseBaoxiuCards(JSONObject jsonObject, AccountObject accountObject) throws JSONException {
 		BaoxiuCardObject cardObject = new BaoxiuCardObject();
@@ -72,13 +110,79 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		
+		sb.append("[Leixing:").append(mLeiXin).append(", Pinpai:").append(mPinPai)
+		.append(", XingHao:").append(mXingHao).append(", BianHao:").append(mSHBianHao).append("]");
 		return sb.toString();
+	}
+	
+	/**
+	 * 删除某个account的全部保修卡
+	 * @param cr
+	 * @param uid
+	 * @return
+	 */
+	public static int deleteAllBaoxiuCardsInDatabaseForAccount(ContentResolver cr, long uid) {
+		return cr.delete(BjnoteContent.BaoxiuCard.CONTENT_URI, WHERE_UID, new String[]{String.valueOf(uid)});
 	}
 
 	@Override
 	public boolean saveInDatebase(ContentResolver cr, ContentValues addtion) {
-		return super.saveInDatebase(cr, addtion);
+		ContentValues values = new ContentValues();
+		if (addtion != null) {
+			values.putAll(addtion);
+		}
+		String[] selectionArgs =  new String[]{String.valueOf(mUID), String.valueOf(mAID), String.valueOf(mBID)};
+		long id = isExsited(cr,selectionArgs);
+		values.put(HaierDBHelper.CARD_TYPE, mLeiXin);
+		values.put(HaierDBHelper.CARD_PINPAI, mPinPai);
+		values.put(HaierDBHelper.CARD_MODEL, mXingHao);
+		values.put(HaierDBHelper.CARD_SERIAL, mSHBianHao);
+		values.put(HaierDBHelper.CARD_BXPhone, mBXPhone);
+		values.put(HaierDBHelper.CARD_FPaddr, mFPaddr);
+		
+		values.put(HaierDBHelper.CARD_BUT_DATE, mBuyDate);
+		values.put(HaierDBHelper.CARD_PRICE, mBuyPrice);
+		values.put(HaierDBHelper.CARD_BUY_TUJING, mBuyTuJing);
+		
+		values.put(HaierDBHelper.CARD_YANBAO_TIME, mYanBaoTime);
+		values.put(HaierDBHelper.CARD_YANBAO_TIME_COMPANY, mYanBaoDanWei);
+		
+		values.put(HaierDBHelper.CONTACT_DATE, new Date().getTime());
+		
+		if (id > 0) {
+			int update = cr.update(BjnoteContent.BaoxiuCard.CONTENT_URI, values,  WHERE_UID_AND_AID_AND_BID, selectionArgs);
+			if (update > 0) {
+				DebugUtils.logD(TAG, "saveInDatebase update exsited bid#" + mBID);
+				return true;
+			} else {
+				DebugUtils.logD(TAG, "saveInDatebase failly update exsited bid#" + mBID);
+			}
+		} else {
+			//如果不存在，新增的时候需要增加uid aid bid值
+			values.put(HaierDBHelper.CARD_UID, mUID);
+			values.put(HaierDBHelper.CARD_AID, mAID);
+			values.put(HaierDBHelper.CARD_BID, mBID);
+			Uri uri = cr.insert(BjnoteContent.BaoxiuCard.CONTENT_URI, values);
+			if (uri != null) {
+				DebugUtils.logD(TAG, "saveInDatebase insert bid#" + mBID);
+				mId = ContentUris.parseId(uri);
+				return true;
+			} else {
+				DebugUtils.logD(TAG, "saveInDatebase failly insert bid#" + mBID);
+			}
+		}
+		return false;
+	}
+	
+	private long isExsited(ContentResolver cr, String[] selectionArgs) {
+		Cursor c = cr.query(BjnoteContent.BaoxiuCard.CONTENT_URI, PROJECTION, WHERE_UID_AND_AID_AND_BID, selectionArgs, null);
+		if (c != null) {
+			if (c.moveToNext()) {
+				return c.getLong(KEY_CARD_BID);
+			}
+			c.close();
+		}
+		return -1;
 	}
 
 }

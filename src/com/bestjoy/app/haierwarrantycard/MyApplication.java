@@ -1,13 +1,16 @@
 package com.bestjoy.app.haierwarrantycard;
 
 import android.app.Application;
+import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerService;
+import com.bestjoy.app.haierwarrantycard.ui.PreferencesActivity;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
 import com.bestjoy.app.haierwarrantycard.utils.InstallFileUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
@@ -63,8 +66,13 @@ public class MyApplication extends Application{
 		
 		//add by chenkai, 20140419, 图片异步加载服务
 		startService(PhotoManagerService.getServiceIntent(this));
+		//第一次的时候我们需要拷贝数据库
+		SharedPreferences sharePrefers = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sharePrefers.getBoolean(PreferencesActivity.KEY_FIRST_STARTUP, true)) {
+			InstallFileUtils.installDatabaseFiles(MyApplication.this, HaierDBHelper.DB_DEVICE_NAME);
+			sharePrefers.edit().putBoolean(PreferencesActivity.KEY_FIRST_STARTUP, false).commit();
+		}
 		
-		InstallFileUtils.installDatabaseFiles(MyApplication.this, HaierDBHelper.DB_DEVICE_NAME);
 	}
 	
 	public synchronized static MyApplication getInstance() {
