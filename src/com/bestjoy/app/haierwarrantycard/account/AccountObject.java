@@ -113,7 +113,7 @@ public class AccountObject implements InfoInterface{
 		values.put(HaierDBHelper.ACCOUNT_PWD, mAccountPwd);
 		//由于我们在HOME表上创建了触发器，一旦发生增删会触发更新Account的ACCOUNT_HOME_COUNT字段，所以，这里就不用更新该字段了
 //		values.put(HaierDBHelper.ACCOUNT_HOME_COUNT, mAccountHomes.size());
-		values.put(HaierDBHelper.CONTACT_DATE, new Date().getTime());
+		values.put(HaierDBHelper.DATE, new Date().getTime());
 		if (id > 0) {
 			int update = cr.update(BjnoteContent.Accounts.CONTENT_URI, values, WHERE_UID, new String[]{String.valueOf(mAccountUid)});
 			if (update > 0) {
@@ -158,14 +158,15 @@ public class AccountObject implements InfoInterface{
 	}
 	
 	private long isExsited(ContentResolver cr, long uid) {
+		long id = -1;
 		Cursor c = cr.query(BjnoteContent.Accounts.CONTENT_URI, PROJECTION_UID, WHERE_UID, new String[]{String.valueOf(uid)}, null);
 		if (c != null) {
 			if (c.moveToNext()) {
-				return c.getLong(KEY_ID);
+				id = c.getLong(KEY_ID);
 			}
 			c.close();
 		}
-		return -1;
+		return id;
 	}
 	
 }

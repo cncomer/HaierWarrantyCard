@@ -6,6 +6,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.widget.TextView;
+
+import com.bestjoy.app.haierwarrantycard.MyApplication;
+import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.InfoInterfaceImpl;
 import com.shwy.bestjoy.utils.NetworkUtils;
@@ -46,7 +50,7 @@ public class AccountParser extends InfoInterfaceImpl{
 	 * @param goodsObject
 	 * @return
 	 */
-	public static AccountObject parseJson(InputStream is) {
+	public static AccountObject parseJson(InputStream is, final TextView view) {
 		 DebugUtils.logParser(TAG, "Start parse");
 		if (is == null ) {
 			return null;
@@ -54,6 +58,15 @@ public class AccountParser extends InfoInterfaceImpl{
 		 AccountObject accountObject = null;
 		try {
 			JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
+			if (view != null) {
+				MyApplication.getInstance().postAsync(new Runnable() {
+
+					@Override
+					public void run() {
+						view.setText(R.string.msg_login_download_accountinfo_wait);
+					}
+				});
+			}
 			accountObject = new AccountObject();
 			//解析userdata
 			parseUserData(jsonObject, accountObject);
@@ -61,9 +74,28 @@ public class AccountParser extends InfoInterfaceImpl{
 				//如果是失败的，我们提前返回，不用解析其他数据了
 				return accountObject;
 			}
+			
+			if (view != null) {
+				MyApplication.getInstance().postAsync(new Runnable() {
+
+					@Override
+					public void run() {
+						view.setText(R.string.msg_login_download_addressinfo_wait);
+					}
+				});
+			}
 			//解析address
 			parseAddress(jsonObject, accountObject);
 			
+			if (view != null) {
+				MyApplication.getInstance().postAsync(new Runnable() {
+
+					@Override
+					public void run() {
+						view.setText(R.string.msg_login_download_baoxiuinfo_wait);
+					}
+				});
+			}
 			//解析保修卡
 			parseBaoxiuCards(jsonObject, accountObject);
 		} catch (JSONException e) {

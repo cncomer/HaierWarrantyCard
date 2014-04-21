@@ -24,7 +24,7 @@ public class BjnoteProvider extends ContentProvider{
 	private String[] mTables = new String[]{
 			HaierDBHelper.TABLE_NAME_ACCOUNTS,
 			HaierDBHelper.TABLE_NAME_HOMES,
-			HaierDBHelper.TABLE_NAME_DEVICES,
+			HaierDBHelper.TABLE_NAME_CARDS,
 			HaierDBHelper.TABLE_SCAN_NAME,
 //			ContactsDBHelper.TABLE_NAME_MYLIFE_CONSUME,
 	};
