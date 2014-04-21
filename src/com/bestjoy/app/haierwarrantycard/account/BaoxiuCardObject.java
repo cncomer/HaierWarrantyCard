@@ -147,7 +147,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		values.put(HaierDBHelper.CARD_YANBAO_TIME, mYanBaoTime);
 		values.put(HaierDBHelper.CARD_YANBAO_TIME_COMPANY, mYanBaoDanWei);
 		
-		values.put(HaierDBHelper.CONTACT_DATE, new Date().getTime());
+		values.put(HaierDBHelper.DATE, new Date().getTime());
 		
 		if (id > 0) {
 			int update = cr.update(BjnoteContent.BaoxiuCard.CONTENT_URI, values,  WHERE_UID_AND_AID_AND_BID, selectionArgs);
@@ -175,14 +175,15 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	}
 	
 	private long isExsited(ContentResolver cr, String[] selectionArgs) {
+		long id = -1;
 		Cursor c = cr.query(BjnoteContent.BaoxiuCard.CONTENT_URI, PROJECTION, WHERE_UID_AND_AID_AND_BID, selectionArgs, null);
 		if (c != null) {
 			if (c.moveToNext()) {
-				return c.getLong(KEY_CARD_BID);
+				id = c.getLong(KEY_CARD_BID);
 			}
 			c.close();
 		}
-		return -1;
+		return id;
 	}
 
 }

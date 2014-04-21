@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.http.client.ClientProtocolException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -50,22 +51,9 @@ public class LoginOrUpdateAccountDialog extends Activity{
 	}
 
 	private LoginAsyncTask mLoginAsyncTask;
-	private ProgressDialog mLoginDialog;
 	private void loginAsync() {
+		mStatusView.setText(mIsLogin?R.string.msg_login_dialog_title_wait:R.string.msg_update_dialog_title_wait);
 		AsyncTaskUtils.cancelTask(mLoginAsyncTask);
-		if (mLoginDialog == null) {
-			mLoginDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-				
-				@Override
-				public void onCancel(DialogInterface dialog) {
-					AsyncTaskUtils.cancelTask(mLoginAsyncTask);
-				}
-			});
-		} else {
-			if (!mLoginDialog.isShowing()) {
-				mLoginDialog.show();
-			}
-		}
 		mLoginAsyncTask = new LoginAsyncTask();
 		mLoginAsyncTask.execute();
 	}
@@ -83,7 +71,7 @@ public class LoginOrUpdateAccountDialog extends Activity{
 			.append("&pwd=");
 			try {
 				_is = NetworkUtils.openContectionLocked(sb.toString(), mPwd, null);
-				mAccountObject = AccountParser.parseJson(_is);
+				mAccountObject = AccountParser.parseJson(_is, mStatusView);
 				if (mAccountObject.isLogined()) {
 					boolean saveAccountOk = HaierAccountManager.getInstance().saveAccountObject(LoginOrUpdateAccountDialog.this.getContentResolver(), mAccountObject);
 					if (!saveAccountOk) {

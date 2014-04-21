@@ -145,7 +145,7 @@ public class HomeObject implements InfoInterface{
 		values.put(HaierDBHelper.DEVICE_CITY_NAME, mHomeCity);
 		values.put(HaierDBHelper.DEVICE_DIS_NAME, mHomeDis);
 		values.put(HaierDBHelper.HOME_DETAIL, mHomePlaceDetail);
-		values.put(HaierDBHelper.CONTACT_DATE, new Date().getTime());
+		values.put(HaierDBHelper.DATE, new Date().getTime());
 		values.put(HaierDBHelper.POSITION, mHomePosition);
 		//对于家，只有位置是0的才是默认，其余的都不是, Home的uid和aid只有新增的时候会插入
 		if (mHomePosition == 0) {
@@ -177,14 +177,15 @@ public class HomeObject implements InfoInterface{
 	}
 	
 	private long isExsited(ContentResolver cr, long uid, long aid) {
+		long id = -1;
 		Cursor c = cr.query(BjnoteContent.Homes.CONTENT_URI, HOME_PROJECTION, WHERE_HOME_AID_ACCOUNT_UID, new String[]{String.valueOf(uid), String.valueOf(aid)}, null);
 		if (c != null) {
 			if (c.moveToNext()) {
-				return c.getLong(KEY_HOME_ADDRESS_ID);
+				id = c.getLong(KEY_HOME_ADDRESS_ID);
 			}
 			c.close();
 		}
-		return -1;
+		return id;
 	}
 	
 	/**
