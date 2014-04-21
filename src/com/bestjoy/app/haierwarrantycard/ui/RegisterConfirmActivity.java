@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.bestjoy.app.haierwarrantycard.MyApplication;
@@ -41,6 +42,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	private AccountObject mAccountObject;
 	
 	private HomeObject mHomeObject;
+	private Button mConfrimReg;
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
@@ -78,6 +80,8 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 		usrPwdConfirmEditText = (EditText) findViewById(R.id.usr_repwd);
 		
 		mHomeObject = mProCityDisEditView.getHomeObject();
+		mConfrimReg = (Button) findViewById(R.id.button_save_reg);
+		mConfrimReg.setOnClickListener(this);
 	}
 	
 	public static void startIntent(Context context) {
@@ -194,6 +198,8 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 				mAccountObject.mAccountTel = mTel;
 				mAccountObject.mAccountPwd = usrPwdEditText.getText().toString().trim();
 				usrPwdConfirm = usrPwdConfirmEditText.getText().toString().trim();
+
+				mHomeObject = mProCityDisEditView.getHomeObject();
 				if(valiInput()) {
 					registerAsync();
 				}
