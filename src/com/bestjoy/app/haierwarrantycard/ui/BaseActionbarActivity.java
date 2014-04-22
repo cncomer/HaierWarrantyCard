@@ -15,6 +15,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 
 import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
@@ -24,7 +25,7 @@ import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.ImageHelper;
 
-public abstract class BaseActionbarActivity extends SherlockActivity {
+public abstract class BaseActionbarActivity extends SherlockFragmentActivity {
 	private static final String TAG = "BaseActionbarActivity";
 
 	private static final int CurrentPictureGalleryRequest = 11000;

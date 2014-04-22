@@ -16,23 +16,29 @@ import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
-
+/**
+ * 账户对象，在程序启动时候会通过{@link HaierAccountManager#setContext(Context context)}来获得当前默认账户。
+ * 
+ * 需要注意的是，在设计数据库的时候，有{@link HaierDBHelper#ACCOUNT_HOME_COUNT}字段，该字段会随着新增或是删除一个HomeObject数据
+ * 自动增加和减少，所以我们保存的时候不要设置他。成员mAccountHomes 以及 mBaoxiuCards默认都是空的，如果需要，需要额外调用方法来获得，
+ * @author chenkai
+ *
+ */
 public class AccountObject implements InfoInterface{
 	private static final String TAG = "HaierAccount";
 	
 	private static final String[] PROJECTION = new String[]{
 		HaierDBHelper.ID,
-		HaierDBHelper.ACCOUNT_MD,
+		HaierDBHelper.ACCOUNT_UID,
 		HaierDBHelper.ACCOUNT_NAME,
 		HaierDBHelper.ACCOUNT_TEL,
 		HaierDBHelper.ACCOUNT_PWD,
-		HaierDBHelper.ACCOUNT_CARD_COUNT,
 		HaierDBHelper.ACCOUNT_HOME_COUNT,
 	};
 	
 	private static final String[] PROJECTION_UID = new String[]{
 		HaierDBHelper.ID,
-		HaierDBHelper.ACCOUNT_MD,
+		HaierDBHelper.ACCOUNT_UID,
 	};
 	
 	
@@ -41,18 +47,16 @@ public class AccountObject implements InfoInterface{
 	private static final int KEY_NAME = 2;
 	private static final int KEY_TEL = 3;
 	private static final int KEY_PWD = 4;
-	private static final int KEY_CARD_COUNT = 5;
-	private static final int KEY_HOME_COUNT = 6;
+	private static final int KEY_HOME_COUNT = 5;
 	
 	private static final String WHERE_DEFAULT = HaierDBHelper.ACCOUNT_DEFAULT + "=1";
-	private static final String WHERE_UID = HaierDBHelper.ACCOUNT_MD + "=?";
+	private static final String WHERE_UID = HaierDBHelper.ACCOUNT_UID + "=?";
 	
 	public long mAccountId;
 	public Long mAccountUid;
 	public String mAccountName;
 	public String mAccountTel;
 	public String mAccountPwd;
-	public int mAccountCardCount;
 	public int mAccountHomeCount;
 	
 	
@@ -64,9 +68,6 @@ public class AccountObject implements InfoInterface{
 	
 	/**我的家信息*/
 	public List<HomeObject> mAccountHomes = new LinkedList<HomeObject>();
-	
-	/**我的保修卡信息*/
-	public List<BaoxiuCardObject> mBaoxiuCards = new LinkedList<BaoxiuCardObject>();
 	
 	public boolean isLogined() {
 		return mStatusCode != 0;
@@ -92,9 +93,9 @@ public class AccountObject implements InfoInterface{
 				haierAccount.mAccountName = c.getString(KEY_NAME);
 				haierAccount.mAccountTel = c.getString(KEY_TEL);
 				haierAccount.mAccountPwd = c.getString(KEY_PWD);
-				haierAccount.mAccountCardCount = c.getInt(KEY_CARD_COUNT);
 				haierAccount.mAccountHomeCount = c.getInt(KEY_HOME_COUNT);
 			}
+		    c.close();
 		}
 		
 		return haierAccount;
@@ -121,13 +122,14 @@ public class AccountObject implements InfoInterface{
 				mAccountId = id;
 				//如果本地已经存在了，那么我们先清空原来就有的Home
 				HomeObject.deleteAllHomesInDatabaseForAccount(cr, mAccountUid);
+				boolean result = true;
 				for(HomeObject homeObject : mAccountHomes) {
-					homeObject.saveInDatebase(cr, null);
-				}
-				//同上，删除本地所有的保修卡信息
-				BaoxiuCardObject.deleteAllBaoxiuCardsInDatabaseForAccount(cr, mAccountUid);
-				for(BaoxiuCardObject baoxiuCardObject : mBaoxiuCards) {
-					baoxiuCardObject.saveInDatebase(cr, null);
+					result = homeObject.saveInDatebase(cr, null);
+					if (result) {
+						for(BaoxiuCardObject baoxiuCardObject : homeObject.mBaoxiuCards) {
+							baoxiuCardObject.saveInDatebase(cr, null);
+						}
+					}
 				}
 				return true;
 			} else {
@@ -135,19 +137,21 @@ public class AccountObject implements InfoInterface{
 			}
 		} else {
 			//如果没有本地没有账户，那么我们新增的时候增加ACCOUNT_MD字段,并设置为当前默认账户
-			values.put(HaierDBHelper.ACCOUNT_MD, mAccountUid);
+			values.put(HaierDBHelper.ACCOUNT_UID, mAccountUid);
 			values.put(HaierDBHelper.ACCOUNT_DEFAULT, 1);
 			Uri uri = cr.insert(BjnoteContent.Accounts.CONTENT_URI, values);
 			if (uri != null) {
 				DebugUtils.logD(TAG, "saveInDatebase insert uid#" + mAccountUid);
 				mAccountId = ContentUris.parseId(uri);
 				//新增我的家数据
+				boolean result = false;
 				for(HomeObject homeObject : mAccountHomes) {
-					homeObject.saveInDatebase(cr, null);
-				}
-				//新增我的保修卡数据
-				for(BaoxiuCardObject baoxiuCardObject : mBaoxiuCards) {
-					baoxiuCardObject.saveInDatebase(cr, null);
+					result = homeObject.saveInDatebase(cr, null);
+					if (result) {
+						for(BaoxiuCardObject baoxiuCardObject : homeObject.mBaoxiuCards) {
+							baoxiuCardObject.saveInDatebase(cr, null);
+						}
+					}
 				}
 				return true;
 			} else {

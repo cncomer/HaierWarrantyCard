@@ -1,10 +1,14 @@
 package com.bestjoy.app.haierwarrantycard.account;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -13,7 +17,14 @@ import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
-
+/**
+ * 账户的家对象
+ * 
+ * 需要注意的是，在设计数据库的时候，有{@link HaierDBHelper#HOME_CARD_COUNT}字段，该字段会随着新增或是删除一个BaoxiuCardObject数据
+ * 自动增加和减少，所以我们保存的时候不要设置他。当调用
+ * @author chenkai
+ *
+ */
 public class HomeObject implements InfoInterface{
 
 	private static final String TAG = "HomeObject";
@@ -28,6 +39,9 @@ public class HomeObject implements InfoInterface{
 	public long mHomeId;
 	public int mHomePosition;
 	public boolean mIsDefault = false;
+	public int mHomeCardCount;
+	/**我的保修卡信息*/
+	public List<BaoxiuCardObject> mBaoxiuCards = new LinkedList<BaoxiuCardObject>();
 	
 	
 	public static final String[] PROVINCE_PROJECTION = new String[]{
@@ -56,24 +70,35 @@ public class HomeObject implements InfoInterface{
 	public static final String SELECTION_CITY_NAME = HaierDBHelper.DEVICE_CITY_NAME + "=?";
 	
 	// home table
-	private static final String WHERE_HOME_ACCOUNTID = HaierDBHelper.REF_ACCOUNT_ID + "=?";
-	private static final String WHERE_HOME_ADDRESS_ID = HaierDBHelper.HOME_ADDRESS_ID + "=?";
+	private static final String WHERE_HOME_ACCOUNTID = HaierDBHelper.ACCOUNT_UID + "=?";
+	private static final String WHERE_HOME_ADDRESS_ID = HaierDBHelper.HOME_AID + "=?";
 	private static final String WHERE_HOME_AID_ACCOUNT_UID = WHERE_HOME_ACCOUNTID + " and " + WHERE_HOME_ADDRESS_ID;
-	
+	private static final String WHERE_ACCOUNT_ID_AND_HOME_ADDRESS_ID = WHERE_HOME_ACCOUNTID + " and " + WHERE_HOME_ADDRESS_ID;
 	public static final String[] HOME_PROJECTION = new String[]{
-		HaierDBHelper.REF_ACCOUNT_ID,        //0
-		HaierDBHelper.HOME_ADDRESS_ID,
+		HaierDBHelper.ACCOUNT_UID,        //0
+		HaierDBHelper.HOME_AID,
 		HaierDBHelper.HOME_NAME,
 		HaierDBHelper.DEVICE_PRO_NAME,
 		HaierDBHelper.DEVICE_CITY_NAME,
 		HaierDBHelper.DEVICE_DIS_NAME,
-		HaierDBHelper.HOME_DETAIL,
+		HaierDBHelper.HOME_DETAIL,           //6
 		HaierDBHelper.HOME_DEFAULT,
 		HaierDBHelper.POSITION,
-		"_id",
+		HaierDBHelper.ID,
+		HaierDBHelper.HOME_CARD_COUNT,      //10
 	};
 	
-	private static final int KEY_HOME_ADDRESS_ID = 1;
+	public static final int KEY_HOME_UID = 0;
+	public static final int KEY_HOME_AID = 1;
+	public static final int KEY_HOME_NAME = 2;
+	public static final int KEY_HOME_PRO_NAME = 3;
+	public static final int KEY_HOME_CITY_NAME = 4;
+	public static final int KEY_HOME_DIS_NAME = 5;
+	public static final int KEY_HOME_DETAIL = 6;
+	public static final int KEY_HOME_DEFAULT = 7;
+	public static final int KEY_HOME_POSITION = 8;
+	public static final int KEY_HOME_ID = 9;
+	public static final int KEY_HOME_CARD_COUNT = 10;
 	
 	public static long getProvinceId(ContentResolver cr, String provinceName) {
 		if (TextUtils.isEmpty(provinceName)) {
@@ -162,8 +187,8 @@ public class HomeObject implements InfoInterface{
 				DebugUtils.logD(TAG, "saveInDatebase failly update exsited aid#" + mHomeAid);
 			}
 		} else {
-			values.put(HaierDBHelper.HOME_ADDRESS_ID, mHomeAid);
-			values.put(HaierDBHelper.REF_ACCOUNT_ID, mHomeUid);
+			values.put(HaierDBHelper.HOME_AID, mHomeAid);
+			values.put(HaierDBHelper.ACCOUNT_UID, mHomeUid);
 			Uri uri = cr.insert(BjnoteContent.Homes.CONTENT_URI, values);
 			if (uri != null) {
 				DebugUtils.logD(TAG, "saveInDatebase insert aid#" + mHomeAid);
@@ -181,7 +206,7 @@ public class HomeObject implements InfoInterface{
 		Cursor c = cr.query(BjnoteContent.Homes.CONTENT_URI, HOME_PROJECTION, WHERE_HOME_AID_ACCOUNT_UID, new String[]{String.valueOf(uid), String.valueOf(aid)}, null);
 		if (c != null) {
 			if (c.moveToNext()) {
-				id = c.getLong(KEY_HOME_ADDRESS_ID);
+				id = c.getLong(KEY_HOME_AID);
 			}
 			c.close();
 		}
@@ -198,15 +223,70 @@ public class HomeObject implements InfoInterface{
 		return cr.delete(BjnoteContent.Homes.CONTENT_URI, WHERE_HOME_ACCOUNTID, new String[]{String.valueOf(uid)});
 	}
 	
+	public static Cursor getAllHomesCursor(ContentResolver cr, long uid) {
+		return cr.query(BjnoteContent.Homes.CONTENT_URI, HOME_PROJECTION, WHERE_HOME_ACCOUNTID, new String[]{String.valueOf(uid)}, null);
+	}
+	
+	public static List<HomeObject> getAllHomeObjects(ContentResolver cr, long uid) {
+		Cursor c = getAllHomesCursor(cr, uid);
+		List<HomeObject> list = new ArrayList<HomeObject>();
+		if (c != null) {
+			list = new ArrayList<HomeObject>(c.getCount());
+			while(c.moveToNext()) {
+				list.add(getFromHomeSCursor(c));
+			}
+			c.close();
+		}
+		return list;
+	}
+	
+	private static HomeObject getFromHomeSCursor(Cursor c) {
+		HomeObject homeObject = new HomeObject();
+		homeObject.mHomeId = c.getLong(KEY_HOME_ID);
+		homeObject.mHomeUid = c.getLong(KEY_HOME_UID);
+		homeObject.mHomeAid = c.getLong(KEY_HOME_AID);
+		homeObject.mHomeName = c.getString(KEY_HOME_NAME);
+		homeObject.mHomeProvince = c.getString(KEY_HOME_PRO_NAME);
+		homeObject.mHomeCity = c.getString(KEY_HOME_CITY_NAME);
+		homeObject.mHomeDis = c.getString(KEY_HOME_DIS_NAME);
+		homeObject.mHomePlaceDetail = c.getString(KEY_HOME_DETAIL);
+		homeObject.mHomePosition = c.getInt(KEY_HOME_POSITION);
+		homeObject.mHomeCardCount = c.getInt(KEY_HOME_CARD_COUNT);
+		homeObject.mIsDefault = c.getInt(KEY_HOME_DEFAULT) == 1;
+		return homeObject;
+	}
+	
+	public static HomeObject getHomeObject(ContentResolver cr, long uid, long aid) {
+		Cursor c = cr.query(BjnoteContent.Homes.CONTENT_URI, HOME_PROJECTION, WHERE_ACCOUNT_ID_AND_HOME_ADDRESS_ID, new String[]{String.valueOf(uid), String.valueOf(aid)}, null);
+		if (c != null) {
+			if (c.moveToNext()) {
+				return getFromHomeSCursor(c);
+			}
+			c.close();
+		}
+		return null;
+	}
+	/**
+	 * 从数据库中找所有该HomeObject的保修卡，并附值给mBaoxiuCards成员
+	 */
+	public void initBaoxiuCards(ContentResolver cr) {
+		mBaoxiuCards = BaoxiuCardObject.getAllBaoxiuCardObjects(cr, mHomeUid, mHomeAid);
+	}
+	
+	public boolean hasBaoxiuCards() {
+		return mHomeCardCount > 0;
+	}
+	
 	/**
 	 * 是否有有效的地址，如果各个字段都是空的，那么我们认为丢弃该家
 	 * @return
 	 */
 	public boolean hasValidateAddress() {
 		return !TextUtils.isEmpty(mHomeName)
-				|| TextUtils.isEmpty(mHomeProvince)
-				|| TextUtils.isEmpty(mHomeCity)
-				|| TextUtils.isEmpty(mHomeDis)
-				|| TextUtils.isEmpty(mHomePlaceDetail);
+				|| !TextUtils.isEmpty(mHomeProvince)
+				|| !TextUtils.isEmpty(mHomeCity)
+				|| !TextUtils.isEmpty(mHomeDis)
+				|| !TextUtils.isEmpty(mHomePlaceDetail);
 	}
+	
 }

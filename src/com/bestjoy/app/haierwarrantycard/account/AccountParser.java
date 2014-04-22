@@ -155,15 +155,21 @@ public class AccountParser extends InfoInterfaceImpl{
 	public static void parseBaoxiuCards(JSONObject jsonObject, AccountObject accountObject) throws JSONException {
 		//解析baoxiu
 		JSONArray baoxiuCards = jsonObject.getJSONArray(BaoxiuCardObject.JSONOBJECT_NAME);
-		accountObject.mBaoxiuCards.clear();
 		if (baoxiuCards != null) {
 			int len = baoxiuCards.length();
 			BaoxiuCardObject baoxiuCardObject = null;
 			for(int index=0; index < len; index++) {
 				baoxiuCardObject = BaoxiuCardObject.parseBaoxiuCards(baoxiuCards.getJSONObject(index), accountObject);
 				if (baoxiuCardObject != null) {
+					//每一个保修卡只会属于一个Home
+					for(HomeObject homeObject : accountObject.mAccountHomes) {
+						if (baoxiuCardObject.mAID == homeObject.mHomeAid) {
+							homeObject.mBaoxiuCards.add(baoxiuCardObject);
+							homeObject.mHomeCardCount += 1;
+							continue;
+						}
+					}
 					DebugUtils.logD(TAG, "find baoxiuCard " + baoxiuCardObject.toString());
-					accountObject.mBaoxiuCards.add(baoxiuCardObject);
 				}
 			}
 		}

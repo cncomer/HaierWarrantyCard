@@ -21,20 +21,38 @@ public class HaierAccountManager {
 		mContext = context; 
 		mHaierAccount = null;
 		mSharedPreferences = mContext.getSharedPreferences(TAG, Context.MODE_PRIVATE);
+		initAccountObject();
 	}
 	
 	public void initAccountObject() {
 		if (mHaierAccount == null) {
 			mHaierAccount = AccountObject.getHaierAccountFromDatabase(mContext);
+			if (mHaierAccount != null) {
+				mHaierAccount.mAccountHomes = HomeObject.getAllHomeObjects(mContext.getContentResolver(), mHaierAccount.mAccountUid);
+				for(HomeObject homeObject : mHaierAccount.mAccountHomes) {
+					homeObject.initBaoxiuCards(mContext.getContentResolver());
+				}
+			}
 		}
+	}
+	
+	public AccountObject getAccountObject() {
+		return mHaierAccount;
 	}
 	
 	public boolean hasLoginned() {
 		return mHaierAccount != null && mHaierAccount.mAccountId > 0;
 	}
-	
-	public boolean hasWarrantyCards() {
-		return mHaierAccount != null && mHaierAccount.mAccountCardCount > 0;
+	/**是否有保修卡*/
+	public boolean hasBaoxiuCards() {
+		if (mHaierAccount != null) {
+			for(HomeObject home : mHaierAccount.mAccountHomes) {
+				if (home.hasBaoxiuCards()) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	public boolean hasHomes() {
@@ -63,6 +81,13 @@ public class HaierAccountManager {
     	}
     	return false;
     	
+    }
+    /**
+     * 更新账户，每当我们增删家和保修卡数据的时候，调用该方法可以同步当前账户信息.
+     */
+    public void updateAccount() {
+    	mHaierAccount = null;
+    	initAccountObject();
     }
     
 }
