@@ -14,6 +14,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.ui.RepairActivity;
 import com.iflytek.cloud.speech.RecognizerListener;
 import com.iflytek.cloud.speech.RecognizerResult;
 import com.iflytek.cloud.speech.SpeechConstant;
@@ -62,15 +63,17 @@ public class SpeechRecognizerEngine {
 
 	/**
 	 * 显示听写对话框.
+	 * @param repairActivity 
 	 * 
 	 * @param
 	 */
-	public void showIatDialog() {
-		if (null == iatDialog) {
+	public void showIatDialog(RepairActivity repairActivity) {
+		//if (null == iatDialog) {
 			// 初始化听写Dialog
-			iatDialog = new RecognizerDialog(mContext);
-		}
+			iatDialog = new RecognizerDialog(repairActivity);
+		//}
 
+		iatDialog.setOwnerActivity(repairActivity);
 		// 清空Grammar_ID，防止识别后进行听写时Grammar_ID的干扰
 		iatDialog.setParameter(SpeechConstant.CLOUD_GRAMMAR, null);
 		;

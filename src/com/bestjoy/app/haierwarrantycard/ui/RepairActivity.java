@@ -78,7 +78,7 @@ public class RepairActivity extends BaseActionbarActivity implements OnClickList
 		switch (v.getId()) {
 		case R.id.button_speak:
 			//显示语音听写Dialog.
-			mSpeechRecognizerEngine.showIatDialog();
+			mSpeechRecognizerEngine.showIatDialog(RepairActivity.this);
 			break;
 
 		default:
