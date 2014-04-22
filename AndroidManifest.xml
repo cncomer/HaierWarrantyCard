@@ -46,7 +46,7 @@
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.MainActivity"
             android:theme="@style/AppTheme.MainActivityActionBar"
-            android:label="@string/app_name" >
+            android:label="" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -123,6 +123,12 @@
             android:name="com.bestjoy.app.haierwarrantycard.ui.LoginOrUpdateAccountDialog"
             android:excludeFromRecents="true"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+        
+        <activity
+            android:name="com.bestjoy.app.haierwarrantycard.ui.BrowserActivity"
+            android:configChanges="orientation"
+            android:excludeFromRecents="true"
+            android:label="@string/title_feedback" />
         
         <provider android:name="com.bestjoy.app.haierwarrantycard.database.BjnoteProvider"
             android:exported="true"
