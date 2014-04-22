@@ -35,13 +35,12 @@ public class SpeechRecognizerEngine {
 	// 识别对象
 	private SpeechRecognizer iatRecognizer;
 	// 识别结果显示
-	private EditText mResultText;
+	private static EditText mResultText;
 
 	@SuppressLint("ShowToast")
-	private SpeechRecognizerEngine(Context context, EditText mAskInput) {
+	private SpeechRecognizerEngine(Context context) {
 		DebugUtils.logD(TAG, "onCreate()");
 		mContext = context;
-		mResultText = mAskInput;
 		// 用户登录
 		SpeechUser.getUser().login(mContext, null, null,
 				"appid=" + mContext.getString(R.string.app_id), listener);
@@ -52,15 +51,17 @@ public class SpeechRecognizerEngine {
 		mToast = Toast.makeText(mContext, "", Toast.LENGTH_LONG);
 	}
 
-	public static SpeechRecognizerEngine getInstance(Context context,
-			EditText mAskInput) {
+	public static SpeechRecognizerEngine getInstance(Context context) {
 		if (mSpeechRecognizerEngine == null) {
-			mSpeechRecognizerEngine = new SpeechRecognizerEngine(context,
-					mAskInput);
+			mSpeechRecognizerEngine = new SpeechRecognizerEngine(context);
 		}
 		return mSpeechRecognizerEngine;
 	}
 
+	public static void setResultText(EditText mAskInput) {
+		mResultText = mAskInput;
+	}
+	
 	/**
 	 * 显示听写对话框.
 	 * @param repairActivity 
@@ -73,7 +74,6 @@ public class SpeechRecognizerEngine {
 			iatDialog = new RecognizerDialog(repairActivity);
 		//}
 
-		iatDialog.setOwnerActivity(repairActivity);
 		// 清空Grammar_ID，防止识别后进行听写时Grammar_ID的干扰
 		iatDialog.setParameter(SpeechConstant.CLOUD_GRAMMAR, null);
 		;

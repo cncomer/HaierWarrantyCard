@@ -42,6 +42,7 @@ public class RepairActivity extends BaseActionbarActivity implements OnClickList
 		return true;
 	}
 	
+	@SuppressWarnings("static-access")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		DebugUtils.logD(TAG, "onCreate()");
@@ -64,7 +65,8 @@ public class RepairActivity extends BaseActionbarActivity implements OnClickList
 			
 		}, 100);*/
 		initViews();
-		mSpeechRecognizerEngine = SpeechRecognizerEngine.getInstance(this, mAskInput);
+		mSpeechRecognizerEngine = SpeechRecognizerEngine.getInstance(this);
+		mSpeechRecognizerEngine.setResultText(mAskInput);
 		
 	}
 	
