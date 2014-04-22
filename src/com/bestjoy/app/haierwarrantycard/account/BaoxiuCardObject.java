@@ -55,7 +55,10 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public String mBuyTuJing;
 	public String mYanBaoTime;
 	public String mYanBaoDanWei;
+	/**用户定义的保修设备名称，如客厅电视机*/
 	public String mCardName;
+	/**主要配件保修，浮点值*/
+	public String mZhuBx;
 	/**本地id*/
 	public long mId = -1;
 	public long mUID, mAID, mBID;

@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.ui.BrowserActivity;
 import com.bestjoy.app.haierwarrantycard.ui.InstallActivity;
 import com.bestjoy.app.haierwarrantycard.ui.MyChooseDevicesActivity;
 import com.bestjoy.app.haierwarrantycard.ui.NewCardActivity;
@@ -126,7 +127,8 @@ public class ModleSettings {
 				}
 				return;
 			case R.id.model_feedback:
-				Intents.openURL(_context, "http://m.rrs.com/rrsm/track/verify.html");
+				BrowserActivity.startActivity(_context, "http://m.rrs.com/rrsm/track/verify.html");
+//				Intents.openURL(_context, "http://m.rrs.com/rrsm/track/verify.html");
 				return;
 			}
 			

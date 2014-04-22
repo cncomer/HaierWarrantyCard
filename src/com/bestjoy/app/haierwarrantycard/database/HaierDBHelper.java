@@ -79,7 +79,7 @@ private static final String TAG = "HaierDBHelper";
   public static final String CARD_YANBAO_TIME_COMPANY = "YanBaoDanWei";
   /**延保单位电话*/
   public static final String CARD_YANBAO_TIME_COPMANY_TEL = "YanBaoDanWeiCommanyTel";
-  /**整机保修*/
+  /**整机保修，目前不定义*/
   public static final String DEVICE_WARRANTY_PERIOD = "warranty_period";
   /**配件保修*/
   public static final String DEVICE_COMPONENT_WARRANTY_PERIOD = "component_warranty_period";

@@ -172,7 +172,7 @@ public class NewWarrantyCardFragment extends BaseFragment implements View.OnClic
 			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 				mCalendar.set(year, monthOfYear, dayOfMonth);
 				//更新日期数据
-				mGoodsObject.mDate = mCalendar.getTimeInMillis();
+//				mGoodsObject.mDate = mCalendar.getTimeInMillis();
 				//更新UI
 				mDatePickBtn.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(new Date(mGoodsObject.mDate)));
 			}

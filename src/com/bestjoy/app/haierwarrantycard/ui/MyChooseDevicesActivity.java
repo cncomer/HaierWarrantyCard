@@ -14,10 +14,16 @@ import android.view.ViewGroup;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.Intents;
-
+/**
+ * 我的家UI，需要选择设备的调用，都可以直接进入该Activity进行选择
+ * @author chenkai
+ *
+ */
 public class MyChooseDevicesActivity extends BaseActionbarActivity {
+	public static final String ACTION_CHOOSE_DEVICE = "com.bestjoy.app.haierwarrantycard.Intent.ACTION_CHOOSE_DEVICE";
 	private static final String TAG = "MyChooseDevicesActivity";
 	private ViewPager mViewPager;
 
@@ -63,7 +69,11 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity {
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			return HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(position).mHomeName;
+			return getHome(position).mHomeName;
+		}
+		
+		private HomeObject getHome(int position) {
+			return HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(position);
 		}
 
 
@@ -93,6 +103,13 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity {
 			return HaierAccountManager.getInstance().getAccountObject().mAccountHomeCount;
 		}
 
+	}
+	
+	
+	
+	public static void startChooseDevice(Context context, String title, int type) {
+		Intent intent = new Intent(context, MyChooseDevicesActivity.class);
+		intent.setAction(ACTION_CHOOSE_DEVICE);
 	}
 	
 }

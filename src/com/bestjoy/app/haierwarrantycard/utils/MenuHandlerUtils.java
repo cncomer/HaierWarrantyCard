@@ -12,12 +12,12 @@ import com.bestjoy.app.haierwarrantycard.ui.RegisterActivity;
 public class MenuHandlerUtils {
 	
     public static void onCreateOptionsMenu(Menu menu) {
-        SubMenu subMenu1 = menu.addSubMenu(0, R.string.menu_more, 0, R.string.menu_more);
-        subMenu1.add(0, R.string.menu_login, 0, R.string.menu_login);
-        subMenu1.add(0, R.string.menu_register, 0, R.string.menu_register);
-        subMenu1.add(0, R.string.menu_setting, 0, R.string.menu_setting);
-        subMenu1.add(0, R.string.menu_help, 0, R.string.menu_help);
-        subMenu1.add(0, R.string.menu_about, 0, R.string.menu_about);
+        SubMenu subMenu1 = menu.addSubMenu(1000, R.string.menu_more, 1000, R.string.menu_more);
+        subMenu1.add(1000, R.string.menu_login, 1001, R.string.menu_login);
+        subMenu1.add(1000, R.string.menu_register, 1002, R.string.menu_register);
+        subMenu1.add(1000, R.string.menu_setting, 1003, R.string.menu_setting);
+        subMenu1.add(1000, R.string.menu_help, 1004, R.string.menu_help);
+        subMenu1.add(1000, R.string.menu_about, 1004, R.string.menu_about);
 
         MenuItem subMenu1Item = subMenu1.getItem();
         subMenu1Item.setIcon(R.drawable.abs__ic_menu_moreoverflow_normal_holo_dark);
