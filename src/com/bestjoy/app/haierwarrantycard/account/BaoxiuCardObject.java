@@ -1,5 +1,6 @@
 package com.bestjoy.app.haierwarrantycard.account;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -54,6 +55,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public String mBuyTuJing;
 	public String mYanBaoTime;
 	public String mYanBaoDanWei;
+	public String mCardName;
 	/**本地id*/
 	public long mId = -1;
 	public long mUID, mAID, mBID;
@@ -77,7 +79,22 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		HaierDBHelper.CARD_NAME,
 	};
 	
+	public static final int KEY_CARD_ID = 0;
+	public static final int KEY_CARD_TYPE = 1;
+	public static final int KEY_CARD_PINPAI = 2;
+	public static final int KEY_CARD_MODEL = 3;
+	public static final int KEY_CARD_SERIAL = 4;
+	public static final int KEY_CARD_BXPhone = 5;
+	public static final int KEY_CARD_FPaddr = 6;
+	public static final int KEY_CARD_BUT_DATE = 7;
+	public static final int KEY_CARD_CARD_PRICE = 8;
+	public static final int KEY_CARD_BUY_TUJING = 9;
+	public static final int KEY_CARD_YANBAO_TIME = 10;
+	public static final int KEY_CARD_YANBAO_TIME_COMPANY = 11;
+	public static final int KEY_CARD_UID = 12;
+	public static final int KEY_CARD_AID = 13;
 	public static final int KEY_CARD_BID = 14;
+	public static final int KEY_CARD_NAME = 15;
 	
 	public static final String WHERE_UID = HaierDBHelper.CARD_UID + "=?";
 	public static final String WHERE_AID = HaierDBHelper.CARD_AID + "=?";
@@ -134,6 +151,40 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	 */
     public static Cursor getAllBaoxiuCardsCursor(ContentResolver cr, long uid, long aid) {
 		return cr.query(BjnoteContent.BaoxiuCard.CONTENT_URI, PROJECTION, WHERE_UID_AND_AID, new String[]{String.valueOf(uid), String.valueOf(aid)}, null);
+	}
+    
+    public static List<BaoxiuCardObject> getAllBaoxiuCardObjects(ContentResolver cr, long uid, long aid) {
+		Cursor c = getAllBaoxiuCardsCursor(cr, uid, aid);
+		List<BaoxiuCardObject> list = new ArrayList<BaoxiuCardObject>();
+		if (c != null) {
+			list = new ArrayList<BaoxiuCardObject>(c.getCount());
+			while(c.moveToNext()) {
+				list.add(getFromBaoxiuCardsCursor(c));
+			}
+			c.close();
+		}
+		return list;
+	}
+    
+    private static BaoxiuCardObject getFromBaoxiuCardsCursor(Cursor c) {
+    	BaoxiuCardObject baoxiuCardObject = new BaoxiuCardObject();
+    	baoxiuCardObject.mId = c.getLong(KEY_CARD_ID);
+    	baoxiuCardObject.mUID = c.getLong(KEY_CARD_UID);
+    	baoxiuCardObject.mAID = c.getLong(KEY_CARD_AID);
+    	baoxiuCardObject.mBID = c.getLong(KEY_CARD_BID);
+    	baoxiuCardObject.mLeiXin = c.getString(KEY_CARD_TYPE);
+    	baoxiuCardObject.mPinPai = c.getString(KEY_CARD_PINPAI);
+    	baoxiuCardObject.mXingHao = c.getString(KEY_CARD_MODEL);
+    	baoxiuCardObject.mSHBianHao = c.getString(KEY_CARD_SERIAL);
+    	baoxiuCardObject.mBXPhone = c.getString(KEY_CARD_BXPhone);
+    	baoxiuCardObject.mFPaddr = c.getString(KEY_CARD_FPaddr);
+    	baoxiuCardObject.mBuyDate = c.getString(KEY_CARD_BUT_DATE);
+    	baoxiuCardObject.mBuyPrice = c.getString(KEY_CARD_CARD_PRICE);
+    	baoxiuCardObject.mBuyTuJing = c.getString(KEY_CARD_BUY_TUJING);
+    	baoxiuCardObject.mYanBaoTime = c.getString(KEY_CARD_YANBAO_TIME);
+    	baoxiuCardObject.mYanBaoDanWei = c.getString(KEY_CARD_YANBAO_TIME_COMPANY);
+    	baoxiuCardObject.mCardName = c.getString(KEY_CARD_NAME);
+		return baoxiuCardObject;
 	}
 
 	@Override

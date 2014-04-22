@@ -29,8 +29,10 @@ public class HaierAccountManager {
 			mHaierAccount = AccountObject.getHaierAccountFromDatabase(mContext);
 			if (mHaierAccount != null) {
 				mHaierAccount.mAccountHomes = HomeObject.getAllHomeObjects(mContext.getContentResolver(), mHaierAccount.mAccountUid);
+				for(HomeObject homeObject : mHaierAccount.mAccountHomes) {
+					homeObject.initBaoxiuCards(mContext.getContentResolver());
+				}
 			}
-			
 		}
 	}
 	
@@ -79,6 +81,13 @@ public class HaierAccountManager {
     	}
     	return false;
     	
+    }
+    /**
+     * 更新账户，每当我们增删家和保修卡数据的时候，调用该方法可以同步当前账户信息.
+     */
+    public void updateAccount() {
+    	mHaierAccount = null;
+    	initAccountObject();
     }
     
 }

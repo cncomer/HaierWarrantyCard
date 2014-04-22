@@ -12,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 9;
+  private static final int DB_VERSION = 6;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -21,7 +21,7 @@ private static final String TAG = "HaierDBHelper";
   //account table
   public static final String TABLE_NAME_ACCOUNTS = "accounts";
   /**用户唯一识别码*/
-  public static final String ACCOUNT_MD = "uid";
+  public static final String ACCOUNT_UID = "uid";
   public static final String ACCOUNT_DEFAULT = "isDefault";
   public static final String ACCOUNT_TEL = "tel";
   public static final String ACCOUNT_NAME = "name";
@@ -34,9 +34,8 @@ private static final String TAG = "HaierDBHelper";
   
   //home table
   public static final String TABLE_NAME_HOMES = "homes";
-  public static final String REF_ACCOUNT_ID = "uid";
   /**地址id,每个地址的id,这个目前没用,要是更改地址的话可能会用到*/
-  public static final String HOME_ADDRESS_ID = "aid";
+  public static final String HOME_AID = "aid";
   public static final String HOME_NAME = "name";
   /**详细地址*/
   public static final String HOME_DETAIL = "home_detail";
@@ -204,11 +203,11 @@ private static final String TAG = "HaierDBHelper";
   
   private void createTriggerForHomeTable(SQLiteDatabase sqLiteDatabase) {
 	  String sql = "CREATE TRIGGER insert_home_update_account" + " AFTER INSERT " + " ON " + TABLE_NAME_HOMES + 
-			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET home_count = home_count+1 WHERE _id = new.uid; END;";
+			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET home_count = home_count+1 WHERE uid = new.uid; END;";
 	  sqLiteDatabase.execSQL(sql);
 	  
 	  sql = "CREATE TRIGGER delete_home_update_account" + " AFTER DELETE " + " ON " + TABLE_NAME_HOMES + 
-			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET home_count = home_count-1 WHERE _id = old.uid; END;";
+			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET home_count = home_count-1 WHERE uid = old.uid; END;";
 	  sqLiteDatabase.execSQL(sql);
 	
   }
@@ -228,8 +227,8 @@ private static final String TAG = "HaierDBHelper";
   private void createAccountTable(SQLiteDatabase sqLiteDatabase) {
 	  sqLiteDatabase.execSQL(
 	            "CREATE TABLE " + TABLE_NAME_ACCOUNTS + " (" +
-	            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-	            ACCOUNT_MD + " TEXT, " +
+	            ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+	            ACCOUNT_UID + " TEXT, " +
 	            ACCOUNT_TEL + " TEXT, " +
 	            ACCOUNT_PWD + " TEXT, " +
 	            ACCOUNT_DEFAULT + " INTEGER NOT NULL DEFAULT 1, " +
@@ -245,9 +244,9 @@ private static final String TAG = "HaierDBHelper";
   private void createHomesTable(SQLiteDatabase sqLiteDatabase) {
 	  sqLiteDatabase.execSQL(
 	            "CREATE TABLE " + TABLE_NAME_HOMES + " (" +
-	            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-	            REF_ACCOUNT_ID + " INTEGER, " +
-	            HOME_ADDRESS_ID + " INTEGER, " +
+	            ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+	            ACCOUNT_UID + " INTEGER, " +
+	            HOME_AID + " INTEGER, " +
 	            HOME_NAME + " TEXT, " +
 	            HOME_CARD_COUNT + " INTEGER, " +
 	            DEVICE_PRO_NAME + " TEXT, " +
@@ -264,7 +263,7 @@ private static final String TAG = "HaierDBHelper";
   private void createBaoxiuCardsTable(SQLiteDatabase sqLiteDatabase) {
 	  sqLiteDatabase.execSQL(
 	            "CREATE TABLE " + TABLE_NAME_CARDS + " (" +
-	            "_id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+	            ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
 	            CARD_UID + " INTEGER, " +  //账户id
 	            CARD_AID + " INTEGER, " +     //家id
 	            CARD_BID + " INTEGER, " +     //保修卡服务器id

@@ -2,11 +2,13 @@ package com.bestjoy.app.haierwarrantycard.account;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
 import android.text.TextUtils;
@@ -15,7 +17,14 @@ import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
-
+/**
+ * 账户的家对象
+ * 
+ * 需要注意的是，在设计数据库的时候，有{@link HaierDBHelper#HOME_CARD_COUNT}字段，该字段会随着新增或是删除一个BaoxiuCardObject数据
+ * 自动增加和减少，所以我们保存的时候不要设置他。当调用
+ * @author chenkai
+ *
+ */
 public class HomeObject implements InfoInterface{
 
 	private static final String TAG = "HomeObject";
@@ -31,6 +40,8 @@ public class HomeObject implements InfoInterface{
 	public int mHomePosition;
 	public boolean mIsDefault = false;
 	public int mHomeCardCount;
+	/**我的保修卡信息*/
+	public List<BaoxiuCardObject> mBaoxiuCards = new LinkedList<BaoxiuCardObject>();
 	
 	
 	public static final String[] PROVINCE_PROJECTION = new String[]{
@@ -59,13 +70,13 @@ public class HomeObject implements InfoInterface{
 	public static final String SELECTION_CITY_NAME = HaierDBHelper.DEVICE_CITY_NAME + "=?";
 	
 	// home table
-	private static final String WHERE_HOME_ACCOUNTID = HaierDBHelper.REF_ACCOUNT_ID + "=?";
-	private static final String WHERE_HOME_ADDRESS_ID = HaierDBHelper.HOME_ADDRESS_ID + "=?";
+	private static final String WHERE_HOME_ACCOUNTID = HaierDBHelper.ACCOUNT_UID + "=?";
+	private static final String WHERE_HOME_ADDRESS_ID = HaierDBHelper.HOME_AID + "=?";
 	private static final String WHERE_HOME_AID_ACCOUNT_UID = WHERE_HOME_ACCOUNTID + " and " + WHERE_HOME_ADDRESS_ID;
-	
+	private static final String WHERE_ACCOUNT_ID_AND_HOME_ADDRESS_ID = WHERE_HOME_ACCOUNTID + " and " + WHERE_HOME_ADDRESS_ID;
 	public static final String[] HOME_PROJECTION = new String[]{
-		HaierDBHelper.REF_ACCOUNT_ID,        //0
-		HaierDBHelper.HOME_ADDRESS_ID,
+		HaierDBHelper.ACCOUNT_UID,        //0
+		HaierDBHelper.HOME_AID,
 		HaierDBHelper.HOME_NAME,
 		HaierDBHelper.DEVICE_PRO_NAME,
 		HaierDBHelper.DEVICE_CITY_NAME,
@@ -176,8 +187,8 @@ public class HomeObject implements InfoInterface{
 				DebugUtils.logD(TAG, "saveInDatebase failly update exsited aid#" + mHomeAid);
 			}
 		} else {
-			values.put(HaierDBHelper.HOME_ADDRESS_ID, mHomeAid);
-			values.put(HaierDBHelper.REF_ACCOUNT_ID, mHomeUid);
+			values.put(HaierDBHelper.HOME_AID, mHomeAid);
+			values.put(HaierDBHelper.ACCOUNT_UID, mHomeUid);
 			Uri uri = cr.insert(BjnoteContent.Homes.CONTENT_URI, values);
 			if (uri != null) {
 				DebugUtils.logD(TAG, "saveInDatebase insert aid#" + mHomeAid);
@@ -243,6 +254,23 @@ public class HomeObject implements InfoInterface{
 		homeObject.mHomeCardCount = c.getInt(KEY_HOME_CARD_COUNT);
 		homeObject.mIsDefault = c.getInt(KEY_HOME_DEFAULT) == 1;
 		return homeObject;
+	}
+	
+	public static HomeObject getHomeObject(ContentResolver cr, long uid, long aid) {
+		Cursor c = cr.query(BjnoteContent.Homes.CONTENT_URI, HOME_PROJECTION, WHERE_ACCOUNT_ID_AND_HOME_ADDRESS_ID, new String[]{String.valueOf(uid), String.valueOf(aid)}, null);
+		if (c != null) {
+			if (c.moveToNext()) {
+				return getFromHomeSCursor(c);
+			}
+			c.close();
+		}
+		return null;
+	}
+	/**
+	 * 从数据库中找所有该HomeObject的保修卡，并附值给mBaoxiuCards成员
+	 */
+	public void initBaoxiuCards(ContentResolver cr) {
+		mBaoxiuCards = BaoxiuCardObject.getAllBaoxiuCardObjects(cr, mHomeUid, mHomeAid);
 	}
 	
 	public boolean hasBaoxiuCards() {

@@ -112,8 +112,7 @@
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.LoginOrUpdateAccountDialog"
             android:excludeFromRecents="true"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            android:launchMode="singleTop"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         
         <provider android:name="com.bestjoy.app.haierwarrantycard.database.BjnoteProvider"
             android:exported="true"
