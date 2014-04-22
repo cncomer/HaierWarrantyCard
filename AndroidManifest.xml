@@ -4,6 +4,11 @@
     android:versionCode="1"
     android:versionName="1.0" >
 
+     <supports-screens
+        android:anyDensity="true"
+        android:largeScreens="true"
+        android:normalScreens="true"
+        android:smallScreens="true" />
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
@@ -107,6 +112,11 @@
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.CaptureActivity"
             android:excludeFromRecents="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:clearTaskOnLaunch="true"
+            android:stateNotNeeded="true"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
             android:launchMode="singleTop"/>
         <activity
