@@ -70,9 +70,7 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 		switch (v.getId()) {
 			case R.id.button_next:
 				if(!TextUtils.isEmpty(tel)) {
-					Bundle bundle = new Bundle();
-					bundle.putString("usr_tel", tel);
-					RegisterConfirmActivity.startIntent(this, bundle);
+					RegisterConfirmActivity.startIntent(this, tel);
 				} else {
 					MyApplication.getInstance().showMessage(R.string.msg_input_usrtel);
 				}

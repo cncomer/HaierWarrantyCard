@@ -25,6 +25,7 @@ import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
+import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
 
 
@@ -70,8 +71,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	}
 
 	private String pickTelData() {
-		if(getIntent() == null || getIntent().getExtras() == null) return null;
-		return getIntent().getExtras().getString("usr_tel");
+		return getIntent() == null ? null : getIntent().getStringExtra(Intents.EXTRA_TEL);
 	}
 
 	private void initViews() {
@@ -91,18 +91,15 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 		Intent intent = new Intent(context, RegisterConfirmActivity.class);
 		context.startActivity(intent);
 	}
-	public static void startIntent(Context context, Bundle bundle) {
+	public static void startIntent(Context context, String tel) {
 		Intent intent = new Intent(context, RegisterConfirmActivity.class);
-		intent.putExtras(bundle);
+		intent.putExtra(Intents.EXTRA_TEL, tel);
 		context.startActivity(intent);
 	}
 	
 	private RegisterAsyncTask mRegisterAsyncTask;
-	private ProgressDialog mRegisterDialog;
-
 	private void registerAsync(String... param) {
 		AsyncTaskUtils.cancelTask(mRegisterAsyncTask);
-		mRegisterDialog = getProgressDialog();
 		showDialog(DIALOG_PROGRESS);
 		mRegisterAsyncTask = new RegisterAsyncTask();
 		mRegisterAsyncTask.execute(param);
@@ -132,7 +129,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			.append("&pwd=")
 			.append(mPwd);
 			String path = sb.substring(sb.indexOf("?"));
-			DebugUtils.logD("huasong", "sb = " + sb.toString() + " path = " + path);
+			DebugUtils.logD(TAG, "sb = " + sb.toString());
 			try {
 				is = NetworkUtils.openContectionLocked(sb.toString(), path, null);
 				try {
@@ -141,11 +138,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 					mStatusMessage = jsonObject.getString("StatusMessage");
 					DebugUtils.logD(TAG, "StatusCode = " + mStatusCode);
 					DebugUtils.logD(TAG, "StatusMessage = " + mStatusMessage);
-					DebugUtils.logD("huasong", "StatusCode = " + jsonObject.getString("StatusCode"));
-					DebugUtils.logD("huasong", "StatusMessage = " + jsonObject.getString("StatusMessage"));
-					DebugUtils.logD("huasong", "Data = " + jsonObject.getString("Data"));
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			} catch (ClientProtocolException e) {
@@ -184,7 +177,6 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	public void onClick(View view) {
 		switch (view.getId()) {
 			case R.id.button_save_reg:
-				DebugUtils.logD("huasong", "button_save onClick");
 				DebugUtils.logD(TAG, "button_save onClick");
 				if(mAccountObject != null)mAccountObject.mAccountName = mUsrNameEditText.getText().toString().trim();
 				mName = mUsrNameEditText.getText().toString().trim();
