@@ -29,9 +29,10 @@ public class HaierAccountManager {
 			mHaierAccount = AccountObject.getHaierAccountFromDatabase(mContext);
 			if (mHaierAccount != null) {
 				mHaierAccount.mAccountHomes = HomeObject.getAllHomeObjects(mContext.getContentResolver(), mHaierAccount.mAccountUid);
-				for(HomeObject homeObject : mHaierAccount.mAccountHomes) {
-					homeObject.initBaoxiuCards(mContext.getContentResolver());
-				}
+				//XXX 如果保修卡数据太多，这里太耗时了，我们不做加载,在我的家的时候再做加载
+//				for(HomeObject homeObject : mHaierAccount.mAccountHomes) {
+//					homeObject.initBaoxiuCards(mContext.getContentResolver());
+//				}
 			}
 		}
 	}

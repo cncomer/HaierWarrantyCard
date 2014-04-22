@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -94,8 +95,10 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity {
 		}
 
 		@Override
-		public Fragment getItem(int arg0) {
-			return new SherlockFragment();
+		public Fragment getItem(int position) {
+			HomeBaoxiuCardFragment f = new HomeBaoxiuCardFragment();
+			f.setHomeBaoxiuCard(getHome(position));
+			return f;
 		}
 
 		@Override
@@ -104,7 +107,6 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity {
 		}
 
 	}
-	
 	
 	
 	public static void startChooseDevice(Context context, String title, int type) {

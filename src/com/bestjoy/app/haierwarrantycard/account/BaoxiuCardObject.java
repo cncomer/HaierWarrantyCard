@@ -169,7 +169,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		return list;
 	}
     
-    private static BaoxiuCardObject getFromBaoxiuCardsCursor(Cursor c) {
+    public static BaoxiuCardObject getFromBaoxiuCardsCursor(Cursor c) {
     	BaoxiuCardObject baoxiuCardObject = new BaoxiuCardObject();
     	baoxiuCardObject.mId = c.getLong(KEY_CARD_ID);
     	baoxiuCardObject.mUID = c.getLong(KEY_CARD_UID);

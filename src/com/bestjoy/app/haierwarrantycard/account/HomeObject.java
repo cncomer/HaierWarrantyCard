@@ -42,6 +42,8 @@ public class HomeObject implements InfoInterface{
 	public int mHomeCardCount;
 	/**我的保修卡信息*/
 	public List<BaoxiuCardObject> mBaoxiuCards = new LinkedList<BaoxiuCardObject>();
+	/**表示当前数据是否过时了，如果是，那么{@link #initBaoxiuCards()}就要重新读取数据库*/
+	private boolean mOutOfDate = true;
 	
 	
 	public static final String[] PROVINCE_PROJECTION = new String[]{
@@ -270,7 +272,12 @@ public class HomeObject implements InfoInterface{
 	 * 从数据库中找所有该HomeObject的保修卡，并附值给mBaoxiuCards成员
 	 */
 	public void initBaoxiuCards(ContentResolver cr) {
-		mBaoxiuCards = BaoxiuCardObject.getAllBaoxiuCardObjects(cr, mHomeUid, mHomeAid);
+		if (mOutOfDate) {
+			mBaoxiuCards = BaoxiuCardObject.getAllBaoxiuCardObjects(cr, mHomeUid, mHomeAid);
+			//使用数据库的数据设置保修卡的个数
+			mHomeCardCount = mBaoxiuCards.size();
+			mOutOfDate = false;
+		}
 	}
 	
 	public boolean hasBaoxiuCards() {
