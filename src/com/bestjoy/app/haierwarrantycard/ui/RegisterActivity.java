@@ -1,5 +1,12 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,6 +26,7 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
+import com.shwy.bestjoy.utils.NetworkUtils;
 
 public class RegisterActivity extends BaseActionbarActivity implements View.OnClickListener{
 	private static final String TAG = "RegisterActivity";
@@ -106,8 +114,8 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 		@Override
 		public void onTick(long millisUntilFinished) {
 			mBtnGetyanzhengma.setClickable(false);
-			mBtnGetyanzhengma.setText(millisUntilFinished / 1000
-					+ RegisterActivity.this.getResources().getString(R.string.second));
+			mBtnGetyanzhengma.setText(RegisterActivity.this.getResources()
+					.getString(R.string.second, millisUntilFinished / 1000));
 		}
 	}
 	private GetYanZhengCodeAsyncTask mGetYanZhengCodeAsyncTask;
@@ -134,19 +142,45 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 		mGetYanZhengCodeAsyncTask.execute(param);
 	}
 	
-	private class GetYanZhengCodeAsyncTask extends AsyncTask<String, Void, Boolean> {
-		private static final String URL = HaierServiceObject.SERVICE_URL + "/Register.ashx?";
+	private class GetYanZhengCodeAsyncTask extends AsyncTask<String, Void, String> {
+		private String mError;
+		private String mRandCode;
 		@Override
-		protected Boolean doInBackground(String... params) {
-			return true;
+		protected String doInBackground(String... params) {
+			mError = null;
+			InputStream is = null;
+			StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
+			sb.append("GetCode.ashx?cell=").append(params[0]);
+			String path = sb.substring(sb.indexOf("?"));
+			DebugUtils.logD(TAG, "sb = " + sb.toString());
+			try {
+				is = NetworkUtils.openContectionLocked(sb.toString(), path, null);
+				try {
+					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
+					mRandCode = jsonObject.getString("randCode");
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				mError = e.getMessage();
+			} catch (IOException e) {
+				e.printStackTrace();
+				mError = e.getMessage();
+			} finally {
+				NetworkUtils.closeInputStream(is);
+			}
+			return mRandCode;
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(String result) {
 			super.onPostExecute(result);
 			if (mGetYanZhengCodeDialog != null) {
 				mGetYanZhengCodeDialog.hide();
 			}
+			mTelInput.setText(result);
+			DebugUtils.logD(TAG, "result = " + result);
 		}
 
 		@Override
