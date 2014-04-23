@@ -200,4 +200,8 @@
     <string name="msg_input_pwd_not_match_tips">两次密码输入不一致，请重新输入</string>
     
     <string name="title_feedback">评价</string>
+    
+    <string name="baoxiucard_validity">%s天</string>
+    <string name="baoxiucard_validity_toomuch">"999天"</string>
+    <string name="baoxiucard_outdate">过保</string>
 </resources>

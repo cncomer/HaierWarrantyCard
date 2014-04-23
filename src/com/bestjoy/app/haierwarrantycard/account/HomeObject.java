@@ -222,7 +222,9 @@ public class HomeObject implements InfoInterface{
 	 * @return
 	 */
 	public static int deleteAllHomesInDatabaseForAccount(ContentResolver cr, long uid) {
-		return cr.delete(BjnoteContent.Homes.CONTENT_URI, WHERE_HOME_ACCOUNTID, new String[]{String.valueOf(uid)});
+		int deleted = cr.delete(BjnoteContent.Homes.CONTENT_URI, WHERE_HOME_ACCOUNTID, new String[]{String.valueOf(uid)});
+		DebugUtils.logD(TAG, "deleteAllHomesInDatabaseForAccount uid#" + uid + ", delete " + deleted);
+		return deleted;
 	}
 	
 	public static Cursor getAllHomesCursor(ContentResolver cr, long uid) {
@@ -235,14 +237,14 @@ public class HomeObject implements InfoInterface{
 		if (c != null) {
 			list = new ArrayList<HomeObject>(c.getCount());
 			while(c.moveToNext()) {
-				list.add(getFromHomeSCursor(c));
+				list.add(getFromHomeSCursor(c, cr));
 			}
 			c.close();
 		}
 		return list;
 	}
 	
-	private static HomeObject getFromHomeSCursor(Cursor c) {
+	private static HomeObject getFromHomeSCursor(Cursor c, ContentResolver cr) {
 		HomeObject homeObject = new HomeObject();
 		homeObject.mHomeId = c.getLong(KEY_HOME_ID);
 		homeObject.mHomeUid = c.getLong(KEY_HOME_UID);
@@ -253,7 +255,8 @@ public class HomeObject implements InfoInterface{
 		homeObject.mHomeDis = c.getString(KEY_HOME_DIS_NAME);
 		homeObject.mHomePlaceDetail = c.getString(KEY_HOME_DETAIL);
 		homeObject.mHomePosition = c.getInt(KEY_HOME_POSITION);
-		homeObject.mHomeCardCount = c.getInt(KEY_HOME_CARD_COUNT);
+//		homeObject.mHomeCardCount = c.getInt(KEY_HOME_CARD_COUNT);
+		homeObject.mHomeCardCount = BaoxiuCardObject.getAllBaoxiuCardsCount(cr, homeObject.mHomeUid, homeObject.mHomeAid);
 		homeObject.mIsDefault = c.getInt(KEY_HOME_DEFAULT) == 1;
 		return homeObject;
 	}
@@ -262,7 +265,7 @@ public class HomeObject implements InfoInterface{
 		Cursor c = cr.query(BjnoteContent.Homes.CONTENT_URI, HOME_PROJECTION, WHERE_ACCOUNT_ID_AND_HOME_ADDRESS_ID, new String[]{String.valueOf(uid), String.valueOf(aid)}, null);
 		if (c != null) {
 			if (c.moveToNext()) {
-				return getFromHomeSCursor(c);
+				return getFromHomeSCursor(c, cr);
 			}
 			c.close();
 		}

@@ -99,16 +99,57 @@ public class HomeBaoxiuCardFragment extends SherlockFragment{
 
 		@Override
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
-			// TODO Auto-generated method stub
-			return new TextView(context);
+			return LayoutInflater.from(context).inflate(R.layout.home_baoxiucard_list_item, parent, false);
 		}
 
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
 			BaoxiuCardObject card = BaoxiuCardObject.getFromBaoxiuCardsCursor(cursor);
-			((TextView) view).setText(card.mSHBianHao);
+			ViewHolder holder = (ViewHolder) view.getTag();
+			if (holder == null) {
+				holder = new ViewHolder();
+				holder._tag = (TextView) view.findViewById(R.id.tag);
+				holder._pinpai = (TextView) view.findViewById(R.id.pinpai);
+				holder._xinghao = (TextView) view.findViewById(R.id.xinghao);
+				holder._title2 = (TextView) view.findViewById(R.id.title2);
+				holder._title3 = (TextView) view.findViewById(R.id.title3);
+				view.setTag(holder);
+			}
+			//设置view
+			holder._tag.setText(card.mCardName);
+			holder._pinpai.setText(card.mPinPai);
+			holder._xinghao.setText(card.mXingHao);
+			
+			//整机保修
+			int validity = card.getBaoxiuValidity();
+			if (validity > 0) {
+				if (validity > 999) {
+					holder._title3.setText(getString(R.string.baoxiucard_validity_toomuch));
+				} else {
+					holder._title3.setText(getString(R.string.baoxiucard_validity, validity));
+				}
+				
+			} else {
+				holder._title3.setText(getString(R.string.baoxiucard_outdate));
+			}
+			
+			//主要部件保修
+			validity = card.getComponentBaoxiuValidity();
+			if (validity > 0) {
+				holder._title2.setText(getString(R.string.baoxiucard_validity, validity));
+			} else {
+				holder._title2.setText(getString(R.string.baoxiucard_outdate));
+			}
 			
 		}
+		
+	}
+	
+	private static final class ViewHolder {
+		//分别是保修卡名字，品牌， 型号， 部件保修剩余时间， 整机保修剩余时间
+		private TextView _tag, _pinpai, _xinghao, _title2, _title3;
+		//分别是部件保修和整机保修布局(整个)
+		private View _component, _zhengji;
 		
 	}
 	

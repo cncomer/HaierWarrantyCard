@@ -48,7 +48,7 @@ public class HaierAccountManager {
 	public boolean hasBaoxiuCards() {
 		if (mHaierAccount != null) {
 			for(HomeObject home : mHaierAccount.mAccountHomes) {
-				if (home.hasBaoxiuCards()) {
+				if (home.mHomeCardCount > 0) {
 					return true;
 				}
 			}

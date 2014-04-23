@@ -43,11 +43,8 @@ import com.shwy.bestjoy.utils.NotifyRegistrant;
 public class PhotoManagerUtilsV2 {
 	private static final String TAG ="PhotoManagerUtils";
 	private static PhotoManagerUtilsV2 INSTANCE = new PhotoManagerUtilsV2();
-	/**Ĭ�ϵ���ƬͼƬ*/
 	private static Bitmap mDefaultBitmap;
-	/**Ĭ�ϵ�Ȧ��ͼ��*/
 	private static Bitmap mDefaultCircleTopicBitmap;
-	/**Ĭ�ϵ�Ȧ��ͼƬǽͼ��*/
 	private static Bitmap mDefaultCirclePhotoBitmap;
 	private static Bitmap mDefaultLoadBitmap;
 	private Context mContext;

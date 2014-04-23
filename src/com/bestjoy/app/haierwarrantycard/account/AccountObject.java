@@ -122,6 +122,7 @@ public class AccountObject implements InfoInterface{
 				mAccountId = id;
 				//如果本地已经存在了，那么我们先清空原来就有的Home
 				HomeObject.deleteAllHomesInDatabaseForAccount(cr, mAccountUid);
+				BaoxiuCardObject.deleteAllBaoxiuCardsInDatabaseForAccount(cr, mAccountUid);
 				boolean result = true;
 				for(HomeObject homeObject : mAccountHomes) {
 					result = homeObject.saveInDatebase(cr, null);

@@ -12,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 6;
+  private static final int DB_VERSION = 10;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -82,7 +82,7 @@ private static final String TAG = "HaierDBHelper";
   /**整机保修，目前不定义*/
   public static final String DEVICE_WARRANTY_PERIOD = "warranty_period";
   /**配件保修*/
-  public static final String DEVICE_COMPONENT_WARRANTY_PERIOD = "component_warranty_period";
+  public static final String CARD_COMPONENT_VALIDITY = "component_validity";
   
   //这里是设备表的扩展，如遥控器
   
@@ -248,7 +248,7 @@ private static final String TAG = "HaierDBHelper";
 	            ACCOUNT_UID + " INTEGER, " +
 	            HOME_AID + " INTEGER, " +
 	            HOME_NAME + " TEXT, " +
-	            HOME_CARD_COUNT + " INTEGER, " +
+	            HOME_CARD_COUNT + " INTEGER NOT NULL DEFAULT 0, " +
 	            DEVICE_PRO_NAME + " TEXT, " +
 	            DEVICE_CITY_NAME + " TEXT, " +
 	            DEVICE_DIS_NAME + " TEXT, " +
@@ -281,10 +281,10 @@ private static final String TAG = "HaierDBHelper";
 	            CARD_YANBAO_TIME_COMPANY + " TEXT, " +
 	            CARD_YANBAO_TIME_COPMANY_TEL + " TEXT, " +
 	            DEVICE_WARRANTY_PERIOD + " TEXT, " +
-	            DEVICE_COMPONENT_WARRANTY_PERIOD + " TEXT, " +
+	            CARD_COMPONENT_VALIDITY + " TEXT, " +
 	            DATE + " TEXT" +
 	            ");");
-	  createTriggerForBaoxiuCardsTable(sqLiteDatabase);
+//	  createTriggerForBaoxiuCardsTable(sqLiteDatabase);
   }
   
   private void createScanHistory(SQLiteDatabase sqLiteDatabase) {
@@ -310,7 +310,7 @@ private static final String TAG = "HaierDBHelper";
   @Override
   public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 	  DebugUtils.logD(TAG, "onUpgrade oldVersion " + oldVersion + " newVersion " + newVersion);
-	  if (oldVersion <= 8) {
+	  if (oldVersion <= 9) {
 			sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_ACCOUNTS);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_HOMES);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CARDS);

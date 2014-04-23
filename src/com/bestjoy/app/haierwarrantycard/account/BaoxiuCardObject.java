@@ -1,5 +1,8 @@
 package com.bestjoy.app.haierwarrantycard.account;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,6 +15,7 @@ import android.content.ContentUris;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
+import android.text.TextUtils;
 
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
@@ -32,11 +36,13 @@ import com.shwy.bestjoy.utils.InfoInterfaceImpl;
             "BuyDate": "20140812", 
             "BuyPrice": "125", 
             "BuyTuJing": "苏宁", 
-            "YanBaoTime": "1年", 
+            "YanBaoTime": "1年",    默认单位是年，使用的时候该值x365=天数
             "YanBaoDanWei": "苏宁", 
             "UID": 1, 
             "AID": 1, 
-            "BID": 1
+            "BID": 1,
+            "ZhuBx":0.0,    部件保修天数，单位是年，计算同保修时间
+            "Tag":"大厅暖气"  保修卡的标签，比如卧室电视机
         }
     ]
  *
@@ -59,9 +65,13 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public String mCardName;
 	/**主要配件保修，浮点值*/
 	public String mZhuBx;
+	/**整机保修，默认是1年*/
+	public String mZhengjiBx = "1";
 	/**本地id*/
 	public long mId = -1;
 	public long mUID, mAID, mBID;
+	
+	private int mZhengjiValidity = -1, mComponentValidity = -1;
 	
 	public static final String[] PROJECTION = new String[]{
 		HaierDBHelper.ID,
@@ -80,6 +90,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		HaierDBHelper.CARD_AID,
 		HaierDBHelper.CARD_BID,              //14
 		HaierDBHelper.CARD_NAME,
+		HaierDBHelper.CARD_COMPONENT_VALIDITY,
 	};
 	
 	public static final int KEY_CARD_ID = 0;
@@ -98,6 +109,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public static final int KEY_CARD_AID = 13;
 	public static final int KEY_CARD_BID = 14;
 	public static final int KEY_CARD_NAME = 15;
+	public static final int KEY_CARD_COMPONENT_VALIDITY = 16;
 	
 	public static final String WHERE_UID = HaierDBHelper.CARD_UID + "=?";
 	public static final String WHERE_AID = HaierDBHelper.CARD_AID + "=?";
@@ -121,6 +133,8 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		cardObject.mYanBaoTime = jsonObject.getString("YanBaoTime");
 		cardObject.mYanBaoDanWei = jsonObject.getString("YanBaoDanWei");
 		
+		cardObject.mCardName = jsonObject.getString("Tag");
+		cardObject.mZhuBx = jsonObject.getString("ZhuBx");
 		
 		cardObject.mUID = jsonObject.getLong("UID");
 		cardObject.mAID = jsonObject.getLong("AID");
@@ -143,8 +157,19 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	 * @return
 	 */
 	public static int deleteAllBaoxiuCardsInDatabaseForAccount(ContentResolver cr, long uid) {
-		return cr.delete(BjnoteContent.BaoxiuCard.CONTENT_URI, WHERE_UID, new String[]{String.valueOf(uid)});
+		int deleted = cr.delete(BjnoteContent.BaoxiuCard.CONTENT_URI, WHERE_UID, new String[]{String.valueOf(uid)});
+		DebugUtils.logD(TAG, "deleteAllBaoxiuCardsInDatabaseForAccount uid#" + uid + ", delete " + deleted);
+		return deleted;
 	}
+	 public static int getAllBaoxiuCardsCount(ContentResolver cr, long uid, long aid) {
+		 Cursor c = getAllBaoxiuCardsCursor(cr, uid, aid);
+		 if (c != null) {
+			 int count = c.getCount();
+			 c.close();
+			 return count;
+		 }
+		 return 0;
+	 }
 	/**
 	 * 获取某个账户某个家的全部保修卡数据
 	 * @param cr
@@ -187,6 +212,8 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
     	baoxiuCardObject.mYanBaoTime = c.getString(KEY_CARD_YANBAO_TIME);
     	baoxiuCardObject.mYanBaoDanWei = c.getString(KEY_CARD_YANBAO_TIME_COMPANY);
     	baoxiuCardObject.mCardName = c.getString(KEY_CARD_NAME);
+    	baoxiuCardObject.mZhuBx = c.getString(KEY_CARD_COMPONENT_VALIDITY);
+    	
 		return baoxiuCardObject;
 	}
 
@@ -198,6 +225,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		}
 		String[] selectionArgs =  new String[]{String.valueOf(mUID), String.valueOf(mAID), String.valueOf(mBID)};
 		long id = isExsited(cr,selectionArgs);
+		values.put(HaierDBHelper.CARD_NAME, mCardName);
 		values.put(HaierDBHelper.CARD_TYPE, mLeiXin);
 		values.put(HaierDBHelper.CARD_PINPAI, mPinPai);
 		values.put(HaierDBHelper.CARD_MODEL, mXingHao);
@@ -211,6 +239,8 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		
 		values.put(HaierDBHelper.CARD_YANBAO_TIME, mYanBaoTime);
 		values.put(HaierDBHelper.CARD_YANBAO_TIME_COMPANY, mYanBaoDanWei);
+		
+		values.put(HaierDBHelper.CARD_COMPONENT_VALIDITY, mZhuBx);
 		
 		values.put(HaierDBHelper.DATE, new Date().getTime());
 		
@@ -250,5 +280,70 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		}
 		return id;
 	}
+	
+	/**
+	 * 返回该保修对象的整机保修有效期天数，计算保修有效期公式 = 延保时间+保修天数-已买天数
+	 * @return
+	 */
+	public int getBaoxiuValidity() {
+		if (mZhengjiValidity == -1) {
+			if (TextUtils.isEmpty(mZhuBx)) {
+				mZhengjiValidity = 0;
+			} else {
+				int validity = (int) ((Float.valueOf(mZhengjiBx) + Float.valueOf(mYanBaoTime)) * 365 + 0.5f);
+				try {
+					//转换购买日期
+					Date buyDate = BUY_DATE_TIME_FORMAT.parse(mBuyDate);
+					//当前日期
+					Date now = new Date();
+					long passedTimeLong = now.getTime() - buyDate.getTime();
+					if (passedTimeLong < 0) {
+						passedTimeLong = 0;
+					}
+					int passedDay = (int) (passedTimeLong / DAY_IN_MILLISECONDS);
+					mZhengjiValidity = validity - passedDay;
+				} catch (ParseException e) {
+					e.printStackTrace();
+					mZhengjiValidity = 0;
+				}
+			}
+		}
+		return mZhengjiValidity;
+	}
+	
+	/**
+	 * 返回该保修对象的主要部件保修有效期天数，计算保修有效期公式 = 保修天数-已买天数
+	 * @return
+	 */
+	public int getComponentBaoxiuValidity() {
+		if (mComponentValidity == -1) {
+			if (TextUtils.isEmpty(mZhuBx)) {
+				//可能会是空的字串，我们就当做0天
+				mComponentValidity = 0;
+			} else {
+				int validity = (int) (Float.valueOf(mZhuBx) * 365 + 0.5f);
+				try {
+					//转换购买日期
+					Date buyDate = BUY_DATE_TIME_FORMAT.parse(mBuyDate);
+					//当前日期
+					Date now = new Date();
+					long passedTimeLong = now.getTime() - buyDate.getTime();
+					if (passedTimeLong < 0) {
+						passedTimeLong = 0;
+					}
+					int passedDay = (int) (passedTimeLong / DAY_IN_MILLISECONDS);
+					mComponentValidity = validity - passedDay;
+				} catch (ParseException e) {
+					e.printStackTrace();
+					mComponentValidity = 0;
+				}
+			}
+			
+		}
+		return mComponentValidity;
+	}
+	
+	public static  DateFormat BUY_DATE_TIME_FORMAT = new SimpleDateFormat("yyyyMMdd");
+	private static long DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
 
 }
