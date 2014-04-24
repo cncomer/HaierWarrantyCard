@@ -188,6 +188,7 @@
   <string name="button_re_vali">重新验证</string>
   <string name="second">倒计时%1$s秒</string>
     <string name="msg_input_usrtel">请输入你的手机号码</string>
+    <string name="msg_input_yanzheng_code">请输入验证码</string>
     <string name="msg_input_usr_name">请输入姓名</string>
     <string name="msg_input_usr_pro">请输入省份</string>
     <string name="msg_input_usr_city">请输入城市</string>

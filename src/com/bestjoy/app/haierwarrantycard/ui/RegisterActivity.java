@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.http.client.ClientProtocolException;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,8 +15,10 @@ import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
@@ -36,6 +36,8 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 	private Button mNextButton;
 	private Button mBtnGetyanzhengma;
 	private EditText mTelInput;
+	private EditText mCodeInput;
+	private CheckBox mCheckBox;
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
@@ -61,6 +63,16 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 		mBtnGetyanzhengma.setOnClickListener(this);
 		
 		mTelInput = (EditText) findViewById(R.id.usr_tel);
+		mCodeInput = (EditText) findViewById(R.id.usr_validate);
+		mCodeInput.setOnClickListener(this);
+		
+		mCheckBox = ((CheckBox) findViewById(R.id.check_protocol));
+		mCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				mNextButton.setEnabled(mCheckBox.isChecked());
+			}
+		});
+		mNextButton.setEnabled(mCheckBox.isChecked());
 	}
 	
 	 public boolean onCreateOptionsMenu(Menu menu) {
@@ -75,13 +87,18 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 	@Override
 	public void onClick(View v) {
 		String tel = mTelInput.getText().toString().trim();
+		String code = mCodeInput.getText().toString().trim();
 		switch (v.getId()) {
 			case R.id.button_next:
-				if(!TextUtils.isEmpty(tel)) {
-					RegisterConfirmActivity.startIntent(this, tel);
-				} else {
-					MyApplication.getInstance().showMessage(R.string.msg_input_usrtel);
-				}
+			if(TextUtils.isEmpty(tel)) {
+				MyApplication.getInstance().showMessage(R.string.msg_input_usrtel);
+				return;
+			}
+			if(TextUtils.isEmpty(code)) {
+				MyApplication.getInstance().showMessage(R.string.msg_input_yanzheng_code);
+				return;
+			}
+			RegisterConfirmActivity.startIntent(this, tel);
 				break;
 			case R.id.button_getyanzhengma:
 				if(!TextUtils.isEmpty(tel)) {
@@ -102,18 +119,18 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 
 		public TimeCount(long millisInFuture, long countDownInterval) {
 			super(millisInFuture, countDownInterval);
+			mBtnGetyanzhengma.setEnabled(false);
 		}
 
 		@Override
 		public void onFinish() {
 			mBtnGetyanzhengma.setText(RegisterActivity.this.getResources()
 					.getString(R.string.button_re_vali));
-			mBtnGetyanzhengma.setClickable(true);
+			mBtnGetyanzhengma.setEnabled(true);
 		}
 
 		@Override
 		public void onTick(long millisUntilFinished) {
-			mBtnGetyanzhengma.setClickable(false);
 			mBtnGetyanzhengma.setText(RegisterActivity.this.getResources()
 					.getString(R.string.second, millisUntilFinished / 1000));
 		}
@@ -156,9 +173,10 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			try {
 				is = NetworkUtils.openContectionLocked(sb.toString(), path, null);
 				try {
-					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
-					mRandCode = jsonObject.getString("randCode");
-				} catch (JSONException e) {
+					DebugUtils.logD(TAG, "is = " + is.toString());
+					mRandCode = is.toString().substring(is.toString().indexOf("@")+1);
+					DebugUtils.logD(TAG, "is = " + is.toString());
+				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			} catch (ClientProtocolException e) {
@@ -179,7 +197,7 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			if (mGetYanZhengCodeDialog != null) {
 				mGetYanZhengCodeDialog.hide();
 			}
-			mTelInput.setText(result);
+			mCodeInput.setText(result);
 			DebugUtils.logD(TAG, "result = " + result);
 		}
 

@@ -58,6 +58,7 @@
                 <EditText
                     android:id="@+id/usr_pwd"
                     style="@style/ProductInfoInput"
+                    android:inputType="textPassword"
                     android:hint="@string/usr_pwd_hint" />
             </LinearLayout>
 
@@ -74,6 +75,7 @@
                 <EditText
                     android:id="@+id/usr_repwd"
                     style="@style/ProductInfoInput"
+                    android:inputType="textPassword"
                     android:hint="@string/usr_repwd_hint" />
             </LinearLayout>
 
