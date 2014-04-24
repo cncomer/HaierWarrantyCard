@@ -65,7 +65,7 @@ public class ProCityDisEditView extends LinearLayout{
 		mHomeObject.mHomeDis = mDisEditView.getText().toString();
 		mHomeObject.mHomePlaceDetail = mAddressEditView.getText().toString();
 		if (mHomeObject.hasValidateAddress()) {
-			//return null;
+			return null;
 		}
 		return mHomeObject;
 	}

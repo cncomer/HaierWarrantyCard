@@ -33,9 +33,6 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	private static final String TAG = "RegisterActivity";
 
 	private ProCityDisEditView mProCityDisEditView;
-	private String mTel;
-	private String mName;
-	private String mPwd;
 	
 	private EditText mUsrNameEditText;
 	private EditText usrPwdEditText;
@@ -66,8 +63,9 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	}
 
 	private void initData() {
-		mTel = pickTelData();
 		mAccountObject = new AccountObject();
+		mAccountObject.mAccountTel = pickTelData();
+		mHomeObject = mProCityDisEditView.getHomeObject();
 	}
 
 	private String pickTelData() {
@@ -82,7 +80,6 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 		usrPwdEditText = (EditText) findViewById(R.id.usr_pwd);
 		usrPwdConfirmEditText = (EditText) findViewById(R.id.usr_repwd);
 		
-		mHomeObject = mProCityDisEditView.getHomeObject();
 		mConfrimReg = (Button) findViewById(R.id.button_save_reg);
 		mConfrimReg.setOnClickListener(this);
 	}
@@ -107,17 +104,14 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 
 	private class RegisterAsyncTask extends AsyncTask<String, Void, Void> {
 		private String mError;
-		private String mStatusCode;
-		private String mStatusMessage;
 		@Override
 		protected Void doInBackground(String... params) {
 			mError = null;
-			mAccountObject = null;
 			InputStream is = null;
 			StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
-			sb.append("Register.ashx?cell=").append(mTel)
+			sb.append("Register.ashx?cell=").append(mAccountObject.mAccountTel)
 			.append("&UserName=")
-			.append(mName)
+			.append(mAccountObject.mAccountName)
 			.append("&Shen=")
 			.append(mHomeObject.mHomeProvince)
 			.append("&Shi=")
@@ -127,17 +121,17 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			.append("&detail=")
 			.append(mHomeObject.mHomePlaceDetail)
 			.append("&pwd=")
-			.append(mPwd);
+			.append(mAccountObject.mAccountPwd);
 			String path = sb.substring(sb.indexOf("?"));
 			DebugUtils.logD(TAG, "sb = " + sb.toString());
 			try {
 				is = NetworkUtils.openContectionLocked(sb.toString(), path, null);
 				try {
 					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
-					mStatusCode = jsonObject.getString("StatusCode");
-					mStatusMessage = jsonObject.getString("StatusMessage");
-					DebugUtils.logD(TAG, "StatusCode = " + mStatusCode);
-					DebugUtils.logD(TAG, "StatusMessage = " + mStatusMessage);
+					mAccountObject.mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
+					mAccountObject.mStatusMessage = jsonObject.getString("StatusMessage");
+					DebugUtils.logD(TAG, "StatusCode = " + mAccountObject.mStatusCode);
+					DebugUtils.logD(TAG, "StatusMessage = " + mAccountObject.mStatusMessage);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -159,10 +153,12 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			dismissDialog(DIALOG_PROGRESS);
 			if (mError != null) {
 				MyApplication.getInstance().showMessage(mError);
-			} else if (mStatusCode.equals("1")) {
+			} else if (mAccountObject.mStatusCode == 1) {
 				//注册成功
+				mAccountObject.mAccountHomes.add(mHomeObject);
+				//mAccountObject.saveInDatebase(getContentResolver(), null);
 			}
-			MyApplication.getInstance().showMessage(mStatusMessage);
+			MyApplication.getInstance().showMessage(mAccountObject.mStatusMessage);
 		}
 
 		@Override
@@ -178,14 +174,13 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 		switch (view.getId()) {
 			case R.id.button_save_reg:
 				DebugUtils.logD(TAG, "button_save onClick");
-				if(mAccountObject != null)mAccountObject.mAccountName = mUsrNameEditText.getText().toString().trim();
-				mName = mUsrNameEditText.getText().toString().trim();
-				mPwd = usrPwdEditText.getText().toString().trim();
-				if(mAccountObject != null) mAccountObject.mAccountTel = mTel;
-				if(mAccountObject != null) mAccountObject.mAccountPwd = usrPwdEditText.getText().toString().trim();
+				mAccountObject.mAccountName = mUsrNameEditText.getText().toString().trim();
+				mAccountObject.mAccountName = mUsrNameEditText.getText().toString().trim();
+				mAccountObject.mAccountPwd = usrPwdEditText.getText().toString().trim();
+				mAccountObject.mAccountPwd = usrPwdEditText.getText().toString().trim();
 				usrPwdConfirm = usrPwdConfirmEditText.getText().toString().trim();
 
-				mHomeObject = mProCityDisEditView.getHomeObject();
+				mProCityDisEditView.updateHomeObject();
 				if(valiInput()) {
 					registerAsync();
 				}
@@ -194,11 +189,11 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	}
 
 	private boolean valiInput() {
-		if (mAccountObject != null && TextUtils.isEmpty(mName)) {
+		if (mAccountObject != null && TextUtils.isEmpty(mAccountObject.mAccountName)) {
 			MyApplication.getInstance().showMessage(R.string.msg_input_usr_name);
 			return false;
 		}
-		if (TextUtils.isEmpty(mPwd)) {
+		if (TextUtils.isEmpty(mAccountObject.mAccountPwd)) {
 			MyApplication.getInstance().showMessage(R.string.msg_input_usr_pwd);
 			return false;
 		}
@@ -218,7 +213,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			MyApplication.getInstance().showMessage(R.string.msg_input_usr_place_detail);
 			return false;
 		}
-		if (!usrPwdConfirm.equals(mPwd)) {
+		if (!usrPwdConfirm.equals(mAccountObject.mAccountPwd)) {
 			MyApplication.getInstance().showMessage(R.string.msg_input_pwd_not_match_tips);
 			return false;
 		}

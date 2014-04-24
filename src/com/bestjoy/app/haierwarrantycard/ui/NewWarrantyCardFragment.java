@@ -174,7 +174,7 @@ public class NewWarrantyCardFragment extends BaseFragment implements View.OnClic
 				//更新日期数据
 //				mGoodsObject.mDate = mCalendar.getTimeInMillis();
 				//更新UI
-				mDatePickBtn.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(new Date(mGoodsObject.mDate)));
+				mDatePickBtn.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(new Date(mCalendar.getTimeInMillis())));
 			}
 				
 		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH))
