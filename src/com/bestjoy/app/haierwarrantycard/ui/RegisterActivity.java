@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -38,6 +40,7 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 	private EditText mTelInput;
 	private EditText mCodeInput;
 	private CheckBox mCheckBox;
+	private String mYanZhengCodeFromServer;
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
@@ -98,10 +101,17 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 				MyApplication.getInstance().showMessage(R.string.msg_input_yanzheng_code);
 				return;
 			}
-			RegisterConfirmActivity.startIntent(this, tel);
+			if (mYanZhengCodeFromServer != null
+					&& mYanZhengCodeFromServer.equals(mCodeInput.getText()
+							.toString().trim())) {
+				RegisterConfirmActivity.startIntent(this, tel);
+			} else {
+				MyApplication.getInstance().showMessage(R.string.msg_input_yanzheng_code_error);
+			}
 				break;
 			case R.id.button_getyanzhengma:
 				if(!TextUtils.isEmpty(tel)) {
+					mYanZhengCodeFromServer = null;
 					mBtnGetyanzhengma.setEnabled(false);
 					doTimeCountDown();
 					loadYanzhengCodeAsync(tel);
@@ -167,16 +177,16 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			mError = null;
 			InputStream is = null;
 			StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
-			sb.append("GetCode.ashx?cell=").append(params[0]);
+			sb.append("SendMessage.ashx?cell=").append(params[0]);
 			String path = sb.substring(sb.indexOf("?"));
 			DebugUtils.logD(TAG, "sb = " + sb.toString());
 			try {
 				is = NetworkUtils.openContectionLocked(sb.toString(), path, null);
+				DebugUtils.logD(TAG, "is = " + is.toString());
 				try {
-					DebugUtils.logD(TAG, "is = " + is.toString());
-					mRandCode = is.toString().substring(is.toString().indexOf("@")+1);
-					DebugUtils.logD(TAG, "is = " + is.toString());
-				} catch (Exception e) {
+					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
+					mRandCode = jsonObject.getString("randcode");
+				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			} catch (ClientProtocolException e) {
@@ -197,8 +207,11 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			if (mGetYanZhengCodeDialog != null) {
 				mGetYanZhengCodeDialog.hide();
 			}
-			mCodeInput.setText(result);
-			DebugUtils.logD(TAG, "result = " + result);
+			mYanZhengCodeFromServer = result;
+			DebugUtils.logD(TAG, "mYanZhengCodeFromServer = " + mYanZhengCodeFromServer);
+			if(mYanZhengCodeFromServer == null) {
+				MyApplication.getInstance().showMessage(R.string.msg_input_yanzheng_code_check_net);
+			}
 		}
 
 		@Override

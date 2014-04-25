@@ -130,8 +130,14 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
 					mAccountObject.mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
 					mAccountObject.mStatusMessage = jsonObject.getString("StatusMessage");
+					String data = jsonObject.getString("Data");
+					DebugUtils.logD(TAG, "Data = " + data);
+					if(data == null) return null;
+					mAccountObject.mAccountUid = Long.parseLong(data.substring(data.indexOf(":")+1));
 					DebugUtils.logD(TAG, "StatusCode = " + mAccountObject.mStatusCode);
 					DebugUtils.logD(TAG, "StatusMessage = " + mAccountObject.mStatusMessage);
+					DebugUtils.logD(TAG, "Data = " + data);
+					DebugUtils.logD(TAG, "Uid = " + mAccountObject.mAccountUid);
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -156,7 +162,12 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			} else if (mAccountObject.mStatusCode == 1) {
 				//注册成功
 				mAccountObject.mAccountHomes.add(mHomeObject);
-				//mAccountObject.saveInDatebase(getContentResolver(), null);
+				try {
+					mAccountObject.saveInDatebase(getContentResolver(), null);
+				} catch (Exception e) {
+					e.printStackTrace();
+					mError = e.getMessage();
+				}
 			}
 			MyApplication.getInstance().showMessage(mAccountObject.mStatusMessage);
 		}
@@ -166,7 +177,6 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			super.onCancelled();
 			dismissDialog(DIALOG_PROGRESS);
 		}
-
 	}
 
 	@Override
