@@ -15,7 +15,9 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.shwy.bestjoy.utils.Intents;
 
 public class LoginActivity extends BaseActionbarActivity implements View.OnClickListener{
 	private static final String TAG = "NewCardActivity";
@@ -93,7 +95,8 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 			if (resultCode == Activity.RESULT_OK) {
 				// login successfully
 				MyApplication.getInstance().showMessage(R.string.msg_login_confirm_success);
-				MyChooseDevicesActivity.startIntent(mContext, null);
+				
+				MyChooseDevicesActivity.startIntent(mContext, ModleSettings.createMyCardDefaultBundle(mContext));
 				finish();
 			}
 		} else {

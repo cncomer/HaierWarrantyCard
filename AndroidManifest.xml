@@ -89,7 +89,12 @@
             android:configChanges="orientation"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
-            android:label="@string/activity_title_choose_device_general" />
+            android:label="@string/activity_title_choose_device_general">
+            <intent-filter >
+                <action android:name="com.bestjoy.app.haierwarrantycard.Intent.ACTION_CHOOSE_DEVICE"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+        </activity>
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.RegisterConfirmActivity"
             android:configChanges="orientation"

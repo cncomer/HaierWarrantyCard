@@ -11,7 +11,10 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.BrowserActivity;
 import com.bestjoy.app.haierwarrantycard.ui.InstallActivity;
@@ -103,38 +106,130 @@ public class ModleSettings {
 		public void onItemClick(AdapterView<?> listView, View view, int pos, long arg3) {
 			Bundle bundle = new Bundle();
 			int id = getModelId(pos);
-			bundle.putInt(Intents.EXTRA_TYPE, id);
 			switch(id) {
 			case R.id.model_my_card:
-				bundle.putString(Intents.EXTRA_NAME, _context.getString(R.string.activity_title_choose_device_general));
 				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {
-					MyChooseDevicesActivity.startIntent(_context, bundle);
+					MyChooseDevicesActivity.startIntent(_context, createMyCardDefaultBundle(_context));
 				} else {
-					NewCardActivity.startIntent(_context, bundle);
+					NewCardActivity.startIntent(_context, createMyCardDefaultBundle(_context));
 				}
 				break;
 			case R.id.model_install:
-				bundle.putString(Intents.EXTRA_NAME, _context.getString(R.string.activity_title_choose_device_install));
-				InstallActivity.startIntnet(_context);
+				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {
+					MyChooseDevicesActivity.startIntent(_context, createMyInstallDefaultBundle(_context));
+				} else {
+					InstallActivity.startIntent(_context, createMyInstallDefaultBundle(_context));
+				}
 				break;
 			case R.id.model_repair:
 				//bundle.putString(Intents.EXTRA_NAME, _context.getString(R.string.activity_title_choose_device_repair));
 				//break;
 				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {
-					MyChooseDevicesActivity.startIntent(_context, bundle);
+					MyChooseDevicesActivity.startIntent(_context, createMyRepairDefaultBundle(_context));
 				} else {
-					RepairActivity.startIntent(_context, bundle);
+					RepairActivity.startIntent(_context, createMyRepairDefaultBundle(_context));
 				}
 				return;
 			case R.id.model_feedback:
 				BrowserActivity.startActivity(_context, "http://m.rrs.com/rrsm/track/verify.html");
-//				Intents.openURL(_context, "http://m.rrs.com/rrsm/track/verify.html");
 				return;
 			}
 			
 			
 		}
 		
+	}
+	
+	/**
+	 * 处理设备选择后的回调
+	 * @param type
+	 */
+	public static void doChoose(Context context, Bundle bundle) {
+		int type = bundle.getInt(Intents.EXTRA_TYPE);
+		switch(type) {
+		case R.id.model_my_card:
+			NewCardActivity.startIntent(context, bundle);
+			break;
+		case R.id.model_install:
+			InstallActivity.startIntent(context, bundle);
+			break;
+		case R.id.model_repair:
+			RepairActivity.startIntent(context, bundle);
+			break;
+		case R.id.model_feedback:
+			break;
+		}
+	}
+	
+	public static boolean createActionBarMenu(Menu menu, Bundle bundle) {
+		if (bundle == null || bundle.getInt(Intents.EXTRA_TYPE) == 0) {
+			return false;
+		}
+		int type = bundle.getInt(Intents.EXTRA_TYPE);
+		switch(type) {
+		case R.id.model_my_card:{
+			MenuItem item = menu.add(0, type, 0, R.string.menu_new_card);
+			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			break;
+		}
+		case R.id.model_install:{
+			MenuItem item = menu.add(0, type, 0, R.string.menu_new_install);
+			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			break;
+		}
+		case R.id.model_repair:{
+			MenuItem item = menu.add(0, type, 0, R.string.menu_new_repair);
+			item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+			break;
+		}
+		}
+		return true;
+	}
+	
+	public static boolean onActionBarMenuSelected(MenuItem item, Context context, Bundle bundle) {
+		switch(item.getItemId()) {
+		case R.id.model_my_card:
+		case R.id.model_install:
+		case R.id.model_repair:
+			ModleSettings.doChoose(context, bundle);
+			return true;
+		}
+		return false;
+	}
+	/**
+	 * 可以使用这个来创建选择设备的Bundle数据
+	 * @param context
+	 * @return
+	 */
+	public static Bundle createMyCardDefaultBundle(Context context) {
+		Bundle bundle = new Bundle();
+		bundle.putInt(Intents.EXTRA_TYPE, R.id.model_my_card);
+		bundle.putString(Intents.EXTRA_NAME, context.getString(R.string.activity_title_choose_device_general));
+		return bundle;
+	}
+	
+	/**
+	 * 可以使用这个来创建选择安装的Bundle数据
+	 * @param context
+	 * @return
+	 */
+	public static Bundle createMyInstallDefaultBundle(Context context) {
+		Bundle bundle = new Bundle();
+		bundle.putInt(Intents.EXTRA_TYPE, R.id.model_install);
+		bundle.putString(Intents.EXTRA_NAME, context.getString(R.string.activity_title_choose_device_general));
+		return bundle;
+	}
+	
+	/**
+	 * 可以使用这个来创建维修的Bundle数据
+	 * @param context
+	 * @return
+	 */
+	public static Bundle createMyRepairDefaultBundle(Context context) {
+		Bundle bundle = new Bundle();
+		bundle.putInt(Intents.EXTRA_TYPE, R.id.model_repair);
+		bundle.putString(Intents.EXTRA_NAME, context.getString(R.string.activity_title_choose_device_general));
+		return bundle;
 	}
 
 }

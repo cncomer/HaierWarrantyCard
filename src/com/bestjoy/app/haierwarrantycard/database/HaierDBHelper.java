@@ -12,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 10;
+  private static final int DB_VERSION = 11;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -77,6 +77,8 @@ private static final String TAG = "HaierDBHelper";
   public static final String CARD_YANBAO_TIME = "YanBaoTime";
   /**延保单位*/
   public static final String CARD_YANBAO_TIME_COMPANY = "YanBaoDanWei";
+  /**整机保修时间*/
+  public static final String CARD_WY = "wy";
   /**延保单位电话*/
   public static final String CARD_YANBAO_TIME_COPMANY_TEL = "YanBaoDanWeiCommanyTel";
   /**整机保修，目前不定义*/
@@ -277,6 +279,7 @@ private static final String TAG = "HaierDBHelper";
 	            CARD_BUT_DATE + " TEXT, " +
 	            CARD_PRICE + " TEXT, " +
 	            CARD_BUY_TUJING + " TEXT, " +
+	            CARD_WY + " INTEGER, " +
 	            CARD_YANBAO_TIME + " TEXT, " +
 	            CARD_YANBAO_TIME_COMPANY + " TEXT, " +
 	            CARD_YANBAO_TIME_COPMANY_TEL + " TEXT, " +
@@ -310,7 +313,7 @@ private static final String TAG = "HaierDBHelper";
   @Override
   public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 	  DebugUtils.logD(TAG, "onUpgrade oldVersion " + oldVersion + " newVersion " + newVersion);
-	  if (oldVersion <= 9) {
+	  if (oldVersion <= 10) {
 			sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_ACCOUNTS);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_HOMES);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CARDS);

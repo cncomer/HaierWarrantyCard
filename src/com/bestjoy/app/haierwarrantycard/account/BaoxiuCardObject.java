@@ -42,7 +42,8 @@ import com.shwy.bestjoy.utils.InfoInterfaceImpl;
             "AID": 1, 
             "BID": 1,
             "ZhuBx":0.0,    部件保修天数，单位是年，计算同保修时间
-            "Tag":"大厅暖气"  保修卡的标签，比如卧室电视机
+            "Tag":"大厅暖气",  保修卡的标签，比如卧室电视机
+            "WY": 1          整机保修时长，单位是年
         }
     ]
  *
@@ -59,6 +60,8 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public String mBuyDate;
 	public String mBuyPrice;
 	public String mBuyTuJing;
+	/**整机保修时间*/
+	public int mWY;
 	public String mYanBaoTime;
 	public String mYanBaoDanWei;
 	/**用户定义的保修设备名称，如客厅电视机*/
@@ -66,7 +69,6 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	/**主要配件保修，浮点值*/
 	public String mZhuBx;
 	/**整机保修，默认是1年*/
-	public String mZhengjiBx = "1";
 	/**本地id*/
 	public long mId = -1;
 	public long mUID, mAID, mBID;
@@ -91,6 +93,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		HaierDBHelper.CARD_BID,              //14
 		HaierDBHelper.CARD_NAME,
 		HaierDBHelper.CARD_COMPONENT_VALIDITY,
+		HaierDBHelper.CARD_WY,
 	};
 	
 	public static final int KEY_CARD_ID = 0;
@@ -110,12 +113,16 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public static final int KEY_CARD_BID = 14;
 	public static final int KEY_CARD_NAME = 15;
 	public static final int KEY_CARD_COMPONENT_VALIDITY = 16;
+	public static final int KEY_CARD_WY = 17;
 	
 	public static final String WHERE_UID = HaierDBHelper.CARD_UID + "=?";
 	public static final String WHERE_AID = HaierDBHelper.CARD_AID + "=?";
 	public static final String WHERE_BID = HaierDBHelper.CARD_BID + "=?";
 	public static final String WHERE_UID_AND_AID = WHERE_UID + " and " + WHERE_AID;
 	public static final String WHERE_UID_AND_AID_AND_BID = WHERE_UID_AND_AID + " and " + WHERE_BID;
+	
+	/**这个值用作不同Activity之间的传递，如选择设备的时候*/
+	public static BaoxiuCardObject mBaoxiuCardObject = null;
 	
 	public static BaoxiuCardObject parseBaoxiuCards(JSONObject jsonObject, AccountObject accountObject) throws JSONException {
 		BaoxiuCardObject cardObject = new BaoxiuCardObject();
@@ -139,6 +146,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		cardObject.mUID = jsonObject.getLong("UID");
 		cardObject.mAID = jsonObject.getLong("AID");
 		cardObject.mBID = jsonObject.getLong("BID");
+		cardObject.mWY = jsonObject.getInt("WY");
 		return cardObject;
 	}
 	
@@ -213,6 +221,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
     	baoxiuCardObject.mYanBaoDanWei = c.getString(KEY_CARD_YANBAO_TIME_COMPANY);
     	baoxiuCardObject.mCardName = c.getString(KEY_CARD_NAME);
     	baoxiuCardObject.mZhuBx = c.getString(KEY_CARD_COMPONENT_VALIDITY);
+    	baoxiuCardObject.mWY = c.getInt(KEY_CARD_WY);
     	
 		return baoxiuCardObject;
 	}
@@ -241,6 +250,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		values.put(HaierDBHelper.CARD_YANBAO_TIME_COMPANY, mYanBaoDanWei);
 		
 		values.put(HaierDBHelper.CARD_COMPONENT_VALIDITY, mZhuBx);
+		values.put(HaierDBHelper.CARD_WY, mWY);
 		
 		values.put(HaierDBHelper.DATE, new Date().getTime());
 		
@@ -290,7 +300,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 			if (TextUtils.isEmpty(mZhuBx)) {
 				mZhengjiValidity = 0;
 			} else {
-				int validity = (int) ((Float.valueOf(mZhengjiBx) + Float.valueOf(mYanBaoTime)) * 365 + 0.5f);
+				int validity = (int) ((mWY + Float.valueOf(mYanBaoTime)) * 365 + 0.5f);
 				try {
 					//转换购买日期
 					Date buyDate = BUY_DATE_TIME_FORMAT.parse(mBuyDate);

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -17,11 +19,16 @@ import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 
-public class HomeBaoxiuCardFragment extends SherlockFragment{
+public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemClickListener{
 	
 	private HomeObject mHomeObject;
 	private ListView mListView;
 	private CardsAdapter mCardsAdapter;
+	private OnBaoxiuCardItemClickListener mOnItemClickListener;
+	
+	public static interface OnBaoxiuCardItemClickListener {
+		void onItemClicked(BaoxiuCardObject card) ;
+	}
 	public void setHomeBaoxiuCard(HomeObject homeObject) {
 		mHomeObject = homeObject;
 	}
@@ -38,7 +45,12 @@ public class HomeBaoxiuCardFragment extends SherlockFragment{
 		mListView = (ListView) view.findViewById(R.id.listview);
 		mCardsAdapter = new CardsAdapter(getActivity(), null, true);
 		mListView.setAdapter(mCardsAdapter);
+		mListView.setOnItemClickListener(this);
 		return view;
+	}
+	
+	public void setOnItemClickListener(OnBaoxiuCardItemClickListener listener) {
+		mOnItemClickListener = listener;
 	}
 	
 	
@@ -101,7 +113,7 @@ public class HomeBaoxiuCardFragment extends SherlockFragment{
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
 			return LayoutInflater.from(context).inflate(R.layout.home_baoxiucard_list_item, parent, false);
 		}
-
+		
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
 			BaoxiuCardObject card = BaoxiuCardObject.getFromBaoxiuCardsCursor(cursor);
@@ -119,6 +131,7 @@ public class HomeBaoxiuCardFragment extends SherlockFragment{
 			holder._tag.setText(card.mCardName);
 			holder._pinpai.setText(card.mPinPai);
 			holder._xinghao.setText(card.mXingHao);
+			holder._card = card;
 			
 			//整机保修
 			int validity = card.getBaoxiuValidity();
@@ -150,6 +163,17 @@ public class HomeBaoxiuCardFragment extends SherlockFragment{
 		private TextView _tag, _pinpai, _xinghao, _title2, _title3;
 		//分别是部件保修和整机保修布局(整个)
 		private View _component, _zhengji;
+		private BaoxiuCardObject _card;
+		
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		if (mOnItemClickListener != null) {
+			//回调主Activity，如果有的话
+			ViewHolder viewHolder = (ViewHolder) view.getTag();
+			mOnItemClickListener.onItemClicked(viewHolder._card);
+		}
 		
 	}
 	

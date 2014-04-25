@@ -145,7 +145,7 @@ public class DebugChooseDevicesAdapter extends BaseAdapter implements ListView.O
 		case R.id.model_repair:
 			break;
 		case R.id.model_my_card:
-			NewCardActivity.startIntent(mActivity);
+			NewCardActivity.startIntent(mActivity, null);
 			break;
 		}
 		

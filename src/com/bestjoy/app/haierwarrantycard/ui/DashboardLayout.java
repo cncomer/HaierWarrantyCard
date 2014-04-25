@@ -64,7 +64,7 @@ public class DashboardLayout extends LinearLayout implements View.OnClickListene
 			MyCardActivity.startIntent(mContext);
 			break;
 		case R.id.button_new_card:
-			NewCardActivity.startIntent(mContext);
+			NewCardActivity.startIntent(mContext,null);
 			break;
 		case R.id.button_repair:
 			MyCardActivity.startIntent(mContext);

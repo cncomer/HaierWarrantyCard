@@ -74,7 +74,8 @@
        <string name="usr_repwd_hint">请再次输入你的密码</string>
        <string name="usr_tel_hint">输入你的手机号</string>
     
-    <string name="activity_title_choose_device_general">选择设备</string>
+    <string name="activity_title_choose_device_general">我的保修卡</string>
+    <string name="activity_title_choose_device_card">选择设备</string>
     <string name="activity_title_choose_device_install">请先选择你要预约安装的产品</string>
     <string name="activity_title_choose_device_repair">请先选择你要预约维修的产品</string>
     <string name="activity_title_repair">预约维修</string>
@@ -204,4 +205,8 @@
     <string name="baoxiucard_validity">%s天</string>
     <string name="baoxiucard_validity_toomuch">"999天"</string>
     <string name="baoxiucard_outdate">过保</string>
+    <string name="menu_new_card">新建保修卡</string>
+    <string name="menu_new_repair">预约维修</string>
+    <string name="menu_new_install">预约安装</string>
+     <string name="menu_new_home">创建家</string>
 </resources>

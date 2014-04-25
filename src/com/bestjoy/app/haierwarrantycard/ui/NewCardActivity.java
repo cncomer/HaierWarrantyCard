@@ -166,11 +166,6 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements View
 		
 	}
 	
-	public static void startIntent(Context context) {
-		Intent intent = new Intent(context, NewCardActivity.class);
-		context.startActivity(intent);
-	}
-	
 	public static void startIntent(Context context, Bundle bundle) {
 		Intent intent = new Intent(context, NewCardActivity.class);
 		if (bundle != null) intent.putExtras(bundle);
