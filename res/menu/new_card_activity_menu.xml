@@ -13,5 +13,10 @@
         android:icon="@drawable/abs__ic_search_api_holo_light"
         android:actionViewClass="com.actionbarsherlock.widget.SearchView"
         android:title="@string/menu_search"/>
+    <item
+        android:id="@+string/menu_done"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:title="@string/menu_done"/>
 
 </menu>

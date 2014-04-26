@@ -6,9 +6,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.actionbarsherlock.view.Menu;
@@ -17,7 +17,6 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
-import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.shwy.bestjoy.utils.Intents;
 /**
  * 新建保修卡、预约维修、预约安装 UI
@@ -28,7 +27,7 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements View
 	SlidingMenu.OnOpenedListener, SlidingMenu.OnClosedListener{
 	private static final String TAG = "NewCardActivity";
 	private ModleBaseFragment mContent;
-	private ChooseDevicesFragment mMenu;
+	private NewCardChooseFragment mMenu;
 	private Bundle mBundles;
 	/**表示是否是第一次进入*/
 	private boolean mIsFirstOnResume = true;
@@ -45,7 +44,7 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements View
 		
 		if (savedInstanceState != null) {
 			mContent = (ModleBaseFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
-			mMenu = (ChooseDevicesFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mMenu");
+			mMenu = (NewCardChooseFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mMenu");
 		}
 		
 		if (mContent == null) {
@@ -64,7 +63,7 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements View
 		}
 		
 		if (mMenu == null) {
-			mMenu = new ChooseDevicesFragment();
+			mMenu = new NewCardChooseFragment();
 			
 		}
 		
@@ -131,9 +130,11 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements View
 		if (getSlidingMenu().isMenuShowing()) {
 			menu.findItem(R.string.menu_choose).setVisible(false);
 			menu.findItem(R.string.menu_search).setVisible(true);
+			menu.findItem(R.string.menu_done).setVisible(true);
 		} else {
 			menu.findItem(R.string.menu_choose).setVisible(true);
 			menu.findItem(R.string.menu_search).setVisible(false);
+			menu.findItem(R.string.menu_done).setVisible(false);
 		}
 		return super.onPrepareOptionsMenu(menu);
 	}
@@ -154,6 +155,13 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements View
 			break;
 		case R.string.menu_choose:
 			getSlidingMenu().showMenu(true);
+			break;
+		case R.string.menu_done:
+			BaoxiuCardObject object = mMenu.getBaoxiuCardObject();
+			if (!TextUtils.isEmpty(object.mLeiXin)) {
+				mContent.updateInfoInterface(object);
+				getSlidingMenu().showContent(true);
+			}
 			break;
 			 // Respond to the action bar's Up/Home button
         case android.R.id.home:

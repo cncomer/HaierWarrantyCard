@@ -11,6 +11,7 @@ import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerService;
 import com.bestjoy.app.haierwarrantycard.ui.PreferencesActivity;
+import com.bestjoy.app.haierwarrantycard.utils.BeepAndVibrate;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
 import com.bestjoy.app.haierwarrantycard.utils.InstallFileUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
@@ -59,6 +60,7 @@ public class MyApplication extends Application{
 //		Contact.init(this);
 		//add by chenkai, 20131201, 网络监听
 		ComConnectivityManager.getInstance().setContext(this);
+		BeepAndVibrate.getInstance().setContext(this);
 		
 		BitmapUtils.getInstance().setContext(this);
 		
