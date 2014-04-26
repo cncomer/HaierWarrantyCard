@@ -8,8 +8,10 @@ import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +25,7 @@ import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
+import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
@@ -168,12 +171,30 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			} else if (mAccountObject.mStatusCode == 1) {
 				//注册成功
 				mAccountObject.mAccountHomes.add(mHomeObject);
-				MyChooseDevicesActivity.startIntent(mContext, ModleSettings.createMyCardDefaultBundle(mContext));
+				boolean saveResult;
 				try {
-					mAccountObject.saveInDatebase(getContentResolver(), null);
+					saveResult = HaierAccountManager.getInstance().saveAccountObject(getContentResolver(), mAccountObject);
 				} catch (Exception e) {
 					e.printStackTrace();
 					mError = e.getMessage();
+					saveResult = false;
+				}
+				if(saveResult) {
+					MyChooseDevicesActivity.startIntent(mContext, ModleSettings.createMyCardDefaultBundle(mContext));
+				} else {
+					//保存数据库失败
+					new AlertDialog.Builder(mContext)
+					.setTitle(R.string.msg_register_title)
+		   			.setMessage(R.string.msg_register_save_fail)
+		   			.setCancelable(false)
+		   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+		   				@Override
+		   				public void onClick(DialogInterface dialog, int which) {
+		   					LoginActivity.startIntent(mContext);
+		   				}
+		   			})
+		   			.create()
+		   			.show();
 				}
 			}
 			MyApplication.getInstance().showMessage(mAccountObject.mStatusMessage);
