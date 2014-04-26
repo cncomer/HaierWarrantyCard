@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.actionbarsherlock.view.Menu;
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
@@ -137,7 +138,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 					mAccountObject.mStatusMessage = jsonObject.getString("StatusMessage");
 					String data = jsonObject.getString("Data");
 					DebugUtils.logD(TAG, "Data = " + data);
-					if(data == null) return null;
+					if(data == null || data.trim().equals("")) return null;
 					mAccountObject.mAccountUid = Long.parseLong(data.substring(data.indexOf(":")+1));
 					DebugUtils.logD(TAG, "StatusCode = " + mAccountObject.mStatusCode);
 					DebugUtils.logD(TAG, "StatusMessage = " + mAccountObject.mStatusMessage);
@@ -184,7 +185,11 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			dismissDialog(DIALOG_PROGRESS);
 		}
 	}
-
+	
+	 public boolean onCreateOptionsMenu(Menu menu) {
+		 return false;
+	 }
+	 
 	@Override
 	public void onClick(View view) {
 		switch (view.getId()) {
