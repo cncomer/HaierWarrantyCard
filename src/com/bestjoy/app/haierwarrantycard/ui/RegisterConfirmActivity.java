@@ -23,6 +23,7 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
@@ -166,6 +167,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			} else if (mAccountObject.mStatusCode == 1) {
 				//注册成功
 				mAccountObject.mAccountHomes.add(mHomeObject);
+				MyChooseDevicesActivity.startIntent(mContext, ModleSettings.createMyCardDefaultBundle(mContext));
 				try {
 					mAccountObject.saveInDatebase(getContentResolver(), null);
 				} catch (Exception e) {
