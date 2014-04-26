@@ -107,7 +107,9 @@
     <string name="button_register_confirm">确认注册</string>
     <string name="input_province_tips">请先选择省份</string>
     <string name="input_city_tips">请先选择城市</string>
-     <string name="choose_address">选择地址</string>
+    <string name="choose_address">选择地址</string>
+    <string name="msg_register_title">提示信息</string>
+    <string name="msg_register_save_fail">注册成功，但无法创建账户，请尝试重新登陆</string>
     
     <string name="msg_progressdialog_wait">操作处理中，请稍后....</string>
     <string name="msg_input_usrtel_password">请输入你的手机号和密码</string>
