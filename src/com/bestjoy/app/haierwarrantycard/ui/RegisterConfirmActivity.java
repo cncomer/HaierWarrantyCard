@@ -2,6 +2,7 @@ package com.bestjoy.app.haierwarrantycard.ui;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
@@ -108,24 +109,27 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 		protected Void doInBackground(String... params) {
 			mError = null;
 			InputStream is = null;
-			StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
-			sb.append("Register.ashx?cell=").append(mAccountObject.mAccountTel)
-			.append("&UserName=")
-			.append(mAccountObject.mAccountName)
-			.append("&Shen=")
-			.append(mHomeObject.mHomeProvince)
-			.append("&Shi=")
-			.append(mHomeObject.mHomeCity)
-			.append("&Qu=")
-			.append(mHomeObject.mHomeDis)
-			.append("&detail=")
-			.append(mHomeObject.mHomePlaceDetail)
-			.append("&pwd=")
-			.append(mAccountObject.mAccountPwd);
-			String path = sb.substring(sb.indexOf("?"));
-			DebugUtils.logD(TAG, "sb = " + sb.toString());
+			final int LENGTH = 7;
+			String[] urls = new String[LENGTH];
+			String[] paths = new String[LENGTH];
+			urls[0] = HaierServiceObject.SERVICE_URL + "Register.ashx?cell=";
+			paths[0] = mAccountObject.mAccountTel;
+			urls[1] = "&UserName=";
+			paths[1] = mAccountObject.mAccountName;
+			urls[2] = "&Shen=";
+			paths[2] = mHomeObject.mHomeProvince;
+			urls[3] = "&Shi=";
+			paths[3] = mHomeObject.mHomeCity;
+			urls[4] = "&Qu=";
+			paths[4] = mHomeObject.mHomeDis;
+			urls[5] = "&detail=";
+			paths[5] = mHomeObject.mHomePlaceDetail;
+			urls[6] = "&pwd=";
+			paths[6] = mAccountObject.mAccountPwd;
+			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
+			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
 			try {
-				is = NetworkUtils.openContectionLocked(sb.toString(), path, null);
+				is = NetworkUtils.openContectionLocked(urls, paths, null);
 				try {
 					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
 					mAccountObject.mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
