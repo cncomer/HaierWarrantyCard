@@ -45,7 +45,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		//每次进来我们先重置这个静态成员
-		BaoxiuCardObject.mBaoxiuCardObject = null;
+		BaoxiuCardObject.setBaoxiuCardObject(null);
 		DebugUtils.logD(TAG, "onCreate()");
 		if (isFinishing()) {
 			return ;
@@ -167,7 +167,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	    if (mIsChooseDevice) {
 	    	//一些特殊的操作，可以放在这里，目前暂不需要实现
 	    }
-	    BaoxiuCardObject.mBaoxiuCardObject = card;
+	    BaoxiuCardObject.setBaoxiuCardObject(card);
     	ModleSettings.doChoose(mContext, mBundle);
 		
 	}

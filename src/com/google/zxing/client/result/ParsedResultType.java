@@ -31,14 +31,5 @@ public enum ParsedResultType {
   TEXT,
   GEO,
   TEL,
-  SMS,
-  CALENDAR,
-  WIFI,
-  ISBN,
-  ENTERPRISE_CARD,
-  PRODUCT_VERIFY,
-  NDEF_SMART_POSTER,
-  ZHT,//展会通
-  MYHOME,//我的家
-  MYLIFE,//生活圈
+  HAIER,  //娴峰皵鏉＄爜
 }

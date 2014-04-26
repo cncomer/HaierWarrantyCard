@@ -12,8 +12,7 @@
 	    <TextView style="@style/ProductInfo"
 	        android:text="@string/product_type"/>
 	    <EditText android:id="@+id/product_type_input"
-	        style="@style/ProductInfoInput"
-	        android:hint="@string/product_debug_placeholder"/>
+	        style="@style/ProductInfoInput"/>
 	</LinearLayout>
 	
     <LinearLayout
@@ -24,7 +23,6 @@
 	    <TextView style="@style/ProductInfo"
 	        android:text="@string/product_brand"/>
 	    <EditText android:id="@+id/product_brand_input"
-	        android:hint="@string/product_debug_placeholder"
 	        style="@style/ProductInfoInput"/>
 	</LinearLayout>
 	
@@ -36,7 +34,6 @@
 	    <TextView style="@style/ProductInfo"
 	        android:text="@string/product_model"/>
 	    <EditText android:id="@+id/product_model_input"
-	        android:hint="@string/product_debug_placeholder"
 	        style="@style/ProductInfoInput"/>
 	</LinearLayout>
 
@@ -49,7 +46,6 @@
 	    <TextView style="@style/ProductInfo"
 	        android:text="@string/product_sn"/>
 	    <EditText android:id="@+id/product_sn_input"
-	        android:hint="@string/product_debug_placeholder"
 	        style="@style/ProductInfoInput"/>
 	</LinearLayout>
 	
@@ -61,7 +57,6 @@
 	    <TextView style="@style/ProductInfo"
 	        android:text="@string/product_tel"/>
 	    <EditText android:id="@+id/product_tel_input"
-	        android:hint="@string/product_debug_placeholder"
 	        style="@style/ProductInfoInput"/>
 	</LinearLayout>
 </LinearLayout>

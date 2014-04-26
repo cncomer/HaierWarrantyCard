@@ -14,6 +14,7 @@ import android.view.View;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
@@ -42,6 +43,7 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements View
 		if (mContent == null) {
 			mContent = new NewWarrantyCardFragment();
 		}
+		mContent.setBaoxiuCardObject(BaoxiuCardObject.getBaoxiuCardObject());
 		if (mMenu == null) {
 			mMenu = new ChooseDevicesFragment();
 		}
@@ -87,6 +89,10 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements View
 		File tempRootDir = Environment.getExternalStorageDirectory();
 		mBillTempFile = new File(tempRootDir, ".billTemp");
 		mAvatorTempFile = new File(tempRootDir, ".avatorTemp");
+	}
+	
+	private void initBaoxiuCardView() {
+		
 	}
 	
 	

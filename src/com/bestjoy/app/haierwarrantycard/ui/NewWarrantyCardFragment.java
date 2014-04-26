@@ -14,31 +14,32 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
-import com.bestjoy.app.haierwarrantycard.goods.GoodsObject;
+import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.ImageHelper;
 import com.shwy.bestjoy.utils.Intents;
 
 public class NewWarrantyCardFragment extends BaseFragment implements View.OnClickListener{
 	
-	private GoodsObject mGoodsObject;
+	private BaoxiuCardObject mBaoxiuCardObject;
 	//按钮
 	private Button mSaveBtn;
 	private TextView mDatePickBtn;
 	private ImageView mBillImageView;
-	
-	/**是否保存完后打开我的家，这主要是条码识别会这样做*/
-	private boolean mIsOpenHomeWhenSave = false;
+	private EditText mTypeInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput;
+	private EditText mPriceInput, mTujingInput, mYanbaoTimeInput, mYanbaoComponyInput, mYanbaoTelInput;
 	private Calendar mCalendar;
 	//临时的拍摄照片路径
 	private File mBillTempFile, mAvatorTempFile;
@@ -70,8 +71,8 @@ public class NewWarrantyCardFragment extends BaseFragment implements View.OnClic
 		mAvatorTempFile = new File(tempRootDir, ".avatorTemp");
 	}
 	
-	public void setGoodsObject(GoodsObject goodsObject) {
-		mGoodsObject = goodsObject;
+	public void setBaoxiuCardObject(BaoxiuCardObject baoxiuCardObject) {
+		mBaoxiuCardObject = baoxiuCardObject;
 	}
 	
 
@@ -79,34 +80,70 @@ public class NewWarrantyCardFragment extends BaseFragment implements View.OnClic
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		 View view = inflater.inflate(R.layout.activity_new_card, container, false);
-		initView(view);
+		 mBillImageView = (ImageView) view.findViewById(R.id.button_scan_bill);
+		 mBillImageView.setOnClickListener(this);
+		 
+		 mTypeInput = (EditText) view.findViewById(R.id.product_type_input);
+		 mPinpaiInput = (EditText) view.findViewById(R.id.product_brand_input);
+		 mModelInput = (EditText) view.findViewById(R.id.product_brand_input);
+		 mBianhaoInput = (EditText) view.findViewById(R.id.product_sn_input);
+		 mBaoxiuTelInput = (EditText) view.findViewById(R.id.product_tel_input);
+		 //购买日期
+		 mDatePickBtn = (TextView) view.findViewById(R.id.product_buy_date);
+		 mDatePickBtn.setOnClickListener(this);
+		 
+		 mPriceInput = (EditText) view.findViewById(R.id.product_buy_cost);
+		 mTujingInput = (EditText) view.findViewById(R.id.product_buy_entry);
+		 mYanbaoTimeInput = (EditText) view.findViewById(R.id.product_buy_delay_time);
+		 mYanbaoComponyInput = (EditText) view.findViewById(R.id.product_buy_delay_componey);
+		 mYanbaoTelInput = (EditText) view.findViewById(R.id.product_buy_delay_componey_tel);
+		 
+		 
+		 mSaveBtn = (Button) view.findViewById(R.id.button_save);
+		 mSaveBtn.setOnClickListener(this);
+			
+		view.findViewById(R.id.button_scan_qrcode).setOnClickListener(this);
 		return view;
 	}
 
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
+		populateView();
 	}
 	
-	private void initView(View view) {
+	private void populateView() {
 		//init layouts
-		if (mSaveBtn == null) {
-		
-			mBillImageView = (ImageView) view.findViewById(R.id.button_scan_bill);
-			mBillImageView.setOnClickListener(this);
-			
-			mDatePickBtn = (TextView) view.findViewById(R.id.product_buy_date);
-			mDatePickBtn.setOnClickListener(this);
-			mSaveBtn = (Button) view.findViewById(R.id.button_save);
-			mSaveBtn.setOnClickListener(this);
-			
-			view.findViewById(R.id.button_scan_qrcode).setOnClickListener(this);
-			
+		if (mBaoxiuCardObject == null) {
+			mTypeInput.getText().clear();
+			mPinpaiInput.getText().clear();
+			mModelInput.getText().clear();
+			mBianhaoInput.getText().clear();
+			mBaoxiuTelInput.getText().clear();
+			mPriceInput.getText().clear();
+			mTujingInput.getText().clear();
+			mYanbaoTimeInput.getText().clear();
+			mYanbaoComponyInput.getText().clear();
+			mYanbaoTelInput.getText().clear();
+		} else {
+			mTypeInput.setText(mBaoxiuCardObject.mLeiXin);
+			mPinpaiInput.setText(mBaoxiuCardObject.mPinPai);
+			mModelInput.setText(mBaoxiuCardObject.mXingHao);
+			mBianhaoInput.setText(mBaoxiuCardObject.mSHBianHao);
+			mBaoxiuTelInput.setText(mBaoxiuCardObject.mBXPhone);
+			mPriceInput.setText(mBaoxiuCardObject.mBuyPrice);
+			mTujingInput.setText(mBaoxiuCardObject.mBuyTuJing);
+			mYanbaoTimeInput.setText(mBaoxiuCardObject.mYanBaoTime);
+			mYanbaoComponyInput.setText(mBaoxiuCardObject.mYanBaoDanWei);
+//			mYanbaoTelInput.setText(mBaoxiuCardObject.m);
 		}
 		
-//		mDatePickBtn.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(new Date(mGoodsObject.mDate)));
-		
 	}
+	
+	public BaoxiuCardObject getmBaoxiuCardObject() {
+		return null;
+	}
+	
 	
 	public Dialog onCreateDialog(int id) {
 		switch(id) {
@@ -144,14 +181,14 @@ public class NewWarrantyCardFragment extends BaseFragment implements View.OnClic
 	public void onClick(View v) {
 		switch(v.getId()) {
 		case R.id.button_scan_bill:
-			if (mGoodsObject != null && !mGoodsObject.hasBill()) {
-				//如果没有发票，我们直接调用相机
-				mPictureRequest = REQUEST_BILL;
-				onCapturePhoto();
-			} else {
-				//如果有，我们显示操作选项，查看或是拍摄发票
-				showDialog(DIALOG_BILL_OP_CONFIRM);
-			}
+//			if (mGoodsObject != null && !mGoodsObject.hasBill()) {
+//				//如果没有发票，我们直接调用相机
+//				mPictureRequest = REQUEST_BILL;
+//				onCapturePhoto();
+//			} else {
+//				//如果有，我们显示操作选项，查看或是拍摄发票
+//				showDialog(DIALOG_BILL_OP_CONFIRM);
+//			}
 			break;
 		case R.id.button_scan_qrcode:
 			Intent scanIntent = new Intent(getActivity(), CaptureActivity.class);
@@ -187,17 +224,21 @@ public class NewWarrantyCardFragment extends BaseFragment implements View.OnClic
 		if (resultCode == Activity.RESULT_OK) {
 			if (REQUEST_SCAN == requestCode) {
 				//识别到了商品信息
-//				GoodsObject scanGoodsObject = GoodsObject.extractIntent(data);
-//				mGoodsObject.mKY = scanGoodsObject.mKY;
-//				mGoodsObject.mWY = scanGoodsObject.mWY;
-//				mGoodsObject.mProductBrand = scanGoodsObject.mProductBrand;
-//				mGoodsObject.mSN = scanGoodsObject.mSN;
-//				
-//				mGoodsObject.mProductModel = scanGoodsObject.mProductModel;
-//				mGoodsObject.mProductName = scanGoodsObject.mProductName;
-//				mGoodsObject.mProductTel = scanGoodsObject.mProductTel;
-				
-//				mSaleGoodsInfoText.setText(scanGoodsObject.toGoodsInfoString());
+				BaoxiuCardObject object = BaoxiuCardObject.getBaoxiuCardObject();
+				//这里一般我们只设置品牌、型号、编号和名称
+				if (!TextUtils.isEmpty(object.mLeiXin)) {
+					mTypeInput.setText(object.mLeiXin);
+				}
+				if (!TextUtils.isEmpty(object.mPinPai)) {
+					mPinpaiInput.setText(object.mPinPai);
+				}
+				if (!TextUtils.isEmpty(object.mSHBianHao)) {
+					mBianhaoInput.setText(object.mSHBianHao);
+				}
+				if (!TextUtils.isEmpty(object.mXingHao)) {
+					mModelInput.setText(object.mXingHao);
+				}
+
 //				//滚动到最低端以便显示完整的商品信息
 //				mScrollView.post(new Runnable() {   
 //				    public void run() {  

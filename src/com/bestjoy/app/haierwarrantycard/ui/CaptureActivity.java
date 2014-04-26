@@ -48,6 +48,7 @@ import com.google.zxing.Result;
 import com.google.zxing.ResultPoint;
 import com.google.zxing.client.android.camera.CameraManager;
 import com.google.zxing.client.android.camera.FlashlightManager;
+import com.google.zxing.client.result.HaierResultHandler;
 import com.google.zxing.client.result.ResultButtonListener;
 import com.google.zxing.client.result.ResultHandler;
 import com.google.zxing.client.result.ResultHandlerFactory;
@@ -323,6 +324,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 //    } else {
 //    	 barcodeImageView.setImageBitmap((barcode == null?PhotoManagerUtilsV2.getInstance().getDefaultBitmap():barcode));
 //    }
+    
+    if (resultHandler instanceof HaierResultHandler) {
+    	HaierResultHandler myhomeResultHandler = (HaierResultHandler) resultHandler;
+		myhomeResultHandler.setParseOperation(mScanTask);
+	}
     
     barcodeImageView.setImageBitmap((barcode == null?PhotoManagerUtilsV2.getInstance().getDefaultBitmap():barcode));
 

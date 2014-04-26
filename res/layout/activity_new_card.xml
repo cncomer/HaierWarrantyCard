@@ -64,6 +64,7 @@
             android:layout_height="fill_parent"
             android:layout_width="fill_parent"
             android:orientation="vertical">
+	        
             <include layout="@layout/product_create_info"/>
             
             <View android:background="@color/light_gray"
@@ -117,7 +118,6 @@
 			    <TextView style="@style/ProductInfo"
 			        android:text="@string/product_buy_cost"/>
 			    <EditText android:id="@+id/product_buy_cost"
-			        android:hint="@string/product_debug_placeholder"
 			        style="@style/ProductInfoInput"/>
 			</LinearLayout>
 			
@@ -129,7 +129,6 @@
 			    <TextView style="@style/ProductInfo"
 			        android:text="@string/product_buy_entry"/>
 			    <EditText android:id="@+id/product_buy_entry"
-			        android:hint="@string/product_debug_placeholder"
 			        style="@style/ProductInfoInput"/>
 			</LinearLayout>
 	
@@ -146,7 +145,6 @@
 			    <TextView style="@style/ProductInfo"
 			        android:text="@string/product_buy_delay_time"/>
 			    <EditText android:id="@+id/product_buy_delay_time"
-			        android:hint="@string/product_debug_placeholder"
 			        style="@style/ProductInfoInput"/>
 			</LinearLayout>
 			
@@ -158,7 +156,6 @@
 			    <TextView style="@style/ProductInfo"
 			        android:text="@string/product_buy_delay_componey"/>
 			    <EditText android:id="@+id/product_buy_delay_componey"
-			        android:hint="@string/product_debug_placeholder"
 			        style="@style/ProductInfoInput"/>
 			</LinearLayout>
 			
@@ -170,7 +167,6 @@
 			    <TextView style="@style/ProductInfo"
 			        android:text="@string/product_buy_delay_componey_tel"/>
 			    <EditText android:id="@+id/product_buy_delay_componey_tel"
-			        android:hint="@string/product_debug_placeholder"
 			        style="@style/ProductInfoInput"/>
 			</LinearLayout>
 			

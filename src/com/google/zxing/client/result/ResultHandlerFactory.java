@@ -32,7 +32,9 @@ public final class ResultHandlerFactory {
   public static ResultHandler makeResultHandler(Activity activity, Result rawResult) {
     ParsedResult result = parseResult(rawResult);
     ParsedResultType type = result.getType();
-    if (type.equals(ParsedResultType.TEXT)) {
+    if (type.equals(ParsedResultType.HAIER)) {
+        return new HaierResultHandler(activity, result);
+    } else if (type.equals(ParsedResultType.TEXT)) {
        return new TextResultHandler(activity, result);
     } 
     return null;
