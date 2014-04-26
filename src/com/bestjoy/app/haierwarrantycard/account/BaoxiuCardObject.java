@@ -43,7 +43,8 @@ import com.shwy.bestjoy.utils.InfoInterfaceImpl;
             "BID": 1,
             "ZhuBx":0.0,    部件保修天数，单位是年，计算同保修时间
             "Tag":"大厅暖气",  保修卡的标签，比如卧室电视机
-            "WY": 1          整机保修时长，单位是年
+            "WY": 1.0,          整机保修时长，单位是年
+            "YBPhone":"400-20098005"  延保电话
         }
     ]
  *
@@ -60,15 +61,16 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public String mBuyDate;
 	public String mBuyPrice;
 	public String mBuyTuJing;
-	/**整机保修时间*/
-	public int mWY;
+	/**整机保修时间，浮点型*/
+	public String mWY;
 	public String mYanBaoTime;
 	public String mYanBaoDanWei;
 	/**用户定义的保修设备名称，如客厅电视机*/
 	public String mCardName;
 	/**主要配件保修，浮点值*/
 	public String mZhuBx;
-	/**整机保修，默认是1年*/
+	/**延保电话*/
+	public String mYBPhone;
 	/**本地id*/
 	public long mId = -1;
 	public long mUID, mAID, mBID;
@@ -94,6 +96,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		HaierDBHelper.CARD_NAME,
 		HaierDBHelper.CARD_COMPONENT_VALIDITY,
 		HaierDBHelper.CARD_WY,
+		HaierDBHelper.CARD_YBPhone,          //18
 	};
 	
 	public static final int KEY_CARD_ID = 0;
@@ -114,6 +117,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public static final int KEY_CARD_NAME = 15;
 	public static final int KEY_CARD_COMPONENT_VALIDITY = 16;
 	public static final int KEY_CARD_WY = 17;
+	public static final int KEY_CARD_YBPHONE = 18;
 	
 	public static final String WHERE_UID = HaierDBHelper.CARD_UID + "=?";
 	public static final String WHERE_AID = HaierDBHelper.CARD_AID + "=?";
@@ -122,7 +126,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public static final String WHERE_UID_AND_AID_AND_BID = WHERE_UID_AND_AID + " and " + WHERE_BID;
 	
 	/**这个值用作不同Activity之间的传递，如选择设备的时候*/
-	public static BaoxiuCardObject mBaoxiuCardObject = null;
+	private static BaoxiuCardObject mBaoxiuCardObject = null;
 	
 	public static BaoxiuCardObject parseBaoxiuCards(JSONObject jsonObject, AccountObject accountObject) throws JSONException {
 		BaoxiuCardObject cardObject = new BaoxiuCardObject();
@@ -146,7 +150,8 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		cardObject.mUID = jsonObject.getLong("UID");
 		cardObject.mAID = jsonObject.getLong("AID");
 		cardObject.mBID = jsonObject.getLong("BID");
-		cardObject.mWY = jsonObject.getInt("WY");
+		cardObject.mWY = jsonObject.getString("WY");
+		cardObject.mYBPhone = jsonObject.getString("YBPhone");
 		return cardObject;
 	}
 	
@@ -221,7 +226,9 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
     	baoxiuCardObject.mYanBaoDanWei = c.getString(KEY_CARD_YANBAO_TIME_COMPANY);
     	baoxiuCardObject.mCardName = c.getString(KEY_CARD_NAME);
     	baoxiuCardObject.mZhuBx = c.getString(KEY_CARD_COMPONENT_VALIDITY);
-    	baoxiuCardObject.mWY = c.getInt(KEY_CARD_WY);
+    	baoxiuCardObject.mWY = c.getString(KEY_CARD_WY);
+    	
+    	baoxiuCardObject.mYBPhone = c.getString(KEY_CARD_YBPHONE);
     	
 		return baoxiuCardObject;
 	}
@@ -251,6 +258,8 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		
 		values.put(HaierDBHelper.CARD_COMPONENT_VALIDITY, mZhuBx);
 		values.put(HaierDBHelper.CARD_WY, mWY);
+		values.put(HaierDBHelper.CARD_YBPhone, mYBPhone);
+		
 		
 		values.put(HaierDBHelper.DATE, new Date().getTime());
 		
@@ -300,7 +309,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 			if (TextUtils.isEmpty(mZhuBx)) {
 				mZhengjiValidity = 0;
 			} else {
-				int validity = (int) ((mWY + Float.valueOf(mYanBaoTime)) * 365 + 0.5f);
+				int validity = (int) ((Float.valueOf(mWY) + Float.valueOf(mYanBaoTime)) * 365 + 0.5f);
 				try {
 					//转换购买日期
 					Date buyDate = BUY_DATE_TIME_FORMAT.parse(mBuyDate);
@@ -351,6 +360,22 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 			
 		}
 		return mComponentValidity;
+	}
+	/**
+	 * 当我们设置过mBaoxiuCardObject值后，需要使用这个方法来获取，这会重置mBaoxiuCardObject对象为null.
+	 * @return
+	 */
+	public static BaoxiuCardObject getBaoxiuCardObject() {
+		BaoxiuCardObject object = mBaoxiuCardObject;
+		mBaoxiuCardObject = null;
+		return object;
+	}
+	/**
+	 * 需要在Activity之间传递保修卡对象的时候，需要调用该方法来设置，之后使用getBaoxiuCardObject()来获得.
+	 * @param baoxiucardObject
+	 */
+	public static void setBaoxiuCardObject(BaoxiuCardObject baoxiucardObject) {
+		mBaoxiuCardObject = baoxiucardObject;
 	}
 	
 	public static  DateFormat BUY_DATE_TIME_FORMAT = new SimpleDateFormat("yyyyMMdd");

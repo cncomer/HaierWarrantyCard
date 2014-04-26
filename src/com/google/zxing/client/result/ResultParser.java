@@ -41,6 +41,7 @@ public abstract class ResultParser {
 
   private static final ResultParser[] PARSERS = {
 //      new MyDeviceResultParser(),
+	  new HaierParser(),
   };
 
   private static final Pattern DIGITS = Pattern.compile("\\d*");

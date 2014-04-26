@@ -135,6 +135,11 @@
             android:excludeFromRecents="true"
             android:label="@string/title_feedback" />
         
+        <activity
+            android:name="com.bestjoy.app.haierwarrantycard.qrcode.HistoryActivity"
+            android:excludeFromRecents="true"
+            android:label="@string/title_scan_history" />
+        
         <provider android:name="com.bestjoy.app.haierwarrantycard.database.BjnoteProvider"
             android:exported="true"
             android:authorities="com.bestjoy.app.haierwarrantycard.provider.BjnoteProvider"/>
