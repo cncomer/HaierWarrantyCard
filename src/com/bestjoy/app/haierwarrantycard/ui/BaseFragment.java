@@ -14,9 +14,14 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.ImageHelper;
+import com.shwy.bestjoy.utils.InfoInterface;
+import com.shwy.bestjoy.utils.Intents;
 
 public class BaseFragment extends SherlockFragment{
 
+	/**请求扫描条码*/
+	public static final int REQUEST_SCAN = 10000;
+	
 	private static final int CurrentPictureGalleryRequest = 101000;
 	private static final int CurrentPictureCameraRequest = 101001;
 	
@@ -108,9 +113,35 @@ public class BaseFragment extends SherlockFragment{
    			} else if (CurrentPictureCameraRequest == requestCode) {
    				onPickFromCameraFinish();
    				
+   			} else if (requestCode == REQUEST_SCAN) {
+   			   //识别到了信息
+			   setScanObjectAfterScan(getScanObjectAfterScan());
    			}
    		}
    	}
+    /**
+     * 请求条码扫描
+     */
+    public void startScan() {
+		Intent scanIntent = new Intent(getActivity(), CaptureActivity.class);
+		scanIntent.putExtra(Intents.EXTRA_SCAN_TASK, true);
+		startActivityForResult(scanIntent, REQUEST_SCAN);
+	}
+    
+    /**
+	 * 当使用条码识别扫描返回了识别对象，会调用该方法，子类需要条码识别功能的话，需要覆盖该方法自行处理结果
+	 * @param baoxiuCardObject
+	 */
+	public void setScanObjectAfterScan(InfoInterface barCodeObject) {
+		
+	}
+	/**
+	 * 子类将实现该方法返回条码识别后能够得到的对象，将在setScanObjectAfterScan()方法中使用
+	 * @return
+	 */
+	public InfoInterface getScanObjectAfterScan() {
+		return null;
+	}
        
    	public Dialog onCreateDialog(int id) {
    		switch(id) {

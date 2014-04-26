@@ -6,12 +6,12 @@
     android:orientation="vertical" >
     
     <EditText android:id="@+id/homeName"
-        android:layout_marginLeft="8dip"
         style="@style/ProductInfoInputHomePlace"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:textSize="16sp"
         android:hint="@string/my_home" />
+    
     <LinearLayout android:layout_marginTop="4dip"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

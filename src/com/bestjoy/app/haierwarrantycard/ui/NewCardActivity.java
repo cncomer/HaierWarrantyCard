@@ -18,12 +18,20 @@ import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
-
+import com.shwy.bestjoy.utils.Intents;
+/**
+ * 新建保修卡、预约维修、预约安装 UI
+ * @author chenkai
+ *
+ */
 public class NewCardActivity extends BaseSlidingFragmentActivity implements View.OnClickListener, 
 	SlidingMenu.OnOpenedListener, SlidingMenu.OnClosedListener{
 	private static final String TAG = "NewCardActivity";
-	private NewWarrantyCardFragment mContent;
+	private ModleBaseFragment mContent;
 	private ChooseDevicesFragment mMenu;
+	private Bundle mBundles;
+	/**表示是否是第一次进入*/
+	private boolean mIsFirstOnResume = true;
 	//临时的拍摄照片路径
 	private File mBillTempFile, mAvatorTempFile;
 	
@@ -36,16 +44,28 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements View
 		
 		
 		if (savedInstanceState != null) {
-			mContent = (NewWarrantyCardFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
+			mContent = (ModleBaseFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
 			mMenu = (ChooseDevicesFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mMenu");
 		}
 		
 		if (mContent == null) {
-			mContent = new NewWarrantyCardFragment();
+			int type = mBundles.getInt(Intents.EXTRA_TYPE);
+			switch(type) {
+			case R.id.model_my_card:
+				mContent = new NewWarrantyCardFragment();
+				break;
+			case R.id.model_install:
+				mContent = new NewInstallCardFragment();
+				break;
+			case R.id.model_repair:
+				mContent = new NewRepairCardFragment();
+				break;
+			}
 		}
-		mContent.setBaoxiuCardObject(BaoxiuCardObject.getBaoxiuCardObject());
+		
 		if (mMenu == null) {
 			mMenu = new ChooseDevicesFragment();
+			
 		}
 		
 		// set the Above View
@@ -91,11 +111,6 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements View
 		mAvatorTempFile = new File(tempRootDir, ".avatorTemp");
 	}
 	
-	private void initBaoxiuCardView() {
-		
-	}
-	
-	
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()) {
@@ -121,6 +136,15 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements View
 			menu.findItem(R.string.menu_search).setVisible(false);
 		}
 		return super.onPrepareOptionsMenu(menu);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		if (mIsFirstOnResume) {
+			mContent.updateInfoInterface(BaoxiuCardObject.getBaoxiuCardObject());
+			mIsFirstOnResume = false;
+		}
 	}
 
 	@Override
@@ -180,7 +204,11 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements View
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
-		return true;
+		mBundles = intent.getExtras();
+		if (mBundles == null) {
+			DebugUtils.logD(TAG, "checkIntent failed, due to mBundles is null");
+		}
+		return mBundles != null;
 	}
 	
 }

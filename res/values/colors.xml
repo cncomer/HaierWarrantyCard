@@ -4,7 +4,7 @@
     <color name="light_black">#ff2e3543</color>
      <color name="action_bar_black">#ff000000</color>
      <color name="light_green">#94CE85</color>
-    
+    <color name="light_blue">#ff58b0ed</color>
     <drawable name="button_black">#ff1c1c1c</drawable>
     <drawable name="button_black_on">#ff717171</drawable>
     

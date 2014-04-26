@@ -33,7 +33,7 @@
        
        
        <string name="title_scan_desc1">扫描海尔产品二维码</string>
-       <string name="title_scan_desc2">获取产品报修信息</string>
+       <string name="title_scan_desc2">获取产品信息</string>
        <string name="title_scan_button">开始扫描</string>
        
        <string name="title_my_product">我的家电</string>

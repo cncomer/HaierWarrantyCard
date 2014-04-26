@@ -36,7 +36,7 @@
 	            android:text="@string/title_scan_desc2"
 	            android:layout_height="wrap_content"/>
         </LinearLayout>
-       <Button android:id="@+id/title_scan_button"
+       <Button android:id="@+id/button_scan_qrcode"
            android:layout_alignParentRight="true"
            android:layout_height="wrap_content"
            android:layout_width="wrap_content"

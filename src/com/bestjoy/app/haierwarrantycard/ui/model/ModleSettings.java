@@ -111,6 +111,7 @@ public class ModleSettings {
 				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {
 					MyChooseDevicesActivity.startIntent(_context, createMyCardDefaultBundle(_context));
 				} else {
+//					NewCardActivity.startIntent(_context, createMyCardDefaultBundle(_context));
 					NewCardActivity.startIntent(_context, createMyCardDefaultBundle(_context));
 				}
 				break;
@@ -118,7 +119,8 @@ public class ModleSettings {
 				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {
 					MyChooseDevicesActivity.startIntent(_context, createMyInstallDefaultBundle(_context));
 				} else {
-					InstallActivity.startIntent(_context, createMyInstallDefaultBundle(_context));
+//					InstallActivity.startIntent(_context, createMyInstallDefaultBundle(_context));
+					NewCardActivity.startIntent(_context, createMyInstallDefaultBundle(_context));
 				}
 				break;
 			case R.id.model_repair:
@@ -127,7 +129,8 @@ public class ModleSettings {
 				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {
 					MyChooseDevicesActivity.startIntent(_context, createMyRepairDefaultBundle(_context));
 				} else {
-					RepairActivity.startIntent(_context, createMyRepairDefaultBundle(_context));
+					NewCardActivity.startIntent(_context, createMyRepairDefaultBundle(_context));
+//					RepairActivity.startIntent(_context, createMyRepairDefaultBundle(_context));
 				}
 				return;
 			case R.id.model_feedback:
@@ -145,20 +148,21 @@ public class ModleSettings {
 	 * @param type
 	 */
 	public static void doChoose(Context context, Bundle bundle) {
-		int type = bundle.getInt(Intents.EXTRA_TYPE);
-		switch(type) {
-		case R.id.model_my_card:
-			NewCardActivity.startIntent(context, bundle);
-			break;
-		case R.id.model_install:
-			InstallActivity.startIntent(context, bundle);
-			break;
-		case R.id.model_repair:
-			RepairActivity.startIntent(context, bundle);
-			break;
-		case R.id.model_feedback:
-			break;
-		}
+//		int type = bundle.getInt(Intents.EXTRA_TYPE);
+//		switch(type) {
+//		case R.id.model_my_card:
+//			NewCardActivity.startIntent(context, bundle);
+//			break;
+//		case R.id.model_install:
+//			InstallActivity.startIntent(context, bundle);
+//			break;
+//		case R.id.model_repair:
+//			RepairActivity.startIntent(context, bundle);
+//			break;
+//		case R.id.model_feedback:
+//			break;
+//		}
+		NewCardActivity.startIntent(context, bundle);
 	}
 	
 	public static boolean createActionBarMenu(Menu menu, Bundle bundle) {

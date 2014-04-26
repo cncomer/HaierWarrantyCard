@@ -29,9 +29,10 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.ImageHelper;
+import com.shwy.bestjoy.utils.InfoInterface;
 import com.shwy.bestjoy.utils.Intents;
 
-public class NewWarrantyCardFragment extends BaseFragment implements View.OnClickListener{
+public class NewWarrantyCardFragment extends ModleBaseFragment implements View.OnClickListener{
 	
 	private BaoxiuCardObject mBaoxiuCardObject;
 	//按钮
@@ -43,8 +44,6 @@ public class NewWarrantyCardFragment extends BaseFragment implements View.OnClic
 	private Calendar mCalendar;
 	//临时的拍摄照片路径
 	private File mBillTempFile, mAvatorTempFile;
-	/**请求扫描条码*/
-	private static final int REQUEST_SCAN = 1;
 	/**请求商品预览图*/
 	private static final int REQUEST_AVATOR = 2;
 	/**请求发票预览图*/
@@ -85,7 +84,7 @@ public class NewWarrantyCardFragment extends BaseFragment implements View.OnClic
 		 
 		 mTypeInput = (EditText) view.findViewById(R.id.product_type_input);
 		 mPinpaiInput = (EditText) view.findViewById(R.id.product_brand_input);
-		 mModelInput = (EditText) view.findViewById(R.id.product_brand_input);
+		 mModelInput = (EditText) view.findViewById(R.id.product_model_input);
 		 mBianhaoInput = (EditText) view.findViewById(R.id.product_sn_input);
 		 mBaoxiuTelInput = (EditText) view.findViewById(R.id.product_tel_input);
 		 //购买日期
@@ -109,12 +108,11 @@ public class NewWarrantyCardFragment extends BaseFragment implements View.OnClic
 	@Override
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
-		populateView();
 	}
 	
-	private void populateView() {
+	private void populateBaoxiuInfoView(BaoxiuCardObject object) {
 		//init layouts
-		if (mBaoxiuCardObject == null) {
+		if (object == null) {
 			mTypeInput.getText().clear();
 			mPinpaiInput.getText().clear();
 			mModelInput.getText().clear();
@@ -126,15 +124,15 @@ public class NewWarrantyCardFragment extends BaseFragment implements View.OnClic
 			mYanbaoComponyInput.getText().clear();
 			mYanbaoTelInput.getText().clear();
 		} else {
-			mTypeInput.setText(mBaoxiuCardObject.mLeiXin);
-			mPinpaiInput.setText(mBaoxiuCardObject.mPinPai);
-			mModelInput.setText(mBaoxiuCardObject.mXingHao);
-			mBianhaoInput.setText(mBaoxiuCardObject.mSHBianHao);
-			mBaoxiuTelInput.setText(mBaoxiuCardObject.mBXPhone);
-			mPriceInput.setText(mBaoxiuCardObject.mBuyPrice);
-			mTujingInput.setText(mBaoxiuCardObject.mBuyTuJing);
-			mYanbaoTimeInput.setText(mBaoxiuCardObject.mYanBaoTime);
-			mYanbaoComponyInput.setText(mBaoxiuCardObject.mYanBaoDanWei);
+			mTypeInput.setText(object.mLeiXin);
+			mPinpaiInput.setText(object.mPinPai);
+			mModelInput.setText(object.mXingHao);
+			mBianhaoInput.setText(object.mSHBianHao);
+			mBaoxiuTelInput.setText(object.mBXPhone);
+			mPriceInput.setText(object.mBuyPrice);
+			mTujingInput.setText(object.mBuyTuJing);
+			mYanbaoTimeInput.setText(object.mYanBaoTime);
+			mYanbaoComponyInput.setText(object.mYanBaoDanWei);
 //			mYanbaoTelInput.setText(mBaoxiuCardObject.m);
 		}
 		
@@ -191,9 +189,10 @@ public class NewWarrantyCardFragment extends BaseFragment implements View.OnClic
 //			}
 			break;
 		case R.id.button_scan_qrcode:
-			Intent scanIntent = new Intent(getActivity(), CaptureActivity.class);
-			scanIntent.putExtra(Intents.EXTRA_SCAN_TASK, true);
-			startActivityForResult(scanIntent, REQUEST_SCAN);
+//			Intent scanIntent = new Intent(getActivity(), CaptureActivity.class);
+//			scanIntent.putExtra(Intents.EXTRA_SCAN_TASK, true);
+//			startActivityForResult(scanIntent, REQUEST_SCAN);
+			startScan();
 			break;
 		case R.id.product_buy_date:
 			showDatePickerDialog();
@@ -222,37 +221,36 @@ public class NewWarrantyCardFragment extends BaseFragment implements View.OnClic
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode == Activity.RESULT_OK) {
-			if (REQUEST_SCAN == requestCode) {
-				//识别到了商品信息
-				BaoxiuCardObject object = BaoxiuCardObject.getBaoxiuCardObject();
-				//这里一般我们只设置品牌、型号、编号和名称
-				if (!TextUtils.isEmpty(object.mLeiXin)) {
-					mTypeInput.setText(object.mLeiXin);
-				}
-				if (!TextUtils.isEmpty(object.mPinPai)) {
-					mPinpaiInput.setText(object.mPinPai);
-				}
-				if (!TextUtils.isEmpty(object.mSHBianHao)) {
-					mBianhaoInput.setText(object.mSHBianHao);
-				}
-				if (!TextUtils.isEmpty(object.mXingHao)) {
-					mModelInput.setText(object.mXingHao);
-				}
-
-//				//滚动到最低端以便显示完整的商品信息
-//				mScrollView.post(new Runnable() {   
-//				    public void run() {  
-//				        mScrollView.scrollTo(0, 1000);  
-//				    }   
-//				});  
-				
-			} else if (REQUEST_BILL == requestCode) {
+			if (REQUEST_BILL == requestCode) {
                 if (mBillTempFile.exists()) {
 //                	mGoodsObject.updateBillAvatorTempLocked(mBillTempFile);
 //                	mBillImageView.setImageBitmap(mGoodsObject.mBillTempBitmap);
 				}
 			}
 		}
+	}
+	
+	@Override
+    public void setScanObjectAfterScan(InfoInterface barCodeObject) {
+		 BaoxiuCardObject object = (BaoxiuCardObject) barCodeObject;
+		//这里一般我们只设置品牌、型号、编号和名称
+		if (!TextUtils.isEmpty(object.mLeiXin)) {
+			mTypeInput.setText(object.mLeiXin);
+		}
+		if (!TextUtils.isEmpty(object.mPinPai)) {
+			mPinpaiInput.setText(object.mPinPai);
+		}
+		if (!TextUtils.isEmpty(object.mSHBianHao)) {
+			mBianhaoInput.setText(object.mSHBianHao);
+		}
+		if (!TextUtils.isEmpty(object.mXingHao)) {
+			mModelInput.setText(object.mXingHao);
+		}
+	}
+	
+	@Override
+	public InfoInterface getScanObjectAfterScan() {
+		return BaoxiuCardObject.getBaoxiuCardObject();
 	}
 	
 	/**
@@ -270,6 +268,13 @@ public class NewWarrantyCardFragment extends BaseFragment implements View.OnClic
 			intent = ImageHelper.createCaptureIntent(Uri.fromFile(mBillTempFile));
 		}
 		startActivityForResult(intent, mPictureRequest);
+	}
+	
+	@Override
+	public void updateInfoInterface(InfoInterface infoInterface) {
+		if (infoInterface instanceof BaoxiuCardObject) {
+			populateBaoxiuInfoView((BaoxiuCardObject)infoInterface);
+		}
 	}
 	
 }
