@@ -109,7 +109,7 @@
     <string name="input_province_tips">请先选择省份</string>
     <string name="input_city_tips">请先选择城市</string>
     <string name="choose_address">选择地址</string>
-    <string name="msg_register_title">提示信息</string>
+    <string name="msg_tip_title">提示信息</string>
     <string name="msg_register_save_fail">注册成功，但无法创建账户，请尝试重新登陆</string>
     
     <string name="msg_progressdialog_wait">操作处理中，请稍后....</string>
@@ -227,4 +227,11 @@
      <string name="title_pinpai">品牌</string>
      <string name="title_xinghao">型号</string>
      <string name="title_choose_type_divider">--</string>
+     
+     <string name="input_type_please_input">请输入</string>
+     <string name="save_success">保存成功</string>
+     <string name="save_fail">保存失败</string>
+     <string name="login_tip">请先登录</string>
+     <string name="msg_yuyue_sucess">预约成功</string>
+     <string name="msg_yuyue_fail">预约失败</string>
 </resources>

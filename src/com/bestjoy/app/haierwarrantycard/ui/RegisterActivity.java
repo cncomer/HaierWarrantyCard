@@ -187,7 +187,7 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			DebugUtils.logD(TAG, "path : " + path);
 			DebugUtils.logD(TAG, "sb : " + sb.toString());
 			try {
-				is = NetworkUtils.openContectionLocked(url, path, null);
+				is = NetworkUtils.openContectionLocked(url, path, MyApplication.getInstance().getSecurityKeyValuesObject());
 				DebugUtils.logD(TAG, "is : " + is.toString());
 				try {
 					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));

@@ -64,14 +64,14 @@ public class SpeechRecognizerEngine {
 	
 	/**
 	 * 显示听写对话框.
-	 * @param repairActivity 
+	 * @param context 
 	 * 
 	 * @param
 	 */
-	public void showIatDialog(RepairActivity repairActivity) {
+	public void showIatDialog(Context context) {
 		//if (null == iatDialog) {
 			// 初始化听写Dialog
-			iatDialog = new RecognizerDialog(repairActivity);
+			iatDialog = new RecognizerDialog(context);
 		//}
 
 		// 清空Grammar_ID，防止识别后进行听写时Grammar_ID的干扰

@@ -1,9 +1,20 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -13,18 +24,26 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
+import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
+import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
+import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView;
+import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
+import com.shwy.bestjoy.utils.NetworkUtils;
 
 public class NewInstallCardFragment extends ModleBaseFragment implements View.OnClickListener{
-	
+	private static final String TAG = "NewInstallCardFragment";
 	//按钮
 	private Button mSaveBtn;
-	private TextView mDatePickBtn;
 	//商品信息
 	private EditText mTypeInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput;
 	//联系人信息
@@ -35,12 +54,17 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	private TextView mYuyueDate, mYuyueTime;
 	private Calendar mCalendar;
 	
+	private BaoxiuCardObject mBaoxiuCardObject;
+	private AccountObject mAccountObject;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
 		getActivity().setTitle(R.string.activity_title_install);
 		mCalendar = Calendar.getInstance();
+		mBaoxiuCardObject = new BaoxiuCardObject();
+		mAccountObject = HaierAccountManager.getInstance().getAccountObject();
 	}
 	
 	@Override
@@ -101,6 +125,15 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			mBaoxiuTelInput.setText(baoxiuCardObject.mBXPhone);
 		}
 		
+		if(mAccountObject == null) {
+			mContactNameInput.getText().clear();
+			mContactTelInput.getText().clear();
+		} else {
+			mContactNameInput.setText(mAccountObject.mAccountName);
+			mContactTelInput.setText(mAccountObject.mAccountTel);
+			mProCityDisEditView.setHomeObject(mAccountObject.mAccountHomes.get(1));
+		}
+		
 	}
 	
 	public BaoxiuCardObject getmBaoxiuCardObject() {
@@ -117,25 +150,206 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			showDatePickerDialog();
 			break;
 		case R.id.time:
+			showTimePickerDialog();
+			break;
+		case R.id.button_save:
+			createNewInatallCard();
 			break;
 		}
 		
 	}
 	
+	private void createNewInatallCard() {
+		if(checkInput()) {
+			if(HaierAccountManager.getInstance().hasLoginned()) {
+				updateNewInstallCardInfo();
+				createNewInatallCardAsync();
+			} else {
+				MyApplication.getInstance().showMessage(R.string.msg_yuyue_fail);
+				LoginActivity.startIntent(this.getActivity());
+			}
+		}
+		
+	}
+
+	private CeateNewInatallCardAsyncTask mCeateNewInatallCardAsyncTask;
+	private void createNewInatallCardAsync(String... param) {
+		AsyncTaskUtils.cancelTask(mCeateNewInatallCardAsyncTask);
+		showDialog(DIALOG_PROGRESS);
+		mCeateNewInatallCardAsyncTask = new CeateNewInatallCardAsyncTask();
+		mCeateNewInatallCardAsyncTask.execute(param);
+	}
+
+	private class CeateNewInatallCardAsyncTask extends AsyncTask<String, Void, Void> {
+		private String mError;
+		int mStatusCode = -1;
+		String mStatusMessage = null;
+		@Override
+		protected Void doInBackground(String... params) {
+			mError = null;
+			InputStream is = null;
+			final int LENGTH = 9;
+			String[] urls = new String[LENGTH];
+			String[] paths = new String[LENGTH];
+			urls[0] = HaierServiceObject.SERVICE_URL + "AddYuYue.ashx?Date=";
+			paths[0] = mYuyueDate.getText().toString().trim();
+			urls[1] = "&Time=";
+			paths[1] = mYuyueTime.getText().toString().trim();
+			urls[2] = "&UID=";
+			paths[2] = String.valueOf(mBaoxiuCardObject.mUID);
+			urls[3] = "&Note=";
+			paths[3] = "";
+			urls[4] = "&AID=";
+			paths[4] = String.valueOf(mBaoxiuCardObject.mAID);
+			urls[5] = "&Type=";
+			paths[5] = "安装";
+			urls[6] = "&BID=";
+			paths[6] = String.valueOf(mBaoxiuCardObject.mBID);
+			urls[7] = "&UserName=";
+			paths[7] = mContactNameInput.getText().toString().trim();
+			urls[8] = "&CellPhone=";
+			paths[8] = mContactTelInput.getText().toString().trim();
+			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
+			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
+			try {
+				is = NetworkUtils.openContectionLocked(urls, paths, MyApplication.getInstance().getSecurityKeyValuesObject());
+				try {
+					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
+					mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
+					mStatusMessage = jsonObject.getString("StatusMessage");
+					DebugUtils.logD(TAG, "StatusCode = " + mStatusCode);
+					DebugUtils.logD(TAG, "StatusMessage = " + mStatusMessage);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				mError = e.getMessage();
+			} catch (IOException e) {
+				e.printStackTrace();
+				mError = e.getMessage();
+			} finally {
+				NetworkUtils.closeInputStream(is);
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			getProgressDialog().dismiss();
+			if (mError != null) {
+				MyApplication.getInstance().showMessage(mError);
+			} else if (mStatusCode == 1) {
+				//预约成功
+				NewInstallCardFragment.this.getActivity().finish();
+			} else {
+				//预约失败
+				new AlertDialog.Builder(NewInstallCardFragment.this.getActivity())
+				.setTitle(R.string.msg_tip_title)
+	   			.setMessage(R.string.msg_yuyue_fail)
+	   			.setCancelable(false)
+	   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+	   				@Override
+	   				public void onClick(DialogInterface dialog, int which) {
+	   				}
+	   			})
+	   			.create()
+	   			.show();
+			}
+			MyApplication.getInstance().showMessage(mStatusMessage);
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			getProgressDialog().dismiss();
+		}
+	}
+	private void updateNewInstallCardInfo() {
+		if(mBaoxiuCardObject == null) {
+			mBaoxiuCardObject = new BaoxiuCardObject();
+		}
+		mBaoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
+		mBaoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
+		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
+		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
+		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
+	}
+
+	private boolean checkInput() {
+		if(TextUtils.isEmpty(mTypeInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_type);
+			return false;
+		}
+		if(TextUtils.isEmpty(mPinpaiInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_brand);
+			return false;
+		}
+		if(TextUtils.isEmpty(mModelInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_model);
+			return false;
+		}
+		if(TextUtils.isEmpty(mBianhaoInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_sn);
+			return false;
+		}
+		if(TextUtils.isEmpty(mBaoxiuTelInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_tel);
+			return false;
+		}
+		
+
+		if(TextUtils.isEmpty(mContactNameInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.name);
+			return false;
+		}
+		if(TextUtils.isEmpty(mContactTelInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.usr_tel);
+			return false;
+		}
+		
+		if(TextUtils.isEmpty(mYuyueDate.getText().toString().trim())){
+			showEmptyInputToast(R.string.date);
+			return false;
+		}
+		if(TextUtils.isEmpty(mYuyueTime.getText().toString().trim())){
+			showEmptyInputToast(R.string.time);
+			return false;
+		}
+		return true;
+	}
+	private void showEmptyInputToast(int resId) {
+		String msg = getResources().getString(resId);
+		MyApplication.getInstance().showMessage(getResources().getString(R.string.input_type_please_input) + msg);
+	}
+
 	private void showDatePickerDialog() {
         new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-			
 			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 				mCalendar.set(year, monthOfYear, dayOfMonth);
 				//更新日期数据
 //				mGoodsObject.mDate = mCalendar.getTimeInMillis();
 				//更新UI
-				mDatePickBtn.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(new Date(mCalendar.getTimeInMillis())));
+				mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(new Date(mCalendar.getTimeInMillis())));
 			}
 				
 		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH))
 		.show();
+	}
+	
+	private void showTimePickerDialog() {
+        new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+			@Override
+			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+				mCalendar.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
+				mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT.format(new Date(mCalendar.getTimeInMillis())));
+			}
+        	
+        }, mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE), true)
+        .show();
+
 	}
 	
 	@Override
