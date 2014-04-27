@@ -27,6 +27,8 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 	private Button mLoginBtn;
 	private EditText mTelInput, mPasswordInput;
 	public static AccountObject mAccountObject;
+	/**进入界面请求*/
+	private int mRequestId;
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
@@ -39,6 +41,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 		if (isFinishing()) {
 			return ;
 		}
+		mRequestId = this.getIntent().getIntExtra(Intents.EXTRA_NAME, -1);
 		setContentView(R.layout.activity_login_20140415);
 		initViews();
 	}
@@ -96,8 +99,12 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 				// login successfully
 				MyApplication.getInstance().showMessage(R.string.msg_login_confirm_success);
 				
-				MyChooseDevicesActivity.startIntent(mContext, ModleSettings.createMyCardDefaultBundle(mContext));
-				finish();
+				if(mRequestId == R.id.model_my_card){
+					finish();
+				} else {					
+					MyChooseDevicesActivity.startIntent(mContext, ModleSettings.createMyCardDefaultBundle(mContext));
+					finish();
+				}
 			}
 		} else {
 			super.onActivityResult(requestCode, resultCode, data);
@@ -106,6 +113,12 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 	
 	public static void startIntent(Context context) {
 		Intent intent = new Intent(context, LoginActivity.class);
+		context.startActivity(intent);
+	}
+	
+	public static void startIntent(Context context, int requestID) {
+		Intent intent = new Intent(context, LoginActivity.class);
+		intent.putExtra(Intents.EXTRA_NAME, requestID);
 		context.startActivity(intent);
 	}
 	

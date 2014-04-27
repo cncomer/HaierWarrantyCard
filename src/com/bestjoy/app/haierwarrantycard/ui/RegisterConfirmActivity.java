@@ -134,7 +134,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
 			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
 			try {
-				is = NetworkUtils.openContectionLocked(urls, paths, null);
+				is = NetworkUtils.openContectionLocked(urls, paths, MyApplication.getInstance().getSecurityKeyValuesObject());
 				try {
 					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
 					mAccountObject.mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
@@ -184,7 +184,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 				} else {
 					//保存数据库失败
 					new AlertDialog.Builder(mContext)
-					.setTitle(R.string.msg_register_title)
+					.setTitle(R.string.msg_tip_title)
 		   			.setMessage(R.string.msg_register_save_fail)
 		   			.setCancelable(false)
 		   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {

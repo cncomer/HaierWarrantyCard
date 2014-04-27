@@ -5,6 +5,7 @@ import java.io.File;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
@@ -32,6 +33,8 @@ public class BaseFragment extends SherlockFragment{
 	
 	public static final int DIALOG_DATA_NOT_CONNECTED = 101006;//数据连接不可用
 	public static final int DIALOG_MOBILE_TYPE_CONFIRM = 101007;//
+	public static final int DIALOG_PROGRESS = 101008;
+	private ProgressDialog mProgressDialog;
 	
 	private int mCurrentPictureRequest = -1;
 	/**
@@ -183,10 +186,19 @@ public class BaseFragment extends SherlockFragment{
    			 //add by chenkai, 20131201, add network check
    	      case DIALOG_DATA_NOT_CONNECTED:
    	    	  return ComConnectivityManager.getInstance().onCreateNoNetworkDialog();
+   	      case DIALOG_PROGRESS:
+   	    	  mProgressDialog = new ProgressDialog(this.getActivity());
+   	    	  mProgressDialog.setMessage(getString(R.string.msg_progressdialog_wait));
+   	    	  mProgressDialog.setCancelable(false);
+   	    	  return mProgressDialog;
    		}
    		return null;
    	}
-   	
+
+    protected ProgressDialog getProgressDialog() {
+ 	   return mProgressDialog;
+    }
+    
    	public void showDialog(int id) {
    		Dialog dialog = onCreateDialog(id);
    		if (dialog != null) {

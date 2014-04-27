@@ -40,6 +40,8 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	private Button mSpeakButton;
 	private SpeechRecognizerEngine mSpeechRecognizerEngine;
 	
+	private BaoxiuCardObject mBaoxiuCardObject;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -89,6 +91,8 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		 mYuyueDate.setOnClickListener(this);
 		 mYuyueTime.setOnClickListener(this);
 		 
+		 mBaoxiuCardObject = new BaoxiuCardObject();
+		 
 		return view;
 	}
 
@@ -128,6 +132,9 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			showDatePickerDialog();
 			break;
 		case R.id.time:
+			break;
+		case R.id.button_speak:
+			mSpeechRecognizerEngine.showIatDialog(getActivity());
 			break;
 		}
 		

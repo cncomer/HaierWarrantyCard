@@ -27,13 +27,16 @@ import android.widget.TextView;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
+import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.shwy.bestjoy.utils.DateUtils;
+import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.ImageHelper;
 import com.shwy.bestjoy.utils.InfoInterface;
 import com.shwy.bestjoy.utils.Intents;
 
 public class NewWarrantyCardFragment extends ModleBaseFragment implements View.OnClickListener{
-	
+	private static final String TAG = "NewWarrantyCardFragment";
 	private BaoxiuCardObject mBaoxiuCardObject;
 	//按钮
 	private Button mSaveBtn;
@@ -197,13 +200,105 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		case R.id.product_buy_date:
 			showDatePickerDialog();
 			break;
+		case R.id.button_save:
+			saveNewWarrantyCard();
+			break;
 		}
 		
 	}
 	
+	private void saveNewWarrantyCard() {
+		if(checkInput()) {
+			if(HaierAccountManager.getInstance().hasLoginned()) {
+				updateWarrantyCardInfo();
+				boolean saveResult = mBaoxiuCardObject.saveInDatebase(this.getActivity().getContentResolver(), null);
+				if(saveResult) {
+					MyApplication.getInstance().showMessage(R.string.save_success);
+					MyChooseDevicesActivity.startIntent(this.getActivity(), ModleSettings.createMyCardDefaultBundle(this.getActivity()));
+				} else {
+					MyApplication.getInstance().showMessage(R.string.save_fail);
+				}
+			} else {
+				MyApplication.getInstance().showMessage(R.string.login_tip);
+				LoginActivity.startIntent(this.getActivity());
+			}
+		}
+	}
+
+	private boolean checkInput() {
+		if(TextUtils.isEmpty(mTypeInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_type);
+			return false;
+		}
+		if(TextUtils.isEmpty(mPinpaiInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_brand);
+			return false;
+		}
+		if(TextUtils.isEmpty(mModelInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_model);
+			return false;
+		}
+		if(TextUtils.isEmpty(mBianhaoInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_sn);
+			return false;
+		}
+		if(TextUtils.isEmpty(mBaoxiuTelInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_tel);
+			return false;
+		}
+		if(TextUtils.isEmpty(mDatePickBtn.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_buy_date);
+			return false;
+		}
+		if(TextUtils.isEmpty(mPriceInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_buy_cost);
+			return false;
+		}
+		if(TextUtils.isEmpty(mTujingInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_buy_entry);
+			return false;
+		}
+		if(TextUtils.isEmpty(mYanbaoTimeInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_buy_delay_time);
+			return false;
+		}
+		if(TextUtils.isEmpty(mYanbaoComponyInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_buy_delay_componey);
+			return false;
+		}
+		if(TextUtils.isEmpty(mYanbaoTelInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_buy_delay_componey_tel);
+			return false;
+		}
+		return true;
+	}
+
+	private void showEmptyInputToast(int resId) {
+		String msg = getResources().getString(resId);
+		MyApplication.getInstance().showMessage(getResources().getString(R.string.input_type_please_input) + msg);
+	}
+
+	private void updateWarrantyCardInfo() {
+		if(mBaoxiuCardObject == null) {
+			mBaoxiuCardObject = new BaoxiuCardObject();
+		}
+		mBaoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
+		mBaoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
+		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
+		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
+		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
+		
+		mBaoxiuCardObject.mBuyDate = mDatePickBtn.getText().toString().trim();
+		mBaoxiuCardObject.mBuyPrice = mPriceInput.getText().toString().trim();
+		mBaoxiuCardObject.mBuyTuJing = mTujingInput.getText().toString().trim();
+		
+		mBaoxiuCardObject.mYanBaoTime = mYanbaoTimeInput.getText().toString().trim();
+		mBaoxiuCardObject.mYanBaoDanWei = mYanbaoComponyInput.getText().toString().trim();
+		mBaoxiuCardObject.mYBPhone = mYanbaoTelInput.getText().toString().trim();
+	}
+
 	private void showDatePickerDialog() {
         new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-			
 			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 				mCalendar.set(year, monthOfYear, dayOfMonth);
