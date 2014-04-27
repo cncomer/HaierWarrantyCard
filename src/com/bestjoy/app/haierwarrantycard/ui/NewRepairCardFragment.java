@@ -81,12 +81,11 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		 mSaveBtn = (Button) view.findViewById(R.id.button_save);
 		 mSaveBtn.setOnClickListener(this);
 
-		 View yuyueView = inflater.inflate(R.layout.yuyue_info_layout, container, false);
 		 //预约时间
-		 ((TextView) yuyueView.findViewById(R.id.yuyue_info_title)).setTextColor(getResources().getColor(R.color.light_green));
-		 yuyueView.findViewById(R.id.yuyue_info_divider).setBackgroundResource(R.color.light_green);
-		 mYuyueDate = (TextView) yuyueView.findViewById(R.id.date);
-		 mYuyueTime = (TextView) yuyueView.findViewById(R.id.time);
+		 ((TextView) view.findViewById(R.id.yuyue_info_title)).setTextColor(getResources().getColor(R.color.light_green));
+		 view.findViewById(R.id.yuyue_info_divider).setBackgroundResource(R.color.light_green);
+		 mYuyueDate = (TextView) view.findViewById(R.id.date);
+		 mYuyueTime = (TextView) view.findViewById(R.id.time);
 		 mYuyueDate.setOnClickListener(this);
 		 mYuyueTime.setOnClickListener(this);
 		 
