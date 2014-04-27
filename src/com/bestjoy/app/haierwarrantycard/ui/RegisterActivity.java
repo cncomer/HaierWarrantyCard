@@ -107,7 +107,6 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 							.toString().trim())) {
 				RegisterConfirmActivity.startIntent(this, tel);
 			} else {
-				RegisterConfirmActivity.startIntent(this, tel);
 				MyApplication.getInstance().showMessage(R.string.msg_input_yanzheng_code_error);
 			}
 				break;
