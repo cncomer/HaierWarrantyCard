@@ -195,6 +195,7 @@
     <string name="msg_input_usrtel">请输入你的手机号码</string>
     <string name="msg_input_yanzheng_code">请输入验证码</string>
     <string name="msg_input_yanzheng_code_check_net">获取验证码失败，请检查你的网络连接</string>
+    <string name="msg_yanzheng_code_msg_send">短信已下发，请稍后</string>
     <string name="msg_input_yanzheng_code_error">验证码输入有误，请重新输入</string>
     <string name="msg_input_usr_name">请输入姓名</string>
     <string name="msg_input_usr_pro">请输入省份</string>

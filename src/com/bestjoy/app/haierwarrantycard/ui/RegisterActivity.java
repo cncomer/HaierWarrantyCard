@@ -7,6 +7,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -106,6 +107,7 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 							.toString().trim())) {
 				RegisterConfirmActivity.startIntent(this, tel);
 			} else {
+				RegisterConfirmActivity.startIntent(this, tel);
 				MyApplication.getInstance().showMessage(R.string.msg_input_yanzheng_code_error);
 			}
 				break;
@@ -176,13 +178,18 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 		protected String doInBackground(String... params) {
 			mError = null;
 			InputStream is = null;
+			String url;
+			String path;
 			StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
 			sb.append("SendMessage.ashx?cell=").append(params[0]);
-			String path = sb.substring(sb.indexOf("?"));
-			DebugUtils.logD(TAG, "sb = " + sb.toString());
+			url = sb.substring(0, sb.indexOf("=")+1);
+			path = params[0];
+			DebugUtils.logD(TAG, "url : " + url);
+			DebugUtils.logD(TAG, "path : " + path);
+			DebugUtils.logD(TAG, "sb : " + sb.toString());
 			try {
-				is = NetworkUtils.openContectionLocked(sb.toString(), path, null);
-				DebugUtils.logD(TAG, "is = " + is.toString());
+				is = NetworkUtils.openContectionLocked(url, path, null);
+				DebugUtils.logD(TAG, "is : " + is.toString());
 				try {
 					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
 					mRandCode = jsonObject.getString("randcode");
@@ -208,9 +215,11 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 				mGetYanZhengCodeDialog.hide();
 			}
 			mYanZhengCodeFromServer = result;
-			DebugUtils.logD(TAG, "mYanZhengCodeFromServer = " + mYanZhengCodeFromServer);
+			DebugUtils.logD(TAG, "result data : " + mYanZhengCodeFromServer);
 			if(mYanZhengCodeFromServer == null) {
 				MyApplication.getInstance().showMessage(R.string.msg_input_yanzheng_code_check_net);
+			} else {
+				MyApplication.getInstance().showMessage(R.string.msg_yanzheng_code_msg_send);
 			}
 		}
 
