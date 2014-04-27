@@ -12,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 12;
+  private static final int DB_VERSION = 13;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -108,6 +108,13 @@ private static final String TAG = "HaierDBHelper";
   public static final String DEVICE_PINPAI_PINYIN = "PinYin";
   public static final String DEVICE_PINPAI_CODE = "Code";
   
+  /**型号数据表，这个我们会新增到预置的device.db数据库文件中*/
+  public static final String TABLE_NAME_DEVICE_XINGHAO = "xinghao";
+  /**品牌五位code码，用来过滤数据用的*/
+  public static final String DEVICE_XINGHAO_PCODE = "pcode";
+  public static final String DEVICE_XINGHAO_MN = "MN";
+  public static final String DEVICE_XINGHAO_KY = "KY";
+  
 
   public static final String TABLE_NAME_DEVICE_CITY_ = "T_City";
   public static final String DEVICE_CITY_ID = "CityID";
@@ -190,7 +197,8 @@ private static final String TAG = "HaierDBHelper";
 //  		createTriggerForMyCardTable(sqLiteDatabase);
   		// Create scan history
   		createScanHistory(sqLiteDatabase);
-
+  		
+  		createXinghaoTable(sqLiteDatabase);
   		
   }
   
@@ -304,6 +312,16 @@ private static final String TAG = "HaierDBHelper";
 	            DETAILS_COL + " TEXT);");
   }
   
+  private void createXinghaoTable(SQLiteDatabase sqLiteDatabase) {
+	  sqLiteDatabase.execSQL(
+	            "CREATE TABLE " + TABLE_NAME_DEVICE_XINGHAO + " (" +
+	            ID + " INTEGER PRIMARY KEY, " +
+	            DEVICE_XINGHAO_PCODE + " TEXT, " +
+	            DEVICE_XINGHAO_MN + " TEXT, " +
+	            DEVICE_XINGHAO_KY + " TEXT, " +
+	            DATE + " TEXT);");
+  }
+  
   private void addTextColumn(SQLiteDatabase sqLiteDatabase, String table, String column) {
 	    String alterForTitleSql = "ALTER TABLE " + table +" ADD " + column + " TEXT";
 		sqLiteDatabase.execSQL(alterForTitleSql);
@@ -332,5 +350,10 @@ private static final String TAG = "HaierDBHelper";
 		    onCreate(sqLiteDatabase);
 		    return;
 		} 
+	  
+	  if (oldVersion == 12) {
+		  createXinghaoTable(sqLiteDatabase);
+		  oldVersion = 13;
+	  }
   }
 }
