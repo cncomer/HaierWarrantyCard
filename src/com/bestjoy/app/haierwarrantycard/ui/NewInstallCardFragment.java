@@ -33,6 +33,7 @@ import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
@@ -273,6 +274,9 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 					mStatusMessage = jsonObject.getString("StatusMessage");
 					DebugUtils.logD(TAG, "StatusCode = " + mStatusCode);
 					DebugUtils.logD(TAG, "StatusMessage = " + mStatusMessage);
+					if (mStatusCode == 1) {
+						return true;
+					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -285,7 +289,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			} finally {
 				NetworkUtils.closeInputStream(is);
 			}
-			return null;
+			return false;
 		}
 
 		@Override
@@ -293,25 +297,31 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			super.onPostExecute(result);
 			getProgressDialog().dismiss();
 			if (mError != null) {
-				MyApplication.getInstance().showMessage(mError);
-			} else if (mStatusCode == 1) {
+				if (result) {
+					//服务器上传信息成功，但本地保存失败，请重新登录同步数据
+					new AlertDialog.Builder(getActivity())
+					.setTitle(R.string.msg_tip_title)
+		   			.setMessage(mError)
+		   			.setCancelable(false)
+		   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+		   				@Override
+		   				public void onClick(DialogInterface dialog, int which) {
+		   					LoginActivity.startIntent(getActivity(), null);
+		   				}
+		   			})
+		   			.create()
+		   			.show();
+				} else {
+					MyApplication.getInstance().showMessage(mError);
+				}
+			} else if (result) {
 				//预约成功
-				NewInstallCardFragment.this.getActivity().finish();
+				getActivity().finish();
+				MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
 			} else {
-				//预约失败
-				new AlertDialog.Builder(NewInstallCardFragment.this.getActivity())
-				.setTitle(R.string.msg_tip_title)
-	   			.setMessage(R.string.msg_yuyue_fail)
-	   			.setCancelable(false)
-	   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-	   				@Override
-	   				public void onClick(DialogInterface dialog, int which) {
-	   				}
-	   			})
-	   			.create()
-	   			.show();
+				MyApplication.getInstance().showMessage(mStatusMessage);
 			}
-			MyApplication.getInstance().showMessage(mStatusMessage);
+			
 		}
 
 		@Override

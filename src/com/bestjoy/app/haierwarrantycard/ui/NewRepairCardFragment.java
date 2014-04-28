@@ -44,7 +44,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	//按钮
 	private Button mSaveBtn;
 	//商品信息
-	private EditText mTypeInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput;
+	private EditText mTypeInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput, mTagInput;
 	//联系人信息
 	private EditText mContactNameInput, mContactTelInput;
 	private ProCityDisEditView mProCityDisEditView;
@@ -83,6 +83,8 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		 mModelInput = (EditText) view.findViewById(R.id.product_model_input);
 		 mBianhaoInput = (EditText) view.findViewById(R.id.product_sn_input);
 		 mBaoxiuTelInput = (EditText) view.findViewById(R.id.product_tel_input);
+		 mTagInput = (EditText) view.findViewById(R.id.product_beizhu_tag);
+		 
 		 
 		 //联系人
 		 ((TextView) view.findViewById(R.id.people_info_title)).setTextColor(getResources().getColor(R.color.light_green));
@@ -111,8 +113,6 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		 mYuyueDate.setOnClickListener(this);
 		 mYuyueTime.setOnClickListener(this);
 		 
-		 mBaoxiuCardObject = new BaoxiuCardObject();
-		 
 		return view;
 	}
 
@@ -130,12 +130,14 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			mModelInput.getText().clear();
 			mBianhaoInput.getText().clear();
 			mBaoxiuTelInput.getText().clear();
+			mTagInput.getText().clear();
 		} else {
 			mTypeInput.setText(mBaoxiuCardObject.mLeiXin);
 			mPinpaiInput.setText(mBaoxiuCardObject.mPinPai);
 			mModelInput.setText(mBaoxiuCardObject.mXingHao);
 			mBianhaoInput.setText(mBaoxiuCardObject.mSHBianHao);
 			mBaoxiuTelInput.setText(mBaoxiuCardObject.mBXPhone);
+			mTagInput.setText(mBaoxiuCardObject.mCardName);
 		}
 		
 	}
@@ -191,6 +193,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
 		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
 		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
+		mBaoxiuCardObject.mCardName = mTagInput.getText().toString().trim();
 		return mBaoxiuCardObject;
 	}
 	
@@ -228,14 +231,15 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	}
 
 	private void createRepairCard() {
-		if(checkInput()) {
-			if(HaierAccountManager.getInstance().hasLoginned()) {
-				updateRepairCardInfo();
+		if(HaierAccountManager.getInstance().hasLoginned()) {
+			//如果没有注册，我们前往登陆界面
+			if(checkInput()) {
 				createRepairCardAsync();
-			} else {
-				MyApplication.getInstance().showMessage(R.string.msg_yuyue_fail);
-				LoginActivity.startIntent(this.getActivity(), getArguments());
 			}
+		} else {
+			//如果没有注册，我们前往登陆/注册界面，这里传递ModelBundle对象过去，以便做合适的跳转
+			MyApplication.getInstance().showMessage(R.string.login_tip);
+			LoginActivity.startIntent(this.getActivity(), getArguments());
 		}
 		
 	}
@@ -248,12 +252,13 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		mCreateRepairCardAsyncTask.execute(param);
 	}
 
-	private class CreateRepairCardAsyncTask extends AsyncTask<String, Void, Void> {
+	private class CreateRepairCardAsyncTask extends AsyncTask<String, Void, Boolean> {
 		private String mError;
 		int mStatusCode = -1;
 		String mStatusMessage = null;
 		@Override
-		protected Void doInBackground(String... params) {
+		protected Boolean doInBackground(String... params) {
+			getBaoxiuCardObject();
 			mError = null;
 			InputStream is = null;
 			final int LENGTH = 9;
@@ -270,7 +275,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			urls[4] = "&AID=";
 			paths[4] = String.valueOf(mBaoxiuCardObject.mAID);
 			urls[5] = "&Type=";
-			paths[5] = "维修";
+			paths[5] = mBaoxiuCardObject.mCardName;
 			urls[6] = "&BID=";
 			paths[6] = String.valueOf(mBaoxiuCardObject.mBID);
 			urls[7] = "&UserName=";
@@ -287,6 +292,10 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 					mStatusMessage = jsonObject.getString("StatusMessage");
 					DebugUtils.logD(TAG, "StatusCode = " + mStatusCode);
 					DebugUtils.logD(TAG, "StatusMessage = " + mStatusMessage);
+					if (mStatusCode == 1) {
+						//操作成功
+						return true;
+					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -299,33 +308,39 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			} finally {
 				NetworkUtils.closeInputStream(is);
 			}
-			return null;
+			return false;
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 			getProgressDialog().dismiss();
 			if (mError != null) {
-				MyApplication.getInstance().showMessage(mError);
-			} else if (mStatusCode == 1) {
+				if (result) {
+					//服务器上传信息成功，但本地保存失败，请重新登录同步数据
+					new AlertDialog.Builder(getActivity())
+					.setTitle(R.string.msg_tip_title)
+		   			.setMessage(mError)
+		   			.setCancelable(false)
+		   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+		   				@Override
+		   				public void onClick(DialogInterface dialog, int which) {
+		   					LoginActivity.startIntent(getActivity(), null);
+		   				}
+		   			})
+		   			.create()
+		   			.show();
+				} else {
+					MyApplication.getInstance().showMessage(mError);
+				}
+			} else if (true) {
 				//预约成功
-				NewRepairCardFragment.this.getActivity().finish();
+				getActivity().finish();
+				MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
 			} else {
-				//预约失败
-				new AlertDialog.Builder(NewRepairCardFragment.this.getActivity())
-				.setTitle(R.string.msg_tip_title)
-	   			.setMessage(R.string.msg_yuyue_fail)
-	   			.setCancelable(false)
-	   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-	   				@Override
-	   				public void onClick(DialogInterface dialog, int which) {
-	   				}
-	   			})
-	   			.create()
-	   			.show();
+				MyApplication.getInstance().showMessage(mStatusMessage);
 			}
-			MyApplication.getInstance().showMessage(mStatusMessage);
+			
 		}
 
 		@Override
@@ -335,17 +350,6 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		}
 	}
 	
-	private void updateRepairCardInfo() {
-		if(mBaoxiuCardObject == null) {
-			mBaoxiuCardObject = new BaoxiuCardObject();
-		}
-		mBaoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
-		mBaoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
-		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
-		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
-		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
-	}
-
 	private boolean checkInput() {
 		if(TextUtils.isEmpty(mTypeInput.getText().toString().trim())){
 			showEmptyInputToast(R.string.product_type);
