@@ -150,4 +150,10 @@
         <item name="android:textSize">14sp</item>
         <item name="android:background">@drawable/edit_text_holo_light</item>
     </style>
+     <style name="ProductStarIcon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">2dip</item>
+        <item name="android:layout_marginRight">6dip</item>
+    </style>
 </resources>

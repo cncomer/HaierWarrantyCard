@@ -1,9 +1,19 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,17 +24,23 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
+import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
+import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView;
+import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
+import com.shwy.bestjoy.utils.NetworkUtils;
 
 public class NewRepairCardFragment extends ModleBaseFragment implements View.OnClickListener{
-	
+	private static final String TAG = "NewRepairCardFragment";
 	//按钮
 	private Button mSaveBtn;
 	//商品信息
@@ -43,6 +59,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	private SpeechRecognizerEngine mSpeechRecognizerEngine;
 	
 	private BaoxiuCardObject mBaoxiuCardObject;
+	private AccountObject mAccountObject;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +67,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		setHasOptionsMenu(true);
 		getActivity().setTitle(R.string.activity_title_repair);
 		mCalendar = Calendar.getInstance();
+		mAccountObject = HaierAccountManager.getInstance().getAccountObject();
 	}
 	
 	@Override
@@ -121,6 +139,15 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			mBianhaoInput.setText(mBaoxiuCardObject.mSHBianHao);
 			mBaoxiuTelInput.setText(mBaoxiuCardObject.mBXPhone);
 		}
+		
+		if(mAccountObject == null) {
+			mContactNameInput.getText().clear();
+			mContactTelInput.getText().clear();
+		} else {
+			mContactNameInput.setText(mAccountObject.mAccountName);
+			mContactTelInput.setText(mAccountObject.mAccountTel);
+			mProCityDisEditView.setHomeObject(mAccountObject.mAccountHomes.get(1));
+		}
 	}
 	
 	public void populateHomeInfoView(HomeObject homeObject) {
@@ -176,10 +203,137 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		case R.id.button_speak:
 			mSpeechRecognizerEngine.showIatDialog(getActivity());
 			break;
+		case R.id.button_save:
+			createRepairCard();
+			break;
 		}
 		
 	}
+
+	private void createRepairCard() {
+		if(checkInput()) {
+			if(HaierAccountManager.getInstance().hasLoginned()) {
+				updateRepairCardInfo();
+				createRepairCardAsync();
+			} else {
+				MyApplication.getInstance().showMessage(R.string.msg_yuyue_fail);
+				LoginActivity.startIntent(this.getActivity(), getArguments());
+			}
+		}
+		
+	}
+
+	private CreateRepairCardAsyncTask mCreateRepairCardAsyncTask;
+	private void createRepairCardAsync(String... param) {
+		AsyncTaskUtils.cancelTask(mCreateRepairCardAsyncTask);
+		showDialog(DIALOG_PROGRESS);
+		mCreateRepairCardAsyncTask = new CreateRepairCardAsyncTask();
+		mCreateRepairCardAsyncTask.execute(param);
+	}
+
+	private class CreateRepairCardAsyncTask extends AsyncTask<String, Void, Void> {
+		private String mError;
+		int mStatusCode = -1;
+		String mStatusMessage = null;
+		@Override
+		protected Void doInBackground(String... params) {
+			mError = null;
+			InputStream is = null;
+			final int LENGTH = 9;
+			String[] urls = new String[LENGTH];
+			String[] paths = new String[LENGTH];
+			urls[0] = HaierServiceObject.SERVICE_URL + "AddYuYue.ashx?Date=";
+			paths[0] = mYuyueDate.getText().toString().trim();
+			urls[1] = "&Time=";
+			paths[1] = mYuyueTime.getText().toString().trim();
+			urls[2] = "&UID=";
+			paths[2] = String.valueOf(mBaoxiuCardObject.mUID);
+			urls[3] = "&Note=";
+			paths[3] = mAskInput.getText().toString().trim();
+			urls[4] = "&AID=";
+			paths[4] = String.valueOf(mBaoxiuCardObject.mAID);
+			urls[5] = "&Type=";
+			paths[5] = "维修";
+			urls[6] = "&BID=";
+			paths[6] = String.valueOf(mBaoxiuCardObject.mBID);
+			urls[7] = "&UserName=";
+			paths[7] = mContactNameInput.getText().toString().trim();
+			urls[8] = "&CellPhone=";
+			paths[8] = mContactTelInput.getText().toString().trim();
+			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
+			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
+			try {
+				is = NetworkUtils.openContectionLocked(urls, paths, MyApplication.getInstance().getSecurityKeyValuesObject());
+				try {
+					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
+					mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
+					mStatusMessage = jsonObject.getString("StatusMessage");
+					DebugUtils.logD(TAG, "StatusCode = " + mStatusCode);
+					DebugUtils.logD(TAG, "StatusMessage = " + mStatusMessage);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				mError = e.getMessage();
+			} catch (IOException e) {
+				e.printStackTrace();
+				mError = e.getMessage();
+			} finally {
+				NetworkUtils.closeInputStream(is);
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			getProgressDialog().dismiss();
+			if (mError != null) {
+				MyApplication.getInstance().showMessage(mError);
+			} else if (mStatusCode == 1) {
+				//预约成功
+				NewRepairCardFragment.this.getActivity().finish();
+			} else {
+				//预约失败
+				new AlertDialog.Builder(NewRepairCardFragment.this.getActivity())
+				.setTitle(R.string.msg_tip_title)
+	   			.setMessage(R.string.msg_yuyue_fail)
+	   			.setCancelable(false)
+	   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+	   				@Override
+	   				public void onClick(DialogInterface dialog, int which) {
+	   				}
+	   			})
+	   			.create()
+	   			.show();
+			}
+			MyApplication.getInstance().showMessage(mStatusMessage);
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			getProgressDialog().dismiss();
+		}
+	}
 	
+	private void updateRepairCardInfo() {
+		if(mBaoxiuCardObject == null) {
+			mBaoxiuCardObject = new BaoxiuCardObject();
+		}
+		mBaoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
+		mBaoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
+		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
+		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
+		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
+	}
+
+	private boolean checkInput() {
+
+		return false;
+	}
+
 	private void showDatePickerDialog() {
         new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
 			

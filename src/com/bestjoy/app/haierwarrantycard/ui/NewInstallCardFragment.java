@@ -45,7 +45,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	//按钮
 	private Button mSaveBtn;
 	//商品信息
-	private EditText mTypeInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput;
+	private EditText mTypeInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput, mBeizhuTag;
 	//联系人信息
 	private EditText mContactNameInput, mContactTelInput;
 	private ProCityDisEditView mProCityDisEditView;
@@ -74,6 +74,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		 mModelInput = (EditText) view.findViewById(R.id.product_model_input);
 		 mBianhaoInput = (EditText) view.findViewById(R.id.product_sn_input);
 		 mBaoxiuTelInput = (EditText) view.findViewById(R.id.product_tel_input);
+		 mBeizhuTag = (EditText) view.findViewById(R.id.product_beizhu_tag);
 		 
 		 //联系人
 		 ((TextView) view.findViewById(R.id.people_info_title)).setTextColor(getResources().getColor(R.color.light_blue));
@@ -184,6 +185,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	private void createNewInatallCard() {
 		if(checkInput()) {
 			if(HaierAccountManager.getInstance().hasLoginned()) {
+				updateNewInstallCardInfo();
 				createNewInatallCardAsync();
 			} else {
 				MyApplication.getInstance().showMessage(R.string.msg_yuyue_fail);
@@ -193,15 +195,15 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		
 	}
 
-	private CeateNewInatallCardAsyncTask mCeateNewInatallCardAsyncTask;
+	private CreateNewInatallCardAsyncTask mCreateNewInatallCardAsyncTask;
 	private void createNewInatallCardAsync(String... param) {
-		AsyncTaskUtils.cancelTask(mCeateNewInatallCardAsyncTask);
+		AsyncTaskUtils.cancelTask(mCreateNewInatallCardAsyncTask);
 		showDialog(DIALOG_PROGRESS);
-		mCeateNewInatallCardAsyncTask = new CeateNewInatallCardAsyncTask();
-		mCeateNewInatallCardAsyncTask.execute(param);
+		mCreateNewInatallCardAsyncTask = new CreateNewInatallCardAsyncTask();
+		mCreateNewInatallCardAsyncTask.execute(param);
 	}
 
-	private class CeateNewInatallCardAsyncTask extends AsyncTask<String, Void, Void> {
+	private class CreateNewInatallCardAsyncTask extends AsyncTask<String, Void, Void> {
 		private String mError;
 		int mStatusCode = -1;
 		String mStatusMessage = null;
@@ -220,7 +222,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			urls[2] = "&UID=";
 			paths[2] = String.valueOf(mBaoxiuCardObject.mUID);
 			urls[3] = "&Note=";
-			paths[3] = "";
+			paths[3] = mBeizhuTag.getText().toString().trim();
 			urls[4] = "&AID=";
 			paths[4] = String.valueOf(mBaoxiuCardObject.mAID);
 			urls[5] = "&Type=";
@@ -287,6 +289,17 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			super.onCancelled();
 			getProgressDialog().dismiss();
 		}
+	}
+	
+	private void updateNewInstallCardInfo() {
+		if(mBaoxiuCardObject == null) {
+			mBaoxiuCardObject = new BaoxiuCardObject();
+		}
+		mBaoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
+		mBaoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
+		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
+		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
+		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
 	}
 
 	private boolean checkInput() {

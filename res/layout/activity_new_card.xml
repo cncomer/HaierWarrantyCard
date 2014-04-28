@@ -65,7 +65,7 @@
             android:layout_width="fill_parent"
             android:orientation="vertical">
 	        
-            <include layout="@layout/product_create_info"/>
+            <include layout="@layout/product_create_info_star"/>
             
             <View android:background="@color/light_gray"
 		        android:layout_width="fill_parent"
