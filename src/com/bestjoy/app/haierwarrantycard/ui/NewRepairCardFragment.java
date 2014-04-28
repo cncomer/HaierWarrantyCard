@@ -33,6 +33,7 @@ import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
+import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditPopView;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.DateUtils;
@@ -47,7 +48,8 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	private EditText mTypeInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput;
 	//联系人信息
 	private EditText mContactNameInput, mContactTelInput;
-	private ProCityDisEditView mProCityDisEditView;
+	//private ProCityDisEditView mProCityDisEditView;
+	private ProCityDisEditPopView mProCityDisEditPopView;
 	
 	//预约信息
 	private TextView mYuyueDate, mYuyueTime;
@@ -89,9 +91,10 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		 view.findViewById(R.id.people_info_divider).setBackgroundResource(R.color.light_green);
 		 mContactNameInput = (EditText) view.findViewById(R.id.contact_name_input);
 		 mContactTelInput = (EditText) view.findViewById(R.id.contact_tel_input);
-		 mProCityDisEditView = (ProCityDisEditView) view.findViewById(R.id.home);
+		 /*mProCityDisEditView = (ProCityDisEditView) view.findViewById(R.id.home);
 		 //不要显示HomeName输入框
-		 mProCityDisEditView.setHomeEditVisiable(View.GONE);
+		 mProCityDisEditView.setHomeEditVisiable(View.GONE);*/
+		 mProCityDisEditPopView = new ProCityDisEditPopView(this.getActivity(), view.findViewById(R.id.edit_province), view.findViewById(R.id.edit_city), view.findViewById(R.id.edit_district));
 		 
 		 //语音
 		 mAskInput = (EditText) view.findViewById(R.id.product_ask_online_input);
@@ -146,12 +149,12 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		} else {
 			mContactNameInput.setText(mAccountObject.mAccountName);
 			mContactTelInput.setText(mAccountObject.mAccountTel);
-			mProCityDisEditView.setHomeObject(mAccountObject.mAccountHomes.get(1));
+			mProCityDisEditPopView.setHomeObject(mAccountObject.mAccountHomes.get(1));
 		}
 	}
 	
 	public void populateHomeInfoView(HomeObject homeObject) {
-		mProCityDisEditView.setHomeObject(homeObject);
+		mProCityDisEditPopView.setHomeObject(homeObject);
 	}
 	
     public void populateContactInfoView(AccountObject accountObject) {
@@ -177,9 +180,9 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		return mBaoxiuCardObject;
 	}
 	
-	public HomeObject getHomeObject() {
+	/*public HomeObject getHomeObject() {
 		return mProCityDisEditView.getHomeObject();
-	}
+	}*/
 	
 
 	public AccountObject getContactInfoObject() {

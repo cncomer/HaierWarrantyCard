@@ -34,6 +34,7 @@ import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditPopView;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.DateUtils;
@@ -48,7 +49,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	private EditText mTypeInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput, mBeizhuTag;
 	//联系人信息
 	private EditText mContactNameInput, mContactTelInput;
-	private ProCityDisEditView mProCityDisEditView;
+	private ProCityDisEditPopView mProCityDisEditPopView;
 	
 	//预约信息
 	private TextView mYuyueDate, mYuyueTime;
@@ -81,9 +82,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		 view.findViewById(R.id.people_info_divider).setBackgroundResource(R.color.light_blue);
 		 mContactNameInput = (EditText) view.findViewById(R.id.contact_name_input);
 		 mContactTelInput = (EditText) view.findViewById(R.id.contact_tel_input);
-		 mProCityDisEditView = (ProCityDisEditView) view.findViewById(R.id.home);
-		 //不要显示HomeName输入框
-		 mProCityDisEditView.setHomeEditVisiable(View.GONE);
+		 mProCityDisEditPopView = new ProCityDisEditPopView(this.getActivity(), view.findViewById(R.id.edit_province), view.findViewById(R.id.edit_city), view.findViewById(R.id.edit_district)); 
 		 
 		 //预约时间
 		 ((TextView) view.findViewById(R.id.yuyue_info_title)).setTextColor(getResources().getColor(R.color.light_blue));
@@ -126,7 +125,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	}
 	
 	public void populateHomeInfoView(HomeObject homeObject) {
-		mProCityDisEditView.setHomeObject(homeObject);
+		mProCityDisEditPopView.setHomeObject(homeObject);
 	}
 	
     public void populateContactInfoView(AccountObject accountObject) {
@@ -153,7 +152,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	}
 	
 	public HomeObject getHomeObject() {
-		return mProCityDisEditView.getHomeObject();
+		return mProCityDisEditPopView.getHomeObject();
 	}
 	
 
@@ -344,6 +343,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		}
 		return true;
 	}
+	
 	private void showEmptyInputToast(int resId) {
 		String msg = getResources().getString(resId);
 		MyApplication.getInstance().showMessage(getResources().getString(R.string.input_type_please_input) + msg);

@@ -71,9 +71,7 @@
                 layout="@layout/product_create_info"/>
             <include layout="@layout/people_contact_info"
                 android:layout_marginTop="10dip"/>
-		    <include layout="@layout/home_pro_city_dis_autocomplete"
-		        android:id="@+id/home"
-		        android:layout_gravity="center_horizontal"/>
+		    <include layout="@layout/pcd_edit_layout" />
 
 			<include layout="@layout/yuyue_info_layout"
                 android:layout_marginTop="10dip"/>
