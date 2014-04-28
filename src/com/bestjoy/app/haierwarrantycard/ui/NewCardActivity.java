@@ -158,7 +158,8 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 		case R.string.menu_done:
 			BaoxiuCardObject object = mMenu.getBaoxiuCardObject();
 			if (!TextUtils.isEmpty(object.mLeiXin)) {
-				mContent.updateInfoInterface(object);
+				//目前只要是选择了小类别，我们就允许更新数据
+				mContent.setBaoxiuObjectAfterSlideMenu(object);
 				getSlidingMenu().showContent(true);
 			}
 			break;

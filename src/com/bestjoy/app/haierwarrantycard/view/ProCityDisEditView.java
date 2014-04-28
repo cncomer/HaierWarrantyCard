@@ -47,13 +47,7 @@ public class ProCityDisEditView extends LinearLayout{
 	}
 	
 	public void updateHomeObject() {
-		if (mHomeObject == null ) {
-			return;
-		}
-		mHomeObject.mHomeProvince = mProEditView.getText().toString();
-		mHomeObject.mHomeCity = mCityEditView.getText().toString();
-		mHomeObject.mHomeDis = mDisEditView.getText().toString();
-		mHomeObject.mHomePlaceDetail = mAddressEditView.getText().toString();
+		getHomeObject();
 	}
 	
 	public HomeObject getHomeObject() {
@@ -71,7 +65,6 @@ public class ProCityDisEditView extends LinearLayout{
 	}
 	
 	public void setHomeObject(HomeObject homeObject) {
-		 mHomeObject = homeObject;
 		 initHomeView(homeObject);
 	}
 
@@ -116,12 +109,14 @@ public class ProCityDisEditView extends LinearLayout{
 	
 	private void initHomeView(HomeObject homeObject) {
 		if (homeObject == null) {
+			mHomeObject = null;
 			mHomeName.getText().clear();
 			mProEditView.getText().clear();
 			mCityEditView.getText().clear();
 			mDisEditView.getText().clear();
 			mAddressEditView.getText().clear();
 		} else {
+			 mHomeObject = homeObject.clone();
 			if (!TextUtils.isEmpty(homeObject.mHomeName)) {
 				mHomeName.setText(homeObject.mHomeName);
 			}

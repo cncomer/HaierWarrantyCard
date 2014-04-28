@@ -264,17 +264,23 @@ public class ProCityDisEditPopView implements OnTouchListener {
 			if(mEditMode == MODE_PROVINCE) {
 				if (position < cursor.getCount()) {
 					cursor.moveToPosition(position);
-					viewHolder._title.setText(cursor.getString(cursor.getColumnIndex(HaierDBHelper.DEVICE_PRO_NAME)));
+					int index = cursor.getColumnIndex(HaierDBHelper.DEVICE_PRO_NAME);
+					if(index >= 0)
+					viewHolder._title.setText(cursor.getString(index));
 				}
 			} else if(mEditMode == MODE_CITY) {
 				if (position < cursor.getCount() && mHomeObject.mHomeProvince != null) {
 					cursor.moveToPosition(position);
-					viewHolder._title.setText(cursor.getString(cursor.getColumnIndex(HaierDBHelper.DEVICE_CITY_NAME)));
+					int index = cursor.getColumnIndex(HaierDBHelper.DEVICE_CITY_NAME);
+					if(index >= 0)
+					viewHolder._title.setText(cursor.getString(index));
 				}
 			} else if (mEditMode == MODE_DISTRICT) {
 				if (position < cursor.getCount() && mHomeObject.mHomeCity != null) {
 					cursor.moveToPosition(position);
-					viewHolder._title.setText(cursor.getString(cursor.getColumnIndex(HaierDBHelper.DEVICE_DIS_NAME)));
+					int index = cursor.getColumnIndex(HaierDBHelper.DEVICE_DIS_NAME);
+					if(index >= 0)
+					viewHolder._title.setText(cursor.getString(index));
 				}
 			}
 			return convertView;

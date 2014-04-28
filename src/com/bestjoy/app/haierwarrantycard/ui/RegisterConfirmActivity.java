@@ -50,9 +50,22 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	
 	private HomeObject mHomeObject;
 	private Button mConfrimReg;
+	private Bundle mBundles;
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
+		mBundles = getIntent().getExtras();
+		if (mBundles == null) {
+			DebugUtils.logD(TAG, "finish due to checkIntent mBundles is null");
+			return false;
+		}
+		String tel = mBundles.getString(Intents.EXTRA_TEL);
+		if (TextUtils.isEmpty(tel)) {
+			DebugUtils.logD(TAG, "finish due to checkIntent tel is null");
+			return false;
+		}
+		mAccountObject = new AccountObject();
+		mAccountObject.mAccountTel = tel;
 		return true;
 	}
 
@@ -65,17 +78,6 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 		}
 		setContentView(R.layout.activity_register);
 		this.initViews();
-		this.initData();
-	}
-
-	private void initData() {
-		mAccountObject = new AccountObject();
-		mAccountObject.mAccountTel = pickTelData();
-		mHomeObject = mProCityDisEditView.getHomeObject();
-	}
-
-	private String pickTelData() {
-		return getIntent() == null ? null : getIntent().getStringExtra(Intents.EXTRA_TEL);
 	}
 
 	private void initViews() {
@@ -90,13 +92,9 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 		mConfrimReg.setOnClickListener(this);
 	}
 	
-	public static void startIntent(Context context) {
+	public static void startIntent(Context context, Bundle bundle) {
 		Intent intent = new Intent(context, RegisterConfirmActivity.class);
-		context.startActivity(intent);
-	}
-	public static void startIntent(Context context, String tel) {
-		Intent intent = new Intent(context, RegisterConfirmActivity.class);
-		intent.putExtra(Intents.EXTRA_TEL, tel);
+		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
 	
@@ -108,13 +106,14 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 		mRegisterAsyncTask.execute(param);
 	}
 
-	private class RegisterAsyncTask extends AsyncTask<String, Void, Void> {
+	private class RegisterAsyncTask extends AsyncTask<String, Void, Boolean> {
 		private String mError;
 		@Override
-		protected Void doInBackground(String... params) {
+		protected Boolean doInBackground(String... params) {
 			mError = null;
 			InputStream is = null;
 			final int LENGTH = 7;
+			mHomeObject = mProCityDisEditView.getHomeObject();
 			String[] urls = new String[LENGTH];
 			String[] paths = new String[LENGTH];
 			urls[0] = HaierServiceObject.SERVICE_URL + "Register.ashx?cell=";
@@ -147,6 +146,17 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 					DebugUtils.logD(TAG, "StatusMessage = " + mAccountObject.mStatusMessage);
 					DebugUtils.logD(TAG, "Data = " + data);
 					DebugUtils.logD(TAG, "Uid = " + mAccountObject.mAccountUid);
+					if (mAccountObject.mStatusCode == 1) {
+						mAccountObject.mAccountHomes.add(mHomeObject);
+						boolean saveResult = HaierAccountManager.getInstance().saveAccountObject(getContentResolver(), mAccountObject);
+					    if (!saveResult) {
+					    	//注册成功，但无法创建账户，请尝试重新登陆
+					    	mError = mContext.getString(R.string.msg_register_save_fail);
+					    }
+					    return true;
+					} else {
+						mError = mAccountObject.mStatusMessage;
+					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -159,33 +169,19 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			} finally {
 				NetworkUtils.closeInputStream(is);
 			}
-			return null;
+			return false;
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 			dismissDialog(DIALOG_PROGRESS);
 			if (mError != null) {
-				MyApplication.getInstance().showMessage(mError);
-			} else if (mAccountObject.mStatusCode == 1) {
-				//注册成功
-				mAccountObject.mAccountHomes.add(mHomeObject);
-				boolean saveResult;
-				try {
-					saveResult = HaierAccountManager.getInstance().saveAccountObject(getContentResolver(), mAccountObject);
-				} catch (Exception e) {
-					e.printStackTrace();
-					mError = e.getMessage();
-					saveResult = false;
-				}
-				if(saveResult) {
-					MyChooseDevicesActivity.startIntent(mContext, ModleSettings.createMyCardDefaultBundle(mContext));
-				} else {
-					//保存数据库失败
+				if (result) {
+					//注册成功，但无法创建账户，请尝试重新登陆
 					new AlertDialog.Builder(mContext)
 					.setTitle(R.string.msg_tip_title)
-		   			.setMessage(R.string.msg_register_save_fail)
+		   			.setMessage(mError)
 		   			.setCancelable(false)
 		   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
 		   				@Override
@@ -195,9 +191,23 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 		   			})
 		   			.create()
 		   			.show();
+				} else {
+					MyApplication.getInstance().showMessage(mError);
 				}
+			} else if (result) {
+				//注册成功，如果是先新建后注册，那么回到选择列表
+				int modelId = ModleSettings.getModelIdFromBundle(mBundles);
+				switch(modelId) {
+				case R.id.model_my_card:
+				case R.id.model_install:
+				case R.id.model_repair:
+					MyChooseDevicesActivity.startIntent(mContext, mBundles);
+					break;
+					default ://否则回到主界面
+						MainActivity.startActivityForTop(mContext);
+				}
+				
 			}
-			MyApplication.getInstance().showMessage(mAccountObject.mStatusMessage);
 		}
 
 		@Override

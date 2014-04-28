@@ -68,7 +68,7 @@
             android:orientation="vertical" >
                       
             <include android:layout_marginTop="6dip"
-                layout="@layout/product_create_info"/>
+                layout="@layout/product_create_info_star"/>
             <include layout="@layout/people_contact_info"
                 android:layout_marginTop="10dip"/>
 		    <include layout="@layout/pcd_edit_layout" />

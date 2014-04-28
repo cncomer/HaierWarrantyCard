@@ -67,14 +67,6 @@
                     style="@style/ProductInfoInputValidate"
                     android:hint="@string/usr_validate"/>
 
-             <CheckBox 
-                android:gravity="center_vertical"
-                android:layout_marginTop="6dip"
-                android:id="@+id/check_protocol"
-	            android:layout_width="wrap_content"
-	            android:text="@string/title_agree_protocol"
-	            android:textColor="#ff716e6e"
-	            android:layout_height="wrap_content"/>
             
             <View
                 android:layout_width="fill_parent"

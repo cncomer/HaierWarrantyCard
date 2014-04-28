@@ -46,6 +46,25 @@ public class HomeObject implements InfoInterface{
 	private boolean mOutOfDate = true;
 	
 	
+	public HomeObject clone() {
+		HomeObject newHomeObject = new HomeObject();
+		newHomeObject.mHomeAid = mHomeAid;
+		newHomeObject.mHomeId = mHomeId;
+		newHomeObject.mHomeUid = mHomeUid;
+		newHomeObject.mHomeName = mHomeName;
+		newHomeObject.mHomeProvince = mHomeProvince;
+		newHomeObject.mHomeCity = mHomeCity;
+		newHomeObject.mHomeDis = mHomeDis;
+		newHomeObject.mHomePlaceDetail = mHomePlaceDetail;
+		
+		newHomeObject.mHomePosition = mHomePosition;
+		newHomeObject.mIsDefault = mIsDefault;
+		newHomeObject.mHomeCardCount = mHomeCardCount;
+		newHomeObject.mOutOfDate = true;
+		
+		return newHomeObject;
+	}
+	
 	public static final String[] PROVINCE_PROJECTION = new String[]{
 		HaierDBHelper.DEVICE_PRO_ID,
 		HaierDBHelper.DEVICE_PRO_NAME,
@@ -305,8 +324,11 @@ public class HomeObject implements InfoInterface{
 	 * @return
 	 */
 	public static HomeObject getHomeObject() {
-		HomeObject object = mHomeObject;
-		mHomeObject = null;
+		HomeObject object = null;
+		if (mHomeObject != null) {
+			object = mHomeObject;
+			mHomeObject = null;
+		}
 		return object;
 	}
 	/**

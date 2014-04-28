@@ -4,7 +4,7 @@ import com.shwy.bestjoy.utils.InfoInterface;
 
 import android.os.Bundle;
 
-public class ModleBaseFragment extends BaseFragment{
+public abstract class ModleBaseFragment extends BaseFragment{
 
 	/**请求扫描条码*/
 	public static final int REQUEST_SCAN = 1;
@@ -17,7 +17,10 @@ public class ModleBaseFragment extends BaseFragment{
 	 * 可以用来从其他地方更新当前Fragment的数据
 	 * @param infoInterface
 	 */
-	public void updateInfoInterface(InfoInterface infoInterface) {
-		
-	}
+	public abstract void updateInfoInterface(InfoInterface infoInterface);
+	/**
+	 * 侧滑菜单要更新当前Fragment的数据
+	 * @param slideManuObject
+	 */
+    public abstract void setBaoxiuObjectAfterSlideMenu(InfoInterface slideManuObject);
 }

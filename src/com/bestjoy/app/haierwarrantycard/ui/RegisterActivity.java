@@ -7,7 +7,6 @@ import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,9 +17,6 @@ import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.EditText;
 
 import com.actionbarsherlock.view.Menu;
@@ -29,6 +25,7 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
+import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
 
 public class RegisterActivity extends BaseActionbarActivity implements View.OnClickListener{
@@ -40,7 +37,6 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 	private Button mBtnGetyanzhengma;
 	private EditText mTelInput;
 	private EditText mCodeInput;
-	private CheckBox mCheckBox;
 	private String mYanZhengCodeFromServer;
 
 	@Override
@@ -69,22 +65,17 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 		mTelInput = (EditText) findViewById(R.id.usr_tel);
 		mCodeInput = (EditText) findViewById(R.id.usr_validate);
 		mCodeInput.setOnClickListener(this);
-		
-		mCheckBox = ((CheckBox) findViewById(R.id.check_protocol));
-		mCheckBox.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-				mNextButton.setEnabled(mCheckBox.isChecked());
-			}
-		});
-		mNextButton.setEnabled(mCheckBox.isChecked());
 	}
 	
 	 public boolean onCreateOptionsMenu(Menu menu) {
 		 return false;
 	 }
 
-	public static void startIntent(Context context) {
+	public static void startIntent(Context context, Bundle modelBundel) {
 		Intent intent = new Intent(context, RegisterActivity.class);
+		if (modelBundel == null) {
+			intent.putExtras(modelBundel);
+		}
 		context.startActivity(intent);
 	}
 
@@ -105,7 +96,12 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			if (mYanZhengCodeFromServer != null
 					&& mYanZhengCodeFromServer.equals(mCodeInput.getText()
 							.toString().trim())) {
-				RegisterConfirmActivity.startIntent(this, tel);
+				Bundle bundle = getIntent().getExtras();
+				if (bundle == null) {
+					bundle = new Bundle();
+				}
+				bundle.putString(Intents.EXTRA_TEL, tel);
+				RegisterConfirmActivity.startIntent(this, bundle);
 			} else {
 				MyApplication.getInstance().showMessage(R.string.msg_input_yanzheng_code_error);
 			}

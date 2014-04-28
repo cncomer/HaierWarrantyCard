@@ -155,6 +155,32 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		return cardObject;
 	}
 	
+	public BaoxiuCardObject clone() {
+		BaoxiuCardObject newBaoxiuCardObject = new BaoxiuCardObject();
+		newBaoxiuCardObject.mUID = mUID;
+		newBaoxiuCardObject.mAID = mAID;
+		newBaoxiuCardObject.mBID = mBID;
+		newBaoxiuCardObject.mWY = mWY;
+		
+		newBaoxiuCardObject.mCardName = mCardName;
+		newBaoxiuCardObject.mZhuBx = mZhuBx;
+		
+		newBaoxiuCardObject.mLeiXin = mLeiXin;
+		newBaoxiuCardObject.mPinPai = mPinPai;
+		newBaoxiuCardObject.mXingHao = mXingHao;
+		newBaoxiuCardObject.mSHBianHao = mSHBianHao;
+		
+		newBaoxiuCardObject.mBXPhone = mBXPhone;
+		newBaoxiuCardObject.mFPaddr = mFPaddr;
+		newBaoxiuCardObject.mBuyDate = mBuyDate;
+		newBaoxiuCardObject.mBuyPrice = mBuyPrice;
+		newBaoxiuCardObject.mBuyTuJing = mBuyTuJing;
+		newBaoxiuCardObject.mYanBaoTime = mYanBaoTime;
+		newBaoxiuCardObject.mYanBaoDanWei = mYanBaoDanWei;
+		newBaoxiuCardObject.mYBPhone = mYBPhone;
+		return newBaoxiuCardObject;
+	}
+	
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
@@ -366,8 +392,11 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	 * @return
 	 */
 	public static BaoxiuCardObject getBaoxiuCardObject() {
-		BaoxiuCardObject object = mBaoxiuCardObject;
-		mBaoxiuCardObject = null;
+		BaoxiuCardObject object = null;
+		if (mBaoxiuCardObject != null) {
+			object = mBaoxiuCardObject;
+			mBaoxiuCardObject = null;
+		}
 		return object;
 	}
 	/**

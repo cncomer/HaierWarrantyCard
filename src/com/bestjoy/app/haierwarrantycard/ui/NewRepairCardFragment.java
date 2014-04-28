@@ -133,8 +133,6 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			mModelInput.getText().clear();
 			mBianhaoInput.getText().clear();
 			mBaoxiuTelInput.getText().clear();
-			mContactNameInput.getText().clear();
-			mContactTelInput.getText().clear();
 		} else {
 			mTypeInput.setText(mBaoxiuCardObject.mLeiXin);
 			mPinpaiInput.setText(mBaoxiuCardObject.mPinPai);
@@ -150,6 +148,33 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			mContactNameInput.setText(mAccountObject.mAccountName);
 			mContactTelInput.setText(mAccountObject.mAccountTel);
 			mProCityDisEditPopView.setHomeObject(mAccountObject.mAccountHomes.get(1));
+		}
+	}
+	
+	public void setBaoxiuObjectAfterSlideMenu(InfoInterface slideManuObject) {
+		if (mBaoxiuCardObject == null) {
+			mBaoxiuCardObject = new BaoxiuCardObject();
+		}
+		if (slideManuObject instanceof BaoxiuCardObject) {
+			BaoxiuCardObject object = (BaoxiuCardObject) slideManuObject;
+			if (!TextUtils.isEmpty(object.mLeiXin)) {
+				mBaoxiuCardObject.mLeiXin = object.mLeiXin;
+				mTypeInput.setText(mBaoxiuCardObject.mLeiXin);
+			}
+			if (!TextUtils.isEmpty(object.mPinPai)) {
+				mBaoxiuCardObject.mPinPai = object.mPinPai;
+				mPinpaiInput.setText(mBaoxiuCardObject.mPinPai);
+			}
+			
+			if (!TextUtils.isEmpty(object.mXingHao)) {
+				mBaoxiuCardObject.mXingHao = object.mXingHao;
+				mModelInput.setText(mBaoxiuCardObject.mXingHao);
+			}
+			
+			if (!TextUtils.isEmpty(object.mSHBianHao)) {
+				mBaoxiuCardObject.mSHBianHao = object.mSHBianHao;
+				mBianhaoInput.setText(mBaoxiuCardObject.mSHBianHao);
+			}
 		}
 	}
 	
