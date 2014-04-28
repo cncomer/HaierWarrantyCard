@@ -114,14 +114,41 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			mModelInput.getText().clear();
 			mBianhaoInput.getText().clear();
 			mBaoxiuTelInput.getText().clear();
-			mContactNameInput.getText().clear();
-			mContactTelInput.getText().clear();
+			mBeizhuTag.getText().clear();
 		} else {
 			mTypeInput.setText(mBaoxiuCardObject.mLeiXin);
 			mPinpaiInput.setText(mBaoxiuCardObject.mPinPai);
 			mModelInput.setText(mBaoxiuCardObject.mXingHao);
 			mBianhaoInput.setText(mBaoxiuCardObject.mSHBianHao);
 			mBaoxiuTelInput.setText(mBaoxiuCardObject.mBXPhone);
+			mBeizhuTag.setText(mBaoxiuCardObject.mCardName);
+		}
+	}
+	
+	public void setBaoxiuObjectAfterSlideMenu(InfoInterface slideManuObject) {
+		if (mBaoxiuCardObject == null) {
+			mBaoxiuCardObject = new BaoxiuCardObject();
+		}
+		if (slideManuObject instanceof BaoxiuCardObject) {
+			BaoxiuCardObject object = (BaoxiuCardObject) slideManuObject;
+			if (!TextUtils.isEmpty(object.mLeiXin)) {
+				mBaoxiuCardObject.mLeiXin = object.mLeiXin;
+				mTypeInput.setText(mBaoxiuCardObject.mLeiXin);
+			}
+			if (!TextUtils.isEmpty(object.mPinPai)) {
+				mBaoxiuCardObject.mPinPai = object.mPinPai;
+				mPinpaiInput.setText(mBaoxiuCardObject.mPinPai);
+			}
+			
+			if (!TextUtils.isEmpty(object.mXingHao)) {
+				mBaoxiuCardObject.mXingHao = object.mXingHao;
+				mModelInput.setText(mBaoxiuCardObject.mXingHao);
+			}
+			
+			if (!TextUtils.isEmpty(object.mSHBianHao)) {
+				mBaoxiuCardObject.mSHBianHao = object.mSHBianHao;
+				mBianhaoInput.setText(mBaoxiuCardObject.mSHBianHao);
+			}
 		}
 	}
 	
@@ -134,11 +161,18 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			mContactNameInput.getText().clear();
 			mContactTelInput.getText().clear();
 		} else {
+			//我们需要克隆一个账户对象，以免被修改
 			mContactNameInput.setText(accountObject.mAccountName);
 			mContactTelInput.setText(accountObject.mAccountTel);
-			
 		}
 	}
+    
+    public AccountObject getContectInfoObject() {
+    	AccountObject accountObject = new AccountObject();
+    	accountObject.mAccountName = mContactNameInput.getText().toString().trim();
+    	accountObject.mAccountTel = mContactTelInput.getText().toString().trim();
+    	return accountObject;
+    }
 	
 	public BaoxiuCardObject getBaoxiuCardObject() {
 		if (mBaoxiuCardObject == null) {
@@ -149,6 +183,8 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
 		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
 		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
+		mBaoxiuCardObject.mCardName = mBeizhuTag.getText().toString().trim();
+		
 		return mBaoxiuCardObject;
 	}
 	
@@ -156,13 +192,6 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		return mProCityDisEditView.getHomeObject();
 	}
 	
-
-	public AccountObject getContactInfoObject() {
-		AccountObject contactInfoObject = new AccountObject();
-		contactInfoObject.mAccountName = mContactNameInput.getText().toString().trim();
-		contactInfoObject.mAccountTel = mContactTelInput.getText().toString().trim();
-		return contactInfoObject;
-	}
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()) {
@@ -183,16 +212,16 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	}
 	
 	private void createNewInatallCard() {
-		if(checkInput()) {
-			if(HaierAccountManager.getInstance().hasLoginned()) {
-				updateNewInstallCardInfo();
+		if(HaierAccountManager.getInstance().hasLoginned()) {
+			//如果没有注册，我们前往登陆界面
+			if(checkInput()) {
 				createNewInatallCardAsync();
-			} else {
-				MyApplication.getInstance().showMessage(R.string.msg_yuyue_fail);
-				LoginActivity.startIntent(this.getActivity(), getArguments());
 			}
+		} else {
+			//如果没有注册，我们前往登陆/注册界面，这里传递ModelBundle对象过去，以便做合适的跳转
+			MyApplication.getInstance().showMessage(R.string.login_tip);
+			LoginActivity.startIntent(this.getActivity(), getArguments());
 		}
-		
 	}
 
 	private CreateNewInatallCardAsyncTask mCreateNewInatallCardAsyncTask;
@@ -203,18 +232,19 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		mCreateNewInatallCardAsyncTask.execute(param);
 	}
 
-	private class CreateNewInatallCardAsyncTask extends AsyncTask<String, Void, Void> {
+	private class CreateNewInatallCardAsyncTask extends AsyncTask<String, Void, Boolean> {
 		private String mError;
 		int mStatusCode = -1;
 		String mStatusMessage = null;
 		@Override
-		protected Void doInBackground(String... params) {
+		protected Boolean doInBackground(String... params) {
 			mError = null;
 			InputStream is = null;
 			final int LENGTH = 9;
 			String[] urls = new String[LENGTH];
 			String[] paths = new String[LENGTH];
-			
+			getBaoxiuCardObject();
+			HomeObject homeObject = mProCityDisEditView.getHomeObject();
 			urls[0] = HaierServiceObject.SERVICE_URL + "AddYuYue.ashx?Date=";
 			paths[0] = mYuyueDate.getText().toString().trim();
 			urls[1] = "&Time=";
@@ -226,7 +256,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			urls[4] = "&AID=";
 			paths[4] = String.valueOf(mBaoxiuCardObject.mAID);
 			urls[5] = "&Type=";
-			paths[5] = "安装";
+			paths[5] = mBaoxiuCardObject.mCardName;
 			urls[6] = "&BID=";
 			paths[6] = String.valueOf(mBaoxiuCardObject.mBID);
 			urls[7] = "&UserName=";
@@ -259,7 +289,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 			getProgressDialog().dismiss();
 			if (mError != null) {
@@ -291,17 +321,6 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		}
 	}
 	
-	private void updateNewInstallCardInfo() {
-		if(mBaoxiuCardObject == null) {
-			mBaoxiuCardObject = new BaoxiuCardObject();
-		}
-		mBaoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
-		mBaoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
-		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
-		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
-		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
-	}
-
 	private boolean checkInput() {
 		if(TextUtils.isEmpty(mTypeInput.getText().toString().trim())){
 			showEmptyInputToast(R.string.product_type);

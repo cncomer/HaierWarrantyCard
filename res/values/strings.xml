@@ -240,4 +240,5 @@
      
      <string name="msg_input_tel_when_find_password">请先输入要找回密码的手机号码</string>
      <string name="msg_find_password_success">密码已成功找回，请查看短信</string>
+      <string name="msg_local_save_card_failed">服务器上传信息成功，但本地保存失败，请重新登录同步数据</string>
 </resources>

@@ -172,8 +172,8 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	    if (mIsChooseDevice) {
 	    	//一些特殊的操作，可以放在这里，目前暂不需要实现
 	    }
-	    BaoxiuCardObject.setBaoxiuCardObject(card);
-	    HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected));
+	    BaoxiuCardObject.setBaoxiuCardObject(card.clone());
+	    HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
     	ModleSettings.doChoose(mContext, mBundle);
 		
 	}

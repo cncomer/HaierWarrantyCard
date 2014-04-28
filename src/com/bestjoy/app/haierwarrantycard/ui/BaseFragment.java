@@ -1,6 +1,7 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
 import java.io.File;
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -199,10 +200,32 @@ public class BaseFragment extends SherlockFragment{
  	   return mProgressDialog;
     }
     
+    protected void dissmissDialog(int id) {
+    	Dialog dialog = mDialogMap.get(id);
+    	if (dialog != null && dialog.isShowing()) {
+    		dialog.dismiss();
+    	}
+     }
+    
+    protected void removeDialog(int id) {
+    	Dialog dialog = mDialogMap.get(id);
+    	if (dialog != null) {
+    		dialog.dismiss();
+    		dialog = null;
+    		mDialogMap.remove(id);
+    	}
+     }
+    
    	public void showDialog(int id) {
-   		Dialog dialog = onCreateDialog(id);
+   		Dialog dialog = mDialogMap.get(id);
+   		if (dialog == null) {
+   			dialog = onCreateDialog(id);
+   			mDialogMap.put(id, dialog);
+   		}
    		if (dialog != null) {
    			dialog.show();
    		}
    	}
+   	
+   	private HashMap<Integer, Dialog> mDialogMap = new HashMap<Integer, Dialog>();
 }

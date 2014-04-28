@@ -31,7 +31,7 @@ public class MenuHandlerUtils {
         	LoginActivity.startIntent(context, null);
      	   break;
         case R.string.menu_register:
-        	RegisterActivity.startIntent(context);
+        	RegisterActivity.startIntent(context, null);
       	   break;
         case R.string.menu_setting:
       	   break;

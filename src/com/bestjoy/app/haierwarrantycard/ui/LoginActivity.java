@@ -89,7 +89,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 	public void onClick(View v) {
 		switch(v.getId()) {
 			case R.id.button_register:
-				RegisterActivity.startIntent(this);
+				RegisterActivity.startIntent(this, getIntent().getExtras());
 				break;
 			case R.id.button_find_password:
 				//如果电话号码为空，提示用户先输入号码，在找回密码

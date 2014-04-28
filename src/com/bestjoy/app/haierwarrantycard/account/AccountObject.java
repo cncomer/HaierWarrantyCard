@@ -73,6 +73,17 @@ public class AccountObject implements InfoInterface{
 		return mStatusCode != 0;
 	}
 	
+	public AccountObject clone() {
+		AccountObject newAccountObject = new AccountObject();
+		newAccountObject.mAccountId = mAccountId;
+		newAccountObject.mAccountUid = mAccountUid;
+		newAccountObject.mAccountName = mAccountName;
+		newAccountObject.mAccountTel = mAccountTel;
+		newAccountObject.mAccountPwd = mAccountPwd;
+		newAccountObject.mAccountHomeCount = mAccountHomeCount;
+		return newAccountObject;
+	}
+	
 	public static AccountObject getHaierAccountFromDatabase(Context context) {
 		AccountObject haierAccount = null;
 		Cursor c = context.getContentResolver().query(BjnoteContent.Accounts.CONTENT_URI, PROJECTION, WHERE_DEFAULT, null, null);
