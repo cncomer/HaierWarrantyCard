@@ -314,7 +314,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		@Override
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
-			getProgressDialog().dismiss();
+			dissmissDialog(DIALOG_PROGRESS);
 			if (mError != null) {
 				if (result) {
 					//服务器上传信息成功，但本地保存失败，请重新登录同步数据
@@ -346,7 +346,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-			getProgressDialog().dismiss();
+			dissmissDialog(DIALOG_PROGRESS);
 		}
 	}
 	
