@@ -347,9 +347,57 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	}
 
 	private boolean checkInput() {
+		if(TextUtils.isEmpty(mTypeInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_type);
+			return false;
+		}
+		if(TextUtils.isEmpty(mPinpaiInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_brand);
+			return false;
+		}
+		if(TextUtils.isEmpty(mModelInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_model);
+			return false;
+		}
+		/*if(TextUtils.isEmpty(mBianhaoInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_sn);
+			return false;
+		}*/
+		if(TextUtils.isEmpty(mBaoxiuTelInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.product_tel);
+			return false;
+		}
+		
 
-		return false;
+		if(TextUtils.isEmpty(mContactNameInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.name);
+			return false;
+		}
+		if(TextUtils.isEmpty(mContactTelInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.usr_tel);
+			return false;
+		}
+		
+		if(TextUtils.isEmpty(mYuyueDate.getText().toString().trim())){
+			showEmptyInputToast(R.string.date);
+			return false;
+		}
+		if(TextUtils.isEmpty(mYuyueTime.getText().toString().trim())){
+			showEmptyInputToast(R.string.time);
+			return false;
+		}
+		if(TextUtils.isEmpty(mAskInput.getText().toString().trim())){
+			showEmptyInputToast(R.string.error_des);
+			return false;
+		}
+		return true;
 	}
+	
+	private void showEmptyInputToast(int resId) {
+		String msg = getResources().getString(resId);
+		MyApplication.getInstance().showMessage(getResources().getString(R.string.input_type_please_input) + msg);
+	}
+
 
 	private void showDatePickerDialog() {
         new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
