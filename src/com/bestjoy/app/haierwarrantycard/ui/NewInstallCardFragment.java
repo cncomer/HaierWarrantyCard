@@ -184,6 +184,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	private void createNewInatallCard() {
 		if(checkInput()) {
 			if(HaierAccountManager.getInstance().hasLoginned()) {
+				updateNewInstallCardInfo();
 				createNewInatallCardAsync();
 			} else {
 				MyApplication.getInstance().showMessage(R.string.msg_yuyue_fail);
@@ -193,15 +194,15 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		
 	}
 
-	private CeateNewInatallCardAsyncTask mCeateNewInatallCardAsyncTask;
+	private CreateNewInatallCardAsyncTask mCreateNewInatallCardAsyncTask;
 	private void createNewInatallCardAsync(String... param) {
-		AsyncTaskUtils.cancelTask(mCeateNewInatallCardAsyncTask);
+		AsyncTaskUtils.cancelTask(mCreateNewInatallCardAsyncTask);
 		showDialog(DIALOG_PROGRESS);
-		mCeateNewInatallCardAsyncTask = new CeateNewInatallCardAsyncTask();
-		mCeateNewInatallCardAsyncTask.execute(param);
+		mCreateNewInatallCardAsyncTask = new CreateNewInatallCardAsyncTask();
+		mCreateNewInatallCardAsyncTask.execute(param);
 	}
 
-	private class CeateNewInatallCardAsyncTask extends AsyncTask<String, Void, Void> {
+	private class CreateNewInatallCardAsyncTask extends AsyncTask<String, Void, Void> {
 		private String mError;
 		int mStatusCode = -1;
 		String mStatusMessage = null;
@@ -287,6 +288,17 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			super.onCancelled();
 			getProgressDialog().dismiss();
 		}
+	}
+	
+	private void updateNewInstallCardInfo() {
+		if(mBaoxiuCardObject == null) {
+			mBaoxiuCardObject = new BaoxiuCardObject();
+		}
+		mBaoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
+		mBaoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
+		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
+		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
+		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
 	}
 
 	private boolean checkInput() {

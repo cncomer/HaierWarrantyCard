@@ -1,8 +1,15 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
+
+import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,6 +19,7 @@ import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.text.TextUtils;
@@ -24,6 +32,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
@@ -31,9 +40,12 @@ import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
+import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.ImageHelper;
 import com.shwy.bestjoy.utils.InfoInterface;
+import com.shwy.bestjoy.utils.NetworkUtils;
 
 public class NewWarrantyCardFragment extends ModleBaseFragment implements View.OnClickListener{
 	private static final String TAG = "NewWarrantyCardFragment";
@@ -217,27 +229,135 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			showDatePickerDialog();
 			break;
 		case R.id.button_save:
-			saveNewWarrantyCard();
+			saveNewWarrantyCardAndSync();
 			break;
 		}
 		
 	}
 	
-	private void saveNewWarrantyCard() {
+	private void saveNewWarrantyCardAndSync() {
 		if(checkInput()) {
 			if(HaierAccountManager.getInstance().hasLoginned()) {
 				getmBaoxiuCardObject();
 				boolean saveResult = mBaoxiuCardObject.saveInDatebase(this.getActivity().getContentResolver(), null);
 				if(saveResult) {
-					MyApplication.getInstance().showMessage(R.string.save_success);
-					MyChooseDevicesActivity.startIntent(this.getActivity(), ModleSettings.createMyCardDefaultBundle(this.getActivity()));
+					//MyApplication.getInstance().showMessage(R.string.save_success);
+					//MyChooseDevicesActivity.startIntent(this.getActivity(), ModleSettings.createMyCardDefaultBundle(this.getActivity()));
 				} else {
 					MyApplication.getInstance().showMessage(R.string.save_fail);
 				}
+				requestNewWarrantyCardAndSync();
 			} else {
 				MyApplication.getInstance().showMessage(R.string.login_tip);
 				LoginActivity.startIntent(this.getActivity(), getArguments());
 			}
+		}
+	}
+	
+
+	private CreateNewWarrantyCardAsyncTask mCreateNewWarrantyCardAsyncTask;
+	private void requestNewWarrantyCardAndSync(String... param) {
+		AsyncTaskUtils.cancelTask(mCreateNewWarrantyCardAsyncTask);
+		showDialog(DIALOG_PROGRESS);
+		mCreateNewWarrantyCardAsyncTask = new CreateNewWarrantyCardAsyncTask();
+		mCreateNewWarrantyCardAsyncTask.execute(param);
+	}
+
+	private class CreateNewWarrantyCardAsyncTask extends AsyncTask<String, Void, Void> {
+		private String mError;
+		int mStatusCode = -1;
+		String mStatusMessage = null;
+		@Override
+		protected Void doInBackground(String... params) {
+			mError = null;
+			InputStream is = null;
+			final int LENGTH = 9;
+			String[] urls = new String[LENGTH];
+			String[] paths = new String[LENGTH];
+			urls[0] = HaierServiceObject.SERVICE_URL + "AddBaoXiuData.ashx?LeiXin=";
+			paths[0] = mBaoxiuCardObject.mLeiXin;
+			urls[1] = "&BuyDate=";
+			paths[1] = mBaoxiuCardObject.mBuyDate;
+			urls[2] = "&BuyPrice=";
+			paths[2] = mBaoxiuCardObject.mBuyPrice;
+			urls[3] = "&BuyTuJing=";
+			paths[3] = mBaoxiuCardObject.mBuyTuJing;
+			urls[4] = "&BXPhone=";
+			paths[4] = mBaoxiuCardObject.mBXPhone;
+			urls[5] = "&PinPai=";
+			paths[5] = mBaoxiuCardObject.mPinPai;
+			urls[6] = "&UID=";
+			paths[6] = String.valueOf(mBaoxiuCardObject.mUID);
+			urls[7] = "&XingHao=";
+			paths[7] = mBaoxiuCardObject.mXingHao;
+			urls[8] = "&YanBaoDanWei=";
+			paths[8] = mBaoxiuCardObject.mYanBaoDanWei;
+			urls[9] = "&YanBaoTime=";
+			paths[9] = mBaoxiuCardObject.mYanBaoTime;
+			urls[10] = "&AID=";
+			paths[10] = String.valueOf(mBaoxiuCardObject.mAID);
+			urls[11] = "&SHBianHao=";
+			paths[11] = mBaoxiuCardObject.mSHBianHao;
+			urls[12] = "&Tag=";
+			paths[12] = "";//这里需要修改
+			urls[13] = "&YBPhone=";
+			paths[13] = mBaoxiuCardObject.mYBPhone;
+			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
+			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
+			try {
+				is = NetworkUtils.openContectionLocked(urls, paths, MyApplication.getInstance().getSecurityKeyValuesObject());
+				try {
+					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
+					mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
+					mStatusMessage = jsonObject.getString("StatusMessage");
+					DebugUtils.logD(TAG, "StatusCode = " + mStatusCode);
+					DebugUtils.logD(TAG, "StatusMessage = " + mStatusMessage);
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				mError = e.getMessage();
+			} catch (IOException e) {
+				e.printStackTrace();
+				mError = e.getMessage();
+			} finally {
+				NetworkUtils.closeInputStream(is);
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			getProgressDialog().dismiss();
+			if (mError != null) {
+				MyApplication.getInstance().showMessage(mError);
+			} else if (mStatusCode == 1) {
+				//添加成功
+				NewWarrantyCardFragment.this.getActivity().finish();
+				MyChooseDevicesActivity.startIntent(NewWarrantyCardFragment.this.getActivity(), ModleSettings.createMyCardDefaultBundle(NewWarrantyCardFragment.this.getActivity()));
+			} else {
+				//添加失败
+				new AlertDialog.Builder(NewWarrantyCardFragment.this.getActivity())
+				.setTitle(R.string.msg_tip_title)
+	   			.setMessage(R.string.save_fail)
+	   			.setCancelable(false)
+	   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+	   				@Override
+	   				public void onClick(DialogInterface dialog, int which) {
+	   				}
+	   			})
+	   			.create()
+	   			.show();
+			}
+			MyApplication.getInstance().showMessage(mStatusMessage);
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			getProgressDialog().dismiss();
 		}
 	}
 
