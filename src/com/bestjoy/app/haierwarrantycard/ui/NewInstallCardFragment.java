@@ -315,10 +315,10 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			showEmptyInputToast(R.string.product_model);
 			return false;
 		}
-		if(TextUtils.isEmpty(mBianhaoInput.getText().toString().trim())){
+		/*if(TextUtils.isEmpty(mBianhaoInput.getText().toString().trim())){
 			showEmptyInputToast(R.string.product_sn);
 			return false;
-		}
+		}*/
 		if(TextUtils.isEmpty(mBaoxiuTelInput.getText().toString().trim())){
 			showEmptyInputToast(R.string.product_tel);
 			return false;
