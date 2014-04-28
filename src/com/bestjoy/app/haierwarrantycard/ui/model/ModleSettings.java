@@ -151,9 +151,6 @@ public class ModleSettings {
 		int type = ModleSettings.getModelIdFromBundle(bundle);
 		switch(type) {
 		case R.id.model_my_card:
-			//我的保修卡有点不同，选择设备会进入到详细界面
-			
-			break;
 		case R.id.model_install:
 		case R.id.model_repair:
 			NewCardActivity.startIntent(context, bundle);
@@ -191,8 +188,6 @@ public class ModleSettings {
 	public static boolean onActionBarMenuSelected(MenuItem item, Context context, Bundle bundle) {
 		switch(item.getItemId()) {
 		case R.id.model_my_card:
-			NewCardActivity.startIntent(context, bundle);
-			break;
 		case R.id.model_install:
 		case R.id.model_repair:
 			ModleSettings.doChoose(context, bundle);
