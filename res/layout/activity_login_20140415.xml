@@ -84,6 +84,17 @@
                 android:text="@string/button_register"
                 android:textColor="#ffff5065"
                 android:textSize="18sp" />
+            
+             <TextView
+                android:id="@+id/button_find_password"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="20dip"
+                android:clickable="true"
+                android:text="@string/button_find_password"
+                android:textColor="@color/blk"
+                android:textSize="18sp" />
         </LinearLayout>
     </ScrollView>
 

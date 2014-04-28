@@ -7,6 +7,7 @@
     <string name="hello_world">Hello world!</string>
     
     <string name="button_register">新用户注册</string>
+     <string name="button_find_password">找回密码</string>
     <string name="button_new_card">新建保修卡</string>
     <string name="button_my_card">我的保修卡</string>
     <string name="button_repair">故障报修</string>
@@ -235,4 +236,7 @@
      <string name="login_tip">请先登录</string>
      <string name="msg_yuyue_sucess">预约成功</string>
      <string name="msg_yuyue_fail">预约失败</string>
+     
+     <string name="msg_input_tel_when_find_password">请先输入要找回密码的手机号码</string>
+     <string name="msg_find_password_success">密码已成功找回，请查看短信</string>
 </resources>
