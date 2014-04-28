@@ -94,6 +94,9 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	
 	public static void startIntent(Context context, Bundle bundle) {
 		Intent intent = new Intent(context, RegisterConfirmActivity.class);
+		if (bundle == null) {
+			bundle = new Bundle();
+		}
 		intent.putExtras(bundle);
 		context.startActivity(intent);
 	}

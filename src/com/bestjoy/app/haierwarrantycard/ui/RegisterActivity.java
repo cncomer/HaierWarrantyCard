@@ -74,8 +74,9 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 	public static void startIntent(Context context, Bundle modelBundel) {
 		Intent intent = new Intent(context, RegisterActivity.class);
 		if (modelBundel == null) {
-			intent.putExtras(modelBundel);
+			modelBundel = new Bundle();
 		}
+		intent.putExtras(modelBundel);
 		context.startActivity(intent);
 	}
 

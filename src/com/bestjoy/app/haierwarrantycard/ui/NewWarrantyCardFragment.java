@@ -365,8 +365,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 				}
 			} else if (result) {
 				//添加成功
-				NewWarrantyCardFragment.this.getActivity().finish();
-				MyChooseDevicesActivity.startIntent(NewWarrantyCardFragment.this.getActivity(), ModleSettings.createMyCardDefaultBundle(NewWarrantyCardFragment.this.getActivity()));
+				getActivity().finish();
+				MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
 			} else {
 				MyApplication.getInstance().showMessage(mStatusMessage);
 			}
