@@ -230,7 +230,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 				boolean saveResult = mBaoxiuCardObject.saveInDatebase(this.getActivity().getContentResolver(), null);
 				if(saveResult) {
 					MyApplication.getInstance().showMessage(R.string.save_success);
-					MyChooseDevicesActivity.startIntent(this.getActivity(), ModleSettings.createMyCardDefaultBundle(this.getActivity()));
+					MyChooseDevicesActivity.startIntent(this.getActivity(), getArguments());
 				} else {
 					MyApplication.getInstance().showMessage(R.string.save_fail);
 				}
