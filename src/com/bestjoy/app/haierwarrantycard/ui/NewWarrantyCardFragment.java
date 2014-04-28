@@ -370,10 +370,10 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			showEmptyInputToast(R.string.product_brand);
 			return false;
 		}
-		if(TextUtils.isEmpty(mModelInput.getText().toString().trim())){
+		/*if(TextUtils.isEmpty(mModelInput.getText().toString().trim())){
 			showEmptyInputToast(R.string.product_model);
 			return false;
-		}
+		}*/
 		if(TextUtils.isEmpty(mBianhaoInput.getText().toString().trim())){
 			showEmptyInputToast(R.string.product_sn);
 			return false;
@@ -382,7 +382,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			showEmptyInputToast(R.string.product_tel);
 			return false;
 		}
-		if(TextUtils.isEmpty(mDatePickBtn.getText().toString().trim())){
+		/*if(TextUtils.isEmpty(mDatePickBtn.getText().toString().trim())){
 			showEmptyInputToast(R.string.product_buy_date);
 			return false;
 		}
@@ -405,7 +405,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		if(TextUtils.isEmpty(mYanbaoTelInput.getText().toString().trim())){
 			showEmptyInputToast(R.string.product_buy_delay_componey_tel);
 			return false;
-		}
+		}*/
 		return true;
 	}
 
