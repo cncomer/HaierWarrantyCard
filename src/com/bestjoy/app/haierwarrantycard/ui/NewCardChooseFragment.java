@@ -37,9 +37,11 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 	
 	private TextView mDalei, mXiaolei, mPinpai, mXinghao;
 	
-	private long mDaleiId = -1, mXiaoleiId = -1, mPinpaiId = -1, mXinghaoId = -1;
+	private long mDaleiId = -1, mPinpaiId = -1, mXinghaoId = -1;
 	/**当前选中的品牌的code码*/
 	private String mPinPaiCode = null;
+	/**选择的小类id,是字符型的，注意*/
+	private String mXiaoleiId = null;
 	
 	private BaoxiuCardObject mBaoxiuCardObject;
 	
@@ -186,7 +188,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 			case R.id.xiaolei:
 				return getActivity().getContentResolver().query(BjnoteContent.XiaoLei.CONTENT_URI, XIAOLEI_PROJECTION, XIAOLEI_SELECTION, new String[]{String.valueOf(mDaleiId)}, null);
 			case R.id.pinpai:
-				return getActivity().getContentResolver().query(BjnoteContent.PinPai.CONTENT_URI, PINPAI_PROJECTION, PINPAI_SELECTION, new String[]{String.valueOf(mXiaoleiId)}, null);
+				return getActivity().getContentResolver().query(BjnoteContent.PinPai.CONTENT_URI, PINPAI_PROJECTION, PINPAI_SELECTION, new String[]{mXiaoleiId}, null);
 			case R.id.xinghao:
 				//对于型号来说，由于要从服务器上获取，所以，这里的而处理与前三者不同，我们先要判断是否本地已经缓存了，有则直接使用，没有则先获取数据保存导本地再查询出来。
 				Cursor c = getActivity().getContentResolver().query(BjnoteContent.XingHao.CONTENT_URI, XinghaoObject.XINGHAO_PROJECTION, XinghaoObject.XINGHAO_CODE_SELECTION, new String[]{mPinPaiCode}, null);
@@ -268,7 +270,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 			}
 			break;
 		case R.id.title_pinpai:
-			if (mXiaoleiId != -1) {
+			if (mXiaoleiId != null) {
 				setListViewVisibility(View.GONE, View.GONE, mPinpaiListViews.getVisibility() == View.VISIBLE ? View.GONE:View.VISIBLE, View.GONE);
 				if (mPinpaiListViews.getTag() == null) {
 					loadDataAsync(mPinpaiListViews);
@@ -323,11 +325,11 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 			case R.id.xiaolei:
 				viewHoldr._id = cursor.getLong(0);
 				viewHoldr._dId = cursor.getLong(2);
-				viewHoldr._xId = cursor.getLong(3);
+				viewHoldr._xId = cursor.getString(3);
 				break;
 			case R.id.pinpai:
 				viewHoldr._id = cursor.getLong(0);
-				viewHoldr._xId = cursor.getLong(2);
+				viewHoldr._xId = cursor.getString(2);
 				viewHoldr._pId = cursor.getLong(3);
 				viewHoldr._pinpaiCode = cursor.getString(5);
 				break;
@@ -347,9 +349,9 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 	
 	private class ViewHolder {
 		private TextView _title;
-		private long _id, _dId, _xId, _pId, _xinghaoId;
+		private long _id, _dId, _pId, _xinghaoId;
 		private int _position;
-		private String _pinpaiCode, _mn, _ky;
+		private String _xId, _pinpaiCode, _mn, _ky;
 		
 	}
 	
@@ -376,7 +378,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 					mDaleiId = viewHolder._dId;
 					mDalei.setText(getGroupTitle(R.string.title_dalei, viewHolder._title.getText().toString()));
 					
-					mXiaoleiId = -1;
+					mXiaoleiId = null;
 					mXiaolei.setText(R.string.title_xiaolei);
 					
 					mPinpaiId = -1;
