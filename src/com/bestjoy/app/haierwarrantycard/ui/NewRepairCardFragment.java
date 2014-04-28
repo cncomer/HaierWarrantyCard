@@ -217,7 +217,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 				createRepairCardAsync();
 			} else {
 				MyApplication.getInstance().showMessage(R.string.msg_yuyue_fail);
-				LoginActivity.startIntent(this.getActivity());
+				LoginActivity.startIntent(this.getActivity(), getArguments());
 			}
 		}
 		

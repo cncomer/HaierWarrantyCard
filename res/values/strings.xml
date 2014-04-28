@@ -41,6 +41,7 @@
        <string name="product_brand">品牌名称</string>
        <string name="product_model">型号</string>
        <string name="product_sn">商品编号</string>
+       <string name="product_beizhu">备注标签</string>
        <string name="product_time">保修期</string>
        <string name="product_tel">保修电话</string>
        <string name="product_where">购买地点</string>

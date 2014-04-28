@@ -45,7 +45,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	//按钮
 	private Button mSaveBtn;
 	//商品信息
-	private EditText mTypeInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput;
+	private EditText mTypeInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput, mBeizhuTag;
 	//联系人信息
 	private EditText mContactNameInput, mContactTelInput;
 	private ProCityDisEditView mProCityDisEditView;
@@ -74,6 +74,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		 mModelInput = (EditText) view.findViewById(R.id.product_model_input);
 		 mBianhaoInput = (EditText) view.findViewById(R.id.product_sn_input);
 		 mBaoxiuTelInput = (EditText) view.findViewById(R.id.product_tel_input);
+		 mBeizhuTag = (EditText) view.findViewById(R.id.product_beizhu_tag);
 		 
 		 //联系人
 		 ((TextView) view.findViewById(R.id.people_info_title)).setTextColor(getResources().getColor(R.color.light_blue));
@@ -221,7 +222,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			urls[2] = "&UID=";
 			paths[2] = String.valueOf(mBaoxiuCardObject.mUID);
 			urls[3] = "&Note=";
-			paths[3] = "";
+			paths[3] = mBeizhuTag.getText().toString().trim();
 			urls[4] = "&AID=";
 			paths[4] = String.valueOf(mBaoxiuCardObject.mAID);
 			urls[5] = "&Type=";
