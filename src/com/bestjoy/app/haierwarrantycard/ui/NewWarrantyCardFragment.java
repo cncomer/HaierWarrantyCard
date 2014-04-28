@@ -26,14 +26,14 @@ import android.widget.TextView;
 
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.shwy.bestjoy.utils.DateUtils;
-import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.ImageHelper;
 import com.shwy.bestjoy.utils.InfoInterface;
-import com.shwy.bestjoy.utils.Intents;
 
 public class NewWarrantyCardFragment extends ModleBaseFragment implements View.OnClickListener{
 	private static final String TAG = "NewWarrantyCardFragment";
@@ -115,7 +115,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	
 	private void populateBaoxiuInfoView(BaoxiuCardObject object) {
 		//init layouts
-		if (object == null) {
+		mBaoxiuCardObject = object;
+		if (mBaoxiuCardObject == null) {
 			mTypeInput.getText().clear();
 			mPinpaiInput.getText().clear();
 			mModelInput.getText().clear();
@@ -127,22 +128,37 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			mYanbaoComponyInput.getText().clear();
 			mYanbaoTelInput.getText().clear();
 		} else {
-			mTypeInput.setText(object.mLeiXin);
-			mPinpaiInput.setText(object.mPinPai);
-			mModelInput.setText(object.mXingHao);
-			mBianhaoInput.setText(object.mSHBianHao);
-			mBaoxiuTelInput.setText(object.mBXPhone);
-			mPriceInput.setText(object.mBuyPrice);
-			mTujingInput.setText(object.mBuyTuJing);
-			mYanbaoTimeInput.setText(object.mYanBaoTime);
-			mYanbaoComponyInput.setText(object.mYanBaoDanWei);
+			mTypeInput.setText(mBaoxiuCardObject.mLeiXin);
+			mPinpaiInput.setText(mBaoxiuCardObject.mPinPai);
+			mModelInput.setText(mBaoxiuCardObject.mXingHao);
+			mBianhaoInput.setText(mBaoxiuCardObject.mSHBianHao);
+			mBaoxiuTelInput.setText(mBaoxiuCardObject.mBXPhone);
+			mPriceInput.setText(mBaoxiuCardObject.mBuyPrice);
+			mTujingInput.setText(mBaoxiuCardObject.mBuyTuJing);
+			mYanbaoTimeInput.setText(mBaoxiuCardObject.mYanBaoTime);
+			mYanbaoComponyInput.setText(mBaoxiuCardObject.mYanBaoDanWei);
 //			mYanbaoTelInput.setText(mBaoxiuCardObject.m);
 		}
 		
 	}
 	
-	public BaoxiuCardObject getmBaoxiuCardObject() {
-		return null;
+	private void getmBaoxiuCardObject() {
+		if(mBaoxiuCardObject == null) {
+			mBaoxiuCardObject = new BaoxiuCardObject();
+		}
+		mBaoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
+		mBaoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
+		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
+		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
+		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
+		
+		mBaoxiuCardObject.mBuyDate = mDatePickBtn.getText().toString().trim();
+		mBaoxiuCardObject.mBuyPrice = mPriceInput.getText().toString().trim();
+		mBaoxiuCardObject.mBuyTuJing = mTujingInput.getText().toString().trim();
+		
+		mBaoxiuCardObject.mYanBaoTime = mYanbaoTimeInput.getText().toString().trim();
+		mBaoxiuCardObject.mYanBaoDanWei = mYanbaoComponyInput.getText().toString().trim();
+		mBaoxiuCardObject.mYBPhone = mYanbaoTelInput.getText().toString().trim();
 	}
 	
 	
@@ -210,7 +226,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	private void saveNewWarrantyCard() {
 		if(checkInput()) {
 			if(HaierAccountManager.getInstance().hasLoginned()) {
-				updateWarrantyCardInfo();
+				getmBaoxiuCardObject();
 				boolean saveResult = mBaoxiuCardObject.saveInDatebase(this.getActivity().getContentResolver(), null);
 				if(saveResult) {
 					MyApplication.getInstance().showMessage(R.string.save_success);
@@ -220,7 +236,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 				}
 			} else {
 				MyApplication.getInstance().showMessage(R.string.login_tip);
-				LoginActivity.startIntent(this.getActivity());
+				LoginActivity.startIntent(this.getActivity(), getArguments());
 			}
 		}
 	}
@@ -276,25 +292,6 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	private void showEmptyInputToast(int resId) {
 		String msg = getResources().getString(resId);
 		MyApplication.getInstance().showMessage(getResources().getString(R.string.input_type_please_input) + msg);
-	}
-
-	private void updateWarrantyCardInfo() {
-		if(mBaoxiuCardObject == null) {
-			mBaoxiuCardObject = new BaoxiuCardObject();
-		}
-		mBaoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
-		mBaoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
-		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
-		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
-		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
-		
-		mBaoxiuCardObject.mBuyDate = mDatePickBtn.getText().toString().trim();
-		mBaoxiuCardObject.mBuyPrice = mPriceInput.getText().toString().trim();
-		mBaoxiuCardObject.mBuyTuJing = mTujingInput.getText().toString().trim();
-		
-		mBaoxiuCardObject.mYanBaoTime = mYanbaoTimeInput.getText().toString().trim();
-		mBaoxiuCardObject.mYanBaoDanWei = mYanbaoComponyInput.getText().toString().trim();
-		mBaoxiuCardObject.mYBPhone = mYanbaoTelInput.getText().toString().trim();
 	}
 
 	private void showDatePickerDialog() {
@@ -369,6 +366,10 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	public void updateInfoInterface(InfoInterface infoInterface) {
 		if (infoInterface instanceof BaoxiuCardObject) {
 			populateBaoxiuInfoView((BaoxiuCardObject)infoInterface);
+		} else if (infoInterface instanceof HomeObject) {
+			//do nothing
+		} else if (infoInterface instanceof AccountObject) {
+			//do nothing
 		}
 	}
 	

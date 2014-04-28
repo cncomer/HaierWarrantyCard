@@ -299,4 +299,22 @@ public class HomeObject implements InfoInterface{
 				|| !TextUtils.isEmpty(mHomePlaceDetail);
 	}
 	
+	private static HomeObject mHomeObject;
+	/**
+	 * 当我们设置过mHomeObject值后，需要使用这个方法来获取，这会重置mHomeObject对象为null.
+	 * @return
+	 */
+	public static HomeObject getHomeObject() {
+		HomeObject object = mHomeObject;
+		mHomeObject = null;
+		return object;
+	}
+	/**
+	 * 需要在Activity之间传递家对象的时候，需要调用该方法来设置，之后使用getHomeObject()来获得.
+	 * @param baoxiucardObject
+	 */
+	public static void setHomeObject(HomeObject homeObject) {
+		mHomeObject = homeObject;
+	}
+	
 }

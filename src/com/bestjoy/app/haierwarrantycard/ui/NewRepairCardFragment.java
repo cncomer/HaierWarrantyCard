@@ -15,7 +15,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
+import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView;
 import com.shwy.bestjoy.utils.DateUtils;
@@ -102,24 +104,62 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	}
 	
 	private void populateBaoxiuInfoView(BaoxiuCardObject baoxiuCardObject) {
-		if (baoxiuCardObject == null) {
+		//init layouts
+		mBaoxiuCardObject = baoxiuCardObject;
+		if (mBaoxiuCardObject == null) {
 			mTypeInput.getText().clear();
 			mPinpaiInput.getText().clear();
 			mModelInput.getText().clear();
 			mBianhaoInput.getText().clear();
 			mBaoxiuTelInput.getText().clear();
+			mContactNameInput.getText().clear();
+			mContactTelInput.getText().clear();
 		} else {
-			mTypeInput.setText(baoxiuCardObject.mLeiXin);
-			mPinpaiInput.setText(baoxiuCardObject.mPinPai);
-			mModelInput.setText(baoxiuCardObject.mXingHao);
-			mBianhaoInput.setText(baoxiuCardObject.mSHBianHao);
-			mBaoxiuTelInput.setText(baoxiuCardObject.mBXPhone);
+			mTypeInput.setText(mBaoxiuCardObject.mLeiXin);
+			mPinpaiInput.setText(mBaoxiuCardObject.mPinPai);
+			mModelInput.setText(mBaoxiuCardObject.mXingHao);
+			mBianhaoInput.setText(mBaoxiuCardObject.mSHBianHao);
+			mBaoxiuTelInput.setText(mBaoxiuCardObject.mBXPhone);
 		}
-		
 	}
 	
-	public BaoxiuCardObject getmBaoxiuCardObject() {
-		return null;
+	public void populateHomeInfoView(HomeObject homeObject) {
+		mProCityDisEditView.setHomeObject(homeObject);
+	}
+	
+    public void populateContactInfoView(AccountObject accountObject) {
+    	if(accountObject == null) {
+			mContactNameInput.getText().clear();
+			mContactTelInput.getText().clear();
+		} else {
+			mContactNameInput.setText(accountObject.mAccountName);
+			mContactTelInput.setText(accountObject.mAccountTel);
+			
+		}
+	}
+	
+	public BaoxiuCardObject getBaoxiuCardObject() {
+		if (mBaoxiuCardObject == null) {
+			mBaoxiuCardObject = new BaoxiuCardObject();
+		}
+		mBaoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
+		mBaoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
+		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
+		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
+		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
+		return mBaoxiuCardObject;
+	}
+	
+	public HomeObject getHomeObject() {
+		return mProCityDisEditView.getHomeObject();
+	}
+	
+
+	public AccountObject getContactInfoObject() {
+		AccountObject contactInfoObject = new AccountObject();
+		contactInfoObject.mAccountName = mContactNameInput.getText().toString().trim();
+		contactInfoObject.mAccountTel = mContactTelInput.getText().toString().trim();
+		return contactInfoObject;
 	}
 
 	@Override
@@ -182,6 +222,10 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	public void updateInfoInterface(InfoInterface infoInterface) {
 		if (infoInterface instanceof BaoxiuCardObject) {
 			populateBaoxiuInfoView((BaoxiuCardObject)infoInterface);
+		} else if (infoInterface instanceof HomeObject) {
+			populateHomeInfoView((HomeObject)infoInterface);
+		} else if (infoInterface instanceof AccountObject) {
+			populateContactInfoView((AccountObject) infoInterface);
 		}
 	}
 }

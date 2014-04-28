@@ -217,7 +217,7 @@
      <string name="msg_scan_finish_return_result_no_network">在返回之前会向服务器查询产品信息，请检查网络是否可用</string>
     <string name="menu_new_repair">预约维修</string>
     <string name="menu_new_install">预约安装</string>
-     <string name="menu_new_home">创建家</string>
+     <string name="menu_manage_home">管理家</string>
      
      <string name="title_scan_history">扫描历史</string>
      <string name="msg_can_not_access_network">抱歉，暂时无法访问服务器，请检查网络，稍后重试</string>

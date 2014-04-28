@@ -15,6 +15,8 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
+import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.shwy.bestjoy.utils.Intents;
@@ -23,7 +25,7 @@ import com.shwy.bestjoy.utils.Intents;
  * @author chenkai
  *
  */
-public class NewCardActivity extends BaseSlidingFragmentActivity implements View.OnClickListener, 
+public class NewCardActivity extends BaseSlidingFragmentActivity implements 
 	SlidingMenu.OnOpenedListener, SlidingMenu.OnClosedListener{
 	private static final String TAG = "NewCardActivity";
 	private ModleBaseFragment mContent;
@@ -61,6 +63,7 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements View
 				break;
 			}
 		}
+		mContent.setArguments(mBundles);
 		
 		if (mMenu == null) {
 			mMenu = new NewCardChooseFragment();
@@ -111,15 +114,6 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements View
 	}
 	
 	@Override
-	public void onClick(View v) {
-		switch(v.getId()) {
-		case R.id.button_save:
-			LoginActivity.startIntent(this);
-			break;
-		}
-	}
-	
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.new_card_activity_menu, menu);
 		return true;
@@ -143,7 +137,12 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements View
 	public void onResume() {
 		super.onResume();
 		if (mIsFirstOnResume) {
+			//更新产品信息
 			mContent.updateInfoInterface(BaoxiuCardObject.getBaoxiuCardObject());
+			//更新家信息
+			mContent.updateInfoInterface(HomeObject.getHomeObject());
+			//更新联系人信息，默认是用的账户信息
+			mContent.updateInfoInterface(HaierAccountManager.getInstance().getAccountObject());
 			mIsFirstOnResume = false;
 		}
 	}

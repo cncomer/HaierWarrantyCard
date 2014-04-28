@@ -144,25 +144,23 @@ public class ModleSettings {
 	}
 	
 	/**
-	 * 处理设备选择后的回调
+	 * 处理设备选择后的回调,注意的是我的保修卡选择后要进入到保修卡详细界面
 	 * @param type
 	 */
 	public static void doChoose(Context context, Bundle bundle) {
-//		int type = bundle.getInt(Intents.EXTRA_TYPE);
-//		switch(type) {
-//		case R.id.model_my_card:
-//			NewCardActivity.startIntent(context, bundle);
-//			break;
-//		case R.id.model_install:
-//			InstallActivity.startIntent(context, bundle);
-//			break;
-//		case R.id.model_repair:
-//			RepairActivity.startIntent(context, bundle);
-//			break;
-//		case R.id.model_feedback:
-//			break;
-//		}
-		NewCardActivity.startIntent(context, bundle);
+		int type = ModleSettings.getModelIdFromBundle(bundle);
+		switch(type) {
+		case R.id.model_my_card:
+			//我的保修卡有点不同，选择设备会进入到详细界面
+			
+			break;
+		case R.id.model_install:
+		case R.id.model_repair:
+			NewCardActivity.startIntent(context, bundle);
+		case R.id.model_feedback:
+			break;
+		}
+		
 	}
 	
 	public static boolean createActionBarMenu(Menu menu, Bundle bundle) {
@@ -193,6 +191,8 @@ public class ModleSettings {
 	public static boolean onActionBarMenuSelected(MenuItem item, Context context, Bundle bundle) {
 		switch(item.getItemId()) {
 		case R.id.model_my_card:
+			NewCardActivity.startIntent(context, bundle);
+			break;
 		case R.id.model_install:
 		case R.id.model_repair:
 			ModleSettings.doChoose(context, bundle);
@@ -236,4 +236,11 @@ public class ModleSettings {
 		return bundle;
 	}
 
+	
+	public static int getModelIdFromBundle(Bundle modelBundle) {
+		if (modelBundle == null) {
+			return -1;
+		}
+		return modelBundle.getInt(Intents.EXTRA_TYPE, -1);
+	}
 }

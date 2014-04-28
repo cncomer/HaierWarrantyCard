@@ -28,7 +28,7 @@ public class MenuHandlerUtils {
         switch (item.getItemId()) {
         // Respond to the action bar's Up/Home button
         case R.string.menu_login:
-        	LoginActivity.startIntent(context);
+        	LoginActivity.startIntent(context, null);
      	   break;
         case R.string.menu_register:
         	RegisterActivity.startIntent(context);

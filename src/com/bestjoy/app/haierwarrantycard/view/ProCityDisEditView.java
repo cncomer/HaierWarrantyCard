@@ -115,14 +115,23 @@ public class ProCityDisEditView extends LinearLayout{
 	}
 	
 	private void initHomeView(HomeObject homeObject) {
-		if (!TextUtils.isEmpty(homeObject.mHomeName)) {
-			mHomeName.setText(homeObject.mHomeName);
+		if (homeObject == null) {
+			mHomeName.getText().clear();
+			mProEditView.getText().clear();
+			mCityEditView.getText().clear();
+			mDisEditView.getText().clear();
+			mAddressEditView.getText().clear();
+		} else {
+			if (!TextUtils.isEmpty(homeObject.mHomeName)) {
+				mHomeName.setText(homeObject.mHomeName);
+			}
+			
+			mProEditView.setText(homeObject.mHomeProvince);
+			mCityEditView.setText(homeObject.mHomeCity);
+			mDisEditView.setText(homeObject.mHomeDis);
+			mAddressEditView.setText(homeObject.mHomePlaceDetail);
 		}
 		
-		mProEditView.setText(homeObject.mHomeProvince);
-		mCityEditView.setText(homeObject.mHomeCity);
-		mDisEditView.setText(homeObject.mHomeDis);
-		mAddressEditView.setText(homeObject.mHomePlaceDetail);
 	}
 	
 	private class AddressAdapter extends CursorAdapter {

@@ -27,8 +27,8 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 	private Button mLoginBtn;
 	private EditText mTelInput, mPasswordInput;
 	public static AccountObject mAccountObject;
-	/**进入界面请求*/
-	private int mRequestId;
+	/**进入界面请求,如新建我的保修卡进来的*/
+	private int mModelId;
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
@@ -41,7 +41,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 		if (isFinishing()) {
 			return ;
 		}
-		mRequestId = this.getIntent().getIntExtra(Intents.EXTRA_NAME, -1);
+		mModelId = ModleSettings.getModelIdFromBundle(getIntent().getExtras());
 		setContentView(R.layout.activity_login_20140415);
 		initViews();
 	}
@@ -98,12 +98,17 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 			if (resultCode == Activity.RESULT_OK) {
 				// login successfully
 				MyApplication.getInstance().showMessage(R.string.msg_login_confirm_success);
-				
-				if(mRequestId == R.id.model_my_card){
-					finish();
-				} else {					
+				switch(mModelId) {
+				case R.id.model_my_card:
+				case R.id.model_install:
+				case R.id.model_repair:
 					MyChooseDevicesActivity.startIntent(mContext, ModleSettings.createMyCardDefaultBundle(mContext));
 					finish();
+					break;
+					default : //其他情况我们回到主界面，海尔要求
+						MainActivity.startActivityForTop(mContext);
+						finish();
+						break;
 				}
 			}
 		} else {
@@ -111,14 +116,12 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 		}
 	}
 	
-	public static void startIntent(Context context) {
+	public static void startIntent(Context context, Bundle modelBundle) {
 		Intent intent = new Intent(context, LoginActivity.class);
-		context.startActivity(intent);
-	}
-	
-	public static void startIntent(Context context, int requestID) {
-		Intent intent = new Intent(context, LoginActivity.class);
-		intent.putExtra(Intents.EXTRA_NAME, requestID);
+		if (modelBundle == null) {
+			modelBundle = new Bundle();
+		}
+		intent.putExtras(modelBundle);
 		context.startActivity(intent);
 	}
 	

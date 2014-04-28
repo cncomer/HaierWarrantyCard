@@ -31,6 +31,9 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	private boolean mIsChooseDevice = false;
 	
 	private Bundle mBundle = null;
+	
+	private int mHomeSelected = 0;
+	private MyPagerAdapter mMyPagerAdapter;
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
@@ -60,14 +63,15 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 			setTitle(title);
 		}
 		mViewPager = (ViewPager) findViewById(R.id.pagerview);
-		mViewPager.setAdapter(new MyPagerAdapter(this.getSupportFragmentManager()));
+		mMyPagerAdapter = new MyPagerAdapter(this.getSupportFragmentManager());
+		mViewPager.setAdapter(mMyPagerAdapter);
 	}
 	
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		ModleSettings.createActionBarMenu(menu, mBundle);
-		MenuItem homeItem = menu.add(R.string.menu_new_home, R.string.menu_new_home, 0, R.string.menu_new_home);
+		MenuItem homeItem = menu.add(R.string.menu_manage_home, R.string.menu_manage_home, 0, R.string.menu_manage_home);
 		homeItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
@@ -75,7 +79,8 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
-		case R.string.menu_new_home:
+		case R.string.menu_manage_home:
+			//管理家
 			break;
 		default:
 			boolean handle = ModleSettings.onActionBarMenuSelected(item, mContext, mBundle);
@@ -122,7 +127,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 
 		@Override
 		public void onPageSelected(int arg0) {
-			
+			mHomeSelected = arg0;
 		}
 
 		@Override
@@ -168,6 +173,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	    	//一些特殊的操作，可以放在这里，目前暂不需要实现
 	    }
 	    BaoxiuCardObject.setBaoxiuCardObject(card);
+	    HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected));
     	ModleSettings.doChoose(mContext, mBundle);
 		
 	}

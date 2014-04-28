@@ -32,7 +32,7 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
-import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
+import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
@@ -55,7 +55,6 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	private Calendar mCalendar;
 	
 	private BaoxiuCardObject mBaoxiuCardObject;
-	private AccountObject mAccountObject;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -63,8 +62,6 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		setHasOptionsMenu(true);
 		getActivity().setTitle(R.string.activity_title_install);
 		mCalendar = Calendar.getInstance();
-		mBaoxiuCardObject = new BaoxiuCardObject();
-		mAccountObject = HaierAccountManager.getInstance().getAccountObject();
 	}
 	
 	@Override
@@ -109,7 +106,8 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	
 	private void populateBaoxiuInfoView(BaoxiuCardObject baoxiuCardObject) {
 		//init layouts
-		if (baoxiuCardObject == null) {
+		mBaoxiuCardObject = baoxiuCardObject;
+		if (mBaoxiuCardObject == null) {
 			mTypeInput.getText().clear();
 			mPinpaiInput.getText().clear();
 			mModelInput.getText().clear();
@@ -118,28 +116,52 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			mContactNameInput.getText().clear();
 			mContactTelInput.getText().clear();
 		} else {
-			mTypeInput.setText(baoxiuCardObject.mLeiXin);
-			mPinpaiInput.setText(baoxiuCardObject.mPinPai);
-			mModelInput.setText(baoxiuCardObject.mXingHao);
-			mBianhaoInput.setText(baoxiuCardObject.mSHBianHao);
-			mBaoxiuTelInput.setText(baoxiuCardObject.mBXPhone);
+			mTypeInput.setText(mBaoxiuCardObject.mLeiXin);
+			mPinpaiInput.setText(mBaoxiuCardObject.mPinPai);
+			mModelInput.setText(mBaoxiuCardObject.mXingHao);
+			mBianhaoInput.setText(mBaoxiuCardObject.mSHBianHao);
+			mBaoxiuTelInput.setText(mBaoxiuCardObject.mBXPhone);
 		}
-		
-		if(mAccountObject == null) {
+	}
+	
+	public void populateHomeInfoView(HomeObject homeObject) {
+		mProCityDisEditView.setHomeObject(homeObject);
+	}
+	
+    public void populateContactInfoView(AccountObject accountObject) {
+    	if(accountObject == null) {
 			mContactNameInput.getText().clear();
 			mContactTelInput.getText().clear();
 		} else {
-			mContactNameInput.setText(mAccountObject.mAccountName);
-			mContactTelInput.setText(mAccountObject.mAccountTel);
-			mProCityDisEditView.setHomeObject(mAccountObject.mAccountHomes.get(1));
+			mContactNameInput.setText(accountObject.mAccountName);
+			mContactTelInput.setText(accountObject.mAccountTel);
+			
 		}
-		
 	}
 	
-	public BaoxiuCardObject getmBaoxiuCardObject() {
-		return null;
+	public BaoxiuCardObject getBaoxiuCardObject() {
+		if (mBaoxiuCardObject == null) {
+			mBaoxiuCardObject = new BaoxiuCardObject();
+		}
+		mBaoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
+		mBaoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
+		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
+		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
+		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
+		return mBaoxiuCardObject;
 	}
+	
+	public HomeObject getHomeObject() {
+		return mProCityDisEditView.getHomeObject();
+	}
+	
 
+	public AccountObject getContactInfoObject() {
+		AccountObject contactInfoObject = new AccountObject();
+		contactInfoObject.mAccountName = mContactNameInput.getText().toString().trim();
+		contactInfoObject.mAccountTel = mContactTelInput.getText().toString().trim();
+		return contactInfoObject;
+	}
 	@Override
 	public void onClick(View v) {
 		switch(v.getId()) {
@@ -162,11 +184,10 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	private void createNewInatallCard() {
 		if(checkInput()) {
 			if(HaierAccountManager.getInstance().hasLoginned()) {
-				updateNewInstallCardInfo();
 				createNewInatallCardAsync();
 			} else {
 				MyApplication.getInstance().showMessage(R.string.msg_yuyue_fail);
-				LoginActivity.startIntent(this.getActivity());
+				LoginActivity.startIntent(this.getActivity(), getArguments());
 			}
 		}
 		
@@ -191,6 +212,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			final int LENGTH = 9;
 			String[] urls = new String[LENGTH];
 			String[] paths = new String[LENGTH];
+			
 			urls[0] = HaierServiceObject.SERVICE_URL + "AddYuYue.ashx?Date=";
 			paths[0] = mYuyueDate.getText().toString().trim();
 			urls[1] = "&Time=";
@@ -265,16 +287,6 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			super.onCancelled();
 			getProgressDialog().dismiss();
 		}
-	}
-	private void updateNewInstallCardInfo() {
-		if(mBaoxiuCardObject == null) {
-			mBaoxiuCardObject = new BaoxiuCardObject();
-		}
-		mBaoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
-		mBaoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
-		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
-		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
-		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
 	}
 
 	private boolean checkInput() {
@@ -378,6 +390,10 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	public void updateInfoInterface(InfoInterface infoInterface) {
 		if (infoInterface instanceof BaoxiuCardObject) {
 			populateBaoxiuInfoView((BaoxiuCardObject)infoInterface);
+		} else if (infoInterface instanceof HomeObject) {
+			populateHomeInfoView((HomeObject)infoInterface);
+		} else if (infoInterface instanceof AccountObject) {
+			populateContactInfoView((AccountObject) infoInterface);
 		}
 	}
 }
