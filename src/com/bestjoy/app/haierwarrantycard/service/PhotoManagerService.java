@@ -62,7 +62,7 @@ public class PhotoManagerService extends Service{
 	}
 	
 	public void requestToken(String token) {
-		mPhotoManagerUtils.releaseToken(token);
+		mPhotoManagerUtils.requestToken(token);
 	}
 	
 	public void releaseToken(String token) {

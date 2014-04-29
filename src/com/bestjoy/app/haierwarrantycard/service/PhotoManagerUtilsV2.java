@@ -31,6 +31,7 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
@@ -117,7 +118,7 @@ public class PhotoManagerUtilsV2 {
      */
     private static String checkPhotoId(String photoId, TaskType type) {
     	switch(type) {
-    	case HOMEDEVICE:
+    	case HOME_DEVICE_AVATOR:
 			default:
 				return photoId;
 		}
@@ -147,11 +148,11 @@ public class PhotoManagerUtilsV2 {
 //		mContext.getCacheDir().mkdirs();
 	}
 	
-	/*public*/ void setAvatorSize(int width, int height) {
+	public void setAvatorSize(int width, int height) {
 		mCurrentImageSize = Math.min(width, height);
 	}
 	
-	/*public*/ void requestToken(String token) {
+	public void requestToken(String token) {
 		if (mAsyncTaskTokenMap.containsKey(token)) {
 		    cancel(token);
 		} else {
@@ -159,7 +160,7 @@ public class PhotoManagerUtilsV2 {
 		}
 	}
 	
-	/*public*/ void releaseToken(String token) {
+	public void releaseToken(String token) {
 		if (mAsyncTaskTokenMap.containsKey(token)) {
 			cancel(token);
 			mAsyncTaskTokenMap.remove(token);
@@ -325,7 +326,7 @@ public class PhotoManagerUtilsV2 {
 		DebugUtils.logPhotoUtils(TAG, "srcBitmap getWidth " + width + " getHeight " + height);
 		float currentImageSize = 0f;
 		switch(type) {
-		case HOMEDEVICE:
+		case HOME_DEVICE_AVATOR:
 			break;
 			default:
 				break;
@@ -345,7 +346,7 @@ public class PhotoManagerUtilsV2 {
 	
 	public Bitmap getDefaultBitmap(TaskType type) {
 		switch(type) {
-		case HOMEDEVICE:
+		case HOME_DEVICE_AVATOR:
 		case PREVIEW:
 			default:
 				return mDefaultBitmap; 
@@ -430,7 +431,7 @@ public class PhotoManagerUtilsV2 {
         return null;
     }
     /**�첽����ͼƬ�����ܻ���Ҫ�ӷ�����������*/
-	void loadPhotoAsync(String token, ImageView imageView, String photoId, byte[] photo, TaskType type) {
+	public void loadPhotoAsync(String token, ImageView imageView, String photoId, byte[] photo, TaskType type) {
 		if (cancelPotentialDownload(photoId, imageView)) {
 			
 			
@@ -448,8 +449,8 @@ public class PhotoManagerUtilsV2 {
 	    }
 	}
 	
-	/**�첽���뱾��ͼƬ�ļ�*/
-	void loadLocalPhotoAsync(String token, ImageView imageView, String photoId, byte[] photo, TaskType type) {
+	/**异步载入图片，可能会需要从服务器上下载*/
+	public void loadLocalPhotoAsync(String token, ImageView imageView, String photoId, byte[] photo, TaskType type) {
 		if (cancelPotentialDownload(photoId, imageView)) {
 			
             Bitmap avatar = getBitmapFromCache(photoId, type);
@@ -466,7 +467,7 @@ public class PhotoManagerUtilsV2 {
             }
 	    }
 	}
-	/**�첽����ͼƬ�����ܻ���Ҫ�ӷ�����������*/
+	/**异步载入本地图片文件*/
 	private void internalLoadPhotoAsync(String token, ImageView imageView, String photoId, TaskType type, byte[] photo) {
 		DebugUtils.logPhotoUtils(TAG, "step 1 set default bitmap");
 //		imageView.setImageBitmap(getDefaultBitmap(type));
@@ -568,7 +569,8 @@ public class PhotoManagerUtilsV2 {
 	
 	public static File getFileToSave(TaskType type, String photoId) {
 		switch(type) {
-		case HOMEDEVICE:
+		case HOME_DEVICE_AVATOR:
+			return MyApplication.getInstance().getProductPreviewAvatorFile(photoId);
 		case PREVIEW:
 		}
 		return null;
@@ -577,7 +579,9 @@ public class PhotoManagerUtilsV2 {
 	public static String getServiceUrl(TaskType type, String photoId) {
 		switch(type) {
 		case PREVIEW:
-		case HOMEDEVICE:
+			return null;
+		case HOME_DEVICE_AVATOR:
+			return HaierServiceObject.getProdcutAvatorUrl(photoId);
 		}
 		return null;
 	}
@@ -702,7 +706,7 @@ public class PhotoManagerUtilsV2 {
 	
 	public enum TaskType {
 		PREVIEW("PreviewVcfType"),
-		HOMEDEVICE("HomeDeviceType");
+		HOME_DEVICE_AVATOR("HomeDeviceAvatorType");  //设备avator
 		private String mTypeName;
 		TaskType(String typeName) {
 			mTypeName=typeName;

@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.CursorAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,10 +21,12 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
+import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
+import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2.TaskType;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 
 public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemClickListener{
-	
+	private static final String TOKEN = HomeBaoxiuCardFragment.class.getName();
 	private HomeObject mHomeObject;
 	private ListView mListView;
 	private CardsAdapter mCardsAdapter;
@@ -42,6 +45,7 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		PhotoManagerUtilsV2.getInstance().requestToken(TOKEN);
 		mContentObserver = new ContentObserver(new Handler()) {
 			@Override
 			public void onChange(boolean selfChange) {
@@ -78,6 +82,7 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 	public void onDestroy() {
 		super.onDestroy();
 		mHomeObject = null;
+		PhotoManagerUtilsV2.getInstance().releaseToken(TOKEN);
 	}
 
 
@@ -139,6 +144,7 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 				holder._xinghao = (TextView) view.findViewById(R.id.xinghao);
 				holder._title2 = (TextView) view.findViewById(R.id.title2);
 				holder._title3 = (TextView) view.findViewById(R.id.title3);
+				holder._avator = (ImageView) view.findViewById(R.id.avator);
 				view.setTag(holder);
 			}
 			//设置view
@@ -146,7 +152,7 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 			holder._pinpai.setText(card.mPinPai);
 			holder._xinghao.setText(card.mXingHao);
 			holder._card = card;
-			
+			PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, holder._avator , card.mKY, null, TaskType.HOME_DEVICE_AVATOR);
 			//整机保修
 			int validity = card.getBaoxiuValidity();
 			if (validity > 0) {
@@ -177,6 +183,7 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 		private TextView _tag, _pinpai, _xinghao, _title2, _title3;
 		//分别是部件保修和整机保修布局(整个)
 		private View _component, _zhengji;
+		private ImageView _avator;
 		private BaoxiuCardObject _card;
 		
 	}

@@ -1,5 +1,7 @@
 package com.bestjoy.app.haierwarrantycard;
 
+import java.io.File;
+
 import android.app.Application;
 import android.content.SharedPreferences;
 import android.os.Environment;
@@ -79,6 +81,56 @@ public class MyApplication extends Application{
 	
 	public synchronized static MyApplication getInstance() {
 		return mInstance;
+	}
+	
+	public File getCachedContactFile(String name) {
+		return new File(getFilesDir(), name+ ".vcf");
+	}
+	
+	public File getAppFilesDir(String dirName) {
+		File root = new File(getFilesDir(), dirName);
+		if (!root.exists()) {
+			root.mkdirs();
+		}
+		return root;
+	}
+	
+	public File getAccountsRoot() {
+		File accountsRoot = getAppFilesDir("accounts");
+		
+		if (!accountsRoot.exists()) {
+			accountsRoot.mkdirs();
+		}
+		return accountsRoot;
+	}
+	
+	public File getAccountDir(String accountMd) {
+		File accountRoot = new File(getAppFilesDir("accounts"), accountMd);
+		
+		if (!accountRoot.exists()) {
+			accountRoot.mkdirs();
+		}
+		return accountRoot;
+	}
+	
+	/**返回产品图像文件files/product/avator*/
+	public File getProductPreviewAvatorFile(String photoid) {
+		return new File(getProductSubDir("avator"), photoid+ ".p");
+	}
+	
+	public File getProductDir() {
+		File productRoot = new File(getAppFilesDir("accounts"), "product");
+		if (!productRoot.exists()) {
+			productRoot.mkdirs();
+		}
+		return productRoot;
+	}
+	public File getProductSubDir(String dirName) {
+		File productRoot = new File(getProductDir(), dirName);
+		if (!productRoot.exists()) {
+			productRoot.mkdirs();
+		}
+		return productRoot;
 	}
 	
 	@Override
