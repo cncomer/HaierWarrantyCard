@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,6 +24,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TimePicker;
 
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
@@ -96,7 +98,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		 /*mProCityDisEditView = (ProCityDisEditView) view.findViewById(R.id.home);
 		 //不要显示HomeName输入框
 		 mProCityDisEditView.setHomeEditVisiable(View.GONE);*/
-		 mProCityDisEditPopView = new ProCityDisEditPopView(this.getActivity(), view.findViewById(R.id.edit_province), view.findViewById(R.id.edit_city), view.findViewById(R.id.edit_district));
+		 mProCityDisEditPopView = new ProCityDisEditPopView(this.getActivity(), view);
 		 
 		 //语音
 		 mAskInput = (EditText) view.findViewById(R.id.product_ask_online_input);
@@ -230,6 +232,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			showDatePickerDialog();
 			break;
 		case R.id.time:
+			showTimePickerDialog();
 			break;
 		case R.id.button_speak:
 			mSpeechRecognizerEngine.showIatDialog(getActivity());
@@ -428,6 +431,19 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 				
 		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH))
 		.show();
+	}
+	
+	private void showTimePickerDialog() {
+        new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+			@Override
+			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+				mCalendar.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
+				mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT.format(new Date(mCalendar.getTimeInMillis())));
+			}
+        	
+        }, mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE), true)
+        .show();
+
 	}
 	
 	@Override

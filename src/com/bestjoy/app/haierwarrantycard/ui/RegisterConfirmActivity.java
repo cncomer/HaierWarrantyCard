@@ -29,6 +29,7 @@ import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditPopView;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.Intents;
@@ -38,7 +39,7 @@ import com.shwy.bestjoy.utils.NetworkUtils;
 public class RegisterConfirmActivity extends BaseActionbarActivity implements View.OnClickListener{
 	private static final String TAG = "RegisterActivity";
 
-	private ProCityDisEditView mProCityDisEditView;
+	private ProCityDisEditPopView mProCityDisEditPopView;
 	
 	private EditText mUsrNameEditText;
 	private EditText usrPwdEditText;
@@ -81,8 +82,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	}
 
 	private void initViews() {
-		mProCityDisEditView = (ProCityDisEditView) findViewById(R.id.home);
-		mProCityDisEditView.setHomeEditVisiable(View.GONE);
+		 mProCityDisEditPopView = new ProCityDisEditPopView(this); 
 		
 		mUsrNameEditText = (EditText) findViewById(R.id.usr_name);
 		usrPwdEditText = (EditText) findViewById(R.id.usr_pwd);
@@ -116,7 +116,6 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			mError = null;
 			InputStream is = null;
 			final int LENGTH = 7;
-			mHomeObject = mProCityDisEditView.getHomeObject();
 			String[] urls = new String[LENGTH];
 			String[] paths = new String[LENGTH];
 			urls[0] = HaierServiceObject.SERVICE_URL + "Register.ashx?cell=";
@@ -198,6 +197,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 					MyApplication.getInstance().showMessage(mError);
 				}
 			} else if (result) {
+				MyApplication.getInstance().showMessage(mAccountObject.mStatusMessage);
 				//注册成功，如果是先新建后注册，那么回到选择列表
 				int modelId = ModleSettings.getModelIdFromBundle(mBundles);
 				switch(modelId) {
@@ -235,7 +235,8 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 				mAccountObject.mAccountPwd = usrPwdEditText.getText().toString().trim();
 				usrPwdConfirm = usrPwdConfirmEditText.getText().toString().trim();
 
-				mProCityDisEditView.updateHomeObject();
+				mHomeObject = mProCityDisEditPopView.getHomeObject();
+				mProCityDisEditPopView.updateHomeObject();
 				if(valiInput()) {
 					registerAsync();
 				}

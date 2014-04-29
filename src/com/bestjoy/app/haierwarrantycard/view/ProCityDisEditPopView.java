@@ -33,6 +33,7 @@ public class ProCityDisEditPopView implements OnTouchListener {
 	private EditText mProEditView;
 	private EditText mCityEditView;
 	private EditText mDisEditView;
+	private EditText mPlaceDetail;
 	private View popupView;
 	private PopupWindow mPopupWindow;
 	private GridView gridView;
@@ -64,55 +65,20 @@ public class ProCityDisEditPopView implements OnTouchListener {
 		HaierDBHelper.DEVICE_DIS_NAME,
 		HaierDBHelper.DEVICE_DIS_CID,
 	};
-	public ProCityDisEditPopView(Context context, View pro, View city, View dis) {
+	public ProCityDisEditPopView(Context context, View view) {
 		mContext = context;
 		mHomeObject = new HomeObject();
-		initViews(pro, city, dis);
+		initViews(view);
+		intiData();
+	}
+	public ProCityDisEditPopView(Context context) {
+		mContext = context;
+		mHomeObject = new HomeObject();
+		initViews(context);
 		intiData();
 	}
 	
 	private void intiData() {
-		mAddressAdapter = new AddressAdapter();
-		gridView.setAdapter(mAddressAdapter);
-
-		final Display display = ((Activity) mContext).getWindow()
-				.getWindowManager().getDefaultDisplay();
-		if (display != null) {
-			screenWidth = display.getWidth();
-			screenHeight = display.getHeight();
-		}
-		int size = screenWidth > screenHeight ? screenWidth : screenHeight;
-		gridView.setHorizontalSpacing(((int) (size * 0.01)));
-		gridView.setVerticalSpacing(((int) (size * 0.01)));
-		gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
-		gridView.setNumColumns(GridView.AUTO_FIT);
-		gridView.setColumnWidth(((int) (size * 0.15)));
-		gridView.setOnItemClickListener(gridItemClickListener);
-	}
-
-	public String getProName() {
-		return mHomeObject.mHomeProvince;
-	}
-
-	public String getCityName() {
-		return mHomeObject.mHomeCity;
-	}
-
-	public String getDisName() {
-		return mHomeObject.mHomeDis;
-	}
-	private void initViews(View pro, View city, View dis) {
-		mProEditView = (EditText) pro;
-		mCityEditView = (EditText) city;
-		mDisEditView = (EditText) dis;
-		
-		mProEditView.setOnTouchListener(this);
-		mCityEditView.setOnTouchListener(this);
-		mDisEditView.setOnTouchListener(this);
-		mProEditView.setInputType(InputType.TYPE_NULL);
-		mCityEditView.setInputType(InputType.TYPE_NULL);
-		mDisEditView.setInputType(InputType.TYPE_NULL);
-		
 		popupView = ((Activity) mContext).getLayoutInflater().inflate(R.layout.layout_popupwindow, null);
 		
 		mAddressAdapter = new AddressAdapter();
@@ -133,6 +99,47 @@ public class ProCityDisEditPopView implements OnTouchListener {
 		gridView.setNumColumns(GridView.AUTO_FIT);
 		gridView.setColumnWidth(((int) (size * 0.15)));
 		gridView.setOnItemClickListener(gridItemClickListener);
+		mAddressAdapter = new AddressAdapter();
+		gridView.setAdapter(mAddressAdapter);
+	}
+
+	public String getProName() {
+		return mHomeObject.mHomeProvince;
+	}
+
+	public String getCityName() {
+		return mHomeObject.mHomeCity;
+	}
+
+	public String getDisName() {
+		return mHomeObject.mHomeDis;
+	}
+
+	private void initViews(Context context) {
+		mProEditView = (EditText) ((Activity) context).findViewById(R.id.edit_province);
+		mCityEditView = (EditText) ((Activity) context).findViewById(R.id.edit_city);
+		mDisEditView = (EditText) ((Activity) context).findViewById(R.id.edit_district);
+		mPlaceDetail = (EditText) ((Activity) context).findViewById(R.id.edit_place_detail);
+
+		mProEditView.setOnTouchListener(this);
+		mCityEditView.setOnTouchListener(this);
+		mDisEditView.setOnTouchListener(this);
+		mProEditView.setInputType(InputType.TYPE_NULL);
+		mCityEditView.setInputType(InputType.TYPE_NULL);
+		mDisEditView.setInputType(InputType.TYPE_NULL);
+	}
+	private void initViews(View view) {
+		mProEditView = (EditText) view.findViewById(R.id.edit_province);
+		mCityEditView = (EditText) view.findViewById(R.id.edit_city);
+		mDisEditView = (EditText) view.findViewById(R.id.edit_district);
+		mPlaceDetail = (EditText) view.findViewById(R.id.edit_place_detail);
+		
+		mProEditView.setOnTouchListener(this);
+		mCityEditView.setOnTouchListener(this);
+		mDisEditView.setOnTouchListener(this);
+		mProEditView.setInputType(InputType.TYPE_NULL);
+		mCityEditView.setInputType(InputType.TYPE_NULL);
+		mDisEditView.setInputType(InputType.TYPE_NULL);
 	}
 
 	@Override
@@ -310,14 +317,24 @@ public class ProCityDisEditPopView implements OnTouchListener {
 	}
 	
 	public void updateHomeObject() {
+		mHomeObject.mHomeProvince = mProEditView.getText().toString().trim();
+		mHomeObject.mHomeCity = mCityEditView.getText().toString().trim();
+		mHomeObject.mHomeDis = mDisEditView.getText().toString().trim();
+		mHomeObject.mHomePlaceDetail = mPlaceDetail.getText().toString().trim();
+	}
+	
+	public void updateEditText() {
 		mProEditView.setText(mHomeObject.mHomeProvince);
 		mCityEditView.setText(mHomeObject.mHomeCity);
 		mDisEditView.setText(mHomeObject.mHomeDis);
+		mPlaceDetail.setText(mHomeObject.mHomePlaceDetail);
 		
 	}
 
-
 	public HomeObject getHomeObject() {
-		return this.mHomeObject;
+		if(mHomeObject == null) {
+			mHomeObject = new HomeObject();
+		}
+		return mHomeObject;
 	}
 }

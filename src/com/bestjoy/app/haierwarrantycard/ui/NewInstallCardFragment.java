@@ -83,7 +83,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		 view.findViewById(R.id.people_info_divider).setBackgroundResource(R.color.light_blue);
 		 mContactNameInput = (EditText) view.findViewById(R.id.contact_name_input);
 		 mContactTelInput = (EditText) view.findViewById(R.id.contact_tel_input);
-		 mProCityDisEditPopView = new ProCityDisEditPopView(this.getActivity(), view.findViewById(R.id.edit_province), view.findViewById(R.id.edit_city), view.findViewById(R.id.edit_district)); 
+		 mProCityDisEditPopView = new ProCityDisEditPopView(this.getActivity(), view); 
 		 
 		 //预约时间
 		 ((TextView) view.findViewById(R.id.yuyue_info_title)).setTextColor(getResources().getColor(R.color.light_blue));

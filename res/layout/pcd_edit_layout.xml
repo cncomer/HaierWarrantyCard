@@ -39,6 +39,20 @@
 	        android:layout_height="wrap_content"
 	        android:text="@string/district" />
 	</LinearLayout>
-			
+			<LinearLayout
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:orientation="horizontal">
+	    <TextView
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:visibility="invisible"
+	        android:text="@string/address" />
+	    <EditText     
+	        android:id="@+id/edit_place_detail"    
+                  style="@style/ProductInfoInputPlace" 
+                  android:layout_weight="1"
+	    	android:inputType="none"/>
+	</LinearLayout>
 
 </LinearLayout>

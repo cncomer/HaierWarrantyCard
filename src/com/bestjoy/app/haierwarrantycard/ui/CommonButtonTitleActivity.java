@@ -180,7 +180,7 @@ public abstract class CommonButtonTitleActivity extends FragmentActivity impleme
 			.create();
 			 //add by chenkai, 20131201, add network check
 	      case DIALOG_DATA_NOT_CONNECTED:
-	    	  return ComConnectivityManager.getInstance().onCreateNoNetworkDialog();
+	    	  return ComConnectivityManager.getInstance().onCreateNoNetworkDialog(mContext);
 		}
 		return super.onCreateDialog(id);
 	}
