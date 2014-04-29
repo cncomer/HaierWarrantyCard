@@ -276,9 +276,9 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			String[] urls = new String[LENGTH];
 			String[] paths = new String[LENGTH];
 			urls[0] = HaierServiceObject.SERVICE_URL + "AddYuYue.ashx?Date=";
-			paths[0] = mYuyueDate.getText().toString().trim();
+			paths[0] = mBaoxiuCardObject.BUY_DATE_TIME_FORMAT.format(mYuyueDate.getText().toString().trim());
 			urls[1] = "&Time=";
-			paths[1] = mYuyueTime.getText().toString().trim();
+			paths[1] = mBaoxiuCardObject.BUY_TIME_FORMAT.format(mYuyueTime.getText().toString().trim());
 			urls[2] = "&UID=";
 			paths[2] = String.valueOf(mBaoxiuCardObject.mUID);
 			urls[3] = "&Note=";
