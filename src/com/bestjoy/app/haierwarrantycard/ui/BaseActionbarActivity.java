@@ -184,7 +184,7 @@ public abstract class BaseActionbarActivity extends SherlockFragmentActivity {
    			.create();
    			 //add by chenkai, 20131201, add network check
    	      case DIALOG_DATA_NOT_CONNECTED:
-   	    	  return ComConnectivityManager.getInstance().onCreateNoNetworkDialog();
+   	    	  return ComConnectivityManager.getInstance().onCreateNoNetworkDialog(mContext);
    	      case DIALOG_PROGRESS:
    	    	  mProgressDialog = new ProgressDialog(this);
    	    	  mProgressDialog.setMessage(getString(R.string.msg_progressdialog_wait));

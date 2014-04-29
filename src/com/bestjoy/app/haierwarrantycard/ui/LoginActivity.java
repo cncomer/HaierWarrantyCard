@@ -97,7 +97,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 					MyApplication.getInstance().showMessage(R.string.msg_input_tel_when_find_password);
 				} else {
 					if (!ComConnectivityManager.getInstance().isConnected()) {
-						ComConnectivityManager.getInstance().onCreateNoNetworkDialog().show();
+						ComConnectivityManager.getInstance().onCreateNoNetworkDialog(mContext).show();
 					} else {
 						findPasswordAsync();
 					}
