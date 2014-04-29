@@ -430,7 +430,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 				if (viewHolder._id != mXinghaoId) {
 					mXinghaoId = viewHolder._id;
 					mBaoxiuCardObject.mXingHao = viewHolder._mn;
-					mBaoxiuCardObject.mSHBianHao = viewHolder._ky;
+					mBaoxiuCardObject.mKY = viewHolder._ky;
 					mXinghao.setText(getGroupTitle(R.string.title_xinghao, mBaoxiuCardObject.mXingHao));
 				}
 				break;

@@ -246,9 +246,9 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			getBaoxiuCardObject();
 			HomeObject homeObject = mProCityDisEditPopView.getHomeObject();
 			urls[0] = HaierServiceObject.SERVICE_URL + "AddYuYue.ashx?Date=";
-			paths[0] = mBaoxiuCardObject.BUY_DATE_TIME_FORMAT.format(mYuyueDate.getText().toString().trim());
+			paths[0] = BaoxiuCardObject.BUY_DATE_TIME_FORMAT.format(mCalendar.getTime());
 			urls[1] = "&Time=";
-			paths[1] = mBaoxiuCardObject.BUY_TIME_FORMAT.format(mYuyueTime.getText().toString().trim());
+			paths[1] = BaoxiuCardObject.BUY_TIME_FORMAT.format(mCalendar.getTime());
 			urls[2] = "&UID=";
 			paths[2] = String.valueOf(mBaoxiuCardObject.mUID);
 			urls[3] = "&Note=";
@@ -383,10 +383,8 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 				mCalendar.set(year, monthOfYear, dayOfMonth);
-				//更新日期数据
-//				mGoodsObject.mDate = mCalendar.getTimeInMillis();
 				//更新UI
-				mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(new Date(mCalendar.getTimeInMillis())));
+				mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
 			}
 				
 		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH))
@@ -397,8 +395,9 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
         new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
 			@Override
 			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-				mCalendar.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
-				mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT.format(new Date(mCalendar.getTimeInMillis())));
+				mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+				mCalendar.set(Calendar.MINUTE, minute);
+				mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT.format(mCalendar.getTime()));
 			}
         	
         }, mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE), true)

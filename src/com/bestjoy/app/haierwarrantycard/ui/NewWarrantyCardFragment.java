@@ -50,7 +50,6 @@ import com.shwy.bestjoy.utils.NetworkUtils;
 public class NewWarrantyCardFragment extends ModleBaseFragment implements View.OnClickListener{
 	private static final String TAG = "NewWarrantyCardFragment";
 	private BaoxiuCardObject mBaoxiuCardObject;
-	private HomeObject mHomeObject;
 	//按钮
 	private Button mSaveBtn;
 	private TextView mDatePickBtn;
@@ -71,6 +70,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	private static final int DIALOG_PROGRESS = 6;
 	
 	private int mPictureRequest = -1;
+	/**所属家id*/
+	private long mAid = -1;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -192,7 +193,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
 		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
 		
-		mBaoxiuCardObject.mBuyDate = mBaoxiuCardObject.BUY_DATE_TIME_FORMAT.format(mDatePickBtn.getText().toString().trim());
+		mBaoxiuCardObject.mBuyDate = BaoxiuCardObject.BUY_DATE_TIME_FORMAT.format(mCalendar.getTime());
 		mBaoxiuCardObject.mBuyPrice = mPriceInput.getText().toString().trim();
 		mBaoxiuCardObject.mBuyTuJing = mTujingInput.getText().toString().trim();
 		
@@ -201,10 +202,9 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		mBaoxiuCardObject.mYBPhone = mYanbaoTelInput.getText().toString().trim();
 		
 		mBaoxiuCardObject.mCardName = mTagInput.getText().toString().trim();
-		
-		//设置所属家aid
-		if (mHomeObject != null) {
-			mBaoxiuCardObject.mAID = mHomeObject.mHomeAid;
+		//设置所属家id
+		if (mAid != -1) {
+			mBaoxiuCardObject.mAID = mAid;
 		}
 		//设置所属账户uid
 		AccountObject accountObject = HaierAccountManager.getInstance().getAccountObject();
@@ -269,6 +269,11 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		private String mError;
 		int mStatusCode = -1;
 		String mStatusMessage = null;
+		/*{
+		    "StatusCode": "1", 
+		    "StatusMessage": "成功返回数据", 
+		    "Data": "Bid:4"
+		}*/
 		@Override
 		protected Boolean doInBackground(String... params) {
 			//更新保修卡信息
@@ -319,6 +324,12 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 					DebugUtils.logD(TAG, "StatusMessage = " + mStatusMessage);
 					if (mStatusCode == 1) {
 						//在保存前，我们需要回填bid数据
+						String data = jsonObject.getString("Data");
+						DebugUtils.logD(TAG, "Data = " + data);
+						if (data.length() > "Bid:".length()) {
+							data = data.substring("Bid:".length() - 1);
+							mBaoxiuCardObject.mBID = Long.valueOf(data);
+						}
 						boolean savedOk = mBaoxiuCardObject.saveInDatebase(getActivity().getContentResolver(), null);
 						if (!savedOk) {
 							//通常不会发生
@@ -437,10 +448,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 				mCalendar.set(year, monthOfYear, dayOfMonth);
-				//更新日期数据
-//				mGoodsObject.mDate = mCalendar.getTimeInMillis();
 				//更新UI
-				mDatePickBtn.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(new Date(mCalendar.getTimeInMillis())));
+				mDatePickBtn.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
 			}
 				
 		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH))
@@ -505,7 +514,10 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		if (infoInterface instanceof BaoxiuCardObject) {
 			populateBaoxiuInfoView((BaoxiuCardObject)infoInterface);
 		} else if (infoInterface instanceof HomeObject) {
-			mHomeObject = (HomeObject) infoInterface;
+			//do nothing
+			if (infoInterface != null) {
+				mAid = ((HomeObject) infoInterface).mHomeAid;
+			}
 		} else if (infoInterface instanceof AccountObject) {
 			//do nothing
 		}
