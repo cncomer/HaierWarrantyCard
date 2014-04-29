@@ -18,8 +18,10 @@ public class HaierParser extends ResultParser{
 		if (matcher.find()) {
 			param = matcher.group(1);
 			DebugUtils.logD(TAG, "find Haier barcode " + param);
+			return new HaierParsedResult(rawText, param);
+		} else {
+			return null;
 		}
-		return new HaierParsedResult(rawText, param);
 	}
 
 }

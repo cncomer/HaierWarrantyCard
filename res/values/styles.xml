@@ -22,8 +22,8 @@
         <!--  item name="android:windowFullscreen">true</item-->
     </style>
      <style name="AppTheme.MainActivityActionBar">
-        <item name="actionBarStyle">@style/Widget.Styled.MainActivityActionBar</item>
-        <item name="android:actionBarStyle">@style/Widget.Styled.MainActivityActionBar</item>
+        <item name="actionBarStyle">@style/Widget.Styled.ActionBar.MainActivity</item>
+        <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar.MainActivity</item>
     </style>
     <style name="Widget.Styled.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <!--  item name="background">@color/action_bar_black</item-->
@@ -32,10 +32,11 @@
         <item name="android:actionButtonStyle">@style/Widget.Sherlock.ActionButton</item>
     </style>
     
-    <style name="Widget.Styled.MainActivityActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+    <style name="Widget.Styled.ActionBar.MainActivity">
         <item name="background">@drawable/top1</item>
         <item name="android:background">@drawable/top1</item>
         <item name="height">@dimen/title_logo_height</item>
+         <item name="android:height">@dimen/title_logo_height</item>
     </style>
     
      <style name="Widget.Sherlock.ActionButton" parent="Widget">
