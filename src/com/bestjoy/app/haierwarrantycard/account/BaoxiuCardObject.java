@@ -44,8 +44,9 @@ import com.shwy.bestjoy.utils.InfoInterfaceImpl;
             "ZhuBx":0.0,    部件保修天数，单位是年，计算同保修时间
             "Tag":"大厅暖气",  保修卡的标签，比如卧室电视机
             "WY": 1.0,          整机保修时长，单位是年
-            "YBPhone":"400-20098005"  延保电话
-        }
+            "YBPhone":"400-20098005",  延保电话
+            "KY":"101000003"     KY编码，用于显示产品图片
+         }
     ]
  *
  */
@@ -71,6 +72,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public String mZhuBx;
 	/**延保电话*/
 	public String mYBPhone;
+	public String mKY;
 	/**本地id*/
 	public long mId = -1;
 	public long mUID, mAID, mBID;
@@ -97,6 +99,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		HaierDBHelper.CARD_COMPONENT_VALIDITY,
 		HaierDBHelper.CARD_WY,
 		HaierDBHelper.CARD_YBPhone,          //18
+		HaierDBHelper.CARD_KY,               //19
 	};
 	
 	public static final int KEY_CARD_ID = 0;
@@ -118,6 +121,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public static final int KEY_CARD_COMPONENT_VALIDITY = 16;
 	public static final int KEY_CARD_WY = 17;
 	public static final int KEY_CARD_YBPHONE = 18;
+	public static final int KEY_CARD_KY = 19;
 	
 	public static final String WHERE_UID = HaierDBHelper.CARD_UID + "=?";
 	public static final String WHERE_AID = HaierDBHelper.CARD_AID + "=?";
@@ -152,6 +156,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		cardObject.mBID = jsonObject.getLong("BID");
 		cardObject.mWY = jsonObject.getString("WY");
 		cardObject.mYBPhone = jsonObject.getString("YBPhone");
+		cardObject.mKY = jsonObject.getString("KY");
 		return cardObject;
 	}
 	
@@ -178,6 +183,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		newBaoxiuCardObject.mYanBaoTime = mYanBaoTime;
 		newBaoxiuCardObject.mYanBaoDanWei = mYanBaoDanWei;
 		newBaoxiuCardObject.mYBPhone = mYBPhone;
+		newBaoxiuCardObject.mKY = mKY;
 		return newBaoxiuCardObject;
 	}
 	
@@ -255,6 +261,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
     	baoxiuCardObject.mWY = c.getString(KEY_CARD_WY);
     	
     	baoxiuCardObject.mYBPhone = c.getString(KEY_CARD_YBPHONE);
+    	baoxiuCardObject.mKY = c.getString(KEY_CARD_KY);
     	
 		return baoxiuCardObject;
 	}
@@ -285,7 +292,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		values.put(HaierDBHelper.CARD_COMPONENT_VALIDITY, mZhuBx);
 		values.put(HaierDBHelper.CARD_WY, mWY);
 		values.put(HaierDBHelper.CARD_YBPhone, mYBPhone);
-		
+		values.put(HaierDBHelper.CARD_KY, mKY);
 		
 		values.put(HaierDBHelper.DATE, new Date().getTime());
 		
