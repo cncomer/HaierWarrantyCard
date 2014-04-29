@@ -246,9 +246,9 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			getBaoxiuCardObject();
 			HomeObject homeObject = mProCityDisEditPopView.getHomeObject();
 			urls[0] = HaierServiceObject.SERVICE_URL + "AddYuYue.ashx?Date=";
-			paths[0] = mYuyueDate.getText().toString().trim();
+			paths[0] = mBaoxiuCardObject.BUY_DATE_TIME_FORMAT.format(mYuyueDate.getText().toString().trim());
 			urls[1] = "&Time=";
-			paths[1] = mYuyueTime.getText().toString().trim();
+			paths[1] = mBaoxiuCardObject.BUY_TIME_FORMAT.format(mYuyueTime.getText().toString().trim());
 			urls[2] = "&UID=";
 			paths[2] = String.valueOf(mBaoxiuCardObject.mUID);
 			urls[3] = "&Note=";

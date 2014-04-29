@@ -192,7 +192,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
 		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
 		
-		mBaoxiuCardObject.mBuyDate = mDatePickBtn.getText().toString().trim();
+		mBaoxiuCardObject.mBuyDate = mBaoxiuCardObject.BUY_DATE_TIME_FORMAT.format(mDatePickBtn.getText().toString().trim());
 		mBaoxiuCardObject.mBuyPrice = mPriceInput.getText().toString().trim();
 		mBaoxiuCardObject.mBuyTuJing = mTujingInput.getText().toString().trim();
 		
