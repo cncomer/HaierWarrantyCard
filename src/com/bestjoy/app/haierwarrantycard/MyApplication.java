@@ -178,7 +178,7 @@ public class MyApplication extends Application{
     public SecurityKeyValuesObject getSecurityKeyValuesObject() {
     	if (mSecurityKeyValuesObject == null) {
     		//Here, we need to notice.
-    		new Exception("getSecurityKeyValuesObject() return null").printStackTrace();
+    		new Exception("warnning getSecurityKeyValuesObject() return null").printStackTrace();
     	}
     	return mSecurityKeyValuesObject;
     }
