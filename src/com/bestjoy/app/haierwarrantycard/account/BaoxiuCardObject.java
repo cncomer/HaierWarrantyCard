@@ -75,7 +75,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public String mKY;
 	/**本地id*/
 	public long mId = -1;
-	public long mUID, mAID, mBID;
+	public long mUID = -1, mAID = -1, mBID = -1;
 	
 	private int mZhengjiValidity = -1, mComponentValidity = -1;
 	
@@ -339,25 +339,27 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	 */
 	public int getBaoxiuValidity() {
 		if (mZhengjiValidity == -1) {
-			if (TextUtils.isEmpty(mZhuBx)) {
-				mZhengjiValidity = 0;
-			} else {
-				int validity = (int) ((Float.valueOf(mWY) + Float.valueOf(mYanBaoTime)) * 365 + 0.5f);
-				try {
-					//转换购买日期
-					Date buyDate = BUY_DATE_TIME_FORMAT.parse(mBuyDate);
-					//当前日期
-					Date now = new Date();
-					long passedTimeLong = now.getTime() - buyDate.getTime();
-					if (passedTimeLong < 0) {
-						passedTimeLong = 0;
-					}
-					int passedDay = (int) (passedTimeLong / DAY_IN_MILLISECONDS);
-					mZhengjiValidity = validity - passedDay;
-				} catch (ParseException e) {
-					e.printStackTrace();
-					mZhengjiValidity = 0;
+			if (TextUtils.isEmpty(mWY)) {
+				mWY = "0";
+			}
+			if (TextUtils.isEmpty(mYanBaoTime)) {
+				mYanBaoTime = "0";
+			}
+			int validity = (int) ((Float.valueOf(mWY) + Float.valueOf(mYanBaoTime)) * 365 + 0.5f);
+			try {
+				//转换购买日期
+				Date buyDate = BUY_DATE_TIME_FORMAT.parse(mBuyDate);
+				//当前日期
+				Date now = new Date();
+				long passedTimeLong = now.getTime() - buyDate.getTime();
+				if (passedTimeLong < 0) {
+					passedTimeLong = 0;
 				}
+				int passedDay = (int) (passedTimeLong / DAY_IN_MILLISECONDS);
+				mZhengjiValidity = validity - passedDay;
+			} catch (ParseException e) {
+				e.printStackTrace();
+				mZhengjiValidity = 0;
 			}
 		}
 		return mZhengjiValidity;

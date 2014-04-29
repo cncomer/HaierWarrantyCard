@@ -2,6 +2,7 @@ package com.bestjoy.app.haierwarrantycard.account;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,6 +14,8 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.bestjoy.app.haierwarrantycard.MyApplication;
+import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.shwy.bestjoy.utils.DebugUtils;
@@ -45,6 +48,17 @@ public class HomeObject implements InfoInterface{
 	/**表示当前数据是否过时了，如果是，那么{@link #initBaoxiuCards()}就要重新读取数据库*/
 	private boolean mOutOfDate = true;
 	
+	private static String DEFAUL_HOME_NAME;
+	
+	public String getHomeTag(Context context) {
+		if (TextUtils.isEmpty(mHomeName)) {
+			if (DEFAUL_HOME_NAME == null) {
+				DEFAUL_HOME_NAME = context.getString(R.string.default_home_name);
+			}
+			return DEFAUL_HOME_NAME;
+		}
+		return mHomeName;
+	}
 	
 	public HomeObject clone() {
 		HomeObject newHomeObject = new HomeObject();
@@ -264,6 +278,7 @@ public class HomeObject implements InfoInterface{
 	}
 	
 	private static HomeObject getFromHomeSCursor(Cursor c, ContentResolver cr) {
+		
 		HomeObject homeObject = new HomeObject();
 		homeObject.mHomeId = c.getLong(KEY_HOME_ID);
 		homeObject.mHomeUid = c.getLong(KEY_HOME_UID);
@@ -294,12 +309,9 @@ public class HomeObject implements InfoInterface{
 	 * 从数据库中找所有该HomeObject的保修卡，并附值给mBaoxiuCards成员
 	 */
 	public void initBaoxiuCards(ContentResolver cr) {
-		if (mOutOfDate) {
-			mBaoxiuCards = BaoxiuCardObject.getAllBaoxiuCardObjects(cr, mHomeUid, mHomeAid);
-			//使用数据库的数据设置保修卡的个数
-			mHomeCardCount = mBaoxiuCards.size();
-			mOutOfDate = false;
-		}
+		mBaoxiuCards = BaoxiuCardObject.getAllBaoxiuCardObjects(cr, mHomeUid, mHomeAid);
+		//使用数据库的数据设置保修卡的个数
+		mHomeCardCount = mBaoxiuCards.size();
 	}
 	
 	public boolean hasBaoxiuCards() {
@@ -337,6 +349,23 @@ public class HomeObject implements InfoInterface{
 	 */
 	public static void setHomeObject(HomeObject homeObject) {
 		mHomeObject = homeObject;
+	}
+	
+	private static LinkedHashMap<Long, HomeObject> mHomesMapCache = new LinkedHashMap<Long, HomeObject>(20) {
+		@Override
+		protected boolean removeEldestEntry(Entry<Long, HomeObject> eldest) {
+			return size() >= 20;
+		}
+	};
+	public static HomeObject getCachedHomeObject(long uid, long aid) {
+		if (mHomesMapCache.containsKey(aid)) {
+			return mHomesMapCache.get(aid);
+		}
+		HomeObject homeObject = HomeObject.getHomeObject(MyApplication.getInstance().getContentResolver(), uid, aid);
+		if (homeObject != null) {
+			mHomesMapCache.put(aid, homeObject);
+		}
+		return homeObject;
 	}
 	
 }

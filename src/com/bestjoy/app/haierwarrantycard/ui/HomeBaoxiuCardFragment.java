@@ -1,9 +1,11 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
 import android.content.Context;
+import android.database.ContentObserver;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 
 public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemClickListener{
@@ -25,6 +28,8 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 	private ListView mListView;
 	private CardsAdapter mCardsAdapter;
 	private OnBaoxiuCardItemClickListener mOnItemClickListener;
+	
+	private ContentObserver mContentObserver;
 	
 	public static interface OnBaoxiuCardItemClickListener {
 		void onItemClicked(BaoxiuCardObject card) ;
@@ -37,6 +42,13 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mContentObserver = new ContentObserver(new Handler()) {
+			@Override
+			public void onChange(boolean selfChange) {
+				super.onChange(selfChange);
+				loadCardsAsync();
+			}
+		};
 	}
 
 	@Override
@@ -46,6 +58,7 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 		mCardsAdapter = new CardsAdapter(getActivity(), null, true);
 		mListView.setAdapter(mCardsAdapter);
 		mListView.setOnItemClickListener(this);
+		getActivity().getContentResolver().registerContentObserver(BjnoteContent.BaoxiuCard.CONTENT_URI, true, mContentObserver);
 		return view;
 	}
 	
@@ -74,6 +87,7 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 		AsyncTaskUtils.cancelTask(mLoadCardsTask);
 		mCardsAdapter.changeCursor(null);
 		mCardsAdapter = null;
+		getActivity().getContentResolver().unregisterContentObserver(mContentObserver);
 	}
 
 

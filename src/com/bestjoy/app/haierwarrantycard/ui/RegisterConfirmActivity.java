@@ -8,6 +8,7 @@ import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -52,6 +53,8 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	private HomeObject mHomeObject;
 	private Button mConfrimReg;
 	private Bundle mBundles;
+	
+	private static final int REQUEST_LOGIN = 1;
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
@@ -105,6 +108,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	private void registerAsync(String... param) {
 		AsyncTaskUtils.cancelTask(mRegisterAsyncTask);
 		showDialog(DIALOG_PROGRESS);
+		mConfrimReg.setEnabled(false);
 		mRegisterAsyncTask = new RegisterAsyncTask();
 		mRegisterAsyncTask.execute(param);
 	}
@@ -140,21 +144,20 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
 					mAccountObject.mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
 					mAccountObject.mStatusMessage = jsonObject.getString("StatusMessage");
-					String data = jsonObject.getString("Data");
-					DebugUtils.logD(TAG, "Data = " + data);
-					if(data == null || data.trim().equals("")) return null;
-					mAccountObject.mAccountUid = Long.parseLong(data.substring(data.indexOf(":")+1));
 					DebugUtils.logD(TAG, "StatusCode = " + mAccountObject.mStatusCode);
 					DebugUtils.logD(TAG, "StatusMessage = " + mAccountObject.mStatusMessage);
-					DebugUtils.logD(TAG, "Data = " + data);
-					DebugUtils.logD(TAG, "Uid = " + mAccountObject.mAccountUid);
 					if (mAccountObject.mStatusCode == 1) {
-						mAccountObject.mAccountHomes.add(mHomeObject);
-						boolean saveResult = HaierAccountManager.getInstance().saveAccountObject(getContentResolver(), mAccountObject);
-					    if (!saveResult) {
-					    	//注册成功，但无法创建账户，请尝试重新登陆
-					    	mError = mContext.getString(R.string.msg_register_save_fail);
-					    }
+						String data = jsonObject.getString("Data");
+						DebugUtils.logD(TAG, "Data = " + data);
+						mAccountObject.mAccountUid = Long.parseLong(data.substring(data.indexOf(":")+1));
+						DebugUtils.logD(TAG, "Uid = " + mAccountObject.mAccountUid);
+						
+//						mAccountObject.mAccountHomes.add(mHomeObject);
+//						boolean saveResult = HaierAccountManager.getInstance().saveAccountObject(getContentResolver(), mAccountObject);
+//					    if (!saveResult) {
+//					    	//注册成功，但无法创建账户，请尝试重新登陆
+//					    	mError = mContext.getString(R.string.msg_register_save_fail);
+//					    }
 					    return true;
 					} else {
 						mError = mAccountObject.mStatusMessage;
@@ -177,46 +180,40 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 		@Override
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
-			dismissDialog(DIALOG_PROGRESS);
+			mConfrimReg.setEnabled(true);
 			if (mError != null) {
-				if (result) {
-					//注册成功，但无法创建账户，请尝试重新登陆
-					new AlertDialog.Builder(mContext)
-					.setTitle(R.string.msg_tip_title)
-		   			.setMessage(mError)
-		   			.setCancelable(false)
-		   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-		   				@Override
-		   				public void onClick(DialogInterface dialog, int which) {
-		   					LoginActivity.startIntent(mContext, null);
-		   				}
-		   			})
-		   			.create()
-		   			.show();
-				} else {
-					MyApplication.getInstance().showMessage(mError);
-				}
+//				if (result) {
+//					//注册成功，但无法创建账户，请尝试重新登陆
+//					new AlertDialog.Builder(mContext)
+//					.setTitle(R.string.msg_tip_title)
+//		   			.setMessage(mError)
+//		   			.setCancelable(false)
+//		   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+//		   				@Override
+//		   				public void onClick(DialogInterface dialog, int which) {
+//		   					LoginActivity.startIntent(mContext, null);
+//		   				}
+//		   			})
+//		   			.create()
+//		   			.show();
+//				} else {
+//					MyApplication.getInstance().showMessage(mError);
+//				}
+				MyApplication.getInstance().showMessage(mError);
 			} else if (result) {
+				//注册后，我们要做一次登陆
 				MyApplication.getInstance().showMessage(mAccountObject.mStatusMessage);
-				//注册成功，如果是先新建后注册，那么回到选择列表
-				int modelId = ModleSettings.getModelIdFromBundle(mBundles);
-				switch(modelId) {
-				case R.id.model_my_card:
-				case R.id.model_install:
-				case R.id.model_repair:
-					MyChooseDevicesActivity.startIntent(mContext, mBundles);
-					break;
-					default ://否则回到主界面
-						MainActivity.startActivityForTop(mContext);
-				}
-				
+				HaierAccountManager.getInstance().saveLastUsrTel(mAccountObject.mAccountTel);
+				startActivityForResult(LoginOrUpdateAccountDialog.createLoginOrUpdate(mContext, true, mAccountObject.mAccountTel, mAccountObject.mAccountPwd), REQUEST_LOGIN);
 			}
+			dismissDialog(DIALOG_PROGRESS);
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
 			dismissDialog(DIALOG_PROGRESS);
+			mConfrimReg.setEnabled(true);
 		}
 	}
 	
@@ -274,5 +271,28 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			return false;
 		}
 		return true;
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_LOGIN) {
+			if (resultCode == Activity.RESULT_OK) {
+				// login successfully
+				MyApplication.getInstance().showMessage(R.string.msg_login_confirm_success);
+				//注册成功，如果是先新建后注册，那么回到选择列表
+				int modelId = ModleSettings.getModelIdFromBundle(mBundles);
+				switch(modelId) {
+				case R.id.model_my_card:
+				case R.id.model_install:
+				case R.id.model_repair:
+					finish();
+					break;
+					default ://否则回到主界面
+						MainActivity.startActivityForTop(mContext);
+				}
+			}
+		} else {
+			super.onActivityResult(requestCode, resultCode, data);
+		}
 	}
 }

@@ -157,4 +157,12 @@
         <item name="android:layout_marginLeft">2dip</item>
         <item name="android:layout_marginRight">6dip</item>
     </style>
+    
+      <style name="ViewProductInfo">
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_weight">1.0</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#ff716e6e</item>
+        <item name="android:singleLine">true</item>
+    </style>
 </resources>

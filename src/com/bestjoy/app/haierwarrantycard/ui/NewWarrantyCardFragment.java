@@ -63,11 +63,6 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	private static final int REQUEST_AVATOR = 2;
 	/**请求发票预览图*/
 	private static final int REQUEST_BILL = 3;
-	private static final int DIALOG_BILL_OP_CONFIRM = 4;
-	/**显示操作选项*/
-	private static final int DIALOG_OPERATION = 5;
-	/**显示进度对话框*/
-	private static final int DIALOG_PROGRESS = 6;
 	
 	private int mPictureRequest = -1;
 	/**所属家id*/
@@ -202,14 +197,19 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		mBaoxiuCardObject.mYBPhone = mYanbaoTelInput.getText().toString().trim();
 		
 		mBaoxiuCardObject.mCardName = mTagInput.getText().toString().trim();
-		//设置所属家id
-		if (mAid != -1) {
-			mBaoxiuCardObject.mAID = mAid;
-		}
+		
 		//设置所属账户uid
 		AccountObject accountObject = HaierAccountManager.getInstance().getAccountObject();
 		if (accountObject != null) {
 			mBaoxiuCardObject.mUID = accountObject.mAccountUid;
+		}
+		
+		//设置所属家id
+		if (mAid != -1) {
+			mBaoxiuCardObject.mAID = mAid;
+		} else if (mBaoxiuCardObject.mAID <= 0) {
+			//如果没有aid,我们默认以第一个家
+			mBaoxiuCardObject.mAID = accountObject.mAccountHomes.get(0).mHomeAid;
 		}
 		DebugUtils.logD(TAG, "getmBaoxiuCardObject() " + mBaoxiuCardObject.mBID);
 	}
@@ -247,6 +247,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		if(HaierAccountManager.getInstance().hasLoginned()) {
 			//如果没有注册，我们前往登陆界面
 			if(checkInput()) {
+				mSaveBtn.setEnabled(false);
 				requestNewWarrantyCardAndSync();
 			}
 		} else {
@@ -281,7 +282,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			
 			mError = null;
 			InputStream is = null;
-			final int LENGTH = 9;
+			final int LENGTH = 14;
 			String[] urls = new String[LENGTH];
 			String[] paths = new String[LENGTH];
 			urls[0] = HaierServiceObject.SERVICE_URL + "AddBaoXiuData.ashx?LeiXin=";
@@ -327,13 +328,31 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 						String data = jsonObject.getString("Data");
 						DebugUtils.logD(TAG, "Data = " + data);
 						if (data.length() > "Bid:".length()) {
-							data = data.substring("Bid:".length() - 1);
+							data = data.substring("Bid:".length());
 							mBaoxiuCardObject.mBID = Long.valueOf(data);
-						}
-						boolean savedOk = mBaoxiuCardObject.saveInDatebase(getActivity().getContentResolver(), null);
-						if (!savedOk) {
-							//通常不会发生
-							mError = getActivity().getString(R.string.msg_local_save_card_failed);
+							//如果后台返回了bid,我们根据它向服务器查询保修卡数据，并解析保存在本地。
+							if (mBaoxiuCardObject.mBID > 0) {
+								NetworkUtils.closeInputStream(is);
+								StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
+								sb.append("GetBaoXiuDataByBID.ashx?BID=").append(mBaoxiuCardObject.mBID);
+								is = NetworkUtils.openContectionLocked(sb.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
+								if (is != null){
+									jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
+									mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
+									mStatusMessage = jsonObject.getString("StatusMessage");
+									if (mStatusCode == 1) {
+										mBaoxiuCardObject = BaoxiuCardObject.parseBaoxiuCards(jsonObject.getJSONObject("Data"), null);
+										boolean savedOk = mBaoxiuCardObject.saveInDatebase(getActivity().getContentResolver(), null);
+										if (!savedOk) {
+											//通常不会发生
+											mError = getActivity().getString(R.string.msg_local_save_card_failed);
+										} else {
+											HaierAccountManager.getInstance().updateHomeObject(mBaoxiuCardObject.mAID);
+										}
+									}
+									
+								}
+							}
 						}
 						return true;
 					}
@@ -355,6 +374,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		@Override
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
+			mSaveBtn.setEnabled(true);
 			dissmissDialog(DIALOG_PROGRESS);
 			if (mError != null) {
 				if (result) {
@@ -376,6 +396,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 				}
 			} else if (result) {
 				//添加成功
+				MyApplication.getInstance().showMessage(R.string.save_success);
 				getActivity().finish();
 				MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
 			} else {
@@ -387,6 +408,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		protected void onCancelled() {
 			super.onCancelled();
 			dissmissDialog(DIALOG_PROGRESS);
+			mSaveBtn.setEnabled(true);
 		}
 	}
 
@@ -403,10 +425,10 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			showEmptyInputToast(R.string.product_model);
 			return false;
 		}*/
-		if(TextUtils.isEmpty(mBianhaoInput.getText().toString().trim())){
-			showEmptyInputToast(R.string.product_sn);
-			return false;
-		}
+//		if(TextUtils.isEmpty(mBianhaoInput.getText().toString().trim())){
+//			showEmptyInputToast(R.string.product_sn);
+//			return false;
+//		}
 		if(TextUtils.isEmpty(mBaoxiuTelInput.getText().toString().trim())){
 			showEmptyInputToast(R.string.product_tel);
 			return false;

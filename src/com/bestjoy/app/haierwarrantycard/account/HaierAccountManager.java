@@ -55,6 +55,16 @@ public class HaierAccountManager {
 		}
 		return false;
 	}
+	/**新建保修卡后都需要调用该方法来更新家*/
+	public void updateHomeObject(long aid) {
+		if (mHaierAccount != null) {
+			for(HomeObject home : mHaierAccount.mAccountHomes) {
+				if (home.mHomeAid  == aid) {
+					home.initBaoxiuCards(mContext.getContentResolver());
+				}
+			}
+		}
+	}
 	
 	public boolean hasHomes() {
 		return mHaierAccount != null && mHaierAccount.mAccountHomeCount > 0;

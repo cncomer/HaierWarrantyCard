@@ -106,7 +106,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			return getHome(position).mHomeName;
+			return getHome(position).getHomeTag(mContext);
 		}
 		
 		private HomeObject getHome(int position) {
@@ -128,6 +128,8 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 		@Override
 		public void onPageSelected(int arg0) {
 			mHomeSelected = arg0;
+			//当选择了一个Home时候，我们要设置HomeObject对象
+			HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
 		}
 
 		@Override
@@ -177,7 +179,6 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	    	//进入详细页面
 	    } else {
 	    	BaoxiuCardObject.setBaoxiuCardObject(card.clone());
-		    HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
 		    ModleSettings.doChoose(mContext, mBundle);
 	    }
 		
