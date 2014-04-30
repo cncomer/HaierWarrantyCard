@@ -47,7 +47,7 @@ public class CardViewActivity extends BaseActionbarActivity {
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.activity_card_view);
 		mDotsLayout = (LinearLayout) findViewById(R.id.dots);
 		mAdsViewPager = (ViewPager) findViewById(R.id.adsViewPager);
 		this.initViewPagers(3);

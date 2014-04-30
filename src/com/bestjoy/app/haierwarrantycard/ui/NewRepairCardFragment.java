@@ -86,6 +86,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		 mPinpaiInput = (EditText) view.findViewById(R.id.product_brand_input);
 		 mModelInput = (EditText) view.findViewById(R.id.product_model_input);
 		 mBianhaoInput = (EditText) view.findViewById(R.id.product_sn_input);
+		 mBianhaoInput.setHint(R.string.hint_optional);
 		 mBaoxiuTelInput = (EditText) view.findViewById(R.id.product_tel_input);
 		 mTagInput = (EditText) view.findViewById(R.id.product_beizhu_tag);
 		 

@@ -230,7 +230,8 @@
      <string name="title_pinpai">品牌</string>
      <string name="title_xinghao">型号</string>
      <string name="title_choose_type_divider">--</string>
-     
+     <string name="hint_optional">选填</string>
+     <string name="hint_must">必填</string>
      <string name="input_type_please_input">请输入</string>
      <string name="save_success">保存成功</string>
      <string name="save_fail">保存失败</string>

@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical" >
             
-            <include layout="@layout/product_create_info_star"/>
+            <include layout="@layout/product_create_info"/>
             <include layout="@layout/people_contact_info"/>
 		    <include layout="@layout/pcd_edit_layout" />
             <include layout="@layout/yuyue_info_layout"

@@ -1,15 +1,11 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
-import java.io.File;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -33,8 +29,6 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 	private Bundle mBundles;
 	/**表示是否是第一次进入*/
 	private boolean mIsFirstOnResume = true;
-	//临时的拍摄照片路径
-	private File mBillTempFile, mAvatorTempFile;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,10 +38,10 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 		}
 		
 		
-//		if (savedInstanceState != null) {
-//			mContent = (ModleBaseFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
-//			mMenu = (NewCardChooseFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mMenu");
-//		}
+		if (savedInstanceState != null) {
+			mContent = (ModleBaseFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
+			mMenu = (NewCardChooseFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mMenu");
+		}
 		int type = mBundles.getInt(Intents.EXTRA_TYPE);
 		if (mContent == null) {
 			switch(type) {
@@ -102,14 +96,6 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		
-		initTempFile();
-		
-	}
-	
-	private void initTempFile() {
-		File tempRootDir = Environment.getExternalStorageDirectory();
-		mBillTempFile = new File(tempRootDir, ".billTemp");
-		mAvatorTempFile = new File(tempRootDir, ".avatorTemp");
 	}
 	
 	@Override
@@ -159,8 +145,8 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 			if (!TextUtils.isEmpty(object.mLeiXin)) {
 				//目前只要是选择了小类别，我们就允许更新数据
 				mContent.setBaoxiuObjectAfterSlideMenu(object);
-				getSlidingMenu().showContent(true);
 			}
+			getSlidingMenu().showContent(true);
 			break;
 			 // Respond to the action bar's Up/Home button
         case android.R.id.home:

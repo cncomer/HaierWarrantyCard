@@ -49,6 +49,8 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 		super.onCreate(savedInstanceState);
 		//每次进来我们先重置这个静态成员
 		BaoxiuCardObject.setBaoxiuCardObject(null);
+		//重置家
+		HomeObject.setHomeObject(null);
 		DebugUtils.logD(TAG, "onCreate()");
 		if (isFinishing()) {
 			return ;

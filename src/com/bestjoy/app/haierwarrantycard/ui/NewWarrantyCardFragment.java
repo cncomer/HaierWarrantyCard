@@ -423,10 +423,10 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			showEmptyInputToast(R.string.product_brand);
 			return false;
 		}
-		/*if(TextUtils.isEmpty(mModelInput.getText().toString().trim())){
+		if(TextUtils.isEmpty(mModelInput.getText().toString().trim())){
 			showEmptyInputToast(R.string.product_model);
 			return false;
-		}*/
+		}
 //		if(TextUtils.isEmpty(mBianhaoInput.getText().toString().trim())){
 //			showEmptyInputToast(R.string.product_sn);
 //			return false;
