@@ -317,6 +317,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			} else if (result) {
 				//预约成功
 				getActivity().finish();
+				MyApplication.getInstance().showMessage(R.string.msg_yuyue_sucess);
 				MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
 			} else {
 				MyApplication.getInstance().showMessage(mStatusMessage);

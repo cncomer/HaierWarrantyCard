@@ -365,6 +365,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			} else if (true) {
 				//预约成功
 				getActivity().finish();
+				MyApplication.getInstance().showMessage(R.string.msg_yuyue_sucess);
 				MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
 			} else {
 				MyApplication.getInstance().showMessage(mStatusMessage);

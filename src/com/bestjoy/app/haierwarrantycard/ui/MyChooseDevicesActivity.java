@@ -65,6 +65,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 		mViewPager = (ViewPager) findViewById(R.id.pagerview);
 		mMyPagerAdapter = new MyPagerAdapter(this.getSupportFragmentManager());
 		mViewPager.setAdapter(mMyPagerAdapter);
+		mViewPager.setOnPageChangeListener(mMyPagerAdapter);
 	}
 	
 	
