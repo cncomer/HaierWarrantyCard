@@ -22,6 +22,7 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
@@ -312,29 +313,39 @@ public class ProCityDisEditPopView implements OnTouchListener {
 	}
 
 	public void setHomeObject(HomeObject homeObject) {
+		if(homeObject == null) {
+			homeObject = new HomeObject();
+		}
 		mHomeObject = homeObject;
-		updateHomeObject();
+		updateHomeView();
 	}
 	
-	public void updateHomeObject() {
-		mHomeObject.mHomeProvince = mProEditView.getText().toString().trim();
-		mHomeObject.mHomeCity = mCityEditView.getText().toString().trim();
-		mHomeObject.mHomeDis = mDisEditView.getText().toString().trim();
-		mHomeObject.mHomePlaceDetail = mPlaceDetail.getText().toString().trim();
-	}
-	
-	public void updateEditText() {
+	public void updateHomeView() {
+		MyApplication.getInstance().showMessage("updateHomeView");
 		mProEditView.setText(mHomeObject.mHomeProvince);
 		mCityEditView.setText(mHomeObject.mHomeCity);
 		mDisEditView.setText(mHomeObject.mHomeDis);
 		mPlaceDetail.setText(mHomeObject.mHomePlaceDetail);
-		
+		if(mHomeObject.mHomeAid > 0) {
+			mProEditView.setEnabled(false);
+			mCityEditView.setEnabled(false);
+			mDisEditView.setEnabled(false);
+		} else {
+			mProEditView.setEnabled(true);
+			mCityEditView.setEnabled(true);
+			mDisEditView.setEnabled(true);
+		}
 	}
 
 	public HomeObject getHomeObject() {
 		if(mHomeObject == null) {
 			mHomeObject = new HomeObject();
 		}
+		mHomeObject.mHomeProvince = mProEditView.getText().toString().trim();
+		mHomeObject.mHomeCity = mCityEditView.getText().toString().trim();
+		mHomeObject.mHomeDis = mDisEditView.getText().toString().trim();
+		mHomeObject.mHomePlaceDetail = mPlaceDetail.getText().toString().trim();
+		
 		return mHomeObject;
 	}
 }

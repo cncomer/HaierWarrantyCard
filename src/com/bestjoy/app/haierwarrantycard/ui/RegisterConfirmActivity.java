@@ -233,7 +233,6 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 				usrPwdConfirm = usrPwdConfirmEditText.getText().toString().trim();
 
 				mHomeObject = mProCityDisEditPopView.getHomeObject();
-				mProCityDisEditPopView.updateHomeObject();
 				if(valiInput()) {
 					registerAsync();
 				}

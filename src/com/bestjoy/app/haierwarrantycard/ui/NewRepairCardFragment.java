@@ -151,7 +151,6 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		} else {
 			mContactNameInput.setText(mAccountObject.mAccountName);
 			mContactTelInput.setText(mAccountObject.mAccountTel);
-			mProCityDisEditPopView.setHomeObject(mAccountObject.mAccountHomes.get(1));
 		}
 	}
 	
@@ -196,6 +195,8 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			
 		}
 	}
+
+
 	
 	public BaoxiuCardObject getBaoxiuCardObject() {
 		if (mBaoxiuCardObject == null) {
@@ -210,9 +211,9 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		return mBaoxiuCardObject;
 	}
 	
-	/*public HomeObject getHomeObject() {
-		return mProCityDisEditView.getHomeObject();
-	}*/
+	public HomeObject getHomeObject() {
+		return mProCityDisEditPopView.getHomeObject();
+	}
 	
 
 	public AccountObject getContactInfoObject() {
@@ -273,6 +274,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		@Override
 		protected Boolean doInBackground(String... params) {
 			getBaoxiuCardObject();
+			ensureHomeID();
 			mError = null;
 			InputStream is = null;
 			final int LENGTH = 9;
@@ -323,6 +325,17 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 				NetworkUtils.closeInputStream(is);
 			}
 			return false;
+		}
+
+		private void ensureHomeID() {
+			HomeObject homeObj = getHomeObject();
+			//设置所属家id
+			if (homeObj.mHomeAid != -1) {
+				mBaoxiuCardObject.mAID = homeObj.mHomeAid;
+			} else if (mBaoxiuCardObject.mAID <= 0) {
+				//如果没有aid,我们默认以第一个家
+				mBaoxiuCardObject.mAID = HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(0).mHomeAid;
+			}
 		}
 
 		@Override
@@ -473,6 +486,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		if (infoInterface instanceof BaoxiuCardObject) {
 			populateBaoxiuInfoView((BaoxiuCardObject)infoInterface);
 		} else if (infoInterface instanceof HomeObject) {
+			MyApplication.getInstance().showMessage("updateInfoInterface HomeObject");
 			populateHomeInfoView((HomeObject)infoInterface);
 		} else if (infoInterface instanceof AccountObject) {
 			populateContactInfoView((AccountObject) infoInterface);
