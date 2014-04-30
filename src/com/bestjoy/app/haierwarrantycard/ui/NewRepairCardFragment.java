@@ -115,6 +115,8 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		 view.findViewById(R.id.yuyue_info_divider).setBackgroundResource(R.color.light_green);
 		 mYuyueDate = (TextView) view.findViewById(R.id.date);
 		 mYuyueTime = (TextView) view.findViewById(R.id.time);
+		 mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
+		 mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT.format(mCalendar.getTime()));
 		 mYuyueDate.setOnClickListener(this);
 		 mYuyueTime.setOnClickListener(this);
 		 
@@ -281,9 +283,9 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			String[] urls = new String[LENGTH];
 			String[] paths = new String[LENGTH];
 			urls[0] = HaierServiceObject.SERVICE_URL + "AddYuYue.ashx?Date=";
-			paths[0] = mBaoxiuCardObject.BUY_DATE_TIME_FORMAT.format(mYuyueDate.getText().toString().trim());
+			paths[0] = BaoxiuCardObject.BUY_DATE_TIME_FORMAT.format(mCalendar.getTime());
 			urls[1] = "&Time=";
-			paths[1] = mBaoxiuCardObject.BUY_TIME_FORMAT.format(mYuyueTime.getText().toString().trim());
+			paths[1] = BaoxiuCardObject.BUY_TIME_FORMAT.format(mCalendar.getTime());
 			urls[2] = "&UID=";
 			paths[2] = String.valueOf(mBaoxiuCardObject.mUID);
 			urls[3] = "&Note=";
@@ -291,7 +293,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			urls[4] = "&AID=";
 			paths[4] = String.valueOf(mBaoxiuCardObject.mAID);
 			urls[5] = "&Type=";
-			paths[5] = mBaoxiuCardObject.mCardName;
+			paths[5] = getActivity().getString(R.string.type_repair);
 			urls[6] = "&BID=";
 			paths[6] = String.valueOf(mBaoxiuCardObject.mBID);
 			urls[7] = "&UserName=";
@@ -439,7 +441,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 				//更新日期数据
 //				mGoodsObject.mDate = mCalendar.getTimeInMillis();
 				//更新UI
-				mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(new Date(mCalendar.getTimeInMillis())));
+				mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
 			}
 				
 		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH))
@@ -450,8 +452,9 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
         new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
 			@Override
 			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-				mCalendar.set(mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH), hourOfDay, minute);
-				mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT.format(new Date(mCalendar.getTimeInMillis())));
+				mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
+				mCalendar.set(Calendar.MINUTE, minute);
+				mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT.format(mCalendar.getTime()));
 			}
         	
         }, mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE), true)

@@ -92,7 +92,8 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		 mYuyueTime = (TextView) view.findViewById(R.id.time);
 		 mYuyueDate.setOnClickListener(this);
 		 mYuyueTime.setOnClickListener(this);
-		 
+		 mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
+		 mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT.format(mCalendar.getTime()));
 		 mSaveBtn = (Button) view.findViewById(R.id.button_save);
 		 mSaveBtn.setOnClickListener(this);
 			
@@ -256,7 +257,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			urls[4] = "&AID=";
 			paths[4] = String.valueOf(mBaoxiuCardObject.mAID);
 			urls[5] = "&Type=";
-			paths[5] = mBaoxiuCardObject.mCardName;
+			paths[5] = getActivity().getString(R.string.type_install);
 			urls[6] = "&BID=";
 			paths[6] = String.valueOf(mBaoxiuCardObject.mBID);
 			urls[7] = "&UserName=";

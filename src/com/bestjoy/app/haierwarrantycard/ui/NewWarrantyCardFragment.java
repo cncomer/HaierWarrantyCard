@@ -99,6 +99,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		 mDatePickBtn = (TextView) view.findViewById(R.id.product_buy_date);
 		 mDatePickBtn.setOnClickListener(this);
 		 
+		 mDatePickBtn.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
+		 
 		 mPriceInput = (EditText) view.findViewById(R.id.product_buy_cost);
 		 mTujingInput = (EditText) view.findViewById(R.id.product_buy_entry);
 		 mYanbaoTimeInput = (EditText) view.findViewById(R.id.product_buy_delay_time);
