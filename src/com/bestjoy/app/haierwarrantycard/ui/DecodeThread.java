@@ -76,7 +76,7 @@ final class DecodeThread extends Thread {
     if (decodeFormats == null || decodeFormats.isEmpty()) {
       SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
       decodeFormats = new Vector<BarcodeFormat>();
-      if (prefs.getBoolean(PreferencesActivity.KEY_DECODE_1D, false)) {
+      if (prefs.getBoolean(PreferencesActivity.KEY_DECODE_1D, true)) {
           decodeFormats.addAll(DecodeFormatManager.ONE_D_FORMATS);
         }
         if (prefs.getBoolean(PreferencesActivity.KEY_DECODE_QR, true)) {

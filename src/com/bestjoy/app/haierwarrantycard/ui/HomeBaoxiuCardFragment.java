@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -148,7 +149,7 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 				view.setTag(holder);
 			}
 			//设置view
-			holder._tag.setText(card.mCardName);
+			holder._tag.setText(getTagName(card.mCardName, card.mLeiXin));
 			holder._pinpai.setText(card.mPinPai);
 			holder._xinghao.setText(card.mXingHao);
 			holder._card = card;
@@ -176,6 +177,20 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 			
 		}
 		
+	}
+	/**
+	 * 标签的内容应该是“备注标签+类型”如“客厅空调”
+	 * @param cardName   备注标签
+	 * @param cardType   类型
+	 * @return
+	 */
+	public static String getTagName(String cardName, String cardType) {
+		StringBuilder sb = new StringBuilder();
+		if (!TextUtils.isEmpty(cardName)) {
+			sb.append(cardName);
+		}
+		sb.append(cardType);
+		return sb.toString();
 	}
 	
 	private static final class ViewHolder {

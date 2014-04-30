@@ -106,10 +106,15 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
     setContentView(R.layout.capture);
 
-    Intent intent = getIntent();
-    if (intent != null) {
-    	mScanTask = intent.getBooleanExtra(Intents.EXTRA_SCAN_TASK, false);
+    if (icicle != null) {
+    	mScanTask = icicle.getBoolean(Intents.EXTRA_SCAN_TASK, false);
+    } else {
+    	Intent intent = getIntent();
+        if (intent != null) {
+        	mScanTask = intent.getBooleanExtra(Intents.EXTRA_SCAN_TASK, false);
+        }
     }
+    
     CameraManager.init(getApplication());
     viewfinderView = (ViewfinderView) findViewById(R.id.viewfinder_view);
     resultView = findViewById(R.id.result_view);
@@ -451,5 +456,13 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
           savedResultToShow=null;
         }
       }
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		outState.putBoolean(Intents.EXTRA_SCAN_TASK, false);
+		super.onSaveInstanceState(outState);
+	}
+    
+    
   
 }
