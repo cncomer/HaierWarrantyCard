@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -40,10 +41,13 @@ public class MainActivity extends BaseActionbarActivity {
 	private ImageView[] mAdsPagerViews = null;
 	private int mCurrentPagerIndex = 0;
 	private static final int DEFAULT_MAX_ADS_SIZE = 3;
+	
+	private Handler mHandler;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		mHandler = new Handler();
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		getSupportActionBar().setDisplayShowTitleEnabled(false);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -77,7 +81,7 @@ public class MainActivity extends BaseActionbarActivity {
 		});
 		
 		ModleSettings.addModelsAdapter(this, (ListView) findViewById(R.id.listview));
-		
+		changeAdsDelay();
 	}
 	
 	 @Override
@@ -159,6 +163,28 @@ public class MainActivity extends BaseActionbarActivity {
 		@Override
 		public void destroyItem(ViewGroup container, int position, Object object) {
 			container.removeView(mAdsPagerViews[position]);
+		}
+		
+	}
+	
+	private void changeAdsDelay() {
+		mHandler.postDelayed(mChangeAdsRunnable, DEFAULT_DELAY);
+	}
+	private static long DEFAULT_DELAY = 5000;
+	private ChangeAdsRunnable mChangeAdsRunnable = new ChangeAdsRunnable();
+	private class ChangeAdsRunnable implements Runnable {
+		@Override
+		public void run() {
+			if (!mAdsViewPagerIsScrolling) {
+				int pageCount = mAdsViewPager.getAdapter().getCount();
+				int nextPage = mCurrentPagerIndex % pageCount + 1;
+				if (nextPage >= pageCount) {
+					nextPage = 0;
+				}
+				mAdsViewPager.setCurrentItem(nextPage);
+				
+			}
+			mHandler.postDelayed(this, DEFAULT_DELAY);
 		}
 		
 	}
