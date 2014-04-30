@@ -83,6 +83,8 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 			//管理家
 			break;
 		default:
+			//当选择了一个Home时候，我们要设置HomeObject对象
+			HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
 			boolean handle = ModleSettings.onActionBarMenuSelected(item, mContext, mBundle);
 			if (! handle) {
 				return super.onOptionsItemSelected(item);
@@ -128,8 +130,6 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 		@Override
 		public void onPageSelected(int arg0) {
 			mHomeSelected = arg0;
-			//当选择了一个Home时候，我们要设置HomeObject对象
-			HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
 		}
 
 		@Override
@@ -179,6 +179,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	    	//进入详细页面
 	    } else {
 	    	BaoxiuCardObject.setBaoxiuCardObject(card.clone());
+	    	HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
 		    ModleSettings.doChoose(mContext, mBundle);
 	    }
 		

@@ -486,7 +486,6 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		if (infoInterface instanceof BaoxiuCardObject) {
 			populateBaoxiuInfoView((BaoxiuCardObject)infoInterface);
 		} else if (infoInterface instanceof HomeObject) {
-			MyApplication.getInstance().showMessage("updateInfoInterface HomeObject");
 			populateHomeInfoView((HomeObject)infoInterface);
 		} else if (infoInterface instanceof AccountObject) {
 			populateContactInfoView((AccountObject) infoInterface);

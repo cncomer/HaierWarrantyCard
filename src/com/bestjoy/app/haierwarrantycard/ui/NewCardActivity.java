@@ -44,13 +44,12 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 		}
 		
 		
-		if (savedInstanceState != null) {
-			mContent = (ModleBaseFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
-			mMenu = (NewCardChooseFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mMenu");
-		}
-		
+//		if (savedInstanceState != null) {
+//			mContent = (ModleBaseFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
+//			mMenu = (NewCardChooseFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mMenu");
+//		}
+		int type = mBundles.getInt(Intents.EXTRA_TYPE);
 		if (mContent == null) {
-			int type = mBundles.getInt(Intents.EXTRA_TYPE);
 			switch(type) {
 			case R.id.model_my_card:
 				mContent = new NewWarrantyCardFragment();

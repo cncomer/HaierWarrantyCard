@@ -321,7 +321,6 @@ public class ProCityDisEditPopView implements OnTouchListener {
 	}
 	
 	public void updateHomeView() {
-		MyApplication.getInstance().showMessage("updateHomeView");
 		mProEditView.setText(mHomeObject.mHomeProvince);
 		mCityEditView.setText(mHomeObject.mHomeCity);
 		mDisEditView.setText(mHomeObject.mHomeDis);
