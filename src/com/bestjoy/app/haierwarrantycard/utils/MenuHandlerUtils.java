@@ -8,6 +8,7 @@ import com.actionbarsherlock.view.SubMenu;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.ui.LoginActivity;
 import com.bestjoy.app.haierwarrantycard.ui.RegisterActivity;
+import com.bestjoy.app.haierwarrantycard.update.AppAboutActivity;
 
 public class MenuHandlerUtils {
 	
@@ -16,7 +17,6 @@ public class MenuHandlerUtils {
         subMenu1.add(1000, R.string.menu_login, 1001, R.string.menu_login);
         subMenu1.add(1000, R.string.menu_register, 1002, R.string.menu_register);
         subMenu1.add(1000, R.string.menu_setting, 1003, R.string.menu_setting);
-        subMenu1.add(1000, R.string.menu_help, 1004, R.string.menu_help);
         subMenu1.add(1000, R.string.menu_about, 1004, R.string.menu_about);
 
         MenuItem subMenu1Item = subMenu1.getItem();
@@ -35,9 +35,8 @@ public class MenuHandlerUtils {
       	   break;
         case R.string.menu_setting:
       	   break;
-        case R.string.menu_help:
-      	   break;
         case R.string.menu_about:
+        	context.startActivity(AppAboutActivity.createIntent(context));
       	   break;
 
         }

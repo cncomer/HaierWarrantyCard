@@ -40,7 +40,6 @@ import com.bestjoy.app.haierwarrantycard.database.HistoryItem;
 import com.bestjoy.app.haierwarrantycard.qrcode.HistoryActivity;
 import com.bestjoy.app.haierwarrantycard.qrcode.HistoryManager;
 import com.bestjoy.app.haierwarrantycard.qrcode.ViewfinderView;
-import com.bestjoy.app.haierwarrantycard.service.PhotoManagerService;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.utils.BeepAndVibrate;
 import com.google.zxing.BarcodeFormat;
@@ -137,7 +136,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     historyManager.trimHistory();
     
     media = BeepAndVibrate.getInstance();
-    PhotoManagerService.getInstance().requestToken(TAG);
   }
 
   @Override
@@ -184,7 +182,6 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   @Override
   public void onDestroy() {
 	  super.onDestroy();
-	  PhotoManagerService.getInstance().releaseToken(TAG);
   }
 
   public boolean onKeyDown(int keyCode, KeyEvent event) {

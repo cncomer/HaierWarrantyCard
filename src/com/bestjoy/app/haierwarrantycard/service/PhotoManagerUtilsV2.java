@@ -571,6 +571,8 @@ public class PhotoManagerUtilsV2 {
 		switch(type) {
 		case HOME_DEVICE_AVATOR:
 			return MyApplication.getInstance().getProductPreviewAvatorFile(photoId);
+		case FaPiao:
+			return MyApplication.getInstance().getProductFaPiaoFile(photoId);
 		case PREVIEW:
 		}
 		return null;
@@ -582,6 +584,8 @@ public class PhotoManagerUtilsV2 {
 			return null;
 		case HOME_DEVICE_AVATOR:
 			return HaierServiceObject.getProdcutAvatorUrl(photoId);
+		case FaPiao:
+			return HaierServiceObject.getProdcutFaPiaoUrl(photoId);
 		}
 		return null;
 	}
@@ -706,6 +710,7 @@ public class PhotoManagerUtilsV2 {
 	
 	public enum TaskType {
 		PREVIEW("PreviewVcfType"),
+		FaPiao("FaPiao"),
 		HOME_DEVICE_AVATOR("HomeDeviceAvatorType");  //设备avator
 		private String mTypeName;
 		TaskType(String typeName) {

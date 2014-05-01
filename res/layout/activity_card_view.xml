@@ -103,25 +103,6 @@
 
                         <TextView
                             style="@style/ProductInfo"
-                            android:text="@string/product_type" />
-
-                        <TextView
-                            android:id="@+id/product_type_input"
-                            style="@style/ViewProductInfo" />
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal" >
-
-                        <ImageView
-                            style="@style/ProductStarIcon"
-                            android:src="@drawable/ic_red_star" />
-
-                        <TextView
-                            style="@style/ProductInfo"
                             android:text="@string/product_brand" />
 
                         <TextView
@@ -198,15 +179,170 @@
 
                         <TextView
                             style="@style/ProductInfo"
-                            android:text="@string/product_beizhu" />
+                            android:text="@string/product_buy_date" />
 
                         <TextView
-                            android:id="@+id/product_beizhu_tag"
+                            android:id="@+id/product_buy_date"
                             style="@style/ViewProductInfo" />
                     </LinearLayout>
-               
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            style="@style/ProductStarIcon"
+                            android:src="@drawable/ic_red_star" />
+
+                        <TextView
+                            style="@style/ProductInfo"
+                            android:text="@string/product_buy_cost" />
+
+                        <TextView
+                            android:id="@+id/product_buy_cost"
+                            style="@style/ViewProductInfo" />
+                    </LinearLayout>
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            style="@style/ProductStarIcon"
+                            android:src="@drawable/ic_red_star" />
+
+                        <TextView
+                            style="@style/ProductInfo"
+                            android:text="@string/product_buy_entry" />
+
+                        <TextView
+                            android:id="@+id/product_buy_entry"
+                            style="@style/ViewProductInfo" />
+                    </LinearLayout>
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            style="@style/ProductStarIcon"
+                            android:src="@drawable/ic_red_star" />
+
+                        <TextView
+                            style="@style/ProductInfo"
+                            android:text="@string/product_buy_delay_time" />
+
+                        <TextView
+                            android:id="@+id/product_buy_delay_time"
+                            style="@style/ViewProductInfo" />
+                    </LinearLayout>
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            style="@style/ProductStarIcon"
+                            android:src="@drawable/ic_red_star" />
+
+                        <TextView
+                            style="@style/ProductInfo"
+                            android:text="@string/product_buy_delay_componey" />
+
+                        <TextView
+                            android:id="@+id/product_buy_delay_componey"
+                            style="@style/ViewProductInfo" />
+                    </LinearLayout>
+                    
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal" >
+
+                        <ImageView
+                            style="@style/ProductStarIcon"
+                            android:src="@drawable/ic_red_star" />
+
+                        <TextView
+                            style="@style/ProductInfo"
+                            android:text="@string/product_buy_delay_componey_tel" />
+
+                        <TextView
+                            android:id="@+id/product_buy_delay_componey_tel"
+                            style="@style/ViewProductInfo" />
+                    </LinearLayout>
+                    
             </LinearLayout>
+            
+            <TextView style="@style/PeopleInfo"
+                android:layout_marginTop="10dip"
+                android:textColor="@color/blk"
+	        	android:text="@string/error_des" />
+            <EditText
+                android:id="@+id/product_ask_online_input"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/edit_text_holo_light"
+                android:gravity="left|top"
+                android:maxLength="1024"
+                android:maxLines="4" />
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:gravity="center"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/ic_voice" />
+
+                <Button
+                    android:id="@+id/button_speak"
+                    style="@style/DefaultShapeButton.Red"
+                    android:layout_width="180dip"
+                    android:layout_marginLeft="10dip"
+                    android:text="@string/button_speek" />
+            </LinearLayout>
+            
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginTop="5dip"
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="invisible"
+                    android:src="@drawable/ic_voice" />
+
+                <Button
+                    android:id="@+id/button_save"
+                    style="@style/DefaultShapeButton.Red"
+                    android:layout_gravity="center_horizontal"
+                	android:background="@drawable/default_black_btn"
+                    android:layout_width="180dip"
+                    android:textColor="#ffffffff"
+                    android:layout_marginLeft="10dip"
+                    android:text="@string/button_save" />
+            </LinearLayout>
+            
+            <View
+                android:layout_width="fill_parent"
+                android:layout_height="60dip" />
         </LinearLayout>
     </ScrollView>
-
 </LinearLayout>

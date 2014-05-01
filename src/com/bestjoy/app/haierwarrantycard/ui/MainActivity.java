@@ -21,6 +21,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
+import com.bestjoy.app.haierwarrantycard.update.UpdateService;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
 
 public class MainActivity extends BaseActionbarActivity {
@@ -81,7 +82,19 @@ public class MainActivity extends BaseActionbarActivity {
 		});
 		
 		ModleSettings.addModelsAdapter(this, (ListView) findViewById(R.id.listview));
+		UpdateService.startUpdateServiceOnAppLaunch(mContext);
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
 		changeAdsDelay();
+	}
+	
+	@Override
+	public void onStop() {
+		super.onStop();
+		mHandler.removeCallbacks(mChangeAdsRunnable);
 	}
 	
 	 @Override

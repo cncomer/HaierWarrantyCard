@@ -1,0 +1,186 @@
+package com.bestjoy.app.haierwarrantycard.update;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.Context;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.bestjoy.app.haierwarrantycard.MyApplication;
+import com.bestjoy.app.haierwarrantycard.R;
+import com.shwy.bestjoy.utils.DebugUtils;
+import com.shwy.bestjoy.utils.NetworkUtils;
+
+/**
+ * version 版本号  从1开始
+ * date 日期  
+ * importance 重要程度  重要程度分为0和1，0表示强制更新, 1表示普通，其他的暂时不支持
+ * size 更新大小 
+ * apk 更新apk的地址，如果是default表示的是默认路径http://www.bjnote.com/down4/bjnote.apk
+ * note 更新说明 如果是http开头的，会以网页的形式显示
+ * @author chenkai
+ *
+ */
+public class ServiceAppInfo implements Parcelable{
+	 /**最近一次执行过自动检测的时间*/
+    public static final String KEY_SERVICE_APP_INFO_CHECK_TIME = "service_app_info_timestamp";
+    public static final String KEY_SERVICE_APP_INFO_VERSION_CODE = "service_app_info_version_code";
+    public static final String KEY_SERVICE_APP_INFO_VERSION_NAME = "service_app_info_version_name";
+    public static final String KEY_SERVICE_APP_INFO_RELEASENOTE = "service_app_info_releasenote";
+    public static final String KEY_SERVICE_APP_INFO_APK_URL = "service_app_info_apk_url";
+    public static final String KEY_SERVICE_APP_INFO_APK_SIZE = "service_app_info_apk_sizel";
+    public static final String KEY_SERVICE_APP_INFO_RELEASEDATE = "service_app_info_releasedate";
+    public static final String KEY_SERVICE_APP_INFO_IMPORTANCE = "service_app_info_importance";
+  
+    
+	public static final String DEFAULT_UPDATE_FILE_URL="http://www.mingdown.com/mobile/getVersion.ashx?app=haier";
+	public static final String KEY_VERSION_CODE = "version";
+	public static final String KEY_VERSION_NAME = "versionCodeName";
+	public static final String KEY_DATE = "date";
+	public static final String KEY_IMPORTANCE = "importance";
+	public static final String KEY_SIZE = "size";
+	public static final String KEY_APK = "apk";
+	public static final String KEY_NOTE = "note";
+	
+	public static final String KEY_TIME = "check_time";
+	
+	public static final int IMPORTANCE_MUST = 0;
+	public static final int IMPORTANCE_OPTIONAL = 1;
+	
+	
+	public int mVersionCode = 0;
+	public String mReleaseDate ;
+	/**更新补丁的重要程度，如果是0表示必须更新并安装，否则无法继续使用；默认是1表示可选择安装更新也可以不选择。*/
+	public int mImportance = IMPORTANCE_OPTIONAL;
+	public String mSizeStr;
+	public String mApkUrl;
+	public String mReleaseNote;
+	
+	public String mVersionName = "";
+	
+	public long mCheckTime;
+
+	
+	public static ServiceAppInfo getServiceAppInfoLocked() {
+		InputStream is = null;
+		ServiceAppInfo appInfo = null;
+		try {
+			is = NetworkUtils.openContectionLocked(DEFAULT_UPDATE_FILE_URL, MyApplication.getInstance().getSecurityKeyValuesObject());
+			if (is != null) {
+				String content = NetworkUtils.getContentFromInput(is);
+				JSONObject json = new JSONObject(content);
+				appInfo = new ServiceAppInfo();
+				appInfo.mVersionCode = json.getInt(KEY_VERSION_CODE);
+				appInfo.mReleaseDate = json.getString(KEY_DATE);
+				appInfo.mImportance = json.getInt(KEY_IMPORTANCE);
+				appInfo.mSizeStr = json.getString(KEY_SIZE);
+				appInfo.mApkUrl = json.getString(KEY_APK);
+				appInfo.mReleaseNote = json.getString(KEY_NOTE);
+				appInfo.mVersionName = json.optString(KEY_VERSION_NAME, String.valueOf(appInfo.mVersionCode));
+				appInfo.mCheckTime = System.currentTimeMillis();
+			}
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} finally {
+			NetworkUtils.closeInputStream(is);
+		}
+		return appInfo;
+	}
+	
+	public void save() {
+		MyApplication.getInstance().mPreferManager.edit()
+		.putLong(KEY_SERVICE_APP_INFO_CHECK_TIME, mCheckTime)
+		.putInt(KEY_SERVICE_APP_INFO_VERSION_CODE, mVersionCode)
+		.putString(KEY_SERVICE_APP_INFO_VERSION_NAME, mVersionName)
+		.putString(KEY_SERVICE_APP_INFO_RELEASENOTE, mReleaseNote)
+		.putString(KEY_SERVICE_APP_INFO_APK_URL, mApkUrl)
+		.putString(KEY_SERVICE_APP_INFO_APK_SIZE, mSizeStr)
+		.putString(KEY_SERVICE_APP_INFO_RELEASEDATE, mReleaseDate)
+		.putInt(KEY_SERVICE_APP_INFO_IMPORTANCE, mImportance)
+		.commit();
+	}
+	
+	public static ServiceAppInfo read() {
+		ServiceAppInfo appInfo = new ServiceAppInfo();
+		
+		appInfo.mCheckTime = MyApplication.getInstance().mPreferManager.getLong(KEY_SERVICE_APP_INFO_CHECK_TIME, -1l);
+		if (appInfo.mCheckTime == -1l) {
+			DebugUtils.logD("AppInfo", "read null from preferences");
+			return null;
+		}
+		appInfo.mVersionCode = MyApplication.getInstance().mPreferManager.getInt(KEY_SERVICE_APP_INFO_VERSION_CODE, -1);
+		appInfo.mVersionName = MyApplication.getInstance().mPreferManager.getString(KEY_SERVICE_APP_INFO_VERSION_NAME, "");
+		appInfo.mReleaseNote = MyApplication.getInstance().mPreferManager.getString(KEY_SERVICE_APP_INFO_RELEASENOTE, "");
+		appInfo.mApkUrl = MyApplication.getInstance().mPreferManager.getString(KEY_SERVICE_APP_INFO_APK_URL, "");
+		
+		appInfo.mSizeStr = MyApplication.getInstance().mPreferManager.getString(KEY_SERVICE_APP_INFO_APK_SIZE, "");
+		appInfo.mReleaseDate = MyApplication.getInstance().mPreferManager.getString(KEY_SERVICE_APP_INFO_RELEASEDATE, "");
+		appInfo.mImportance = MyApplication.getInstance().mPreferManager.getInt(KEY_SERVICE_APP_INFO_IMPORTANCE, IMPORTANCE_OPTIONAL);
+		return appInfo;
+	}
+	
+	public String buildReleasenote(Context context) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(context.getString(R.string.msg_app_release_time, mReleaseDate)).append("\n");
+		sb.append(context.getString(R.string.msg_app_release_size, mSizeStr)).append("\n").append("\n");
+		sb.append(mReleaseNote);
+		return sb.toString();
+	}
+	
+	public static long getLatestCheckTime() {
+		return MyApplication.getInstance().mPreferManager.getLong(ServiceAppInfo.KEY_SERVICE_APP_INFO_CHECK_TIME, 0);
+	}
+
+
+	@Override
+	public int describeContents() {
+		return 0;
+	}
+
+
+	@Override
+	public void writeToParcel(Parcel dest, int flags) {
+		dest.writeInt(mVersionCode);
+		dest.writeString(mReleaseDate);
+		dest.writeInt(mImportance);
+		dest.writeString(mSizeStr);
+		dest.writeString(mApkUrl);
+		dest.writeString(mReleaseNote);
+		dest.writeString(mVersionName);
+		
+	}
+	
+	
+	public static final Parcelable.Creator<ServiceAppInfo> CREATOR = new Parcelable.Creator<ServiceAppInfo>(){
+
+		@Override
+		public ServiceAppInfo createFromParcel(Parcel source) {
+			ServiceAppInfo appInfo = new ServiceAppInfo();
+			appInfo.mVersionCode = source.readInt();
+			appInfo.mReleaseDate = source.readString();
+			appInfo.mImportance = source.readInt();
+			appInfo.mSizeStr = source.readString();
+			appInfo.mApkUrl = source.readString();
+			appInfo.mReleaseNote = source.readString();
+			appInfo.mVersionName = source.readString();
+			return appInfo;
+		}
+
+		@Override
+		public ServiceAppInfo[] newArray(int size) {
+			return new ServiceAppInfo[size];
+		}
+		
+	};
+	
+	
+}

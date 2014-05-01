@@ -52,8 +52,8 @@ public class AccountObject implements InfoInterface{
 	private static final String WHERE_DEFAULT = HaierDBHelper.ACCOUNT_DEFAULT + "=1";
 	private static final String WHERE_UID = HaierDBHelper.ACCOUNT_UID + "=?";
 	
-	public long mAccountId;
-	public Long mAccountUid;
+	public long mAccountId = -1;
+	public long mAccountUid = -1;
 	public String mAccountName;
 	public String mAccountTel;
 	public String mAccountPwd;

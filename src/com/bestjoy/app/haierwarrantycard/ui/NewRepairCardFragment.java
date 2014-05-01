@@ -62,8 +62,9 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	private Button mSpeakButton;
 	private SpeechRecognizerEngine mSpeechRecognizerEngine;
 	
-	private BaoxiuCardObject mBaoxiuCardObject;
-	private AccountObject mAccountObject;
+	private long mAid = -1;
+	private long mUid = -1;
+	private long mBid = -1;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +72,6 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		setHasOptionsMenu(true);
 		getActivity().setTitle(R.string.activity_title_repair);
 		mCalendar = Calendar.getInstance();
-		mAccountObject = HaierAccountManager.getInstance().getAccountObject();
 	}
 	
 	@Override
@@ -131,8 +131,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	
 	private void populateBaoxiuInfoView(BaoxiuCardObject baoxiuCardObject) {
 		//init layouts
-		mBaoxiuCardObject = baoxiuCardObject;
-		if (mBaoxiuCardObject == null) {
+		if (baoxiuCardObject == null) {
 			mTypeInput.getText().clear();
 			mPinpaiInput.getText().clear();
 			mModelInput.getText().clear();
@@ -140,52 +139,37 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			mBaoxiuTelInput.getText().clear();
 			mTagInput.getText().clear();
 		} else {
-			mTypeInput.setText(mBaoxiuCardObject.mLeiXin);
-			mPinpaiInput.setText(mBaoxiuCardObject.mPinPai);
-			mModelInput.setText(mBaoxiuCardObject.mXingHao);
-			mBianhaoInput.setText(mBaoxiuCardObject.mSHBianHao);
-			mBaoxiuTelInput.setText(mBaoxiuCardObject.mBXPhone);
-			mTagInput.setText(mBaoxiuCardObject.mCardName);
-		}
-		
-		if(mAccountObject == null) {
-			mContactNameInput.getText().clear();
-			mContactTelInput.getText().clear();
-		} else {
-			mContactNameInput.setText(mAccountObject.mAccountName);
-			mContactTelInput.setText(mAccountObject.mAccountTel);
+			mTypeInput.setText(baoxiuCardObject.mLeiXin);
+			mPinpaiInput.setText(baoxiuCardObject.mPinPai);
+			mModelInput.setText(baoxiuCardObject.mXingHao);
+			mBianhaoInput.setText(baoxiuCardObject.mSHBianHao);
+			mBaoxiuTelInput.setText(baoxiuCardObject.mBXPhone);
+			mTagInput.setText(baoxiuCardObject.mCardName);
 		}
 	}
 	
 	public void setBaoxiuObjectAfterSlideMenu(InfoInterface slideManuObject) {
-		if (mBaoxiuCardObject == null) {
-			mBaoxiuCardObject = new BaoxiuCardObject();
-		}
 		if (slideManuObject instanceof BaoxiuCardObject) {
 			BaoxiuCardObject object = (BaoxiuCardObject) slideManuObject;
 			if (!TextUtils.isEmpty(object.mLeiXin)) {
-				mBaoxiuCardObject.mLeiXin = object.mLeiXin;
-				mTypeInput.setText(mBaoxiuCardObject.mLeiXin);
+				mTypeInput.setText(object.mLeiXin);
 			}
 			if (!TextUtils.isEmpty(object.mPinPai)) {
-				mBaoxiuCardObject.mPinPai = object.mPinPai;
-				mPinpaiInput.setText(mBaoxiuCardObject.mPinPai);
+				mPinpaiInput.setText(object.mPinPai);
 			}
 			
 			if (!TextUtils.isEmpty(object.mXingHao)) {
-				mBaoxiuCardObject.mXingHao = object.mXingHao;
-				mModelInput.setText(mBaoxiuCardObject.mXingHao);
+				mModelInput.setText(object.mXingHao);
 			}
 			
 			if (!TextUtils.isEmpty(object.mSHBianHao)) {
-				mBaoxiuCardObject.mSHBianHao = object.mSHBianHao;
-				mBianhaoInput.setText(mBaoxiuCardObject.mSHBianHao);
+				mBianhaoInput.setText(object.mSHBianHao);
 			}
 		}
 	}
 	
 	public void populateHomeInfoView(HomeObject homeObject) {
-		mProCityDisEditPopView.setHomeObject(homeObject);
+		mProCityDisEditPopView.setHomeObject(homeObject.clone());
 	}
 	
     public void populateContactInfoView(AccountObject accountObject) {
@@ -202,16 +186,18 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 
 	
 	public BaoxiuCardObject getBaoxiuCardObject() {
-		if (mBaoxiuCardObject == null) {
-			mBaoxiuCardObject = new BaoxiuCardObject();
-		}
-		mBaoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
-		mBaoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
-		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
-		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
-		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
-		mBaoxiuCardObject.mCardName = mTagInput.getText().toString().trim();
-		return mBaoxiuCardObject;
+		BaoxiuCardObject baoxiuCardObject = new BaoxiuCardObject();
+		baoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
+		baoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
+		baoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
+		baoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
+		baoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
+		baoxiuCardObject.mCardName = mTagInput.getText().toString().trim();
+		baoxiuCardObject.mAID = mAid;
+		baoxiuCardObject.mUID = mUid;
+		baoxiuCardObject.mBID = mBid;
+		
+		return baoxiuCardObject;
 	}
 	
 	public HomeObject getHomeObject() {
@@ -276,8 +262,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		String mStatusMessage = null;
 		@Override
 		protected Boolean doInBackground(String... params) {
-			getBaoxiuCardObject();
-			ensureHomeID();
+			BaoxiuCardObject baoxiuCardObject = getBaoxiuCardObject();
 			mError = null;
 			InputStream is = null;
 			final int LENGTH = 9;
@@ -288,15 +273,15 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			urls[1] = "&Time=";
 			paths[1] = BaoxiuCardObject.BUY_TIME_FORMAT.format(mCalendar.getTime());
 			urls[2] = "&UID=";
-			paths[2] = String.valueOf(mBaoxiuCardObject.mUID);
+			paths[2] = String.valueOf(baoxiuCardObject.mUID);
 			urls[3] = "&Note=";
 			paths[3] = mAskInput.getText().toString().trim();
 			urls[4] = "&AID=";
-			paths[4] = String.valueOf(mBaoxiuCardObject.mAID);
+			paths[4] = String.valueOf(baoxiuCardObject.mAID);
 			urls[5] = "&Type=";
 			paths[5] = getActivity().getString(R.string.type_repair);
 			urls[6] = "&BID=";
-			paths[6] = String.valueOf(mBaoxiuCardObject.mBID);
+			paths[6] = String.valueOf(baoxiuCardObject.mBID);
 			urls[7] = "&UserName=";
 			paths[7] = mContactNameInput.getText().toString().trim();
 			urls[8] = "&CellPhone=";
@@ -328,17 +313,6 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 				NetworkUtils.closeInputStream(is);
 			}
 			return false;
-		}
-
-		private void ensureHomeID() {
-			HomeObject homeObj = getHomeObject();
-			//设置所属家id
-			if (homeObj.mHomeAid != -1) {
-				mBaoxiuCardObject.mAID = homeObj.mHomeAid;
-			} else if (mBaoxiuCardObject.mAID <= 0) {
-				//如果没有aid,我们默认以第一个家
-				mBaoxiuCardObject.mAID = HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(0).mHomeAid;
-			}
 		}
 
 		@Override
@@ -489,10 +463,27 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	@Override
 	public void updateInfoInterface(InfoInterface infoInterface) {
 		if (infoInterface instanceof BaoxiuCardObject) {
+			if (infoInterface != null) {
+				mBid = ((BaoxiuCardObject)infoInterface).mBID;
+				mAid = ((BaoxiuCardObject)infoInterface).mAID;
+				mUid = ((BaoxiuCardObject)infoInterface).mUID;
+			}
 			populateBaoxiuInfoView((BaoxiuCardObject)infoInterface);
 		} else if (infoInterface instanceof HomeObject) {
+			if (infoInterface != null) {
+				long aid = ((HomeObject)infoInterface).mHomeAid;
+				if (aid > 0) {
+					mAid = aid;
+				}
+			}
 			populateHomeInfoView((HomeObject)infoInterface);
 		} else if (infoInterface instanceof AccountObject) {
+			if (infoInterface != null) {
+				long uid = ((AccountObject)infoInterface).mAccountUid;
+				if (uid > 0) {
+					mUid = uid;
+				}
+			}
 			populateContactInfoView((AccountObject) infoInterface);
 		}
 	}

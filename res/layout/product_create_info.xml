@@ -60,7 +60,7 @@
 	        style="@style/ProductInfoInput"/>
 	</LinearLayout>
 	
-    <LinearLayout
+    <LinearLayout android:id="@+id/product_beizhu_tag_layout"
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:gravity="center_vertical"

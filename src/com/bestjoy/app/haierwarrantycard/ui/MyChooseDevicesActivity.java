@@ -180,6 +180,9 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	    int id = ModleSettings.getModelIdFromBundle(mBundle);
 	    if (id == R.id.model_my_card) {
 	    	//进入详细页面
+	    	BaoxiuCardObject.setBaoxiuCardObject(card.clone());
+	    	HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
+	    	CardViewActivity.startActivit(mContext);
 	    } else {
 	    	BaoxiuCardObject.setBaoxiuCardObject(card.clone());
 	    	HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());

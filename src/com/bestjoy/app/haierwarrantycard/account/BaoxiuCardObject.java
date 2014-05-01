@@ -1,5 +1,6 @@
 package com.bestjoy.app.haierwarrantycard.account;
 
+import java.io.File;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -13,13 +14,19 @@ import org.json.JSONObject;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.text.TextUtils;
 
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
+import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.shwy.bestjoy.utils.DebugUtils;
+import com.shwy.bestjoy.utils.ImageHelper;
 import com.shwy.bestjoy.utils.InfoInterfaceImpl;
 /**
  * 保修卡对象
@@ -416,6 +423,122 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		mBaoxiuCardObject = baoxiucardObject;
 	}
 	
+	/**
+	 * 标签的内容应该是“备注标签+类型”如“客厅空调”
+	 * @param cardName   备注标签
+	 * @param cardType   类型
+	 * @return
+	 */
+	public static String getTagName(String cardName, String cardType) {
+		StringBuilder sb = new StringBuilder();
+		if (!TextUtils.isEmpty(cardName)) {
+			sb.append(cardName);
+		}
+		sb.append(cardType);
+		return sb.toString();
+	}
+	//add by chenkai for FaPiao begin
+	//添加构造器来初始化发票相关的信息
+	public BaoxiuCardObject() {
+		mBillFile = MyApplication.getInstance().getProductFaPiaoFile(getPhotoId());
+	}
+	private static final int mAvatorWidth = 320, mAvatorHeight = 480;
+	public static final String PHOTOID_SEPERATOR = "_";
+	/**占位符号，通常用在PD、SID等字段数据*/
+	public static final String PHOTOID_PLASEHOLDER = "00_00";
+	/**临时拍摄的照片路径，当保存成功的时候会将该文件路径重命名为mBillAvator*/
+	public Bitmap mBillTempBitmap;
+	/**本地发票图片路径*/
+	public File mBillFile;
+	/**临时拍摄的照片路径，当保存成功的时候会将该文件路径重命名为mBillAvator*/
+	public File mBillTempFile;
+	
+	public static BaoxiuCardObject objectUseForbill = null;
+	/**是否有发票,如果有发票文件或是有发票的拍摄获得的临时文件,我们认为是有发票的*/
+	public boolean hasLocalBill() {
+		return mBillFile.exists() || mBillTempFile != null;
+	}
+	
+	
+	/**
+	 * http://115.29.231.29/Fapiao/20140421/01324df60b0734de0f973c7907af55fc.jpg
+	 * 返回 20140421_01324df60b0734de0f973c7907af55fc
+	 * @return
+	 */
+	public String getPhotoId() {
+		if (!TextUtils.isEmpty(mFPaddr) && mFPaddr.startsWith(HaierServiceObject.FAPIAO_PREFIX)) {
+			String photoId = mFPaddr.substring(HaierServiceObject.FAPIAO_PREFIX.length());
+			photoId = photoId.replaceAll("/", "_");
+			return photoId;
+		}
+		return PHOTOID_PLASEHOLDER;
+	}
+	
+	/**保存临时的发票拍摄作为该商品的使用发票预览图*/
+	boolean saveBillAvatorTempFileLocked() {
+		if (mBillTempBitmap != null) {
+			File newPath = MyApplication.getInstance().getProductFaPiaoFile(getPhotoId());
+			boolean result = ImageHelper.bitmapToFile(mBillTempBitmap, newPath, 100);
+			if (result) {
+				mBillFile = newPath;
+				if (mBillTempFile != null && mBillTempFile.exists()) {
+					mBillTempFile.delete();
+					mBillTempFile = null;
+				}
+			}
+			return result;
+		} else {
+			return false;
+		}
+	}
+	
+	 /**
+     * 返回商品发票预览图的Base64编码字符串
+     * @return
+     */
+    String getBase64StringFromBillAvator(){
+    	//默认返回""
+    	String result = "";
+    	//如果此时还没有临时商品预览图，我们从文件中构建
+        if (mBillTempBitmap == null) {
+        	if (mBillFile != null) {
+        		Bitmap billTempBitmap = ImageHelper.getSmallBitmap(mBillFile.getAbsolutePath(), mAvatorWidth, mAvatorHeight);
+        		result = ImageHelper.bitmapToString(billTempBitmap, 100);
+        	}
+        } else {
+        	 result = ImageHelper.bitmapToString(mBillTempBitmap, 100);
+        }
+        
+       return result == null ? "":result;
+    }
+    
+    public void updateBillAvatorTempLocked(File file) {
+    	mBillTempFile = file;
+    	mBillTempBitmap = ImageHelper.getSmallBitmap(file.getAbsolutePath(), mAvatorWidth, mAvatorWidth);
+    	mBillTempBitmap = ImageHelper.rotateBitmap(mBillTempBitmap, 90);
+		ImageHelper.bitmapToFile(mBillTempBitmap, mBillTempFile, 100);
+    }
+	
+	public void clear() {
+		if (mBillTempBitmap != null) {
+			mBillTempBitmap.recycle();
+			mBillTempBitmap = null;
+		}
+		if (mBillTempFile != null && mBillTempFile.exists()) {
+			mBillTempFile.delete();
+			mBillTempFile = null;
+		}
+	}
+	
+	public static void showBill(Context context, BaoxiuCardObject baociuCardObject) {
+		objectUseForbill = baociuCardObject;
+		if (baociuCardObject != null) {
+			Intent intent = new Intent(Intent.ACTION_VIEW);
+			intent.setDataAndType(BjnoteContent.BaoxiuCard.BILL_CONTENT_URI, "image/png");
+			context.startActivity(intent);
+		}
+	}
+	//add by chenkai for FaPiao end
 	public static  DateFormat BUY_DATE_TIME_FORMAT = new SimpleDateFormat("yyyyMMdd");
 	public static  DateFormat BUY_TIME_FORMAT = new SimpleDateFormat("HHmm");
 	private static long DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;

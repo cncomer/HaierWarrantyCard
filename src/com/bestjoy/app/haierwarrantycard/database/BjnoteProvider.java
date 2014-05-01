@@ -1,6 +1,7 @@
 package com.bestjoy.app.haierwarrantycard.database;
 
 
+import java.io.File;
 import java.io.FileNotFoundException;
 
 import android.content.ContentProvider;
@@ -16,6 +17,8 @@ import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.text.TextUtils;
 
+import com.bestjoy.app.haierwarrantycard.MyApplication;
+import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.shwy.bestjoy.utils.DebugUtils;
 
 public class BjnoteProvider extends ContentProvider{
@@ -39,6 +42,8 @@ public class BjnoteProvider extends ContentProvider{
 	
 	private static final int DEVICE = 0x0200;
 	private static final int DEVICE_ID = 0x0201;
+	/**用来预览发票*/
+	private static final int BILL_AVATOR = 0x0202;
 	
 	private static final int SCAN_HISTORY = 0x0300;
 	private static final int SCAN_HISTORY_ID = 0x0301;
@@ -58,6 +63,7 @@ public class BjnoteProvider extends ContentProvider{
 	        
 	        matcher.addURI(BjnoteContent.AUTHORITY, "baoxiucard", DEVICE);
 	        matcher.addURI(BjnoteContent.AUTHORITY, "baoxiucard/#", DEVICE_ID);
+	        matcher.addURI(BjnoteContent.AUTHORITY, "baoxiucard/preview/bill", BILL_AVATOR);
 	        
 	        
 	        matcher.addURI(BjnoteContent.AUTHORITY, "scan_history", SCAN_HISTORY);
@@ -293,11 +299,22 @@ public class BjnoteProvider extends ContentProvider{
 		return sb.toString();
 	}
 
+
 	@Override
-	public ParcelFileDescriptor openFile(Uri uri, String mode)
-			throws FileNotFoundException {
+	public ParcelFileDescriptor openFile(Uri uri, String mode) throws FileNotFoundException {
 		int match = findMatch(uri, "openFile");
-		//这里用来打开私有文件，通过这样的方式，其他程序可以读取URI指向的文件
+		switch(match) {
+			case BILL_AVATOR:
+	        	File file = MyApplication.getInstance().getProductFaPiaoFile(BaoxiuCardObject.objectUseForbill.getPhotoId());
+	        	if (BaoxiuCardObject.objectUseForbill.mBillTempFile != null && BaoxiuCardObject.objectUseForbill.mBillTempFile.exists()) {
+			    	return ParcelFileDescriptor.open(BaoxiuCardObject.objectUseForbill.mBillTempFile, ParcelFileDescriptor.MODE_READ_WRITE);
+			    } else if (file.exists()) {
+			        return ParcelFileDescriptor.open(file, ParcelFileDescriptor.MODE_READ_WRITE);
+			    } else {
+			    	DebugUtils.logE(TAG, "openFile can't find file " + file.getAbsolutePath());
+			    }
+				break;
+		}
 		return super.openFile(uri, mode);
 	}
 
@@ -306,7 +323,5 @@ public class BjnoteProvider extends ContentProvider{
 			throws FileNotFoundException {
 		return super.openAssetFile(uri, mode);
 	}
-
-	
 	
 }

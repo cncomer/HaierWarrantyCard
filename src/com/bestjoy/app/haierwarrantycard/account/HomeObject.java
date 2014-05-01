@@ -35,11 +35,11 @@ public class HomeObject implements InfoInterface{
 	//住址信息
 	public String mHomeProvince, mHomeCity, mHomeDis, mHomePlaceDetail;
 	/**家所属账户uid*/
-	public long mHomeUid;
+	public long mHomeUid = -1;
 	/**住址id,对应服务器上的数据项*/
-	public long mHomeAid;
+	public long mHomeAid = -1;
 	/**本地_id数据字段值*/
-	public long mHomeId;
+	public long mHomeId = -1;
 	public int mHomePosition;
 	public boolean mIsDefault = false;
 	public int mHomeCardCount;

@@ -20,6 +20,7 @@ import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.DeviceStorageUtils;
 import com.shwy.bestjoy.utils.DevicesUtils;
+import com.shwy.bestjoy.utils.NotifyRegistrant;
 import com.shwy.bestjoy.utils.SecurityUtils.SecurityKeyValuesObject;
 
 public class MyApplication extends Application{
@@ -27,6 +28,7 @@ public class MyApplication extends Application{
 	private static final String TAG ="BJfileApp";
 	private Handler mHandler;
 	private static MyApplication mInstance;
+	public SharedPreferences mPreferManager;
 
 	@Override
 	public void onCreate() {
@@ -67,15 +69,13 @@ public class MyApplication extends Application{
 		BitmapUtils.getInstance().setContext(this);
 		
 		HaierAccountManager.getInstance().setContext(this);
-		
-		//add by chenkai, 20140419, 图片异步加载服务
-		startService(PhotoManagerService.getServiceIntent(this));
 		//第一次的时候我们需要拷贝数据库
 		SharedPreferences sharePrefers = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sharePrefers.getBoolean(PreferencesActivity.KEY_FIRST_STARTUP, true)) {
 			InstallFileUtils.installDatabaseFiles(MyApplication.this, HaierDBHelper.DB_DEVICE_NAME);
 			sharePrefers.edit().putBoolean(PreferencesActivity.KEY_FIRST_STARTUP, false).commit();
 		}
+		mPreferManager = PreferenceManager.getDefaultSharedPreferences(this);
 		
 	}
 	
@@ -116,6 +116,11 @@ public class MyApplication extends Application{
 	/**返回产品图像文件files/product/avator*/
 	public File getProductPreviewAvatorFile(String photoid) {
 		return new File(getProductSubDir("avator"), photoid+ ".p");
+	}
+	
+	/**返回产品发票文件files/product/bill/*/
+	public File getProductFaPiaoFile(String photoid) {
+		return new File(getProductSubDir("bill"), photoid+ ".b");
 	}
 	
 	public File getProductDir() {
@@ -237,4 +242,33 @@ public class MyApplication extends Application{
     public void setSecurityKeyValuesObject(SecurityKeyValuesObject securityKeyValuesObject) {
     	mSecurityKeyValuesObject = securityKeyValuesObject;
     }
+    
+  //add by chenkai, 20131208, updating check begin
+    public File buildLocalDownloadAppFile(int downloadedVersionCode) {
+    	StringBuilder sb = new StringBuilder("Warranty_");
+    	sb.append(String.valueOf(downloadedVersionCode))
+    	.append(".apk");
+    	return new File(getExternalStorageRoot(".download"), sb.toString());
+    }
+    
+    /**
+     * 返回SD卡的应用根目录，type为子目录名字， 如download、.download
+     * @param type
+     * @return
+     */
+    public File getExternalStorageRoot(String type) {
+    	if (!hasExternalStorage()) {
+    		return null;
+    	}
+    	File root = new File(Environment.getExternalStorageDirectory(), getPackageName());
+    	if (!root.exists()) {
+    		root.mkdirs();
+    	}
+    	root =  new File(root, type);
+    	if (!root.exists()) {
+    		root.mkdir();
+    	}
+    	return root;
+    }
+    //add by chenkai, 20131208, updating check end
 }
