@@ -1,12 +1,22 @@
 package com.bestjoy.app.haierwarrantycard;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.text.TextUtils;
+
+import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+
 
 public class HaierServiceObject {
 
 	public static final String SERVICE_URL = "http://115.29.231.29/Haier/";
 	
 	public static final String PRODUCT_AVATOR_URL= "http://115.29.231.29/proimg/";
+	/**发票路径的前缀*/
 	public static final String FAPIAO_PREFIX = "http://115.29.231.29/Fapiao/";
+	
+	public static final String CARD_DELETE_URL = SERVICE_URL + "DeleteBaoXiuByBIDUID.ashx?";
 	/***
 	   * 产品图片网址  http://115.29.231.29/proimg/507/5070A000A.jpg  说明5070A000A：为Key，507：key 为前三位
 	   * @return
@@ -25,5 +35,47 @@ public class HaierServiceObject {
 	 */
 	public static String getProdcutFaPiaoUrl(String fapiao) {
 		return fapiao;
+	}
+	/**
+	 * 删除保修数据： serverIP/Haier/DeleteBaoXiuByBIDUID.ashx
+	 * @param BID:保修ID
+	 * @param UID:用户ID
+	 * @return
+	 */
+	public static String getBaoxiuCardDeleteUrl(String bid, String uid) {
+		StringBuilder sb = new StringBuilder(CARD_DELETE_URL);
+		sb.append("BID=").append(bid)
+		.append("&UID=").append(uid);
+		return sb.toString();
+	}
+	
+	
+	
+	public static class HaierResultObject {
+		public int mStatusCode = 0;
+		public String mStatusMessage;
+		public JSONObject mData;
+		
+		public static HaierResultObject parse(String content) {
+			HaierResultObject resultObject = new HaierResultObject();
+			if (TextUtils.isEmpty(content)) {
+				return resultObject;
+			}
+			try {
+				JSONObject jsonObject = new JSONObject(content);
+				resultObject.mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
+				resultObject.mStatusMessage = jsonObject.getString("StatusMessage");
+				resultObject.mData = jsonObject.getJSONObject("Data");
+				DebugUtils.logD("HaierResultObject", "StatusCode = " + resultObject.mStatusCode);
+				DebugUtils.logD("HaierResultObject", "StatusMessage = " +resultObject.mStatusMessage);
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			return resultObject;
+		}
+		
+		public boolean isOpSuccessfully() {
+			return mStatusCode == 1;
+		}
 	}
 }

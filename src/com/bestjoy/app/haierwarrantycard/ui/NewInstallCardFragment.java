@@ -145,6 +145,10 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			if (!TextUtils.isEmpty(object.mSHBianHao)) {
 				mBianhaoInput.setText(object.mSHBianHao);
 			}
+			
+			if (!TextUtils.isEmpty(object.mBXPhone)) {
+				mBaoxiuTelInput.setText(object.mBXPhone);
+			}
 		}
 	}
 	

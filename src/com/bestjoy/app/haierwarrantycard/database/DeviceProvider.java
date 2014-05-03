@@ -22,12 +22,12 @@ public class DeviceProvider extends ContentProvider{
 	private static final String TAG = "DeviceProvider";
 	private SQLiteDatabase mContactDatabase;
 	private String[] mTables = new String[]{
-			HaierDBHelper.TABLE_NAME_DEVICE_DALEI,
-			HaierDBHelper.TABLE_NAME_DEVICE_XIAOLEI,
-			HaierDBHelper.TABLE_NAME_DEVICE_PINPAI,
-			HaierDBHelper.TABLE_NAME_DEVICE_PROVINCE,
-			HaierDBHelper.TABLE_NAME_DEVICE_CITY_,
-			HaierDBHelper.TABLE_NAME_DEVICE_DISTRICT_,
+			DeviceDBHelper.TABLE_NAME_DEVICE_DALEI,
+			DeviceDBHelper.TABLE_NAME_DEVICE_XIAOLEI,
+			DeviceDBHelper.TABLE_NAME_DEVICE_PINPAI,
+			DeviceDBHelper.TABLE_NAME_DEVICE_PROVINCE,
+			DeviceDBHelper.TABLE_NAME_DEVICE_CITY_,
+			DeviceDBHelper.TABLE_NAME_DEVICE_DISTRICT_,
 //			ContactsDBHelper.TABLE_NAME_MYLIFE_CONSUME,
 	};
 	private static final int BASE = 8;
@@ -82,7 +82,7 @@ public class DeviceProvider extends ContentProvider{
             return mContactDatabase;
         }
 
-        mContactDatabase = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(HaierDBHelper.DB_DEVICE_NAME), null);
+        mContactDatabase = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(DeviceDBHelper.DB_DEVICE_NAME), null);
         mContactDatabase.setLockingEnabled(true);
         return mContactDatabase;
 	}

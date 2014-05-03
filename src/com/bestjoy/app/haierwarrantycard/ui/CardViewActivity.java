@@ -1,7 +1,15 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -13,11 +21,18 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject.HaierResultObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
+import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
+import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
+import com.shwy.bestjoy.utils.AsyncTaskUtils;
+import com.shwy.bestjoy.utils.ComConnectivityManager;
+import com.shwy.bestjoy.utils.NetworkUtils;
 import com.shwy.bestjoy.utils.NotifyRegistrant;
 
 public class CardViewActivity extends BaseActionbarActivity implements View.OnClickListener{
@@ -65,15 +80,15 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		 mYanbaoComponyInput = (TextView) findViewById(R.id.product_buy_delay_componey);
 		 mYanbaoTelInput = (TextView) findViewById(R.id.product_buy_delay_componey_tel);
 		
-		 //语音
-		 mAskInput = (EditText) findViewById(R.id.product_ask_online_input);
-		 mSpeakButton =  (Button) findViewById(R.id.button_speak);
-		 mSpeakButton.setOnClickListener(this);
-		 mSpeechRecognizerEngine = SpeechRecognizerEngine.getInstance(mContext);
-		 mSpeechRecognizerEngine.setResultText(mAskInput);
-		 
-		 mSaveBtn = (Button) findViewById(R.id.button_save);
-		 mSaveBtn.setOnClickListener(this);
+//		 //语音
+//		 mAskInput = (EditText) findViewById(R.id.product_ask_online_input);
+//		 mSpeakButton =  (Button) findViewById(R.id.button_speak);
+//		 mSpeakButton.setOnClickListener(this);
+//		 mSpeechRecognizerEngine = SpeechRecognizerEngine.getInstance(mContext);
+//		 mSpeechRecognizerEngine.setResultText(mAskInput);
+//		 
+//		 mSaveBtn = (Button) findViewById(R.id.button_save);
+//		 mSaveBtn.setOnClickListener(this);
 		 
 		 mAvatorView = (ImageView) findViewById(R.id.avator);
 		 mAvatorView.setOnClickListener(this);
@@ -117,11 +132,27 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	
 	 @Override
      public boolean onCreateOptionsMenu(Menu menu) {
-  	     boolean result = super.onCreateOptionsMenu(menu);
-  	     MenuItem subMenu1Item = menu.findItem(R.string.menu_more);
-  	     subMenu1Item.setIcon(R.drawable.abs__ic_menu_moreoverflow_normal_holo_light);
-         return result;
+  	     getSupportMenuInflater().inflate(R.menu.card_view_activity_menu, menu);
+         return true;
      }
+	 
+	 @Override
+	 public boolean onOptionsItemSelected(MenuItem menuItem) {
+		 switch(menuItem.getItemId()) {
+		 case R.string.menu_edit:
+			 //编辑卡片
+			 break;
+		 case R.string.menu_delete:
+			//删除卡片
+			 if (ComConnectivityManager.getInstance().isConnected()) {
+				 delteCardAsync();
+			 } else {
+				 showDialog(DIALOG_DATA_NOT_CONNECTED);
+			 }
+			 break;
+		 }
+		 return super.onOptionsItemSelected(menuItem);
+	 }
 	 
 	 @Override
 	public void onClick(View v) {
@@ -156,6 +187,57 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		mBaoxiuCardObject = BaoxiuCardObject.getBaoxiuCardObject();
 		return mBaoxiuCardObject != null && mBaoxiuCardObject.mBID > 0;
 	}
+	
+	private DeleteCardAsyncTask mDeleteCardAsyncTask;
+	private void delteCardAsync() {
+		AsyncTaskUtils.cancelTask(mDeleteCardAsyncTask);
+		showDialog(DIALOG_PROGRESS);
+		mDeleteCardAsyncTask = new DeleteCardAsyncTask();
+		mDeleteCardAsyncTask.execute();
+	}
+	
+	private class DeleteCardAsyncTask extends AsyncTask<Void, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			boolean result = false;
+			InputStream is = null;
+			try {
+				is = NetworkUtils.openContectionLocked(HaierServiceObject.getBaoxiuCardDeleteUrl(String.valueOf(mBaoxiuCardObject.mBID), String.valueOf(mBaoxiuCardObject.mUID)), MyApplication.getInstance().getSecurityKeyValuesObject());
+				if (is != null) {
+					String content = NetworkUtils.getContentFromInput(is);
+					HaierResultObject resultObject = HaierResultObject.parse(content);
+					if (resultObject.isOpSuccessfully()) {
+						//删除服务器成功后还要删除本地的数据
+						int deleted = BaoxiuCardObject.deleteBaoxiuCardInDatabaseForAccount(mContext.getContentResolver(), mBaoxiuCardObject.mUID, mBaoxiuCardObject.mAID, mBaoxiuCardObject.mBID);
+						if (deleted > 0) {
+							//本地删除成功后我们还要刷新对应HomeObject对象的保修卡数据
+							HaierAccountManager.getInstance().updateHomeObject(mBaoxiuCardObject.mAID);
+						}
+						
+					}
+				}
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+		}
+		
+	}
+	
 	/**
 	 * 回到主界面
 	 * @param context

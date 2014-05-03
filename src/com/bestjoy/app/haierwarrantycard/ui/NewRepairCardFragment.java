@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
@@ -19,10 +18,13 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 
@@ -36,7 +38,6 @@ import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditPopView;
-import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
@@ -66,6 +67,8 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	private long mUid = -1;
 	private long mBid = -1;
 	
+	private ScrollView mScrollView;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -78,6 +81,9 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		 View view = inflater.inflate(R.layout.activity_repair_20140418, container, false);
+		 
+		 mScrollView = (ScrollView) view.findViewById(R.id.scrollview);
+		 
 		 //条码识别
 		 view.findViewById(R.id.button_scan_qrcode).setOnClickListener(this);
 		 
@@ -100,6 +106,16 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		 //不要显示HomeName输入框
 		 mProCityDisEditView.setHomeEditVisiable(View.GONE);*/
 		 mProCityDisEditPopView = new ProCityDisEditPopView(this.getActivity(), view);
+//		 mProCityDisEditPopView.setOnClickListener(new OnClickListener() {
+//
+//			@Override
+//			public void onClick(View v) {
+//				mScrollView.scrollTo(0, -(int) v.getTop() + 20);
+//				
+//			}
+//
+//			 
+//		 });
 		 
 		 //语音
 		 mAskInput = (EditText) view.findViewById(R.id.product_ask_online_input);
@@ -164,6 +180,10 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			
 			if (!TextUtils.isEmpty(object.mSHBianHao)) {
 				mBianhaoInput.setText(object.mSHBianHao);
+			}
+			
+			if (!TextUtils.isEmpty(object.mBXPhone)) {
+				mBaoxiuTelInput.setText(object.mBXPhone);
 			}
 		}
 	}

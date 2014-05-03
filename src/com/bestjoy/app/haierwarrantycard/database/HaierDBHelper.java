@@ -92,23 +92,6 @@ private static final String TAG = "HaierDBHelper";
   
   //这里是设备表的扩展，如遥控器
   
-  //设备数据库
-  public static final String DB_DEVICE_NAME = "device.db";
-  public static final String TABLE_NAME_DEVICE_DALEI = "DaLei";
-  public static final String DEVICE_DALEI_NAME = "Name";
-  public static final String DEVICE_DALEI_ID = "ID";
-  
-  public static final String TABLE_NAME_DEVICE_XIAOLEI = "XiaoLei";
-  public static final String DEVICE_XIALEI_DID = "DID";
-  public static final String DEVICE_XIALEI_XID = "XID";
-  public static final String DEVICE_XIALEI_NAME = "XName";
-  
-  public static final String TABLE_NAME_DEVICE_PINPAI = "PinPai";
-  public static final String DEVICE_PINPAI_XID = "XID";
-  public static final String DEVICE_PINPAI_PID = "PID";
-  public static final String DEVICE_PINPAI_NAME = "PName";
-  public static final String DEVICE_PINPAI_PINYIN = "PinYin";
-  public static final String DEVICE_PINPAI_CODE = "Code";
   
   /**型号数据表，这个我们会新增到预置的device.db数据库文件中*/
   public static final String TABLE_NAME_DEVICE_XINGHAO = "xinghao";
@@ -116,25 +99,6 @@ private static final String TAG = "HaierDBHelper";
   public static final String DEVICE_XINGHAO_PCODE = "pcode";
   public static final String DEVICE_XINGHAO_MN = "MN";
   public static final String DEVICE_XINGHAO_KY = "KY";
-  
-
-  public static final String TABLE_NAME_DEVICE_CITY_ = "T_City";
-  public static final String DEVICE_CITY_ID = "CityID";
-  public static final String DEVICE_CITY_NAME = "CityName";
-  public static final String DEVICE_CITY_PID = "ProID";
-  public static final String DEVICE_CITY_SORT = "CitySort";
-  
-  public static final String TABLE_NAME_DEVICE_DISTRICT_ = "T_District";
-  public static final String DEVICE_DIS_ID = "Id";
-  public static final String DEVICE_DIS_NAME = "DisName";
-  public static final String DEVICE_DIS_CID = "CityID";
-  public static final String DEVICE_DIS_DISSORT = "DisSort";
-  
-  public static final String TABLE_NAME_DEVICE_PROVINCE = "T_Province";
-  public static final String DEVICE_PRO_ID = "ProID";
-  public static final String DEVICE_PRO_NAME = "ProName";
-  public static final String DEVICE_PRO_SORT = "ProSort";
-  public static final String DEVICE_PRO_REMARK = "ProRemark";
   
   // Qrcode scan part begin
   public static final String TABLE_SCAN_NAME = "history";
@@ -263,9 +227,9 @@ private static final String TAG = "HaierDBHelper";
 	            HOME_AID + " INTEGER, " +
 	            HOME_NAME + " TEXT, " +
 	            HOME_CARD_COUNT + " INTEGER NOT NULL DEFAULT 0, " +
-	            DEVICE_PRO_NAME + " TEXT, " +
-	            DEVICE_CITY_NAME + " TEXT, " +
-	            DEVICE_DIS_NAME + " TEXT, " +
+	            DeviceDBHelper.DEVICE_PRO_NAME + " TEXT, " +
+	            DeviceDBHelper.DEVICE_CITY_NAME + " TEXT, " +
+	            DeviceDBHelper.DEVICE_DIS_NAME + " TEXT, " +
 	            HOME_DETAIL + " TEXT, " +
 	            HOME_DEFAULT + " INTEGER NOT NULL DEFAULT 1, " +
 	            POSITION + " INTEGER NOT NULL DEFAULT 1, " +

@@ -13,8 +13,8 @@ import com.shwy.bestjoy.utils.NetworkUtils;
 public class InstallFileUtils {
 	private static final String TAG = "InstallFileUtils";
 
-	public static boolean installDatabaseFiles(Context context, String fileName) {
-		 File file = context.getDatabasePath(fileName);
+	public static boolean installDatabaseFiles(Context context, String fileName, String ext, String extReplace) {
+		 File file = context.getDatabasePath(fileName + extReplace);
 		 boolean success = true;
 		 if(file.exists() || file.isDirectory()) {
 			 boolean deleted = file.delete();
@@ -23,12 +23,12 @@ public class InstallFileUtils {
 			  }
 		 }
 			  
-		  DebugUtils.logD(TAG, "installDatabaseFiles " + fileName);
+		  DebugUtils.logD(TAG, "start to install DatabaseFiles " + fileName);
 		  file.getParentFile().mkdirs();
 		  InputStream is = null;
 		  FileOutputStream fos = null;
 		  try {
-			  is = context.getResources().getAssets().open(fileName);
+			  is = context.getResources().getAssets().open(fileName + ext);
 			  fos = new FileOutputStream(file);
 			  byte[] buffer = new byte[8192];
 			  int count = 0;
@@ -48,6 +48,7 @@ public class InstallFileUtils {
 				}
 			  }
 		  }
+		  DebugUtils.logD(TAG, "install " + fileName + " success? " + success);
 		 return success;
 	  }
 }

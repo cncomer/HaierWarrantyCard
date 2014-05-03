@@ -15,7 +15,9 @@ import android.os.Bundle;
 
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.database.DeviceDBHelper;
 import com.bestjoy.app.haierwarrantycard.update.ServiceAppInfo;
+import com.bestjoy.app.haierwarrantycard.utils.InstallFileUtils;
 import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.FilesUtils;
 import com.shwy.bestjoy.utils.Intents;
@@ -74,11 +76,9 @@ public class JumpActivity extends Activity {
 				edit.putBoolean(PreferencesActivity.KEY_LATEST_VERSION_INSTALL, true);
 				edit.putLong(PreferencesActivity.KEY_LATEST_VERSION_LEVEL, 0);
 				edit.commit();
-
 				//删除下载更新的临时目录，确保没有其他的安装包了
 				FilesUtils.deleteFile(TAG, MyApplication.getInstance().getExternalStorageRoot(".download"));
-
-				launchMainActivity();
+				launchMainActivityDelay();
 			} else {// 不是第一次启动
 					// 是否完成上次下载的更新的安装
 				DebugUtils.logD(TAG, "not FirstLaunch");
@@ -99,23 +99,43 @@ public class JumpActivity extends Activity {
 						}
 					}
 				}
-				launchMainActivity();
+				launchMainActivityDelay();
 			}
 		} catch (PackageManager.NameNotFoundException e) {
 			e.printStackTrace();
 		}
+		launchMainActivityNoDelay();
 	}
 	
-	private void launchMainActivity() {
-		MyApplication.getInstance().postDelay(new Runnable() {
-
-			@Override
-			public void run() {
-				MainActivity.startActivityForTop(mContext);
-				finish();
-			}
-			
-		}, 1000);
+	private void launchMainActivityNoDelay() {
+		MainActivity.startActivityForTop(mContext);
+		finish();
+		
+	}
+	
+	private void launchMainActivityDelay() {
+		final SharedPreferences prefers = MyApplication.getInstance().mPreferManager;
+		if (prefers.getBoolean(PreferencesActivity.KEY_FIRST_STARTUP, true) || DeviceDBHelper.isNeedReinstallDeviceDatabase()) {
+			new Thread() {
+				@Override
+				public void run() {
+					//第一次的时候我们需要拷贝数据库
+					if (prefers.getBoolean(PreferencesActivity.KEY_FIRST_STARTUP, true) || DeviceDBHelper.isNeedReinstallDeviceDatabase()) {
+						InstallFileUtils.installDatabaseFiles(mContext, "device", ".png", ".db");
+						prefers.edit().putBoolean(PreferencesActivity.KEY_FIRST_STARTUP, false)
+						.putInt(DeviceDBHelper.KEY_VERSION, DeviceDBHelper.VERSION).commit();
+					}
+					MyApplication.getInstance().postAsync(new Runnable() {
+						@Override
+						public void run() {
+							launchMainActivityNoDelay();
+						}
+						
+					});
+				}
+				
+			}.start();
+		}
 		
 	}
 	
@@ -141,7 +161,7 @@ public class JumpActivity extends Activity {
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int which) {
 								MyApplication.getInstance().mPreferManager.edit().putBoolean(PreferencesActivity.KEY_LATEST_VERSION_INSTALL, true).commit();
-								launchMainActivity();
+								launchMainActivityNoDelay();
 							}
 						});
 			} else {

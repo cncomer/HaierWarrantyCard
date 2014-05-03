@@ -17,6 +17,7 @@ import android.text.TextUtils;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
+import com.bestjoy.app.haierwarrantycard.database.DeviceDBHelper;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
@@ -80,29 +81,29 @@ public class HomeObject implements InfoInterface{
 	}
 	
 	public static final String[] PROVINCE_PROJECTION = new String[]{
-		HaierDBHelper.DEVICE_PRO_ID,
-		HaierDBHelper.DEVICE_PRO_NAME,
+		DeviceDBHelper.DEVICE_PRO_ID,
+		DeviceDBHelper.DEVICE_PRO_NAME,
 		"_id",
 	};
 	
 	public static final String[] CITY_PROJECTION = new String[]{
-		HaierDBHelper.DEVICE_CITY_ID,
-		HaierDBHelper.DEVICE_CITY_NAME,
-		HaierDBHelper.DEVICE_CITY_PID,
+		DeviceDBHelper.DEVICE_CITY_ID,
+		DeviceDBHelper.DEVICE_CITY_NAME,
+		DeviceDBHelper.DEVICE_CITY_PID,
 		"_id",
 	};
 	
 	public static final String[] DISTRICT_PROJECTION = new String[]{
-		HaierDBHelper.DEVICE_DIS_ID,
-		HaierDBHelper.DEVICE_DIS_NAME,
-		HaierDBHelper.DEVICE_DIS_CID,
+		DeviceDBHelper.DEVICE_DIS_ID,
+		DeviceDBHelper.DEVICE_DIS_NAME,
+		DeviceDBHelper.DEVICE_DIS_CID,
 		"_id",
 	};
 	
-	public static final String SELECTION_PROVINCE_NAME = HaierDBHelper.DEVICE_PRO_NAME + "=?";
+	public static final String SELECTION_PROVINCE_NAME = DeviceDBHelper.DEVICE_PRO_NAME + "=?";
 	
 	// city table
-	public static final String SELECTION_CITY_NAME = HaierDBHelper.DEVICE_CITY_NAME + "=?";
+	public static final String SELECTION_CITY_NAME = DeviceDBHelper.DEVICE_CITY_NAME + "=?";
 	
 	// home table
 	private static final String WHERE_HOME_ACCOUNTID = HaierDBHelper.ACCOUNT_UID + "=?";
@@ -113,9 +114,9 @@ public class HomeObject implements InfoInterface{
 		HaierDBHelper.ACCOUNT_UID,        //0
 		HaierDBHelper.HOME_AID,
 		HaierDBHelper.HOME_NAME,
-		HaierDBHelper.DEVICE_PRO_NAME,
-		HaierDBHelper.DEVICE_CITY_NAME,
-		HaierDBHelper.DEVICE_DIS_NAME,
+		DeviceDBHelper.DEVICE_PRO_NAME,
+		DeviceDBHelper.DEVICE_CITY_NAME,
+		DeviceDBHelper.DEVICE_DIS_NAME,
 		HaierDBHelper.HOME_DETAIL,           //6
 		HaierDBHelper.HOME_DEFAULT,
 		HaierDBHelper.POSITION,
@@ -154,16 +155,16 @@ public class HomeObject implements InfoInterface{
 		if (TextUtils.isEmpty(provinceNameLike)) {
 			return cr.query(BjnoteContent.Province.CONTENT_URI, PROVINCE_PROJECTION, null, null, null);
 		}
-		String selection = HaierDBHelper.DEVICE_PRO_NAME + " like '" + provinceNameLike + "%'";
+		String selection = DeviceDBHelper.DEVICE_PRO_NAME + " like '" + provinceNameLike + "%'";
 		return cr.query(BjnoteContent.Province.CONTENT_URI, PROVINCE_PROJECTION, selection, null, null);
 	}
 	public static Cursor getCitiesLike(ContentResolver cr, long proId, String cityNameLike) {
 		if (proId == -1) {
 			return null;
 		}
-		String selection = HaierDBHelper.DEVICE_CITY_PID + "=" + proId;
+		String selection = DeviceDBHelper.DEVICE_CITY_PID + "=" + proId;
 		if (!TextUtils.isEmpty(cityNameLike)) {
-			selection += " and " + HaierDBHelper.DEVICE_CITY_NAME + " like '" + cityNameLike + "%'";
+			selection += " and " + DeviceDBHelper.DEVICE_CITY_NAME + " like '" + cityNameLike + "%'";
 		}
 		return cr.query(BjnoteContent.City.CONTENT_URI, CITY_PROJECTION, selection, null, null);
 	}
@@ -186,9 +187,9 @@ public class HomeObject implements InfoInterface{
 		if (cityId == -1) {
 			return null;
 		}
-		String selection = HaierDBHelper.DEVICE_DIS_CID + "=" + cityId;
+		String selection = DeviceDBHelper.DEVICE_DIS_CID + "=" + cityId;
 		if (!TextUtils.isEmpty(districtNameLike)) {
-			selection += " and " + HaierDBHelper.DEVICE_DIS_NAME + " like '" + districtNameLike + "'%";
+			selection += " and " + DeviceDBHelper.DEVICE_DIS_NAME + " like '" + districtNameLike + "'%";
 		}
 		return cr.query(BjnoteContent.District.CONTENT_URI, DISTRICT_PROJECTION, selection, null, null);
 	}
@@ -201,9 +202,9 @@ public class HomeObject implements InfoInterface{
 		}
 		long id = isExsited(cr,mHomeUid, mHomeAid);
 		values.put(HaierDBHelper.HOME_NAME, mHomeName);
-		values.put(HaierDBHelper.DEVICE_PRO_NAME, mHomeProvince);
-		values.put(HaierDBHelper.DEVICE_CITY_NAME, mHomeCity);
-		values.put(HaierDBHelper.DEVICE_DIS_NAME, mHomeDis);
+		values.put(DeviceDBHelper.DEVICE_PRO_NAME, mHomeProvince);
+		values.put(DeviceDBHelper.DEVICE_CITY_NAME, mHomeCity);
+		values.put(DeviceDBHelper.DEVICE_DIS_NAME, mHomeDis);
 		values.put(HaierDBHelper.HOME_DETAIL, mHomePlaceDetail);
 		values.put(HaierDBHelper.DATE, new Date().getTime());
 		values.put(HaierDBHelper.POSITION, mHomePosition);

@@ -70,13 +70,13 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public String mBuyPrice;
 	public String mBuyTuJing;
 	/**整机保修时间，浮点型*/
-	public String mWY;
-	public String mYanBaoTime;
+	public String mWY = "0";
+	public String mYanBaoTime = "0";
 	public String mYanBaoDanWei;
 	/**用户定义的保修设备名称，如客厅电视机*/
 	public String mCardName;
 	/**主要配件保修，浮点值*/
-	public String mZhuBx;
+	public String mZhuBx = "0";
 	/**延保电话*/
 	public String mYBPhone;
 	public String mKY;
@@ -153,15 +153,24 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		
 		cardObject.mBuyTuJing = jsonObject.getString("BuyTuJing");
 		cardObject.mYanBaoTime = jsonObject.getString("YanBaoTime");
+		if ("null".equals(cardObject.mYanBaoTime)) {
+			cardObject.mYanBaoTime = "0";
+		}
 		cardObject.mYanBaoDanWei = jsonObject.getString("YanBaoDanWei");
 		
 		cardObject.mCardName = jsonObject.getString("Tag");
 		cardObject.mZhuBx = jsonObject.getString("ZhuBx");
+		if ("null".equals(cardObject.mZhuBx)) {
+			cardObject.mZhuBx = "0";
+		}
 		
 		cardObject.mUID = jsonObject.getLong("UID");
 		cardObject.mAID = jsonObject.getLong("AID");
 		cardObject.mBID = jsonObject.getLong("BID");
 		cardObject.mWY = jsonObject.getString("WY");
+		if ("null".equals(cardObject.mWY)) {
+			cardObject.mWY = "0";
+		}
 		cardObject.mYBPhone = jsonObject.getString("YBPhone");
 		cardObject.mKY = jsonObject.getString("KY");
 		return cardObject;
@@ -200,6 +209,12 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		sb.append("[Leixing:").append(mLeiXin).append(", Pinpai:").append(mPinPai)
 		.append(", XingHao:").append(mXingHao).append(", BianHao:").append(mSHBianHao).append("]");
 		return sb.toString();
+	}
+	
+	public static int deleteBaoxiuCardInDatabaseForAccount(ContentResolver cr, long uid, long aid, long bid) {
+		int deleted = cr.delete(BjnoteContent.BaoxiuCard.CONTENT_URI, WHERE_UID_AND_AID_AND_BID, new String[]{String.valueOf(uid), String.valueOf(aid), String.valueOf(bid)});
+		DebugUtils.logD(TAG, "deleteBaoxiuCardInDatabaseForAccount bid#" + bid + ", delete " + deleted);
+		return deleted;
 	}
 	
 	/**

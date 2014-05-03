@@ -25,6 +25,7 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.XinghaoObject;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
+import com.bestjoy.app.haierwarrantycard.database.DeviceDBHelper;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
@@ -47,37 +48,42 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 	
 	private static final String[] DALEI_PROJECTION = new String[]{
 		HaierDBHelper.ID,
-		HaierDBHelper.DEVICE_DALEI_NAME,                //1
-		HaierDBHelper.DEVICE_DALEI_ID,
+		DeviceDBHelper.DEVICE_DALEI_NAME,                //1
+		DeviceDBHelper.DEVICE_DALEI_ID,
 	};
 	
 	private static final String[] XIAOLEI_PROJECTION = new String[]{
 		HaierDBHelper.ID,
-		HaierDBHelper.DEVICE_XIALEI_NAME,              //1
-		HaierDBHelper.DEVICE_XIALEI_DID,
-		HaierDBHelper.DEVICE_XIALEI_XID,
+		DeviceDBHelper.DEVICE_XIALEI_NAME,              //1
+		DeviceDBHelper.DEVICE_XIALEI_DID,
+		DeviceDBHelper.DEVICE_XIALEI_XID,
 		
 		
 	};
 	
 	private static final String[] PINPAI_PROJECTION = new String[]{
 		HaierDBHelper.ID,
-		HaierDBHelper.DEVICE_PINPAI_NAME,            //1
-		HaierDBHelper.DEVICE_PINPAI_XID,
-		HaierDBHelper.DEVICE_PINPAI_PID,
-		HaierDBHelper.DEVICE_PINPAI_PINYIN,
-		HaierDBHelper.DEVICE_PINPAI_CODE,
+		DeviceDBHelper.DEVICE_PINPAI_NAME,            //1
+		DeviceDBHelper.DEVICE_PINPAI_XID,
+		DeviceDBHelper.DEVICE_PINPAI_PID,
+		DeviceDBHelper.DEVICE_PINPAI_PINYIN,
+		DeviceDBHelper.DEVICE_PINPAI_CODE,
+		DeviceDBHelper.DEVICE_PINPAI_BXPHONE,       //6
 	};
 	
-	private static final String XIAOLEI_SELECTION = HaierDBHelper.DEVICE_XIALEI_DID + "=?";
-	private static final String PINPAI_SELECTION = HaierDBHelper.DEVICE_PINPAI_XID + "=?";
+	private static final String XIAOLEI_SELECTION = DeviceDBHelper.DEVICE_XIALEI_DID + "=?";
+	private static final String PINPAI_SELECTION = DeviceDBHelper.DEVICE_PINPAI_XID + "=?";
 
 	private View mProgressBarLayout;
+	
+	/**品牌海尔名称，这个用来在用户选择品牌时候做判断，如果是，那么保修卡的电话是400699999*/
+	private String mPinpaiHaierDes = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		mBaoxiuCardObject = new BaoxiuCardObject();
+		mPinpaiHaierDes = getActivity().getString(R.string.pinpai_haier);
 	}
 
 	@Override
@@ -332,6 +338,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 				viewHoldr._xId = cursor.getString(2);
 				viewHoldr._pId = cursor.getLong(3);
 				viewHoldr._pinpaiCode = cursor.getString(5);
+				viewHoldr.mBXphone = cursor.getString(6);
 				break;
 			case R.id.xinghao:
 				viewHoldr._id = cursor.getLong(0);
@@ -351,7 +358,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 		private TextView _title;
 		private long _id, _dId, _pId, _xinghaoId;
 		private int _position;
-		private String _xId, _pinpaiCode, _mn, _ky;
+		private String _xId, _pinpaiCode, _mn, _ky, mBXphone;
 		
 	}
 	
@@ -417,6 +424,8 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 					mPinpaiId = viewHolder._pId;
 					mPinPaiCode = viewHolder._pinpaiCode;
 					mBaoxiuCardObject.mPinPai = viewHolder._title.getText().toString();
+					mBaoxiuCardObject.mBXPhone = viewHolder.mBXphone;
+					
 					mPinpai.setText(getGroupTitle(R.string.title_pinpai, mBaoxiuCardObject.mPinPai));
 					
 					mXinghaoId = -1;

@@ -10,6 +10,7 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -22,10 +23,10 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
+import com.bestjoy.app.haierwarrantycard.database.DeviceDBHelper;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 
 public class ProCityDisEditPopView implements OnTouchListener {
@@ -51,20 +52,20 @@ public class ProCityDisEditPopView implements OnTouchListener {
 	private static final int MODE_DISTRICT = MODE_CITY + 1;
 
 	private static final String[] PRO_PROJECTION = new String[]{
-		HaierDBHelper.DEVICE_PRO_ID,
-		HaierDBHelper.DEVICE_PRO_NAME,
+		DeviceDBHelper.DEVICE_PRO_ID,
+		DeviceDBHelper.DEVICE_PRO_NAME,
 	};
 	
 	private static final String[] CITY_PROJECTION = new String[]{
-		HaierDBHelper.DEVICE_CITY_ID,
-		HaierDBHelper.DEVICE_CITY_NAME,
-		HaierDBHelper.DEVICE_CITY_PID,
+		DeviceDBHelper.DEVICE_CITY_ID,
+		DeviceDBHelper.DEVICE_CITY_NAME,
+		DeviceDBHelper.DEVICE_CITY_PID,
 	};
 	
 	private static final String[] DIS_PROJECTION = new String[]{
-		HaierDBHelper.DEVICE_DIS_ID,
-		HaierDBHelper.DEVICE_DIS_NAME,
-		HaierDBHelper.DEVICE_DIS_CID,
+		DeviceDBHelper.DEVICE_DIS_ID,
+		DeviceDBHelper.DEVICE_DIS_NAME,
+		DeviceDBHelper.DEVICE_DIS_CID,
 	};
 	public ProCityDisEditPopView(Context context, View view) {
 		mContext = context;
@@ -77,6 +78,16 @@ public class ProCityDisEditPopView implements OnTouchListener {
 		mHomeObject = new HomeObject();
 		initViews(context);
 		intiData();
+	}
+	
+	public void setOnClickListener(View.OnClickListener listenr) {
+		mProEditView.setClickable(true);
+		mCityEditView.setClickable(true);
+		mDisEditView.setClickable(true);
+		mProEditView.setOnClickListener(listenr);
+		mCityEditView.setOnClickListener(listenr);
+		mDisEditView.setOnClickListener(listenr);
+		
 	}
 	
 	private void intiData() {
@@ -164,7 +175,7 @@ public class ProCityDisEditPopView implements OnTouchListener {
 						if(mProID == null) break;
 						mCursor = mContext.getContentResolver().query(
 								BjnoteContent.City.CONTENT_URI, CITY_PROJECTION,
-								HaierDBHelper.DEVICE_PRO_ID + "=?",
+								DeviceDBHelper.DEVICE_PRO_ID + "=?",
 								new String[] { mProID, }, null);
 						mAddressAdapter.changeAddressData(mCursor);
 					}
@@ -186,7 +197,7 @@ public class ProCityDisEditPopView implements OnTouchListener {
 						if(mCityID == null) break;
 						mCursor = mContext.getContentResolver().query(
 								BjnoteContent.District.CONTENT_URI, DIS_PROJECTION,
-								HaierDBHelper.DEVICE_CITY_ID + "=?",
+								DeviceDBHelper.DEVICE_CITY_ID + "=?",
 								new String[] { mCityID, }, null);
 						mAddressAdapter.changeAddressData(mCursor);
 					}
@@ -204,11 +215,13 @@ public class ProCityDisEditPopView implements OnTouchListener {
 	}
 	
 	private void initPopWindow(View view) {
-		mPopupWindow = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, 150, true);
-		mPopupWindow.setAnimationStyle(R.style.AnimationPreview);  
-		mPopupWindow.setTouchable(true);
-		mPopupWindow.setOutsideTouchable(true);
-		mPopupWindow.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), (Bitmap) null));
+		if (mPopupWindow == null) {
+			mPopupWindow = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
+			mPopupWindow.setAnimationStyle(R.style.AnimationPreview);  
+			mPopupWindow.setTouchable(true);
+			mPopupWindow.setOutsideTouchable(true);
+			mPopupWindow.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), (Bitmap) null));
+		}
 		mPopupWindow.showAsDropDown(view, 0, 0);
 		
 	}
@@ -221,8 +234,8 @@ public class ProCityDisEditPopView implements OnTouchListener {
 				case MODE_PROVINCE:
 					if (position < mCursor.getCount()) {
 						mCursor.moveToPosition(position);
-						mHomeObject.mHomeProvince = mCursor.getString(mCursor.getColumnIndex(HaierDBHelper.DEVICE_PRO_NAME));
-						mProID = mCursor.getString(mCursor.getColumnIndex(HaierDBHelper.DEVICE_PRO_ID));
+						mHomeObject.mHomeProvince = mCursor.getString(mCursor.getColumnIndex(DeviceDBHelper.DEVICE_PRO_NAME));
+						mProID = mCursor.getString(mCursor.getColumnIndex(DeviceDBHelper.DEVICE_PRO_ID));
 						mProEditView.setText(mHomeObject.mHomeProvince);
 						mCityEditView.getText().clear();
 						mDisEditView.getText().clear();
@@ -231,8 +244,8 @@ public class ProCityDisEditPopView implements OnTouchListener {
 				case MODE_CITY:
 					if (position < mCursor.getCount()) {
 						mCursor.moveToPosition(position);
-						mHomeObject.mHomeCity = mCursor.getString(mCursor.getColumnIndex(HaierDBHelper.DEVICE_CITY_NAME));
-						mCityID = mCursor.getString(mCursor.getColumnIndex(HaierDBHelper.DEVICE_CITY_ID));
+						mHomeObject.mHomeCity = mCursor.getString(mCursor.getColumnIndex(DeviceDBHelper.DEVICE_CITY_NAME));
+						mCityID = mCursor.getString(mCursor.getColumnIndex(DeviceDBHelper.DEVICE_CITY_ID));
 						mCityEditView.setText(mHomeObject.mHomeCity);
 						mDisEditView.getText().clear();
 					}
@@ -240,7 +253,7 @@ public class ProCityDisEditPopView implements OnTouchListener {
 				case MODE_DISTRICT:
 					if (position < mCursor.getCount()) {
 						mCursor.moveToPosition(position);
-						mHomeObject.mHomeDis = mCursor.getString(mCursor.getColumnIndex(HaierDBHelper.DEVICE_DIS_NAME));
+						mHomeObject.mHomeDis = mCursor.getString(mCursor.getColumnIndex(DeviceDBHelper.DEVICE_DIS_NAME));
 						mDisEditView.setText(mHomeObject.mHomeDis);
 					}
 					break;
@@ -272,21 +285,21 @@ public class ProCityDisEditPopView implements OnTouchListener {
 			if(mEditMode == MODE_PROVINCE) {
 				if (position < cursor.getCount()) {
 					cursor.moveToPosition(position);
-					int index = cursor.getColumnIndex(HaierDBHelper.DEVICE_PRO_NAME);
+					int index = cursor.getColumnIndex(DeviceDBHelper.DEVICE_PRO_NAME);
 					if(index >= 0)
 					viewHolder._title.setText(cursor.getString(index));
 				}
 			} else if(mEditMode == MODE_CITY) {
 				if (position < cursor.getCount() && mHomeObject.mHomeProvince != null) {
 					cursor.moveToPosition(position);
-					int index = cursor.getColumnIndex(HaierDBHelper.DEVICE_CITY_NAME);
+					int index = cursor.getColumnIndex(DeviceDBHelper.DEVICE_CITY_NAME);
 					if(index >= 0)
 					viewHolder._title.setText(cursor.getString(index));
 				}
 			} else if (mEditMode == MODE_DISTRICT) {
 				if (position < cursor.getCount() && mHomeObject.mHomeCity != null) {
 					cursor.moveToPosition(position);
-					int index = cursor.getColumnIndex(HaierDBHelper.DEVICE_DIS_NAME);
+					int index = cursor.getColumnIndex(DeviceDBHelper.DEVICE_DIS_NAME);
 					if(index >= 0)
 					viewHolder._title.setText(cursor.getString(index));
 				}

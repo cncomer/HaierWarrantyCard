@@ -99,6 +99,9 @@
     <string name="menu_search">搜索</string>
     <string name="menu_done">确定</string>
     <string name="menu_choose">选择</string>
+    
+    <string name="menu_edit">编辑</string>
+    <string name="menu_delete">删除</string>
 
     <string name="register_tips">输入手机号码，点击“获取验证码”后，系统会自动下发一条默认密码短信</string>
     <string name="title_get_usr_validate">获取验证码</string>
@@ -279,4 +282,6 @@
           <string name="dialog_msg_download_unfinish_on_exit">下载未完成，是否取消并退出?</string>
           <string name="dialog_msg_download_unfinish">下载未完成，是否取消?</string>
          <!-- 自动更新 end -->
+         
+         <string name="pinpai_haier">海尔</string>
 </resources>

@@ -315,7 +315,7 @@ public class BjnoteProvider extends ContentProvider{
 			    }
 				break;
 		}
-		return super.openFile(uri, mode);
+		throw new FileNotFoundException("no Image found for uri " + uri);
 	}
 
 	@Override

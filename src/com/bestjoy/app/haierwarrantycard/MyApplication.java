@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.database.DeviceDBHelper;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerService;
 import com.bestjoy.app.haierwarrantycard.ui.PreferencesActivity;
@@ -29,7 +30,7 @@ public class MyApplication extends Application{
 	private Handler mHandler;
 	private static MyApplication mInstance;
 	public SharedPreferences mPreferManager;
-
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -69,12 +70,7 @@ public class MyApplication extends Application{
 		BitmapUtils.getInstance().setContext(this);
 		
 		HaierAccountManager.getInstance().setContext(this);
-		//第一次的时候我们需要拷贝数据库
-		SharedPreferences sharePrefers = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sharePrefers.getBoolean(PreferencesActivity.KEY_FIRST_STARTUP, true)) {
-			InstallFileUtils.installDatabaseFiles(MyApplication.this, HaierDBHelper.DB_DEVICE_NAME);
-			sharePrefers.edit().putBoolean(PreferencesActivity.KEY_FIRST_STARTUP, false).commit();
-		}
+		
 		mPreferManager = PreferenceManager.getDefaultSharedPreferences(this);
 		
 	}
