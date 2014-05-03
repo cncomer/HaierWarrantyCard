@@ -1,6 +1,10 @@
 package com.bestjoy.app.haierwarrantycard.account;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -8,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -28,6 +33,7 @@ import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.ImageHelper;
 import com.shwy.bestjoy.utils.InfoInterfaceImpl;
+import com.shwy.bestjoy.utils.NetworkUtils;
 /**
  * 保修卡对象
  * @author chenkai
@@ -148,6 +154,42 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		
 		cardObject.mBXPhone = jsonObject.getString("BXPhone");
 		cardObject.mFPaddr = jsonObject.getString("FPaddr");
+		
+		if (!TextUtils.isEmpty(cardObject.mFPaddr)) {
+			//如果有发票，我们需要先下载发票
+			File faPiaoFile = MyApplication.getInstance().getProductFaPiaoFile(cardObject.getFapiaoPhotoId());
+			if (faPiaoFile.exists()) {
+				DebugUtils.logD(TAG, "parseBaoxiuCards delete local existed fapiao " + faPiaoFile.getAbsolutePath());
+				faPiaoFile.delete();
+			}
+			InputStream is = null;
+			try {
+				is = NetworkUtils.openContectionLocked(cardObject.mFPaddr, MyApplication.getInstance().getSecurityKeyValuesObject());
+				if (is != null) {
+					OutputStream out = new FileOutputStream(faPiaoFile);
+					byte[] buffer = new byte[4096];
+					int size;
+					try {
+						size = is.read(buffer);
+						while (size >= 0) {
+							out.write(buffer, 0, size);
+							size = is.read(buffer);
+						}
+						out.flush();
+						out.close();
+						DebugUtils.logD(TAG, "parseBaoxiuCards download fapiao " + faPiaoFile.getAbsolutePath());
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} finally {
+				NetworkUtils.closeInputStream(is);
+			}
+		}
 		cardObject.mBuyDate = jsonObject.getString("BuyDate");
 		cardObject.mBuyPrice = jsonObject.getString("BuyPrice");
 		
@@ -452,14 +494,9 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		sb.append(cardType);
 		return sb.toString();
 	}
-	//add by chenkai for FaPiao begin
-	//添加构造器来初始化发票相关的信息
-	public BaoxiuCardObject() {
-		mBillFile = MyApplication.getInstance().getProductFaPiaoFile(getPhotoId());
-	}
 	private static final int mAvatorWidth = 320, mAvatorHeight = 480;
 	public static final String PHOTOID_SEPERATOR = "_";
-	/**占位符号，通常用在PD、SID等字段数据*/
+	/**占位符号*/
 	public static final String PHOTOID_PLASEHOLDER = "00_00";
 	/**临时拍摄的照片路径，当保存成功的时候会将该文件路径重命名为mBillAvator*/
 	public Bitmap mBillTempBitmap;
@@ -471,6 +508,9 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public static BaoxiuCardObject objectUseForbill = null;
 	/**是否有发票,如果有发票文件或是有发票的拍摄获得的临时文件,我们认为是有发票的*/
 	public boolean hasLocalBill() {
+		if (mBillFile == null) {
+			mBillFile = MyApplication.getInstance().getProductFaPiaoFile(getFapiaoPhotoId());
+		}
 		return mBillFile.exists() || mBillTempFile != null;
 	}
 	
@@ -480,7 +520,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	 * 返回 20140421_01324df60b0734de0f973c7907af55fc
 	 * @return
 	 */
-	public String getPhotoId() {
+	public String getFapiaoPhotoId() {
 		if (!TextUtils.isEmpty(mFPaddr) && mFPaddr.startsWith(HaierServiceObject.FAPIAO_PREFIX)) {
 			String photoId = mFPaddr.substring(HaierServiceObject.FAPIAO_PREFIX.length());
 			photoId = photoId.replaceAll("/", "_");
@@ -492,7 +532,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	/**保存临时的发票拍摄作为该商品的使用发票预览图*/
 	boolean saveBillAvatorTempFileLocked() {
 		if (mBillTempBitmap != null) {
-			File newPath = MyApplication.getInstance().getProductFaPiaoFile(getPhotoId());
+			File newPath = MyApplication.getInstance().getProductFaPiaoFile(getFapiaoPhotoId());
 			boolean result = ImageHelper.bitmapToFile(mBillTempBitmap, newPath, 100);
 			if (result) {
 				mBillFile = newPath;

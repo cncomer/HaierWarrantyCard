@@ -59,6 +59,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			return;
 		}
 		mHandler = new Handler();
+		BaoxiuCardObject.showBill(mContext, null);
 		NotifyRegistrant.getInstance().register(mHandler);
 		PhotoManagerUtilsV2.getInstance().requestToken(TOKEN);
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
@@ -109,7 +110,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		 if (!TextUtils.isEmpty(mBaoxiuCardObject.mKY)) {
 			 PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, mAvatorView, mBaoxiuCardObject.mKY, null, PhotoManagerUtilsV2.TaskType.HOME_DEVICE_AVATOR);
 		 }
-		 if (TextUtils.isEmpty(mBaoxiuCardObject.mFPaddr)) {
+		 if (!mBaoxiuCardObject.hasLocalBill()) {
 			 mBillView.setVisibility(View.INVISIBLE);
 		 } else {
 			 mBillView.setVisibility(View.VISIBLE);
@@ -167,6 +168,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		case R.id.button_guide:
 			break;
 		case R.id.button_bill:
+			BaoxiuCardObject.showBill(mContext, mBaoxiuCardObject);
 			break;
 		}
 		

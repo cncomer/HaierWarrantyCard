@@ -153,7 +153,9 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 			holder._pinpai.setText(card.mPinPai);
 			holder._xinghao.setText(card.mXingHao);
 			holder._card = card;
-			PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, holder._avator , card.mKY, null, TaskType.HOME_DEVICE_AVATOR);
+			if (!TextUtils.isEmpty(card.mKY)) {
+				PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, holder._avator , card.mKY, null, TaskType.HOME_DEVICE_AVATOR);
+			}
 			//整机保修
 			int validity = card.getBaoxiuValidity();
 			if (validity > 0) {
