@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.http.client.ClientProtocolException;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
@@ -28,7 +26,6 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
-import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
@@ -52,6 +49,8 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	private BaoxiuCardObject mBaoxiuCardObject;
 	
 	private Handler mHandler;
+	
+	private Bundle mBundles;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -141,6 +140,9 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		 switch(menuItem.getItemId()) {
 		 case R.string.menu_edit:
 			 //编辑卡片
+			 BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
+			 NewCardActivity.startIntent(mContext, mBundles);
+			 finish();
 			 break;
 		 case R.string.menu_delete:
 			//删除卡片
@@ -185,7 +187,8 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	@Override
 	protected boolean checkIntent(Intent intent) {
 		mBaoxiuCardObject = BaoxiuCardObject.getBaoxiuCardObject();
-		return mBaoxiuCardObject != null && mBaoxiuCardObject.mBID > 0;
+		mBundles = intent.getExtras();
+		return mBaoxiuCardObject != null && mBaoxiuCardObject.mBID > 0 && mBundles != null;
 	}
 	
 	private DeleteCardAsyncTask mDeleteCardAsyncTask;
@@ -196,17 +199,17 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		mDeleteCardAsyncTask.execute();
 	}
 	
-	private class DeleteCardAsyncTask extends AsyncTask<Void, Void, Boolean> {
+	private class DeleteCardAsyncTask extends AsyncTask<Void, Void, HaierResultObject> {
 
 		@Override
-		protected Boolean doInBackground(Void... params) {
-			boolean result = false;
+		protected HaierResultObject doInBackground(Void... params) {
 			InputStream is = null;
+			HaierResultObject resultObject = new HaierResultObject();
 			try {
 				is = NetworkUtils.openContectionLocked(HaierServiceObject.getBaoxiuCardDeleteUrl(String.valueOf(mBaoxiuCardObject.mBID), String.valueOf(mBaoxiuCardObject.mUID)), MyApplication.getInstance().getSecurityKeyValuesObject());
 				if (is != null) {
 					String content = NetworkUtils.getContentFromInput(is);
-					HaierResultObject resultObject = HaierResultObject.parse(content);
+					resultObject = HaierResultObject.parse(content);
 					if (resultObject.isOpSuccessfully()) {
 						//删除服务器成功后还要删除本地的数据
 						int deleted = BaoxiuCardObject.deleteBaoxiuCardInDatabaseForAccount(mContext.getContentResolver(), mBaoxiuCardObject.mUID, mBaoxiuCardObject.mAID, mBaoxiuCardObject.mBID);
@@ -214,26 +217,32 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 							//本地删除成功后我们还要刷新对应HomeObject对象的保修卡数据
 							HaierAccountManager.getInstance().updateHomeObject(mBaoxiuCardObject.mAID);
 						}
-						
 					}
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
+				resultObject.mStatusMessage = e.getMessage();
 			} catch (IOException e) {
+				resultObject.mStatusMessage = e.getMessage();
 				e.printStackTrace();
 			}
-			
-			return null;
+			return resultObject;
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(HaierResultObject result) {
 			super.onPostExecute(result);
+			dismissDialog(DIALOG_PROGRESS);
+			MyApplication.getInstance().showMessage(result.mStatusMessage);
+			if (result.isOpSuccessfully()) {
+				finish();
+			}
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
+			dismissDialog(DIALOG_PROGRESS);
 		}
 		
 	}
@@ -242,8 +251,11 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	 * 回到主界面
 	 * @param context
 	 */
-	public static void startActivit(Context context) {
+	public static void startActivit(Context context, Bundle bundle) {
 		Intent intent = new Intent(context, CardViewActivity.class);
+		if (bundle != null) {
+			intent.putExtras(bundle);
+		}
 		context.startActivity(intent);
 	}
 
