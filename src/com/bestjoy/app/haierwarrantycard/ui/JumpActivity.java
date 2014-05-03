@@ -77,7 +77,8 @@ public class JumpActivity extends Activity {
 				edit.putLong(PreferencesActivity.KEY_LATEST_VERSION_LEVEL, 0);
 				edit.commit();
 				//删除下载更新的临时目录，确保没有其他的安装包了
-				FilesUtils.deleteFile(TAG, MyApplication.getInstance().getExternalStorageRoot(".download"));
+				File downloadFile = MyApplication.getInstance().getExternalStorageRoot(".download");
+				if(downloadFile != null) FilesUtils.deleteFile(TAG, downloadFile);
 				launchMainActivityDelay();
 			} else {// 不是第一次启动
 					// 是否完成上次下载的更新的安装
