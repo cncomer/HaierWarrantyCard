@@ -10,6 +10,7 @@
     <string name="button_register">新用户注册</string>
      <string name="button_find_password">找回密码</string>
     <string name="button_new_card">新建保修卡</string>
+    <string name="button_edit_card">编辑保修卡</string>
     <string name="button_my_card">我的保修卡</string>
     <string name="button_repair">故障报修</string>
      <string name="button_webview_goback">回退</string>
@@ -241,6 +242,7 @@
      <string name="hint_must">必填</string>
      <string name="input_type_please_input">请输入</string>
      <string name="save_success">保存成功</string>
+     <string name="update_success">更新成功</string>
      <string name="save_fail">保存失败</string>
      <string name="login_tip">请先登录</string>
      <string name="msg_yuyue_sucess">预约成功</string>

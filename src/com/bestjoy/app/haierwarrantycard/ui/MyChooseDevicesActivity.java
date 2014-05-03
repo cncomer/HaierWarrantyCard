@@ -184,7 +184,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	    	//进入详细页面
 	    	BaoxiuCardObject.setBaoxiuCardObject(card.clone());
 	    	HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
-	    	CardViewActivity.startActivit(mContext);
+	    	CardViewActivity.startActivit(mContext, mBundle);
 	    } else {
 	    	BaoxiuCardObject.setBaoxiuCardObject(card.clone());
 	    	HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());

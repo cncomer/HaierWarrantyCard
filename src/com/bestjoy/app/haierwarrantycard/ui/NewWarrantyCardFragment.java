@@ -34,14 +34,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject.HaierResultObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
+import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.ImageHelper;
 import com.shwy.bestjoy.utils.InfoInterface;
@@ -49,6 +52,7 @@ import com.shwy.bestjoy.utils.NetworkUtils;
 
 public class NewWarrantyCardFragment extends ModleBaseFragment implements View.OnClickListener{
 	private static final String TAG = "NewWarrantyCardFragment";
+	private static final String TOKEN = NewWarrantyCardFragment.class.getName();
 	//按钮
 	private Button mSaveBtn;
 	private TextView mDatePickBtn;
@@ -77,6 +81,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		PhotoManagerUtilsV2.getInstance().requestToken(TOKEN);
 		setHasOptionsMenu(true);
 		mCalendar = Calendar.getInstance();
 		mBaoxiuCardObject = new BaoxiuCardObject();
@@ -134,6 +139,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
+		PhotoManagerUtilsV2.getInstance().releaseToken(TOKEN);
 		BaoxiuCardObject.showBill(getActivity(), null);
 	}
 
@@ -164,7 +170,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		return super.onCreateDialog(id);
 	}
 	
-	public boolean hasEditable() {
+	public boolean isEditable() {
 		return mBid > 0;
 	}
 	
@@ -182,6 +188,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			mYanbaoComponyInput.getText().clear();
 			mYanbaoTelInput.getText().clear();
 			mTagInput.getText().clear();
+			//传递进来的，我们还需要清空发票数据
+			mBaoxiuCardObject.mFPaddr = null;
 		} else {
 			mTypeInput.setText(object.mLeiXin);
 			mPinpaiInput.setText(object.mPinPai);
@@ -195,7 +203,9 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			mYanbaoComponyInput.setText(object.mYanBaoDanWei);
 			mYanbaoTelInput.setText(object.mYBPhone);
 			mTagInput.setText(object.mCardName);
-			if (hasEditable()) {
+			//传递进来的，我们还需要读取发票数据
+			mBaoxiuCardObject.mFPaddr = object.mFPaddr;
+			if (isEditable()) {
 				//如果是已经创建了的，我们不允许修改时间，并且要使用保修卡的购买时间
 				try {
 					Date date = BaoxiuCardObject.BUY_DATE_TIME_FORMAT.parse(object.mBuyDate);
@@ -204,6 +214,15 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 					e.printStackTrace();
 				}
 				 mDatePickBtn.setEnabled(false);
+				 
+				//如果有发票，我们显示出来
+				if (mBaoxiuCardObject.hasLocalBill()) {
+					PhotoManagerUtilsV2.getInstance().loadLocalPhotoAsync(TOKEN, mBillImageView, mBaoxiuCardObject.getFapiaoPhotoId(), null, PhotoManagerUtilsV2.TaskType.FaPiao);
+				}
+				
+				//设置标题为编辑保修卡
+				getActivity().setTitle(R.string.button_edit_card);
+				mSaveBtn.setText(R.string.button_update);
 			}
 		}
 		
@@ -285,7 +304,15 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 //			} else {
 //				MyApplication.getInstance().showMessage(R.string.msg_cant_show_bill);
 //			}
-			saveNewWarrantyCardAndSync();
+			 if (ComConnectivityManager.getInstance().isConnected()) {
+				 if (isEditable()) {
+						updateWarrantyCardAsync();
+					} else {
+						saveNewWarrantyCardAndSync();
+					}
+			 } else {
+				 showDialog(DIALOG_DATA_NOT_CONNECTED);
+			 }
 			break;
 		}
 		
@@ -327,7 +354,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		protected Boolean doInBackground(String... params) {
 			//更新保修卡信息
 			BaoxiuCardObject baoxiuCardObject = getmBaoxiuCardObject();
-			
+			DebugUtils.logD(TAG, "CreateNewWarrantyCardAsyncTask for AID " + baoxiuCardObject.mAID);
 			mError = null;
 			InputStream is = null;
 			final int LENGTH = 14;
@@ -459,6 +486,132 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			mSaveBtn.setEnabled(true);
 		}
 	}
+	
+	//########################更新操作 开始################################################
+	/*
+	 ServerIP/Haier/UpdateBaoXiu.ashx
+	参数：
+	LeiXin 
+	XingHao 
+	SHBianHao 
+	BXPhone 
+	BuyTuJing 
+	YanBaoDanWei 
+	Tag 
+	YanBaoTime 
+	YBPhone 
+	BID 
+	BuyDate 
+	BuyPrice 
+	FPaddr 
+	AID 
+	说明
+	跟添加保修数据的参数唯一不同的事一个有UID(用户ID)没有BID 
+	这个有BID(保修ID) 没有用户ID 
+
+	 */
+	private UpdateWarrantyCardAsyncTask mUpdateWarrantyCardAsyncTask;
+	private void updateWarrantyCardAsync() {
+		AsyncTaskUtils.cancelTask(mUpdateWarrantyCardAsyncTask);
+		showDialog(DIALOG_PROGRESS);
+		mUpdateWarrantyCardAsyncTask = new UpdateWarrantyCardAsyncTask();
+		mUpdateWarrantyCardAsyncTask.execute();
+	}
+
+	private class UpdateWarrantyCardAsyncTask extends AsyncTask<Void, Void, HaierResultObject> {
+		/*{
+		    "StatusCode": "1", 
+		    "StatusMessage": "成功返回数据", 
+		    "Data": "Bid:4"
+		}*/
+		@Override
+		protected HaierResultObject doInBackground(Void... params) {
+			//更新保修卡信息
+			BaoxiuCardObject baoxiuCardObject = getmBaoxiuCardObject();
+			DebugUtils.logD(TAG, "UpdateWarrantyCardAsyncTask BID " + baoxiuCardObject.mBID);
+			HaierResultObject haierResultObject = new HaierResultObject();
+			InputStream is = null;
+			final int LENGTH = 14;
+			String[] urls = new String[LENGTH];
+			String[] paths = new String[LENGTH];
+			urls[0] = HaierServiceObject.SERVICE_URL + "UpdateBaoXiu.ashx?LeiXin=";
+			paths[0] = baoxiuCardObject.mLeiXin;
+			urls[1] = "&BuyDate=";
+			paths[1] = baoxiuCardObject.mBuyDate;
+			urls[2] = "&BuyPrice=";
+			paths[2] = baoxiuCardObject.mBuyPrice;
+			urls[3] = "&BuyTuJing=";
+			paths[3] = baoxiuCardObject.mBuyTuJing;
+			urls[4] = "&BXPhone=";
+			paths[4] = baoxiuCardObject.mBXPhone;
+			urls[5] = "&PinPai=";
+			paths[5] = baoxiuCardObject.mPinPai;
+			urls[6] = "&BID=";
+			paths[6] = String.valueOf(baoxiuCardObject.mBID);
+			urls[7] = "&XingHao=";
+			paths[7] = baoxiuCardObject.mXingHao;
+			urls[8] = "&YanBaoDanWei=";
+			paths[8] = baoxiuCardObject.mYanBaoDanWei;
+			urls[9] = "&YanBaoTime=";
+			paths[9] = baoxiuCardObject.mYanBaoTime;
+			urls[10] = "&AID=";
+			paths[10] = String.valueOf(baoxiuCardObject.mAID);
+			urls[11] = "&SHBianHao=";
+			paths[11] = baoxiuCardObject.mSHBianHao;
+			urls[12] = "&Tag=";
+			paths[12] = baoxiuCardObject.mCardName;
+			urls[13] = "&YBPhone=";
+			paths[13] = baoxiuCardObject.mYBPhone;
+			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
+			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
+			try {
+				is = NetworkUtils.openContectionLocked(urls, paths, MyApplication.getInstance().getSecurityKeyValuesObject());
+				haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
+				if (haierResultObject.isOpSuccessfully()) {
+					//成功删除了服务器上的数据，我们还需要同步删除本地的数据
+					boolean updated = baoxiuCardObject.saveInDatebase(getActivity().getContentResolver(), null);
+					if (!updated) {
+						//通常不会发生
+						DebugUtils.logD(TAG, "UpdateWarrantyCardAsyncTask " + getActivity().getString(R.string.msg_local_save_card_failed));
+					}
+				}
+						
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				haierResultObject.mStatusMessage = e.getMessage();
+			} catch (IOException e) {
+				e.printStackTrace();
+				haierResultObject.mStatusMessage = e.getMessage();
+			} finally {
+				NetworkUtils.closeInputStream(is);
+			}
+			return haierResultObject;
+		}
+
+		@Override
+		protected void onPostExecute(HaierResultObject result) {
+			super.onPostExecute(result);
+			mSaveBtn.setEnabled(true);
+			dissmissDialog(DIALOG_PROGRESS);
+			if (result.isOpSuccessfully()) {
+				MyApplication.getInstance().showMessage(R.string.update_success);
+				getActivity().finish();
+				MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
+			} else {
+				MyApplication.getInstance().showMessage(result.mStatusMessage);
+			}
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			dissmissDialog(DIALOG_PROGRESS);
+			mSaveBtn.setEnabled(true);
+		}
+	}
+	
+	
+	//########################更新操作 结束#################################################
 
 	private boolean checkInput() {
 		if(TextUtils.isEmpty(mTypeInput.getText().toString().trim())){

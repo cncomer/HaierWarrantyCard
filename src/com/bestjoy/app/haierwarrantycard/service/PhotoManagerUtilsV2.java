@@ -430,15 +430,13 @@ public class PhotoManagerUtilsV2 {
         }
         return null;
     }
-    /**�첽����ͼƬ�����ܻ���Ҫ�ӷ�����������*/
+    /**异步载入图片，可能会需要从服务器上下载*/
 	public void loadPhotoAsync(String token, ImageView imageView, String photoId, byte[] photo, TaskType type) {
 		if (cancelPotentialDownload(photoId, imageView)) {
-			
-			
             Bitmap avatar = getBitmapFromCache(photoId, type);
             if (avatar != null && imageView != null) {
                 imageView.setImageBitmap(avatar);
-                //֪ͨ��������ͼƬ�Ѿ����������
+                //通知监听器，图片已经加载完成了
                 Bundle data = new Bundle();
                 data.putString(Intents.EXTRA_PHOTOID, photoId);
                 data.putString(Intents.EXTRA_TYPE, type.toString());
@@ -449,14 +447,14 @@ public class PhotoManagerUtilsV2 {
 	    }
 	}
 	
-	/**异步载入图片，可能会需要从服务器上下载*/
+	/**异步载入本地图片文件*/
 	public void loadLocalPhotoAsync(String token, ImageView imageView, String photoId, byte[] photo, TaskType type) {
 		if (cancelPotentialDownload(photoId, imageView)) {
 			
             Bitmap avatar = getBitmapFromCache(photoId, type);
             if (avatar != null && imageView != null) {
                 imageView.setImageBitmap(avatar);
-                //֪ͨ��������ͼƬ�Ѿ����������
+                //通知监听器，图片已经加载完成了
                 Bundle data = new Bundle();
                 data.putString(Intents.EXTRA_PHOTOID, photoId);
                 data.putString(Intents.EXTRA_TYPE, type.toString());
@@ -480,7 +478,7 @@ public class PhotoManagerUtilsV2 {
         }
 		loadPhotoTask.execute();
 	}
-	/**�첽���뱾��ͼƬ�ļ�*/
+	/**异步载入本地图片文件*/
 	private void internalLoadLocalPhotoAsync(String token, ImageView imageView, String photoId, TaskType type, byte[] photo) {
 		DebugUtils.logPhotoUtils(TAG, "step 1 set default bitmap");
 //		imageView.setImageBitmap(getDefaultBitmap(type));

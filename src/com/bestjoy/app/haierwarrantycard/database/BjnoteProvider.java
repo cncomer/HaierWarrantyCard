@@ -305,7 +305,7 @@ public class BjnoteProvider extends ContentProvider{
 		int match = findMatch(uri, "openFile");
 		switch(match) {
 			case BILL_AVATOR:
-	        	File file = MyApplication.getInstance().getProductFaPiaoFile(BaoxiuCardObject.objectUseForbill.getPhotoId());
+	        	File file = MyApplication.getInstance().getProductFaPiaoFile(BaoxiuCardObject.objectUseForbill.getFapiaoPhotoId());
 	        	if (BaoxiuCardObject.objectUseForbill.mBillTempFile != null && BaoxiuCardObject.objectUseForbill.mBillTempFile.exists()) {
 			    	return ParcelFileDescriptor.open(BaoxiuCardObject.objectUseForbill.mBillTempFile, ParcelFileDescriptor.MODE_READ_WRITE);
 			    } else if (file.exists()) {
