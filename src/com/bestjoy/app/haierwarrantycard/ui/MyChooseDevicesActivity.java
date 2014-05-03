@@ -84,6 +84,8 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 		switch(item.getItemId()) {
 		case R.string.menu_manage_home:
 			//管理家
+	    	//HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
+	    	HomeManagerActivity.startActivity(mContext);
 			break;
 		default:
 			//当选择了一个Home时候，我们要设置HomeObject对象

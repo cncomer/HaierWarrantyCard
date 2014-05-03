@@ -102,6 +102,8 @@
     
     <string name="menu_edit">编辑</string>
     <string name="menu_delete">删除</string>
+	<string name="menu_create">新建</string>
+	<string name="menu_save">保存</string>
 
     <string name="register_tips">输入手机号码，点击“获取验证码”后，系统会自动下发一条默认密码短信</string>
     <string name="title_get_usr_validate">获取验证码</string>
@@ -224,6 +226,7 @@
     <string name="menu_new_repair">预约维修</string>
     <string name="menu_new_install">预约安装</string>
      <string name="menu_manage_home">管理家</string>
+     <string name="activity_title_new_home">新建家</string>
      
      <string name="title_scan_history">扫描历史</string>
      <string name="msg_can_not_access_network">抱歉，暂时无法访问服务器，请检查网络，稍后重试</string>

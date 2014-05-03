@@ -10,7 +10,6 @@ import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -27,7 +26,6 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.database.DeviceDBHelper;
-import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 
 public class ProCityDisEditPopView implements OnTouchListener {
 	private static final String TAG = "ProCityDisEditView";
@@ -71,13 +69,13 @@ public class ProCityDisEditPopView implements OnTouchListener {
 		mContext = context;
 		mHomeObject = new HomeObject();
 		initViews(view);
-		intiData();
+		initData();
 	}
 	public ProCityDisEditPopView(Context context) {
 		mContext = context;
 		mHomeObject = new HomeObject();
 		initViews(context);
-		intiData();
+		initData();
 	}
 	
 	public void setOnClickListener(View.OnClickListener listenr) {
@@ -90,7 +88,7 @@ public class ProCityDisEditPopView implements OnTouchListener {
 		
 	}
 	
-	private void intiData() {
+	private void initData() {
 		popupView = ((Activity) mContext).getLayoutInflater().inflate(R.layout.layout_popupwindow, null);
 		
 		mAddressAdapter = new AddressAdapter();
@@ -125,6 +123,10 @@ public class ProCityDisEditPopView implements OnTouchListener {
 
 	public String getDisName() {
 		return mHomeObject.mHomeDis;
+	}
+	
+	public String getDetailPlaceName() {
+		return mHomeObject.mHomePlaceDetail;
 	}
 
 	private void initViews(Context context) {
