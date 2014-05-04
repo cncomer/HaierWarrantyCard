@@ -54,7 +54,7 @@
            android:singleLine="true"
            android:layout_gravity="center_horizontal"
            android:layout_marginTop="2dip"
-           android:text="123天"/>
+           />
     </FrameLayout>
     
     <FrameLayout android:layout_width="wrap_content"
@@ -71,8 +71,7 @@
            android:textColor="@color/wt"
            android:singleLine="true"
             android:layout_marginTop="2dip"
-           android:layout_gravity="center_horizontal"
-           android:text="123天"/>
+           android:layout_gravity="center_horizontal"/>
     </FrameLayout>
     
 </LinearLayout>

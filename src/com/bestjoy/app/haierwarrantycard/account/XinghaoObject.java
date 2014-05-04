@@ -54,13 +54,14 @@ public class XinghaoObject extends InfoInterfaceImpl{
     	return sb.toString();
     }
 	public static List<XinghaoObject> parse(InputStream is, String pinpaiCode) {
+		 List<XinghaoObject> list = new ArrayList<XinghaoObject>();
 		if (is == null) {
-			return null;
+			return list;
 		}
 		try {
 			JSONArray jsonArray = new JSONArray(NetworkUtils.getContentFromInput(is));
 			int len = jsonArray.length();
-			 List<XinghaoObject> list = new ArrayList<XinghaoObject>(len);
+			 list = new ArrayList<XinghaoObject>(len);
 			if (len > 0) {
 				JSONObject object = null;
 				XinghaoObject xinghaoObject = null;
@@ -72,13 +73,11 @@ public class XinghaoObject extends InfoInterfaceImpl{
 					xinghaoObject.mPinpaiCode = pinpaiCode;
 					list.add(xinghaoObject);
 				}
-				return list;
 			}
-			
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return list;
 	}
 	
 	@Override

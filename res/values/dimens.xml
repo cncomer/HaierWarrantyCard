@@ -30,7 +30,7 @@
      <dimen name="product_preview_avator_width">70dip</dimen>
      <dimen name="product_preview_avator_height">70dip</dimen>
      <dimen name="choose_device_slidingmenu_offset">25dip</dimen>
-     <dimen name="choose_device_choose_slidingmenu_offset">150dip</dimen>
+     <dimen name="choose_device_choose_slidingmenu_offset">60dip</dimen>
       <dimen name="shadow_width">5dp</dimen>
       
       <dimen name="province_textsize">14sp</dimen>

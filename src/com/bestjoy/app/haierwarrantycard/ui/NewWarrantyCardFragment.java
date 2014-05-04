@@ -16,9 +16,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -341,141 +343,141 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		mCreateNewWarrantyCardAsyncTask.execute(param);
 	}
 
-	private class CreateNewWarrantyCardAsyncTask extends AsyncTask<String, Void, Boolean> {
-		private String mError;
-		int mStatusCode = -1;
-		String mStatusMessage = null;
+	private class CreateNewWarrantyCardAsyncTask extends AsyncTask<String, Void, HaierResultObject> {
 		/*{
 		    "StatusCode": "1", 
 		    "StatusMessage": "成功返回数据", 
 		    "Data": "Bid:4"
 		}*/
 		@Override
-		protected Boolean doInBackground(String... params) {
+		protected HaierResultObject doInBackground(String... params) {
 			//更新保修卡信息
 			BaoxiuCardObject baoxiuCardObject = getmBaoxiuCardObject();
 			DebugUtils.logD(TAG, "CreateNewWarrantyCardAsyncTask for AID " + baoxiuCardObject.mAID);
-			mError = null;
+			HaierResultObject haierResultObject = new HaierResultObject();
 			InputStream is = null;
-			final int LENGTH = 14;
-			String[] urls = new String[LENGTH];
-			String[] paths = new String[LENGTH];
-			urls[0] = HaierServiceObject.SERVICE_URL + "AddBaoXiuData.ashx?LeiXin=";
-			paths[0] = baoxiuCardObject.mLeiXin;
-			urls[1] = "&BuyDate=";
-			paths[1] = baoxiuCardObject.mBuyDate;
-			urls[2] = "&BuyPrice=";
-			paths[2] = baoxiuCardObject.mBuyPrice;
-			urls[3] = "&BuyTuJing=";
-			paths[3] = baoxiuCardObject.mBuyTuJing;
-			urls[4] = "&BXPhone=";
-			paths[4] = baoxiuCardObject.mBXPhone;
-			urls[5] = "&PinPai=";
-			paths[5] = baoxiuCardObject.mPinPai;
-			urls[6] = "&UID=";
-			paths[6] = String.valueOf(baoxiuCardObject.mUID);
-			urls[7] = "&XingHao=";
-			paths[7] = baoxiuCardObject.mXingHao;
-			urls[8] = "&YanBaoDanWei=";
-			paths[8] = baoxiuCardObject.mYanBaoDanWei;
-			urls[9] = "&YanBaoTime=";
-			paths[9] = baoxiuCardObject.mYanBaoTime;
-			urls[10] = "&AID=";
-			paths[10] = String.valueOf(baoxiuCardObject.mAID);
-			urls[11] = "&SHBianHao=";
-			paths[11] = baoxiuCardObject.mSHBianHao;
-			urls[12] = "&Tag=";
-			paths[12] = baoxiuCardObject.mCardName;
-			urls[13] = "&YBPhone=";
-			paths[13] = baoxiuCardObject.mYBPhone;
-			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
-			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
+			final int LENGTH = 15;
+			String[] keys = new String[LENGTH];
+			String[] values = new String[LENGTH];
+			keys[0] = "LeiXin=";
+			values[0] = baoxiuCardObject.mLeiXin;
+			keys[1] = "&BuyDate=";
+			values[1] = baoxiuCardObject.mBuyDate;
+			keys[2] = "&BuyPrice=";
+			values[2] = baoxiuCardObject.mBuyPrice;
+			keys[3] = "&BuyTuJing=";
+			values[3] = baoxiuCardObject.mBuyTuJing;
+			keys[4] = "&BXPhone=";
+			values[4] = baoxiuCardObject.mBXPhone;
+			keys[5] = "&PinPai=";
+			values[5] = baoxiuCardObject.mPinPai;
+			keys[6] = "&UID=";
+			values[6] = String.valueOf(baoxiuCardObject.mUID);
+			keys[7] = "&XingHao=";
+			values[7] = baoxiuCardObject.mXingHao;
+			keys[8] = "&YanBaoDanWei=";
+			values[8] = baoxiuCardObject.mYanBaoDanWei;
+			keys[9] = "&YanBaoTime=";
+			values[9] = baoxiuCardObject.mYanBaoTime;
+			keys[10] = "&AID=";
+			values[10] = String.valueOf(baoxiuCardObject.mAID);
+			keys[11] = "&SHBianHao=";
+			values[11] = baoxiuCardObject.mSHBianHao;
+			keys[12] = "&Tag=";
+			values[12] = baoxiuCardObject.mCardName;
+			keys[13] = "&YBPhone=";
+			values[13] = baoxiuCardObject.mYBPhone;
+			keys[14] = "&imgstr=";
+			values[14] = baoxiuCardObject.getBase64StringFromBillAvator().replaceAll("\\+", "*");
+			DebugUtils.logD(TAG, "urls = " + Arrays.toString(keys));
+			DebugUtils.logD(TAG, "paths = " + Arrays.toString(values));
+//			StringBuilder paramValue = new StringBuilder();
+//			if (baoxiuCardObject.hasTempBill()) {
+//				paramValue.append("imgstr=").append(baoxiuCardObject.getBase64StringFromBillAvator())
+//				.append("&");
+//			}
+//			paramValue.append("LeiXin=").append(baoxiuCardObject.mLeiXin)
+//			.append("&BuyDate=").append(baoxiuCardObject.mBuyDate)
+//			.append("&BuyPrice=").append(baoxiuCardObject.mBuyPrice)
+//			.append("&BuyTuJing=").append(baoxiuCardObject.mBuyTuJing)
+//			.append("&BXPhone=").append(baoxiuCardObject.mBXPhone)
+//			.append("&PinPai=").append(baoxiuCardObject.mPinPai)
+//			.append("&UID=").append(String.valueOf(baoxiuCardObject.mUID))
+//			.append("&XingHao=").append(baoxiuCardObject.mXingHao)
+//			.append("&YanBaoDanWei=").append(baoxiuCardObject.mYanBaoDanWei)
+//			.append("&YanBaoTime=").append(baoxiuCardObject.mYanBaoTime)
+//			.append("&AID=").append(String.valueOf(baoxiuCardObject.mAID))
+//			.append("&SHBianHao=").append(baoxiuCardObject.mSHBianHao)
+//			.append("&Tag=").append(baoxiuCardObject.mCardName)
+//			.append("&YBPhone=").append(baoxiuCardObject.mYBPhone);
+//			DebugUtils.logD(TAG, "param " + paramValue.toString());
 			try {
-				is = NetworkUtils.openContectionLocked(urls, paths, MyApplication.getInstance().getSecurityKeyValuesObject());
+				StringBuilder paramValue = new StringBuilder(HaierServiceObject.SERVICE_URL + "AddBaoXiu.ashx?");
+				paramValue.append(NetworkUtils.getUrlEncodedString(params, values));
+				is = NetworkUtils.openContectionLocked(paramValue.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
+//				is = NetworkUtils.openPostContectionLocked(HaierServiceObject.SERVICE_URL + "UploadBaoXiu.asmx/UpLoadData", "param", paramValue.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
 				try {
-					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
-					mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
-					mStatusMessage = jsonObject.getString("StatusMessage");
-					DebugUtils.logD(TAG, "StatusCode = " + mStatusCode);
-					DebugUtils.logD(TAG, "StatusMessage = " + mStatusMessage);
-					if (mStatusCode == 1) {
+					haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
+					DebugUtils.logD(TAG, "StatusCode = " + haierResultObject.mStatusCode);
+					DebugUtils.logD(TAG, "StatusMessage = " + haierResultObject.mStatusMessage);
+					if (haierResultObject.isOpSuccessfully()) {
 						//在保存前，我们需要回填bid数据
-						String data = jsonObject.getString("Data");
+						String data = haierResultObject.mStrData;
 						DebugUtils.logD(TAG, "Data = " + data);
 						if (data.length() > "Bid:".length()) {
 							data = data.substring("Bid:".length());
 							baoxiuCardObject.mBID = Long.valueOf(data);
 							//如果后台返回了bid,我们根据它向服务器查询保修卡数据，并解析保存在本地。
 							if (baoxiuCardObject.mBID > 0) {
+								baoxiuCardObject.clear();
 								NetworkUtils.closeInputStream(is);
 								StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
 								sb.append("GetBaoXiuDataByBID.ashx?BID=").append(baoxiuCardObject.mBID);
 								is = NetworkUtils.openContectionLocked(sb.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
 								if (is != null){
-									jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
-									mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
-									mStatusMessage = jsonObject.getString("StatusMessage");
-									if (mStatusCode == 1) {
-										baoxiuCardObject = BaoxiuCardObject.parseBaoxiuCards(jsonObject.getJSONObject("Data"), null);
+									haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
+									if (haierResultObject.isOpSuccessfully()) {
+										baoxiuCardObject = BaoxiuCardObject.parseBaoxiuCards(haierResultObject.mJsonData, null);
 										boolean savedOk = baoxiuCardObject.saveInDatebase(getActivity().getContentResolver(), null);
 										if (!savedOk) {
 											//通常不会发生
-											mError = getActivity().getString(R.string.msg_local_save_card_failed);
+											haierResultObject.mStatusMessage = getActivity().getString(R.string.msg_local_save_card_failed);
 										} else {
 											HaierAccountManager.getInstance().updateHomeObject(baoxiuCardObject.mAID);
 										}
-									}
+									} 
 									
 								}
 							}
 						}
-						return true;
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
-				mError = e.getMessage();
+				haierResultObject.mStatusMessage = e.getMessage();
 			} catch (IOException e) {
 				e.printStackTrace();
-				mError = e.getMessage();
+				haierResultObject.mStatusMessage = e.getMessage();
 			} finally {
 				NetworkUtils.closeInputStream(is);
 			}
-			return false;
+			return haierResultObject;
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(HaierResultObject result) {
 			super.onPostExecute(result);
 			mSaveBtn.setEnabled(true);
 			dissmissDialog(DIALOG_PROGRESS);
-			if (mError != null) {
-				if (result) {
-					//服务器上传信息成功，但本地保存失败，请重新登录同步数据
-					new AlertDialog.Builder(getActivity())
-					.setTitle(R.string.msg_tip_title)
-		   			.setMessage(mError)
-		   			.setCancelable(false)
-		   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-		   				@Override
-		   				public void onClick(DialogInterface dialog, int which) {
-		   					LoginActivity.startIntent(getActivity(), null);
-		   				}
-		   			})
-		   			.create()
-		   			.show();
-				} else {
-					MyApplication.getInstance().showMessage(mError);
-				}
-			} else if (result) {
+			if (result.isOpSuccessfully()) {
 				//添加成功
 				MyApplication.getInstance().showMessage(R.string.save_success);
 				getActivity().finish();
 				MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
 			} else {
-				MyApplication.getInstance().showMessage(mStatusMessage);
+				MyApplication.getInstance().showMessage(result.mStatusMessage);
 			}
 		}
 
@@ -686,7 +688,14 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
                 if (mBillTempFile.exists()) {
                 	if (mBillTempFile.exists()) {
                     	mBaoxiuCardObject.updateBillAvatorTempLocked(mBillTempFile);
+                    	Drawable drawable = mBillImageView.getDrawable();
                     	mBillImageView.setImageBitmap(mBaoxiuCardObject.mBillTempBitmap);
+                    	if (drawable instanceof BitmapDrawable) {
+                    		Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
+                    		if (bitmap != null) {
+                    			bitmap.recycle();
+                    		}
+                    	}
     				}
 				}
                 return;

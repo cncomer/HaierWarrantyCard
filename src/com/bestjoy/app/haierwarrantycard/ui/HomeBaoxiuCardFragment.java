@@ -159,11 +159,12 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 			//整机保修
 			int validity = card.getBaoxiuValidity();
 			if (validity > 0) {
-				if (validity > 999) {
-					holder._title3.setText(getString(R.string.baoxiucard_validity_toomuch));
-				} else {
-					holder._title3.setText(getString(R.string.baoxiucard_validity, validity));
-				}
+//				if (validity > 999) {
+//					holder._title3.setText(getString(R.string.baoxiucard_validity_toomuch));
+//				} else {
+//					holder._title3.setText(getString(R.string.baoxiucard_validity, validity));
+//				}
+				holder._title3.setText(getString(R.string.baoxiucard_validity, validity));
 				
 			} else {
 				holder._title3.setText(getString(R.string.baoxiucard_outdate));
@@ -171,6 +172,8 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 			
 			//主要部件保修
 			validity = card.getComponentBaoxiuValidity();
+			//目前不显示部件保修
+			holder._title2.setVisibility(View.GONE);
 			if (validity > 0) {
 				holder._title2.setText(getString(R.string.baoxiucard_validity, validity));
 			} else {

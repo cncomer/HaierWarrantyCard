@@ -513,7 +513,13 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		}
 		return mBillFile.exists() || mBillTempFile != null;
 	}
-	
+	/**
+	 * 添加发票时候使用，用来表示是否有临时的拍摄发票文件，有的话，我们认为是要上传的
+	 * @return
+	 */
+	public boolean hasTempBill() {
+		return mBillTempFile != null && mBillTempFile.exists() ;
+	}
 	
 	/**
 	 * http://115.29.231.29/Fapiao/20140421/01324df60b0734de0f973c7907af55fc.jpg
@@ -551,7 +557,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
      * 返回商品发票预览图的Base64编码字符串
      * @return
      */
-    String getBase64StringFromBillAvator(){
+    public String getBase64StringFromBillAvator(){
     	//默认返回""
     	String result = "";
     	//如果此时还没有临时商品预览图，我们从文件中构建

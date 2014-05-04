@@ -9,8 +9,11 @@ import org.apache.http.client.ClientProtocolException;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.TextPaint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -110,15 +113,24 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 		
 		mDalei = (TextView) view.findViewById(R.id.title_dalei);
 		mDalei.setOnClickListener(this);
+		TextPaint tp = mDalei.getPaint();
+		tp.setFakeBoldText(true);
+		
 		
 		mXiaolei = (TextView) view.findViewById(R.id.title_xiaolei);
 		mXiaolei.setOnClickListener(this);
+		tp = mXiaolei.getPaint();
+		tp.setFakeBoldText(true);
 		
 		mPinpai = (TextView) view.findViewById(R.id.title_pinpai);
 		mPinpai.setOnClickListener(this);
+		tp = mPinpai.getPaint();
+		tp.setFakeBoldText(true);
 		
 		mXinghao = (TextView) view.findViewById(R.id.title_xinghao);
 		mXinghao.setOnClickListener(this);
+		tp = mXinghao.getPaint();
+		tp.setFakeBoldText(true);
 		
 		
 		mDaleiListViews = (ListView) view.findViewById(R.id.dalei);
@@ -141,11 +153,20 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 		listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		listView.setOnItemClickListener(new ListViewItemSelectedListener(listView.getId()));
 	}
+	
+	private void releaseAdapter(CursorAdapter adapter) {
+		adapter.changeCursor(null);
+		adapter = null;
+	}
 
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 		AsyncTaskUtils.cancelTask(mLoadDataAsyncTask);
+		releaseAdapter((CursorAdapter)mDaleiListViews.getAdapter());
+		releaseAdapter((CursorAdapter)mXiaoleiListViews.getAdapter());
+		releaseAdapter((CursorAdapter)mPinpaiListViews.getAdapter());
+		releaseAdapter((CursorAdapter)mXinghaoListViews.getAdapter());
 	}
 
 	@Override
@@ -249,6 +270,18 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 		@Override
 		protected void onPostExecute(Cursor result) {
 			super.onPostExecute(result);
+			if (result == null || result != null && result.getCount() == 0) {
+				switch(_listView.getId()) {
+				case R.id.dalei:
+				case R.id.xiaolei:
+				case R.id.pinpai:
+					break;
+				case R.id.xinghao:
+					MyApplication.getInstance().showMessageAsync(R.string.msg_download_no_xinghao_wait);
+					break;
+				}
+				
+			}
 			((CursorAdapter) _listView.getAdapter()).changeCursor(result);
 			_listView.setTag(new Object());
 			mProgressBarLayout.setVisibility(View.GONE);

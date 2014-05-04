@@ -93,6 +93,7 @@
     
     <string name="menu_more">更多</string>
     <string name="menu_login">登陆</string>
+    <string name="menu_exit">退出</string>
     <string name="menu_register">注册</string>
     <string name="menu_setting">设置</string>
     <string name="menu_help">帮助</string>
@@ -217,7 +218,7 @@
     <string name="title_feedback">评价</string>
     
     <string name="baoxiucard_validity">%s天</string>
-    <string name="baoxiucard_validity_toomuch">"999天"</string>
+    <string name="baoxiucard_validity_toomuch">"999+天"</string>
     <string name="baoxiucard_outdate">过保</string>
     <string name="menu_new_card">新建保修卡</string>
      <string name="button_rescan">重新扫描</string>
@@ -232,7 +233,7 @@
      <string name="title_scan_history">扫描历史</string>
      <string name="msg_can_not_access_network">抱歉，暂时无法访问服务器，请检查网络，稍后重试</string>
      <string name="msg_download_xinghao_wait">正在下载型号数据，请稍等...</string>
-     
+     <string name="msg_download_no_xinghao_wait">服务器还暂时没有该品牌的产品</string>
      <string name="title_dalei">大类</string>
      <string name="title_xiaolei">小类</string>
      <string name="title_pinpai">品牌</string>

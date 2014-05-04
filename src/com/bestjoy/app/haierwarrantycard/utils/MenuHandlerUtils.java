@@ -6,6 +6,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.LoginActivity;
 import com.bestjoy.app.haierwarrantycard.ui.RegisterActivity;
 import com.bestjoy.app.haierwarrantycard.update.AppAboutActivity;
@@ -18,6 +19,7 @@ public class MenuHandlerUtils {
         subMenu1.add(1000, R.string.menu_register, 1002, R.string.menu_register);
         subMenu1.add(1000, R.string.menu_setting, 1003, R.string.menu_setting);
         subMenu1.add(1000, R.string.menu_about, 1004, R.string.menu_about);
+        subMenu1.add(1000, R.string.menu_exit, 1005, R.string.menu_exit);
 
         MenuItem subMenu1Item = subMenu1.getItem();
         subMenu1Item.setIcon(R.drawable.abs__ic_menu_moreoverflow_normal_holo_dark);
@@ -38,6 +40,9 @@ public class MenuHandlerUtils {
         case R.string.menu_about:
         	context.startActivity(AppAboutActivity.createIntent(context));
       	   break;
+        case R.string.menu_exit:
+        	Runtime.getRuntime().exit(0);
+        	break;
 
         }
         return false;
