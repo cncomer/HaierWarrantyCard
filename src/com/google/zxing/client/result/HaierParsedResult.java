@@ -23,6 +23,8 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
+import android.text.TextUtils;
+
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.InfoInterfaceImpl;
@@ -98,7 +100,16 @@ public final class HaierParsedResult extends ParsedResult {
 		       		    } else if ("Brand".equals(tag)) {
 		 	       	    	baoxiuCardObject.mPinPai = nextTextElement(parser);
 		       		    } else if ("Class".equals(tag)) {
-		       		    	baoxiuCardObject.mLeiXin = nextTextElement(parser);
+		       		    	String classContent = nextTextElement(parser);
+		       		    	if (!TextUtils.isEmpty(classContent)) {
+		       		    		int index = classContent.indexOf("—");
+		       		    		if (index > 0) {
+		       		    			baoxiuCardObject.mLeiXin = classContent.substring(index+1);
+		       		    		} else {
+		       		    			baoxiuCardObject.mLeiXin = classContent;
+		       		    		}
+		       		    	}
+		       		    	
 		       		    } else if ("Type".equals(tag)) {
 		       		    	baoxiuCardObject.mXingHao = nextTextElement(parser);
 		       		    } else if ("BarCode".equals(tag)) {

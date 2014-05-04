@@ -35,17 +35,33 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 	
 	private ContentObserver mContentObserver;
 	
+	private long mAid = -1, mUid = -1;
+	
 	public static interface OnBaoxiuCardItemClickListener {
 		void onItemClicked(BaoxiuCardObject card) ;
 	}
 	public void setHomeBaoxiuCard(HomeObject homeObject) {
 		mHomeObject = homeObject;
+		mAid = homeObject.mHomeAid;
+		mUid = homeObject.mHomeUid;
 	}
 	
 
 	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		outState.putLong("aid", mAid);
+		outState.putLong("uid", mUid);
+		super.onSaveInstanceState(outState);
+	}
+
+
+	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (savedInstanceState != null) {
+			mAid = savedInstanceState.getLong("aid");
+			mUid = savedInstanceState.getLong("uid");
+		}
 		PhotoManagerUtilsV2.getInstance().requestToken(TOKEN);
 		mContentObserver = new ContentObserver(new Handler()) {
 			@Override
@@ -82,7 +98,6 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mHomeObject = null;
 		PhotoManagerUtilsV2.getInstance().releaseToken(TOKEN);
 	}
 
@@ -92,15 +107,13 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 		super.onDestroyView();
 		AsyncTaskUtils.cancelTask(mLoadCardsTask);
 		mCardsAdapter.changeCursor(null);
-		mCardsAdapter = null;
 		getActivity().getContentResolver().unregisterContentObserver(mContentObserver);
 	}
-
 
 	private LoadCardsTask mLoadCardsTask;
 	private void loadCardsAsync() {
 		AsyncTaskUtils.cancelTask(mLoadCardsTask);
-		if (mHomeObject != null) {
+		if (mAid > 0 && mUid > 0) {
 			mLoadCardsTask = new LoadCardsTask();
 			mLoadCardsTask.execute();
 		}
@@ -111,7 +124,7 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 
 		@Override
 		protected Cursor doInBackground(Void... params) {
-			return BaoxiuCardObject.getAllBaoxiuCardsCursor(getActivity().getContentResolver(), mHomeObject.mHomeUid, mHomeObject.mHomeAid);
+			return BaoxiuCardObject.getAllBaoxiuCardsCursor(getActivity().getContentResolver(), mUid, mAid);
 		}
 
 		@Override
@@ -146,6 +159,7 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 				holder._title2 = (TextView) view.findViewById(R.id.title2);
 				holder._title3 = (TextView) view.findViewById(R.id.title3);
 				holder._avator = (ImageView) view.findViewById(R.id.avator);
+				holder._component = view.findViewById(R.id.component);
 				view.setTag(holder);
 			}
 			//设置view
@@ -159,13 +173,11 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 			//整机保修
 			int validity = card.getBaoxiuValidity();
 			if (validity > 0) {
-//				if (validity > 999) {
-//					holder._title3.setText(getString(R.string.baoxiucard_validity_toomuch));
-//				} else {
-//					holder._title3.setText(getString(R.string.baoxiucard_validity, validity));
-//				}
-				holder._title3.setText(getString(R.string.baoxiucard_validity, validity));
-				
+				if (validity > 9999) {
+					holder._title3.setText(getString(R.string.baoxiucard_validity_toomuch));
+				} else {
+					holder._title3.setText(getString(R.string.baoxiucard_validity, validity));
+				}
 			} else {
 				holder._title3.setText(getString(R.string.baoxiucard_outdate));
 			}
@@ -173,7 +185,7 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 			//主要部件保修
 			validity = card.getComponentBaoxiuValidity();
 			//目前不显示部件保修
-			holder._title2.setVisibility(View.GONE);
+			holder._component.setVisibility(View.INVISIBLE);
 			if (validity > 0) {
 				holder._title2.setText(getString(R.string.baoxiucard_validity, validity));
 			} else {

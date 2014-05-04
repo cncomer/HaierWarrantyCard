@@ -40,6 +40,7 @@ import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
+import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
 
 public class NewInstallCardFragment extends ModleBaseFragment implements View.OnClickListener{
@@ -59,6 +60,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	private long mAid = -1;
 	private long mUid = -1;
 	private long mBid = -1;
+	private String mMustHaierPinpaiStr = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,6 +68,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		setHasOptionsMenu(true);
 		getActivity().setTitle(R.string.activity_title_install);
 		mCalendar = Calendar.getInstance();
+		mMustHaierPinpaiStr = getString(R.string.pinpai_haier);
 	}
 	
 	@Override
@@ -373,6 +376,28 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			showEmptyInputToast(R.string.time);
 			return false;
 		}
+		String pinpai = mPinpaiInput.getText().toString().trim();
+		final String bxPhone = mBaoxiuTelInput.getText().toString().trim();
+		//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
+    	if (!mMustHaierPinpaiStr.equals(pinpai)) {
+    		new AlertDialog.Builder(getActivity())
+	    	.setMessage(R.string.must_haier_confirm_yuyue)
+	    	.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if (!TextUtils.isEmpty(bxPhone)) {
+						Intents.callPhone(getActivity(), bxPhone);
+					} else {
+						MyApplication.getInstance().showMessage(R.string.msg_no_bxphone);
+					}
+					
+				}
+			})
+			.setNegativeButton(android.R.string.cancel, null)
+			.show();
+		    return false;
+    	}
 		return true;
 	}
 	

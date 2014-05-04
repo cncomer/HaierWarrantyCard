@@ -35,12 +35,14 @@ import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditPopView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
+import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
 
 public class NewRepairCardFragment extends ModleBaseFragment implements View.OnClickListener{
@@ -68,6 +70,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	private long mBid = -1;
 	
 	private ScrollView mScrollView;
+	private String mMustHaierPinpaiStr = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -75,6 +78,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		setHasOptionsMenu(true);
 		getActivity().setTitle(R.string.activity_title_repair);
 		mCalendar = Calendar.getInstance();
+		mMustHaierPinpaiStr = getString(R.string.pinpai_haier);
 	}
 	
 	@Override
@@ -419,6 +423,28 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			showEmptyInputToast(R.string.error_des);
 			return false;
 		}
+		String pinpai = mPinpaiInput.getText().toString().trim();
+		final String bxPhone = mBaoxiuTelInput.getText().toString().trim();
+		//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
+    	if (!mMustHaierPinpaiStr.equals(pinpai)) {
+    		new AlertDialog.Builder(getActivity())
+	    	.setMessage(R.string.must_haier_confirm_yuyue)
+	    	.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					if (!TextUtils.isEmpty(bxPhone)) {
+						Intents.callPhone(getActivity(), bxPhone);
+					} else {
+						MyApplication.getInstance().showMessage(R.string.msg_no_bxphone);
+					}
+					
+				}
+			})
+			.setNegativeButton(android.R.string.cancel, null)
+			.show();
+		    return false;
+    	} 
 		return true;
 	}
 	

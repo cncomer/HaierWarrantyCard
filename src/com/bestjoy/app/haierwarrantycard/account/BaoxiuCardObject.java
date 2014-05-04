@@ -155,7 +155,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		cardObject.mBXPhone = jsonObject.getString("BXPhone");
 		cardObject.mFPaddr = jsonObject.getString("FPaddr");
 		
-		if (!TextUtils.isEmpty(cardObject.mFPaddr)) {
+		if (!TextUtils.isEmpty(cardObject.mFPaddr) && !BaoxiuCardObject.PHOTOID_PLASEHOLDER.equals(cardObject.getFapiaoPhotoId())) {
 			//如果有发票，我们需要先下载发票
 			File faPiaoFile = MyApplication.getInstance().getProductFaPiaoFile(cardObject.getFapiaoPhotoId());
 			if (faPiaoFile.exists()) {

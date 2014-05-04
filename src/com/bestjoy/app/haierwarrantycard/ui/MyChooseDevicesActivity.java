@@ -1,6 +1,8 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
 import android.database.Cursor;
@@ -15,6 +17,7 @@ import android.text.TextUtils;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
@@ -42,6 +45,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	private MyPagerAdapter mMyPagerAdapter;
 	
 	private ContentObserver mContentObserver;
+	private String mMustHaierPinpaiStr = null;
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
@@ -63,6 +67,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 		if (isFinishing()) {
 			return ;
 		}
+		mMustHaierPinpaiStr = getString(R.string.pinpai_haier);
 		if (ACTION_CHOOSE_DEVICE.equals(getIntent().getAction())) {
 			DebugUtils.logD(TAG, "want to choose device");
 			mIsChooseDevice = true;
@@ -229,7 +234,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	}
 
 	@Override
-	public void onItemClicked(BaoxiuCardObject card) {
+	public void onItemClicked(final BaoxiuCardObject card) {
 	    if (mIsChooseDevice) {
 	    	//一些特殊的操作，可以放在这里，目前暂不需要实现
 	    }
@@ -240,9 +245,31 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	    	HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
 	    	CardViewActivity.startActivit(mContext, mBundle);
 	    } else {
-	    	BaoxiuCardObject.setBaoxiuCardObject(card.clone());
-	    	HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
-		    ModleSettings.doChoose(mContext, mBundle);
+	    	//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
+	    	if (mMustHaierPinpaiStr.equals(card.mPinPai)) {
+	    		BaoxiuCardObject.setBaoxiuCardObject(card.clone());
+		    	HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
+			    ModleSettings.doChoose(mContext, mBundle);
+	    	} else {
+	    		new AlertDialog.Builder(mContext)
+		    	.setMessage(R.string.must_haier_confirm_yuyue)
+		    	.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if (!TextUtils.isEmpty(card.mBXPhone)) {
+							Intents.callPhone(mContext, card.mBXPhone);
+						} else {
+							MyApplication.getInstance().showMessage(R.string.msg_no_bxphone);
+						}
+						
+					}
+				})
+				.setNegativeButton(android.R.string.cancel, null)
+				.show();
+	    	}
+	    	
+	    	
 	    }
 		
 	}
