@@ -17,6 +17,9 @@ public class HaierServiceObject {
 	public static final String FAPIAO_PREFIX = "http://115.29.231.29/Fapiao/";
 	
 	public static final String CARD_DELETE_URL = SERVICE_URL + "DeleteBaoXiuByBIDUID.ashx?";
+	
+	public static final String HOME_DELETE_URL = SERVICE_URL + "DeleteAddressByAID.ashx?";
+
 	/***
 	   * 产品图片网址  http://115.29.231.29/proimg/507/5070A000A.jpg  说明5070A000A：为Key，507：key 为前三位
 	   * @return
@@ -54,8 +57,7 @@ public class HaierServiceObject {
 	public static class HaierResultObject {
 		public int mStatusCode = 0;
 		public String mStatusMessage;
-		public JSONObject mJsonData;
-		public String mStrData;
+		public JSONObject mData;
 		
 		public static HaierResultObject parse(String content) {
 			HaierResultObject resultObject = new HaierResultObject();
@@ -66,15 +68,9 @@ public class HaierServiceObject {
 				JSONObject jsonObject = new JSONObject(content);
 				resultObject.mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
 				resultObject.mStatusMessage = jsonObject.getString("StatusMessage");
+				resultObject.mData = jsonObject.getJSONObject("Data");
 				DebugUtils.logD("HaierResultObject", "StatusCode = " + resultObject.mStatusCode);
 				DebugUtils.logD("HaierResultObject", "StatusMessage = " +resultObject.mStatusMessage);
-				try {
-					resultObject.mJsonData = jsonObject.getJSONObject("Data");
-				} catch (JSONException e) {
-					resultObject.mStrData = jsonObject.getString("Data");
-				}
-				
-				
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}

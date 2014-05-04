@@ -10,8 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
+import android.text.TextUtils;
+import android.widget.EditText;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -30,6 +30,7 @@ import com.shwy.bestjoy.utils.NetworkUtils;
 public class NewHomeActivity extends BaseActionbarActivity {
 	private static final String TAG = "NewHomeActivity";
 	private ProCityDisEditPopView mProCityDisEditPopView;
+	private EditText mHomeEditText;
 	@Override
 	protected boolean checkIntent(Intent intent) {
 		return true;
@@ -40,6 +41,17 @@ public class NewHomeActivity extends BaseActionbarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_home);
 		mProCityDisEditPopView = new ProCityDisEditPopView(this);
+		mHomeEditText = (EditText) findViewById(R.id.my_home);
+		updateView();
+	}
+
+	private void updateView() {
+		int homeIndex = getIntent().getIntExtra("home_index", -1);
+		if(homeIndex >= 0) {
+			HomeObject homeObject = HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(homeIndex);
+			mProCityDisEditPopView.setHomeObject(homeObject);
+			mHomeEditText.setText(homeObject.getHomeTag(this));
+		}
 	}
 
 	@Override
@@ -54,7 +66,9 @@ public class NewHomeActivity extends BaseActionbarActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case R.string.menu_save:
-			createNewHomeAsync();
+			if(valiInput()) {
+				createNewHomeAsync();
+			}
 			break;
 		default:
 			break;
@@ -62,8 +76,33 @@ public class NewHomeActivity extends BaseActionbarActivity {
 		return super.onOptionsItemSelected(item);
 	}
 	
-	public static void startActivit(Context context) {
+	private boolean valiInput() {
+		HomeObject mHomeObject = mProCityDisEditPopView.getHomeObject();
+		if(TextUtils.isEmpty(mHomeObject.mHomeProvince)) {
+			MyApplication.getInstance().showMessage(R.string.msg_input_usr_pro);
+			return false;
+		} else if (TextUtils.isEmpty(mHomeObject.mHomeCity)){
+			MyApplication.getInstance().showMessage(R.string.msg_input_usr_city);
+			return false;
+		} else if (TextUtils.isEmpty(mHomeObject.mHomeDis)){
+			MyApplication.getInstance().showMessage(R.string.msg_input_usr_dis);
+			return false;
+		} else if (TextUtils.isEmpty(mHomeObject.mHomePlaceDetail)){
+			MyApplication.getInstance().showMessage(R.string.msg_input_usr_place_detail);
+			return false;
+		}
+		return true;
+	}
+
+	public static void startActivity(Context context) {
 		Intent intent = new Intent(context, NewHomeActivity.class);
+		context.startActivity(intent);
+	}
+	
+
+	public static void startActivity(Context context, int pos) {
+		Intent intent = new Intent(context, NewHomeActivity.class);
+		intent.putExtra("home_index", pos);
 		context.startActivity(intent);
 	}
 
@@ -98,7 +137,7 @@ public class NewHomeActivity extends BaseActionbarActivity {
 			urls[4] = "&UID=";
 			paths[4] = String.valueOf(HaierAccountManager.getInstance().getAccountObject().mAccountUid);
 			urls[5] = "&Tag=";
-			paths[5] = "";
+			paths[5] = mHomeEditText.getText().toString().trim();
 			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
 			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
 			try {
@@ -107,6 +146,7 @@ public class NewHomeActivity extends BaseActionbarActivity {
 					String content = NetworkUtils.getContentFromInput(is);
 					HaierResultObject resultObject = HaierResultObject.parse(content);
 					MyApplication.getInstance().showMessageAsync(resultObject.mStatusMessage);
+					NewHomeActivity.this.finish();
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
