@@ -57,7 +57,8 @@ public class HaierServiceObject {
 	public static class HaierResultObject {
 		public int mStatusCode = 0;
 		public String mStatusMessage;
-		public JSONObject mData;
+		public JSONObject mJsonData;
+		public String mStrData;
 		
 		public static HaierResultObject parse(String content) {
 			HaierResultObject resultObject = new HaierResultObject();
@@ -68,9 +69,13 @@ public class HaierServiceObject {
 				JSONObject jsonObject = new JSONObject(content);
 				resultObject.mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
 				resultObject.mStatusMessage = jsonObject.getString("StatusMessage");
-				resultObject.mData = jsonObject.getJSONObject("Data");
 				DebugUtils.logD("HaierResultObject", "StatusCode = " + resultObject.mStatusCode);
 				DebugUtils.logD("HaierResultObject", "StatusMessage = " +resultObject.mStatusMessage);
+				try {
+					resultObject.mJsonData = jsonObject.getJSONObject("Data");
+				} catch (JSONException e) {
+					resultObject.mStrData = jsonObject.getString("Data");
+				}
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
