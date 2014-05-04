@@ -292,4 +292,5 @@
          <string name="pinpai_haier">海尔</string>
          <string name="msg_no_bxphone">对不起，该保修卡没有设置售后服务电话</string>
          <string name="must_haier_confirm_yuyue">目前只有海尔产品才接 受电子预约服务，是否直接拨打厂家电话？</string>
+         <string name="none_select_tips">没有选择任何条目</string>
 </resources>
