@@ -2,7 +2,11 @@ package com.bestjoy.app.haierwarrantycard.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
+import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -15,8 +19,10 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.Intents;
 /**
  * 我的家UI，需要选择设备的调用，都可以直接进入该Activity进行选择
@@ -34,6 +40,8 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	
 	private int mHomeSelected = 0;
 	private MyPagerAdapter mMyPagerAdapter;
+	
+	private ContentObserver mContentObserver;
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
@@ -68,6 +76,22 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 		mMyPagerAdapter = new MyPagerAdapter(this.getSupportFragmentManager());
 		mViewPager.setAdapter(mMyPagerAdapter);
 		mViewPager.setOnPageChangeListener(mMyPagerAdapter);
+		
+		mContentObserver = new ContentObserver(new Handler()) {
+			@Override
+			public void onChange(boolean selfChange) {
+				super.onChange(selfChange);
+				loadHomesAsync();
+			}
+		};
+		//监听Home数据表的变化，一旦变化了，我们重新查询一次家
+		getContentResolver().registerContentObserver(BjnoteContent.Homes.CONTENT_URI, true, mContentObserver);
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		getContentResolver().unregisterContentObserver(mContentObserver);
 	}
 	
 	
@@ -101,6 +125,36 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	}
 
 
+	private LoadHomesAsyncTask mLoadHomesAsyncTask;
+	private void loadHomesAsync() {
+		AsyncTaskUtils.cancelTask(mLoadHomesAsyncTask);
+		mLoadHomesAsyncTask = new LoadHomesAsyncTask();
+		mLoadHomesAsyncTask.execute();
+	}
+	private class LoadHomesAsyncTask extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			HaierAccountManager.getInstance().initAccountHomes();
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			mMyPagerAdapter.notifyDataSetChanged();
+			if (mHomeSelected < mMyPagerAdapter.getCount() && mHomeSelected != mViewPager.getCurrentItem()) {
+				mViewPager.setCurrentItem(mHomeSelected);
+			}
+			
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+		}
+		
+	}
 
 
 	class MyPagerAdapter extends FragmentStatePagerAdapter implements ViewPager.OnPageChangeListener {
