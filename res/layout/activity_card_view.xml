@@ -45,10 +45,20 @@
                     android:scaleType="fitCenter" />
 
                 <ImageView
+                    android:id="@+id/button_policy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="40dip"
+                    android:layout_toRightOf="@+id/avator"
+                    android:clickable="true"
+                    android:src="@drawable/button_policy" />
+
+                <ImageView
                     android:id="@+id/button_qa"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="40dip"
+                    android:layout_below="@+id/button_policy"
                     android:layout_toRightOf="@+id/avator"
                     android:clickable="true"
                     android:src="@drawable/button_qa" />

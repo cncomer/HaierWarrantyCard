@@ -47,7 +47,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	private TextView mNameInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput;
 	private TextView mDatePickBtn, mPriceInput, mTujingInput, mYanbaoTimeInput, mYanbaoComponyInput, mYanbaoTelInput;
 	
-	private ImageView mAvatorView, mQaView, mGuideView, mBillView;
+	private ImageView mAvatorView, mPolicyView, mQaView, mGuideView, mBillView;
 	
 	private BaoxiuCardObject mBaoxiuCardObject;
 	
@@ -98,6 +98,9 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		 
 		 mQaView = (ImageView) findViewById(R.id.button_qa);
 		 mQaView.setOnClickListener(this);
+		 
+		 mPolicyView = (ImageView) findViewById(R.id.button_policy);
+		 mPolicyView.setOnClickListener(this);
 		 
 		 mGuideView = (ImageView) findViewById(R.id.button_guide);
 		 mGuideView.setOnClickListener(this);
@@ -181,6 +184,10 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			mSpeechRecognizerEngine.showIatDialog(mContext);
 			break;
 		case R.id.button_qa:
+			BrowserActivity.startActivity(mContext, "http://www.haier.com/cn/services_supports/overview/cooling/daily_use/troubles/");
+			break;
+		case R.id.button_policy:
+			BrowserActivity.startActivity(mContext, "http://www.haier.com/cn/services_supports/overview/cooling/service_guarantee/warranty/");
 			break;
 		case R.id.button_guide:
 			break;
