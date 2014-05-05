@@ -5,7 +5,9 @@ import java.io.InputStream;
 
 import org.apache.http.client.ClientProtocolException;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,6 +31,7 @@ import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
+import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
 import com.shwy.bestjoy.utils.NotifyRegistrant;
 
@@ -146,18 +149,32 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			 finish();
 			 break;
 		 case R.string.menu_delete:
-			//删除卡片
-			 if (ComConnectivityManager.getInstance().isConnected()) {
-				 delteCardAsync();
-			 } else {
-				 showDialog(DIALOG_DATA_NOT_CONNECTED);
-			 }
+			 showDeleteDialog();
 			 break;
 		 }
 		 return super.onOptionsItemSelected(menuItem);
 	 }
 	 
-	 @Override
+	 private void showDeleteDialog() {
+		 new AlertDialog.Builder(this)
+		 	.setTitle(R.string.msg_tip_title)
+	    	.setMessage(R.string.sure_delete)
+	    	.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					//删除卡片
+					 if (ComConnectivityManager.getInstance().isConnected()) {
+						 delteCardAsync();
+					 } else {
+						 showDialog(DIALOG_DATA_NOT_CONNECTED);
+					 }
+				}
+			})
+			.setNegativeButton(android.R.string.cancel, null)
+			.show();
+	}
+
+	@Override
 	public void onClick(View v) {
 		switch(v.getId()) {
 		case R.id.button_speak:
