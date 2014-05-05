@@ -340,7 +340,7 @@ public class ProCityDisEditPopView implements OnTouchListener {
 		mCityEditView.setText(mHomeObject.mHomeCity);
 		mDisEditView.setText(mHomeObject.mHomeDis);
 		mPlaceDetail.setText(mHomeObject.mHomePlaceDetail);
-		if(mHomeObject.mHomeAid > 0) {
+		/*if(mHomeObject.mHomeAid > 0) {
 			mProEditView.setEnabled(false);
 			mCityEditView.setEnabled(false);
 			mDisEditView.setEnabled(false);
@@ -348,7 +348,7 @@ public class ProCityDisEditPopView implements OnTouchListener {
 			mProEditView.setEnabled(true);
 			mCityEditView.setEnabled(true);
 			mDisEditView.setEnabled(true);
-		}
+		}*/
 	}
 
 	public HomeObject getHomeObject() {
