@@ -42,6 +42,7 @@ public class ProCityDisEditPopView implements OnTouchListener {
 	private Cursor mCursor;
 	private String mProID;
 	private String mCityID;
+	private String mDisID;
 	private int mEditMode;
 	private HomeObject mHomeObject;
 	private AddressAdapter mAddressAdapter;
@@ -127,6 +128,21 @@ public class ProCityDisEditPopView implements OnTouchListener {
 	
 	public String getDetailPlaceName() {
 		return mHomeObject.mHomePlaceDetail;
+	}
+	
+	public String getDisID() {
+		if(mDisID != null) return mDisID;
+		String pro = mProEditView.getText().toString().trim();
+		String city = mCityEditView.getText().toString().trim();
+		String dis = mDisEditView.getText().toString().trim();
+		String selection = DeviceDBHelper.DEVICE_DIS_NAME + " like '" + dis + "%'";
+		mCursor = mContext.getContentResolver().query(
+				BjnoteContent.District.CONTENT_URI, DIS_PROJECTION, selection, null, null);
+		if(mCursor.moveToNext()) {
+			mDisID = mCursor.getString(mCursor.getColumnIndex(DeviceDBHelper.DEVICE_DIS_ID));
+		}
+		
+		return mDisID;
 	}
 
 	private void initViews(Context context) {
@@ -258,6 +274,7 @@ public class ProCityDisEditPopView implements OnTouchListener {
 					if (position < mCursor.getCount()) {
 						mCursor.moveToPosition(position);
 						mHomeObject.mHomeDis = mCursor.getString(mCursor.getColumnIndex(DeviceDBHelper.DEVICE_DIS_NAME));
+						mDisID =  mCursor.getString(mCursor.getColumnIndex(DeviceDBHelper.DEVICE_DIS_ID));
 						mDisEditView.setText(mHomeObject.mHomeDis);
 					}
 					break;
