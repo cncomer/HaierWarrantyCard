@@ -435,7 +435,8 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 				mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
 				mCalendar.set(Calendar.MINUTE, minute);
-				mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT.format(mCalendar.getTime()));
+				mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT .format(mCalendar.getTime())
+						+ "-" + DateUtils.TOPIC_TIME_FORMAT.format(new Date(mCalendar.getTimeInMillis() + 60 * 60 * 1000)));
 			}
         	
         }, mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE), true)
