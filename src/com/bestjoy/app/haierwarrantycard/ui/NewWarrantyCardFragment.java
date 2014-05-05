@@ -218,7 +218,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 				 mDatePickBtn.setEnabled(false);
 				 
 				//如果有发票，我们显示出来
-				if (mBaoxiuCardObject.hasLocalBill()) {
+				if (mBaoxiuCardObject.hasBillAvator()) {
 					PhotoManagerUtilsV2.getInstance().loadLocalPhotoAsync(TOKEN, mBillImageView, mBaoxiuCardObject.getFapiaoPhotoId(), null, PhotoManagerUtilsV2.TaskType.FaPiao);
 				}
 				

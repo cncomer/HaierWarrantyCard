@@ -1,5 +1,7 @@
 package com.bestjoy.app.haierwarrantycard.account;
 
+import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -39,6 +41,25 @@ public class HaierAccountManager {
 //				homeObject.initBaoxiuCards(mContext.getContentResolver());
 //			}
 			mHaierAccount.mAccountHomeCount = mHaierAccount.mAccountHomes.size();
+		}
+	}
+	
+	public void deleteDefaultAccount() {
+		if (mHaierAccount != null) {
+			DebugUtils.logD(TAG, "start deleteDefaultAccount() for uid " + mHaierAccount.mAccountUid);
+			//删除全部保修卡数据
+			int deleted = BaoxiuCardObject.deleteAllBaoxiuCardsInDatabaseForAccount(mContext.getContentResolver(), mHaierAccount.mAccountUid);
+			DebugUtils.logD(TAG, "deleted " + deleted + " BaoxiuCards");
+			//删除全部家数据
+			deleted = HomeObject.deleteAllHomesInDatabaseForAccount(mContext.getContentResolver(), mHaierAccount.mAccountUid);
+			DebugUtils.logD(TAG, "deleted " + deleted + " Homes");
+			//删除账户数据
+			deleted = AccountObject.deleteAccount(mContext.getContentResolver(), mHaierAccount.mAccountUid);
+			mHaierAccount = null;
+			DebugUtils.logD(TAG, "deleted " + deleted + " Account");
+			DebugUtils.logD(TAG, "end deleteDefaultAccount()");
+		} else {
+			DebugUtils.logD(TAG, "deleteDefaultAccount() nothing to do");
 		}
 	}
 	

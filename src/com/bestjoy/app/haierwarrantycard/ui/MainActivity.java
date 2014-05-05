@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.view.PagerAdapter;
@@ -19,10 +20,14 @@ import android.widget.ListView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.update.UpdateService;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
+import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
+import com.shwy.bestjoy.utils.AsyncTaskUtils;
 
 public class MainActivity extends BaseActionbarActivity {
 	private LinearLayout mDotsLayout;
@@ -88,6 +93,7 @@ public class MainActivity extends BaseActionbarActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
+		invalidateOptionsMenu();
 		changeAdsDelay();
 	}
 	
@@ -101,9 +107,60 @@ public class MainActivity extends BaseActionbarActivity {
      public boolean onCreateOptionsMenu(Menu menu) {
   	     boolean result = super.onCreateOptionsMenu(menu);
   	     MenuItem subMenu1Item = menu.findItem(R.string.menu_more);
+  	     subMenu1Item.getSubMenu().add(1000, R.string.menu_exit, 1005, R.string.menu_exit);
   	     subMenu1Item.setIcon(R.drawable.abs__ic_menu_moreoverflow_normal_holo_light);
          return result;
      }
+	 
+	 public boolean onPrepareOptionsMenu(Menu menu) {
+		 menu.findItem(R.string.menu_exit).setVisible(HaierAccountManager.getInstance().hasLoginned());
+	     return super.onPrepareOptionsMenu(menu);
+	 }
+	 
+	 @Override
+	 public boolean onOptionsItemSelected(MenuItem menuItem) {
+		 switch(menuItem.getItemId()) {
+		 case R.string.menu_exit:
+			 deleteAccountAsync();
+			 return true;
+		 }
+		 return super.onOptionsItemSelected(menuItem);
+	 }
+	 
+	 private DeleteAccountTask mDeleteAccountTask;
+	 private void deleteAccountAsync() {
+		 AsyncTaskUtils.cancelTask(mDeleteAccountTask);
+		 showDialog(DIALOG_PROGRESS);
+		 mDeleteAccountTask = new DeleteAccountTask();
+		 mDeleteAccountTask.execute();
+	 }
+	 private class DeleteAccountTask extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			HaierAccountManager.getInstance().deleteDefaultAccount();
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			dismissDialog(DIALOG_PROGRESS);
+			invalidateOptionsMenu();
+			MyApplication.getInstance().showMessage(R.string.msg_op_successed);
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			dismissDialog(DIALOG_PROGRESS);
+		}
+		
+		
+		 
+	 }
+	 
+
 
 	private void initDots(int count){
 		LayoutInflater flater = this.getLayoutInflater();

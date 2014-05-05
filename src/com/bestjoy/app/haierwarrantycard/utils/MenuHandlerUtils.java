@@ -19,7 +19,7 @@ public class MenuHandlerUtils {
         subMenu1.add(1000, R.string.menu_register, 1002, R.string.menu_register);
         subMenu1.add(1000, R.string.menu_setting, 1003, R.string.menu_setting);
         subMenu1.add(1000, R.string.menu_about, 1004, R.string.menu_about);
-        subMenu1.add(1000, R.string.menu_exit, 1005, R.string.menu_exit);
+//        subMenu1.add(1000, R.string.menu_exit, 1005, R.string.menu_exit);
 
         MenuItem subMenu1Item = subMenu1.getItem();
         subMenu1Item.setIcon(R.drawable.abs__ic_menu_moreoverflow_normal_holo_dark);
@@ -40,9 +40,9 @@ public class MenuHandlerUtils {
         case R.string.menu_about:
         	context.startActivity(AppAboutActivity.createIntent(context));
       	   break;
-        case R.string.menu_exit:
-        	Runtime.getRuntime().exit(0);
-        	break;
+//        case R.string.menu_exit:
+//        	HaierAccountManager.getInstance().deleteDefaultAccount();
+//        	break;
 
         }
         return false;
