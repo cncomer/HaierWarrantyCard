@@ -297,4 +297,6 @@
           <string name="msg_local_save_op_failed">服务器上传信息成功，但本地保存失败</string>
          <string name="yuyue_time_too_early_tips">预约时间必须大于当前时间后3个小时</string>
          <string name="sure_delete">确定删除吗？</string>
+         <string name="button_onekey_install">一键安装</string>
+         <string name="button_onekey_repair">一键报修</string>
 </resources>

@@ -669,6 +669,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public static  DateFormat BUY_DATE_TIME_FORMAT_ALL = new SimpleDateFormat("yyyyMMddHHmm");
 	public static  DateFormat BUY_DATE_TIME_FORMAT = new SimpleDateFormat("yyyyMMdd");
 	public static  DateFormat BUY_TIME_FORMAT = new SimpleDateFormat("HHmm");
+	public static  DateFormat BUY_DATE_FORMAT = new SimpleDateFormat("yyyy年MM月dd日");
 	private static long DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
 
 }
