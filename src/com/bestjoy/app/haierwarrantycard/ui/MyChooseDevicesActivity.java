@@ -17,6 +17,7 @@ import android.text.TextUtils;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
@@ -45,7 +46,6 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	private MyPagerAdapter mMyPagerAdapter;
 	
 	private ContentObserver mContentObserver;
-	private String mMustHaierPinpaiStr = null;
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
@@ -67,7 +67,6 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 		if (isFinishing()) {
 			return ;
 		}
-		mMustHaierPinpaiStr = getString(R.string.pinpai_haier);
 		if (ACTION_CHOOSE_DEVICE.equals(getIntent().getAction())) {
 			DebugUtils.logD(TAG, "want to choose device");
 			mIsChooseDevice = true;
@@ -246,7 +245,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	    	CardViewActivity.startActivit(mContext, mBundle);
 	    } else {
 	    	//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
-	    	if (mMustHaierPinpaiStr.equals(card.mPinPai)) {
+	    	if (HaierServiceObject.isHaierPinpai(card.mPinPai)) {
 	    		BaoxiuCardObject.setBaoxiuCardObject(card.clone());
 		    	HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
 			    ModleSettings.doChoose(mContext, mBundle);

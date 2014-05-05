@@ -735,6 +735,9 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		if (!TextUtils.isEmpty(object.mXingHao)) {
 			mModelInput.setText(object.mXingHao);
 		}
+		if (!TextUtils.isEmpty(object.mBXPhone)) {
+			mBaoxiuTelInput.setText(object.mBXPhone);
+		}
 	}
 	
 	@Override

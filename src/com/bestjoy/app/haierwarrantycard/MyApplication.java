@@ -72,6 +72,7 @@ public class MyApplication extends Application{
 		HaierAccountManager.getInstance().setContext(this);
 		
 		mPreferManager = PreferenceManager.getDefaultSharedPreferences(this);
+		HaierServiceObject.setContext(this);
 		
 	}
 	
