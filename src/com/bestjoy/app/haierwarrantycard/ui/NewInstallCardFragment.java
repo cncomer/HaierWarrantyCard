@@ -243,29 +243,35 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			BaoxiuCardObject baoxiuCardObject = getBaoxiuCardObject();
 			mError = null;
 			InputStream is = null;
-			final int LENGTH = 9;
+			final int LENGTH = 12;
 			String[] urls = new String[LENGTH];
 			String[] paths = new String[LENGTH];
 			getBaoxiuCardObject();
 			HomeObject homeObject = mProCityDisEditPopView.getHomeObject();
-			urls[0] = HaierServiceObject.SERVICE_URL + "AddYuYue.ashx?Date=";
-			paths[0] = BaoxiuCardObject.BUY_DATE_TIME_FORMAT.format(mCalendar.getTime());
-			urls[1] = "&Time=";
-			paths[1] = BaoxiuCardObject.BUY_TIME_FORMAT.format(mCalendar.getTime());
-			urls[2] = "&UID=";
-			paths[2] = String.valueOf(baoxiuCardObject.mUID);
-			urls[3] = "&Note=";
-			paths[3] = mBeizhuTag.getText().toString().trim();
-			urls[4] = "&AID=";
-			paths[4] = String.valueOf(baoxiuCardObject.mAID);
-			urls[5] = "&Type=";
-			paths[5] = getActivity().getString(R.string.type_install);
-			urls[6] = "&BID=";
-			paths[6] = String.valueOf(baoxiuCardObject.mBID);
-			urls[7] = "&UserName=";
-			paths[7] = mContactNameInput.getText().toString().trim();
-			urls[8] = "&CellPhone=";
-			paths[8] = mContactTelInput.getText().toString().trim();
+			urls[0] = HaierServiceObject.SERVICE_URL + "AddHaierYuyue.ashx?LeiXin=";
+			paths[0] = baoxiuCardObject.mLeiXin;
+			urls[1] = "&PinPai=";
+			paths[1] = baoxiuCardObject.mPinPai;
+			urls[2] = "&XingHao=";
+			paths[2] = baoxiuCardObject.mXingHao;
+			urls[3] = "&SHBianhao=";
+			paths[3] = baoxiuCardObject.mSHBianHao;
+			urls[4] = "&BxPhone=";
+			paths[4] = baoxiuCardObject.mBXPhone;
+			urls[5] = "&UserName=";
+			paths[5] = mContactNameInput.getText().toString().trim();
+			urls[6] = "&Cell=";
+			paths[6] = mContactTelInput.getText().toString().trim();
+			urls[7] = "&address=";
+			paths[7] = homeObject.mHomePlaceDetail;
+			urls[8] = "&dstrictid=";
+			paths[8] = mProCityDisEditPopView.getDisID();
+			urls[9] = "&yytime=";
+			paths[9] = BaoxiuCardObject.BUY_TIME_FORMAT.format(mCalendar.getTime());
+			urls[10] = "&Desc=";
+			paths[10] = mBeizhuTag.getText().toString().trim();
+			urls[11] = "&service_type=";
+			paths[11] = "T01";//T01为安装
 			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
 			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
 			try {
@@ -404,8 +410,9 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	}
 	
 	private boolean timeEscapeEnough() {
-		if((mCalendar.getTimeInMillis() - System.currentTimeMillis()) > 3 * 60 * 60 * 1000)
-			return true;
+		if((mCalendar.getTimeInMillis() - System.currentTimeMillis()) > 3 * 60 * 60 * 1000) {
+			return true;			
+		}
 		return false;
 	}
 
