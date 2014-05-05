@@ -3,11 +3,8 @@ package com.bestjoy.app.haierwarrantycard.ui;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
-import java.util.Arrays;
 
 import org.apache.http.client.ClientProtocolException;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -33,7 +30,7 @@ import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
-import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
@@ -213,101 +210,19 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			BaoxiuCardObject.showBill(mContext, mBaoxiuCardObject);
 			break;
 		case R.id.button_onekey_install:
-			addYuyueInfo2Server("T01");
+			 BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
+			 HomeObject.setHomeObject(mHomeObject);
+			ModleSettings.doChoose(mContext, ModleSettings.createMyInstallDefaultBundle(mContext));
 			break;
 		case R.id.button_onekey_repair:
-			addYuyueInfo2Server("T02");
+			 BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
+			 HomeObject.setHomeObject(mHomeObject);
+			ModleSettings.doChoose(mContext, ModleSettings.createMyRepairDefaultBundle(mContext));
 			break;
 		}
 		
 	}
-	 
-	 private void addYuyueInfo2Server(String type) {
-		 addYuyueCardAsync(type);
-	}
 
-		private addYuyueCardAsyncTask maddYuyueCardAsyncTask;
-		private void addYuyueCardAsync(String... param) {
-			AsyncTaskUtils.cancelTask(maddYuyueCardAsyncTask);
-			showDialog(DIALOG_PROGRESS);
-			maddYuyueCardAsyncTask = new addYuyueCardAsyncTask();
-			maddYuyueCardAsyncTask.execute(param);
-		}
-
-		private class addYuyueCardAsyncTask extends AsyncTask<String, Void, Boolean> {
-			private String mError;
-			int mStatusCode = -1;
-			String mStatusMessage = null;
-			@Override
-			protected Boolean doInBackground(String... params) {
-				mError = null;
-				InputStream is = null;
-				final int LENGTH = 12;
-				String[] urls = new String[LENGTH];
-				String[] paths = new String[LENGTH];
-				urls[0] = HaierServiceObject.SERVICE_URL + "AddHaierYuyue.ashx?LeiXin=";
-				paths[0] = mBaoxiuCardObject.mLeiXin;
-				urls[1] = "&PinPai=";
-				paths[1] = mBaoxiuCardObject.mPinPai;
-				urls[2] = "&XingHao=";
-				paths[2] = mBaoxiuCardObject.mXingHao;
-				urls[3] = "&SHBianhao=";
-				paths[3] = mBaoxiuCardObject.mSHBianHao;
-				urls[4] = "&BxPhone=";
-				paths[4] = mBaoxiuCardObject.mBXPhone;
-				urls[5] = "&UserName=";
-				paths[5] = HaierAccountManager.getInstance().getAccountObject().mAccountName;
-				urls[6] = "&Cell=";
-				paths[6] = HaierAccountManager.getInstance().getAccountObject().mAccountTel;
-				urls[7] = "&address=";
-				paths[7] = mHomeObject.mHomePlaceDetail;
-				urls[8] = "&dstrictid=";
-				paths[8] = HomeObject.getDisID(mContext.getContentResolver(), mHomeObject.mHomeDis);
-				urls[9] = "&yytime=";
-				paths[9] = mBaoxiuCardObject.mBuyDate;
-				urls[10] = "&Desc=";
-				paths[10] = "";
-				urls[11] = "&service_type=";
-				paths[11] = params[0];
-				DebugUtils.logD(TOKEN, "urls = " + Arrays.toString(urls));
-				DebugUtils.logD(TOKEN, "paths = " + Arrays.toString(paths));
-				try {
-					is = NetworkUtils.openContectionLocked(urls, paths, MyApplication.getInstance().getSecurityKeyValuesObject());
-
-					HaierResultObject haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
-					DebugUtils.logD(TOKEN, "StatusCode = " + haierResultObject.mStatusCode);
-					DebugUtils.logD(TOKEN, "StatusMessage = " + haierResultObject.mStatusMessage);
-					if (haierResultObject.isOpSuccessfully()) {
-						MyApplication.getInstance().showMessageAsync(haierResultObject.mStatusMessage);
-					}
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
-					mError = e.getMessage();
-				} catch (IOException e) {
-					e.printStackTrace();
-					mError = e.getMessage();
-				} finally {
-					NetworkUtils.closeInputStream(is);
-				}
-				return false;
-			}
-
-			@Override
-			protected void onPostExecute(Boolean result) {
-				super.onPostExecute(result);
-				dismissDialog(DIALOG_PROGRESS);
-				if (mError != null) {
-					MyApplication.getInstance().showMessage(mError);
-				}
-				
-			}
-
-			@Override
-			protected void onCancelled() {
-				super.onCancelled();
-				dismissDialog(DIALOG_PROGRESS);
-			}
-		}
 	private void showEmptyInputToast(int resId) {
 			String msg = getResources().getString(resId);
 			MyApplication.getInstance().showMessage(getResources().getString(R.string.input_type_please_input) + msg);
