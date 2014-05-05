@@ -2,6 +2,7 @@ package com.bestjoy.app.haierwarrantycard.ui;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -33,10 +34,8 @@ import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
-import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditPopView;
-import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
@@ -98,8 +97,9 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		 mYuyueTime = (TextView) view.findViewById(R.id.time);
 		 mYuyueDate.setOnClickListener(this);
 		 mYuyueTime.setOnClickListener(this);
-		 mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
-		 mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT.format(mCalendar.getTime()));
+		 //不需要自动填写预约时间
+		 //mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
+		 //mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT.format(mCalendar.getTime()));
 		 mSaveBtn = (Button) view.findViewById(R.id.button_save);
 		 mSaveBtn.setOnClickListener(this);
 			
@@ -376,6 +376,10 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			showEmptyInputToast(R.string.time);
 			return false;
 		}
+		if(!timeEscapeEnough()) {
+			MyApplication.getInstance().showMessage(R.string.yuyue_time_too_early_tips);
+			return false;
+		}
 		String pinpai = mPinpaiInput.getText().toString().trim();
 		final String bxPhone = mBaoxiuTelInput.getText().toString().trim();
 		//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
@@ -401,6 +405,12 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		return true;
 	}
 	
+	private boolean timeEscapeEnough() {
+		if((mCalendar.getTimeInMillis() - System.currentTimeMillis()) > 3 * 60 * 60 * 1000)
+			return true;
+		return false;
+	}
+
 	private void showEmptyInputToast(int resId) {
 		String msg = getResources().getString(resId);
 		MyApplication.getInstance().showMessage(getResources().getString(R.string.input_type_please_input) + msg);
