@@ -233,15 +233,18 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 			DebugUtils.logD(TAG, "parseBaoxiuCards delete local existed fapiao " + faPiaoFile.getAbsolutePath());
 			faPiaoFile.delete();
 		}
+		
+		String base64Str = cardObject.mFPaddr;
 		//首先假设没有发票
 		cardObject.mFPaddr = "0";
-		String base64Str = cardObject.mFPaddr;
 		if (TextUtils.isEmpty(base64Str)) {
 			return;
 		}
-		base64Str = base64Str.replace(" ", "");
+		DebugUtils.logE(TAG, "base64Str.len " + base64Str.length());
+		base64Str = base64Str.replaceAll(" ", "");
     	if (TextUtils.isEmpty(base64Str)) {
     		 DebugUtils.logE(TAG, "find empty original text encoded by base64, so we just skip decode bill bitmap.");
+    		 return;
     	} 
     	
         try {
@@ -642,7 +645,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
     public void updateBillAvatorTempLocked(File file) {
     	mBillTempFile = file;
     	mBillTempBitmap = ImageHelper.getSmallBitmap(file.getAbsolutePath(), mAvatorWidth, mAvatorWidth);
-    	mBillTempBitmap = ImageHelper.rotateBitmap(mBillTempBitmap, 90);
+//    	mBillTempBitmap = ImageHelper.rotateBitmap(mBillTempBitmap, 90);
 		ImageHelper.bitmapToFile(mBillTempBitmap, mBillTempFile, 100);
     }
 	
