@@ -609,6 +609,9 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 					if (!updated) {
 						//通常不会发生
 						DebugUtils.logD(TAG, "UpdateWarrantyCardAsyncTask " + getActivity().getString(R.string.msg_local_save_card_failed));
+					} else {
+						//更新家以便设备列表能够看到
+						HaierAccountManager.getInstance().updateHomeObject(baoxiuCardObject.mAID);
 					}
 				}
 						
