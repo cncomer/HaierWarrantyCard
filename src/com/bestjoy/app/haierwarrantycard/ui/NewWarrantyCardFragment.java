@@ -74,9 +74,6 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	private static final int DIALOG_BILL_OP_CONFIRM = 5;
 	
 	private int mPictureRequest = -1;
-	private long mAid = -1;
-	private long mUid = -1;
-	private long mBid = -1;
 	
 	private BaoxiuCardObject mBaoxiuCardObject;
 
@@ -159,6 +156,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 						BaoxiuCardObject.showBill(getActivity(), mBaoxiuCardObject);
 						break;
 					case 1:
+						mPictureRequest = REQUEST_BILL;
 						onCapturePhoto();
 						break;
 					}
@@ -173,7 +171,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	}
 	
 	public boolean isEditable() {
-		return mBid > 0;
+		return mBaoxiuCardObject.mBID > 0;
 	}
 	
 	private void populateBaoxiuInfoView(BaoxiuCardObject object) {
@@ -190,8 +188,6 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			mYanbaoComponyInput.getText().clear();
 			mYanbaoTelInput.getText().clear();
 			mTagInput.getText().clear();
-			//传递进来的，我们还需要清空发票数据
-			mBaoxiuCardObject.mFPaddr = null;
 		} else {
 			mTypeInput.setText(object.mLeiXin);
 			mPinpaiInput.setText(object.mPinPai);
@@ -206,7 +202,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			mYanbaoTelInput.setText(object.mYBPhone);
 			mTagInput.setText(object.mCardName);
 			//传递进来的，我们还需要读取发票数据
-			mBaoxiuCardObject.mFPaddr = object.mFPaddr;
+			mBaoxiuCardObject = object.clone();
+			
 			if (isEditable()) {
 				//如果是已经创建了的，我们不允许修改时间，并且要使用保修卡的购买时间
 				try {
@@ -270,10 +267,6 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		mBaoxiuCardObject.mYBPhone = mYanbaoTelInput.getText().toString().trim();
 		
 		mBaoxiuCardObject.mCardName = mTagInput.getText().toString().trim();
-		
-		mBaoxiuCardObject.mAID = mAid;
-		mBaoxiuCardObject.mUID = mUid;
-		mBaoxiuCardObject.mBID = mBid;
 		
 		return mBaoxiuCardObject;
 	}
@@ -490,6 +483,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 				//添加成功
 				MyApplication.getInstance().showMessage(R.string.save_success);
 				getActivity().finish();
+				mBaoxiuCardObject.clear();
 				MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
 			} else {
 				MyApplication.getInstance().showMessage(result.mStatusMessage);
@@ -548,44 +542,69 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			DebugUtils.logD(TAG, "UpdateWarrantyCardAsyncTask BID " + baoxiuCardObject.mBID);
 			HaierResultObject haierResultObject = new HaierResultObject();
 			InputStream is = null;
-			final int LENGTH = 14;
-			String[] urls = new String[LENGTH];
-			String[] paths = new String[LENGTH];
-			urls[0] = HaierServiceObject.SERVICE_URL + "UpdateBaoXiu.ashx?LeiXin=";
-			paths[0] = baoxiuCardObject.mLeiXin;
-			urls[1] = "&BuyDate=";
-			paths[1] = baoxiuCardObject.mBuyDate;
-			urls[2] = "&BuyPrice=";
-			paths[2] = baoxiuCardObject.mBuyPrice;
-			urls[3] = "&BuyTuJing=";
-			paths[3] = baoxiuCardObject.mBuyTuJing;
-			urls[4] = "&BXPhone=";
-			paths[4] = baoxiuCardObject.mBXPhone;
-			urls[5] = "&PinPai=";
-			paths[5] = baoxiuCardObject.mPinPai;
-			urls[6] = "&BID=";
-			paths[6] = String.valueOf(baoxiuCardObject.mBID);
-			urls[7] = "&XingHao=";
-			paths[7] = baoxiuCardObject.mXingHao;
-			urls[8] = "&YanBaoDanWei=";
-			paths[8] = baoxiuCardObject.mYanBaoDanWei;
-			urls[9] = "&YanBaoTime=";
-			paths[9] = baoxiuCardObject.mYanBaoTime;
-			urls[10] = "&AID=";
-			paths[10] = String.valueOf(baoxiuCardObject.mAID);
-			urls[11] = "&SHBianHao=";
-			paths[11] = baoxiuCardObject.mSHBianHao;
-			urls[12] = "&Tag=";
-			paths[12] = baoxiuCardObject.mCardName;
-			urls[13] = "&YBPhone=";
-			paths[13] = baoxiuCardObject.mYBPhone;
-			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
-			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
+//			final int LENGTH = 14;
+//			String[] urls = new String[LENGTH];
+//			String[] paths = new String[LENGTH];
+//			urls[0] = HaierServiceObject.SERVICE_URL + "UpdateBaoXiu.ashx?LeiXin=";
+//			paths[0] = baoxiuCardObject.mLeiXin;
+//			urls[1] = "&BuyDate=";
+//			paths[1] = baoxiuCardObject.mBuyDate;
+//			urls[2] = "&BuyPrice=";
+//			paths[2] = baoxiuCardObject.mBuyPrice;
+//			urls[3] = "&BuyTuJing=";
+//			paths[3] = baoxiuCardObject.mBuyTuJing;
+//			urls[4] = "&BXPhone=";
+//			paths[4] = baoxiuCardObject.mBXPhone;
+//			urls[5] = "&PinPai=";
+//			paths[5] = baoxiuCardObject.mPinPai;
+//			urls[6] = "&BID=";
+//			paths[6] = String.valueOf(baoxiuCardObject.mBID);
+//			urls[7] = "&XingHao=";
+//			paths[7] = baoxiuCardObject.mXingHao;
+//			urls[8] = "&YanBaoDanWei=";
+//			paths[8] = baoxiuCardObject.mYanBaoDanWei;
+//			urls[9] = "&YanBaoTime=";
+//			paths[9] = baoxiuCardObject.mYanBaoTime;
+//			urls[10] = "&AID=";
+//			paths[10] = String.valueOf(baoxiuCardObject.mAID);
+//			urls[11] = "&SHBianHao=";
+//			paths[11] = baoxiuCardObject.mSHBianHao;
+//			urls[12] = "&Tag=";
+//			paths[12] = baoxiuCardObject.mCardName;
+//			urls[13] = "&YBPhone=";
+//			paths[13] = baoxiuCardObject.mYBPhone;
+//			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
+//			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
+			
+			StringBuilder paramValue = new StringBuilder();
+			paramValue.append(baoxiuCardObject.mLeiXin)
+			.append("|").append(baoxiuCardObject.mBuyDate)
+			.append("|").append(baoxiuCardObject.mBuyPrice)
+			.append("|").append(baoxiuCardObject.mBuyTuJing)
+			.append("|").append(baoxiuCardObject.mBXPhone)
+			.append("|").append(baoxiuCardObject.mPinPai)
+			.append("|").append(String.valueOf(baoxiuCardObject.mBID))
+			.append("|").append(baoxiuCardObject.mXingHao)
+			.append("|").append(baoxiuCardObject.mYanBaoDanWei)
+			.append("|").append(baoxiuCardObject.mYanBaoTime)
+			.append("|").append(String.valueOf(baoxiuCardObject.mAID))	
+			.append("|").append(baoxiuCardObject.mSHBianHao)
+			.append("|").append(baoxiuCardObject.mCardName)
+			.append("|").append(baoxiuCardObject.mYBPhone);
+			paramValue.append("|").append(baoxiuCardObject.getBase64StringFromBillAvator());
+			DebugUtils.logD(TAG, "param " + paramValue.toString());
+			
 			try {
-				is = NetworkUtils.openContectionLocked(urls, paths, MyApplication.getInstance().getSecurityKeyValuesObject());
+//				is = NetworkUtils.openContectionLocked(urls, paths, MyApplication.getInstance().getSecurityKeyValuesObject());
+				is = NetworkUtils.openPostContectionLocked("http://115.29.231.29/UploadBaoXiu.asmx/UpdateBaoXiu", "ara", paramValue.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
+				
 				haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
 				if (haierResultObject.isOpSuccessfully()) {
-					//成功删除了服务器上的数据，我们还需要同步删除本地的数据
+					//将临时图片存成发票
+					boolean savedBill = baoxiuCardObject.saveBillAvatorTempFileLocked();
+					if (savedBill) {
+						baoxiuCardObject.mFPaddr = "1";
+					}
 					boolean updated = baoxiuCardObject.saveInDatebase(getActivity().getContentResolver(), null);
 					if (!updated) {
 						//通常不会发生
@@ -613,6 +632,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			if (result.isOpSuccessfully()) {
 				MyApplication.getInstance().showMessage(R.string.update_success);
 				getActivity().finish();
+				mBaoxiuCardObject.clear();
 				MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
 			} else {
 				MyApplication.getInstance().showMessage(result.mStatusMessage);
@@ -765,24 +785,19 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	@Override
 	public void updateInfoInterface(InfoInterface infoInterface) {
 		if (infoInterface instanceof BaoxiuCardObject) {
-			if (infoInterface != null) {
-				mBid = ((BaoxiuCardObject)infoInterface).mBID;
-				mAid = ((BaoxiuCardObject)infoInterface).mAID;
-				mUid = ((BaoxiuCardObject)infoInterface).mUID;
-			}
 			populateBaoxiuInfoView((BaoxiuCardObject)infoInterface);
 		} else if (infoInterface instanceof HomeObject) {
 			if (infoInterface != null) {
 				long aid = ((HomeObject)infoInterface).mHomeAid;
 				if (aid > 0) {
-					mAid = aid;
+					mBaoxiuCardObject.mAID = aid;
 				}
 			}
 		} else if (infoInterface instanceof AccountObject) {
 			if (infoInterface != null) {
 				long uid = ((AccountObject)infoInterface).mAccountUid;
 				if (uid > 0) {
-					mUid = uid;
+					mBaoxiuCardObject.mUID = uid;
 				}
 			}
 		}

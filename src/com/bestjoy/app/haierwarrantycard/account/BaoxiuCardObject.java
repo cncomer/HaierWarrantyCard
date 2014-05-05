@@ -605,7 +605,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	}
 	
 	/**保存临时的发票拍摄作为该商品的使用发票预览图*/
-	boolean saveBillAvatorTempFileLocked() {
+	public boolean saveBillAvatorTempFileLocked() {
 		if (mBillTempBitmap != null) {
 			File newPath = MyApplication.getInstance().getProductFaPiaoFile(getFapiaoPhotoId());
 			boolean result = ImageHelper.bitmapToFile(mBillTempBitmap, newPath, 100);
@@ -631,6 +631,9 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
     	String result = "";
     	//如果此时还没有临时商品预览图，我们从文件中构建
         if (mBillTempBitmap == null) {
+        	if (mBillFile == null) {
+    			mBillFile = MyApplication.getInstance().getProductFaPiaoFile(getFapiaoPhotoId());
+    		}
         	if (mBillFile != null) {
         		Bitmap billTempBitmap = ImageHelper.getSmallBitmap(mBillFile.getAbsolutePath(), mAvatorWidth, mAvatorHeight);
         		result = ImageHelper.bitmapToString(billTempBitmap, 100);
