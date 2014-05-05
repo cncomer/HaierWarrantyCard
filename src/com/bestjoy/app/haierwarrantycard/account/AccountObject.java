@@ -84,6 +84,10 @@ public class AccountObject implements InfoInterface{
 		return newAccountObject;
 	}
 	
+	public static int deleteAccount(ContentResolver cr, long uid) {
+		return cr.delete(BjnoteContent.Accounts.CONTENT_URI, WHERE_UID, new String[]{String.valueOf(uid)});
+	}
+	
 	public static AccountObject getHaierAccountFromDatabase(Context context) {
 		AccountObject haierAccount = null;
 		Cursor c = context.getContentResolver().query(BjnoteContent.Accounts.CONTENT_URI, PROJECTION, WHERE_DEFAULT, null, null);

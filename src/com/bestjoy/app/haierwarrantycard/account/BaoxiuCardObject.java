@@ -1,6 +1,7 @@
 package com.bestjoy.app.haierwarrantycard.account;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,8 +24,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Base64;
 
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
@@ -71,7 +75,8 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public String mXingHao;
 	public String mSHBianHao;
 	public String mBXPhone;
-	public String mFPaddr;
+	/**这个变量的值为0,1，表示是否有发票*/
+	public String mFPaddr = "0";
 	public String mBuyDate;
 	public String mBuyPrice;
 	public String mBuyTuJing;
@@ -155,41 +160,42 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		cardObject.mBXPhone = jsonObject.getString("BXPhone");
 		cardObject.mFPaddr = jsonObject.getString("FPaddr");
 		
-		if (!TextUtils.isEmpty(cardObject.mFPaddr) && !BaoxiuCardObject.PHOTOID_PLASEHOLDER.equals(cardObject.getFapiaoPhotoId())) {
-			//如果有发票，我们需要先下载发票
-			File faPiaoFile = MyApplication.getInstance().getProductFaPiaoFile(cardObject.getFapiaoPhotoId());
-			if (faPiaoFile.exists()) {
-				DebugUtils.logD(TAG, "parseBaoxiuCards delete local existed fapiao " + faPiaoFile.getAbsolutePath());
-				faPiaoFile.delete();
-			}
-			InputStream is = null;
-			try {
-				is = NetworkUtils.openContectionLocked(cardObject.mFPaddr, MyApplication.getInstance().getSecurityKeyValuesObject());
-				if (is != null) {
-					OutputStream out = new FileOutputStream(faPiaoFile);
-					byte[] buffer = new byte[4096];
-					int size;
-					try {
-						size = is.read(buffer);
-						while (size >= 0) {
-							out.write(buffer, 0, size);
-							size = is.read(buffer);
-						}
-						out.flush();
-						out.close();
-						DebugUtils.logD(TAG, "parseBaoxiuCards download fapiao " + faPiaoFile.getAbsolutePath());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} finally {
-				NetworkUtils.closeInputStream(is);
-			}
-		}
+//		if (!TextUtils.isEmpty(cardObject.mFPaddr) && !BaoxiuCardObject.PHOTOID_PLASEHOLDER.equals(cardObject.getFapiaoPhotoId())) {
+//			//如果有发票，我们需要先下载发票
+//			File faPiaoFile = MyApplication.getInstance().getProductFaPiaoFile(cardObject.getFapiaoPhotoId());
+//			if (faPiaoFile.exists()) {
+//				DebugUtils.logD(TAG, "parseBaoxiuCards delete local existed fapiao " + faPiaoFile.getAbsolutePath());
+//				faPiaoFile.delete();
+//			}
+//			InputStream is = null;
+//			try {
+//				is = NetworkUtils.openContectionLocked(cardObject.mFPaddr, MyApplication.getInstance().getSecurityKeyValuesObject());
+//				if (is != null) {
+//					OutputStream out = new FileOutputStream(faPiaoFile);
+//					byte[] buffer = new byte[4096];
+//					int size;
+//					try {
+//						size = is.read(buffer);
+//						while (size >= 0) {
+//							out.write(buffer, 0, size);
+//							size = is.read(buffer);
+//						}
+//						out.flush();
+//						out.close();
+//						DebugUtils.logD(TAG, "parseBaoxiuCards download fapiao " + faPiaoFile.getAbsolutePath());
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					}
+//				}
+//			} catch (ClientProtocolException e) {
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			} finally {
+//				NetworkUtils.closeInputStream(is);
+//			}
+//		}
+		
 		cardObject.mBuyDate = jsonObject.getString("BuyDate");
 		cardObject.mBuyPrice = jsonObject.getString("BuyPrice");
 		
@@ -215,7 +221,55 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		}
 		cardObject.mYBPhone = jsonObject.getString("YBPhone");
 		cardObject.mKY = jsonObject.getString("KY");
+		//解码发票，如果有的话
+		decodeFapiao(cardObject);
 		return cardObject;
+	}
+	
+	private static void decodeFapiao(BaoxiuCardObject cardObject) {
+		//如果有发票，我们需要先下载发票
+		File faPiaoFile = MyApplication.getInstance().getProductFaPiaoFile(cardObject.getFapiaoPhotoId());
+		if (faPiaoFile.exists()) {
+			DebugUtils.logD(TAG, "parseBaoxiuCards delete local existed fapiao " + faPiaoFile.getAbsolutePath());
+			faPiaoFile.delete();
+		}
+		//首先假设没有发票
+		cardObject.mFPaddr = "0";
+		String base64Str = cardObject.mFPaddr;
+		if (TextUtils.isEmpty(base64Str)) {
+			return;
+		}
+		base64Str = base64Str.replace(" ", "");
+    	if (TextUtils.isEmpty(base64Str)) {
+    		 DebugUtils.logE(TAG, "find empty original text encoded by base64, so we just skip decode bill bitmap.");
+    	} 
+    	
+        try {
+        	byte[] byteArray = Base64.decode(base64Str, Base64.DEFAULT);
+        	 if (byteArray == null) {
+        		 DebugUtils.logE(TAG, "can't decode bill byte array from original text encoded by base64");
+        		 return;
+			 }
+        	 Bitmap bitmap = BitmapFactory.decodeByteArray(byteArray, 0, byteArray.length);
+   			 if (bitmap != null) {
+   				 try {
+   					 boolean saveOk = bitmap.compress(CompressFormat.PNG, 100, new FileOutputStream(faPiaoFile));
+   					 DebugUtils.logE(TAG, "save bill bitmap as file " + faPiaoFile.getAbsolutePath() + " " + saveOk);
+   					 bitmap.recycle();
+   					 if (saveOk) {
+   						 cardObject.mFPaddr = "1";
+   					 }
+   				 } catch (FileNotFoundException ffe) {
+   					 ffe.printStackTrace();
+   				 } catch(Exception e) {
+   					e.printStackTrace();
+   				 }
+   			 } else {
+   			     DebugUtils.logE(TAG, "can't decode bill bitmap from byte array");
+   			 }
+		 } catch (IllegalArgumentException e) {
+			e.printStackTrace();
+		 }
 	}
 	
 	public BaoxiuCardObject clone() {
@@ -497,7 +551,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	private static final int mAvatorWidth = 320, mAvatorHeight = 480;
 	public static final String PHOTOID_SEPERATOR = "_";
 	/**占位符号*/
-	public static final String PHOTOID_PLASEHOLDER = "00_00";
+	public static final String PHOTOID_PLASEHOLDER = "00_00_00";
 	/**临时拍摄的照片路径，当保存成功的时候会将该文件路径重命名为mBillAvator*/
 	public Bitmap mBillTempBitmap;
 	/**本地发票图片路径*/
@@ -514,6 +568,13 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		return mBillFile.exists() || mBillTempFile != null;
 	}
 	/**
+	 * 是否有发票
+	 * @return
+	 */
+	public boolean hasBillAvator() {
+		return mFPaddr != null && mFPaddr.equals("1");
+	}
+	/**
 	 * 添加发票时候使用，用来表示是否有临时的拍摄发票文件，有的话，我们认为是要上传的
 	 * @return
 	 */
@@ -527,10 +588,15 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	 * @return
 	 */
 	public String getFapiaoPhotoId() {
-		if (!TextUtils.isEmpty(mFPaddr) && mFPaddr.startsWith(HaierServiceObject.FAPIAO_PREFIX)) {
-			String photoId = mFPaddr.substring(HaierServiceObject.FAPIAO_PREFIX.length());
-			photoId = photoId.replaceAll("/", "_");
-			return photoId;
+//		if (!TextUtils.isEmpty(mFPaddr) && mFPaddr.startsWith(HaierServiceObject.FAPIAO_PREFIX)) {
+//			String photoId = mFPaddr.substring(HaierServiceObject.FAPIAO_PREFIX.length());
+//			photoId = photoId.replaceAll("/", "_");
+//			return photoId;
+//		}
+		if (mUID > 0 && mAID > 0 && mBID > 0) {
+			StringBuilder sb = new StringBuilder();
+			sb.append(mUID).append(PHOTOID_SEPERATOR).append(mAID).append(PHOTOID_SEPERATOR).append(mBID);
+			return sb.toString();
 		}
 		return PHOTOID_PLASEHOLDER;
 	}

@@ -16,6 +16,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.ui.BrowserActivity;
 import com.bestjoy.app.haierwarrantycard.ui.InstallActivity;
 import com.bestjoy.app.haierwarrantycard.ui.MyChooseDevicesActivity;
@@ -106,6 +107,10 @@ public class ModleSettings {
 		public void onItemClick(AdapterView<?> listView, View view, int pos, long arg3) {
 			Bundle bundle = new Bundle();
 			int id = getModelId(pos);
+			if (HaierAccountManager.getInstance().hasLoginned()) {
+				//如果登陆了，我们先设置默认的家对象
+				HomeObject.setHomeObject(HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(0));
+			}
 			switch(id) {
 			case R.id.model_my_card:
 				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {

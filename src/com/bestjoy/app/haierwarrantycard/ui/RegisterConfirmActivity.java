@@ -45,7 +45,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	private EditText mUsrNameEditText;
 	private EditText usrPwdEditText;
 	private EditText usrPwdConfirmEditText;
-	
+	private EditText usrHomeNameEditText;
 	private String usrPwdConfirm;
 	
 	private AccountObject mAccountObject;
@@ -86,7 +86,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 
 	private void initViews() {
 		 mProCityDisEditPopView = new ProCityDisEditPopView(this); 
-		
+		 usrHomeNameEditText = (EditText) findViewById(R.id.tag);
 		mUsrNameEditText = (EditText) findViewById(R.id.usr_name);
 		usrPwdEditText = (EditText) findViewById(R.id.usr_pwd);
 		usrPwdConfirmEditText = (EditText) findViewById(R.id.usr_repwd);
@@ -119,7 +119,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 		protected Boolean doInBackground(String... params) {
 			mError = null;
 			InputStream is = null;
-			final int LENGTH = 7;
+			final int LENGTH = 8;
 			String[] urls = new String[LENGTH];
 			String[] paths = new String[LENGTH];
 			urls[0] = HaierServiceObject.SERVICE_URL + "Register.ashx?cell=";
@@ -136,6 +136,8 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			paths[5] = mHomeObject.mHomePlaceDetail;
 			urls[6] = "&pwd=";
 			paths[6] = mAccountObject.mAccountPwd;
+			urls[7] = "&Tag=";
+			paths[7] = usrHomeNameEditText.getText().toString().trim();
 			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
 			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
 			try {

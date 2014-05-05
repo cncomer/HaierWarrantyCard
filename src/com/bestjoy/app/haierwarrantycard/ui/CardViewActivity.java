@@ -113,7 +113,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		 if (!TextUtils.isEmpty(mBaoxiuCardObject.mKY)) {
 			 PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, mAvatorView, mBaoxiuCardObject.mKY, null, PhotoManagerUtilsV2.TaskType.HOME_DEVICE_AVATOR);
 		 }
-		 if (!mBaoxiuCardObject.hasLocalBill()) {
+		 if (!mBaoxiuCardObject.hasBillAvator()) {
 			 mBillView.setVisibility(View.INVISIBLE);
 		 } else {
 			 mBillView.setVisibility(View.VISIBLE);
