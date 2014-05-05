@@ -119,6 +119,7 @@ public class NewHomeActivity extends BaseActionbarActivity {
 			InputStream is = null;
 			HaierResultObject haierResultObject = new HaierResultObject();
 			HomeObject mHomeObject = mProCityDisEditPopView.getHomeObject();
+			mHomeObject.mHomeName = mHomeEditText.getText().toString().trim();
 			final int LENGTH = 6;
 			String[] urls = new String[LENGTH];
 			String[] paths = new String[LENGTH];
@@ -133,7 +134,7 @@ public class NewHomeActivity extends BaseActionbarActivity {
 			urls[4] = "&UID=";
 			paths[4] = String.valueOf(HaierAccountManager.getInstance().getAccountObject().mAccountUid);
 			urls[5] = "&Tag=";
-			paths[5] = mHomeEditText.getText().toString().trim();
+			paths[5] = mHomeObject.mHomeName;
 			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
 			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
 			try {
@@ -161,6 +162,8 @@ public class NewHomeActivity extends BaseActionbarActivity {
 						if (!saved) {
 							MyApplication.getInstance().showMessageAsync(R.string.msg_local_save_op_failed);
 						}
+						//刷新本地家
+						HaierAccountManager.getInstance().initAccountHomes();
 					}
 				}
 			} catch (ClientProtocolException e) {
