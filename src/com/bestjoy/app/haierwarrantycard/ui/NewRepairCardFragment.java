@@ -18,8 +18,6 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -35,7 +33,6 @@ import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
-import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditPopView;
@@ -136,8 +133,9 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		 view.findViewById(R.id.yuyue_info_divider).setBackgroundResource(R.color.light_green);
 		 mYuyueDate = (TextView) view.findViewById(R.id.date);
 		 mYuyueTime = (TextView) view.findViewById(R.id.time);
-		 mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
-		 mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT.format(mCalendar.getTime()));
+		 //不需要自动填写预约时间
+		 //mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
+		 //mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT.format(mCalendar.getTime()));
 		 mYuyueDate.setOnClickListener(this);
 		 mYuyueTime.setOnClickListener(this);
 		 
@@ -423,6 +421,11 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			showEmptyInputToast(R.string.error_des);
 			return false;
 		}
+
+		if(!timeEscapeEnough()) {
+			MyApplication.getInstance().showMessage(R.string.yuyue_time_too_early_tips);
+			return false;
+		}
 		String pinpai = mPinpaiInput.getText().toString().trim();
 		final String bxPhone = mBaoxiuTelInput.getText().toString().trim();
 		//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
@@ -446,6 +449,12 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		    return false;
     	} 
 		return true;
+	}
+
+	private boolean timeEscapeEnough() {
+		if((mCalendar.getTimeInMillis() - System.currentTimeMillis()) > 3 * 60 * 60 * 1000)
+			return true;
+		return false;
 	}
 	
 	private void showEmptyInputToast(int resId) {
