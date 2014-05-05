@@ -31,33 +31,37 @@ public class NewHomeActivity extends BaseActionbarActivity {
 	private static final String TAG = "NewHomeActivity";
 	private ProCityDisEditPopView mProCityDisEditPopView;
 	private EditText mHomeEditText;
+	private HomeObject mHomeObject ;
 	@Override
 	protected boolean checkIntent(Intent intent) {
-		return true;
+		mHomeObject = HomeObject.getHomeObject();
+		if (mHomeObject == null) {
+			DebugUtils.logD(TAG, "mHomeObject is null, so finish it");
+		}
+		return mHomeObject != null;
 	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_home);
+		if (mHomeObject.mHomeAid > 0) {
+			setTitle(R.string.activity_title_update_home);
+		}
 		mProCityDisEditPopView = new ProCityDisEditPopView(this);
 		mHomeEditText = (EditText) findViewById(R.id.my_home);
 		updateView();
 	}
 
 	private void updateView() {
-		int homeIndex = getIntent().getIntExtra("home_index", -1);
-		if(homeIndex >= 0) {
-			HomeObject homeObject = HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(homeIndex);
-			mProCityDisEditPopView.setHomeObject(homeObject);
-			mHomeEditText.setText(homeObject.getHomeTag(this));
-		}
+		mProCityDisEditPopView.setHomeObject(mHomeObject);
+		mHomeEditText.setText(mHomeObject.getHomeTag(this));
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		ModleSettings.createActionBarMenu(menu, null);
-		MenuItem homeItem = menu.add(R.string.menu_save, R.string.menu_save, 0, R.string.menu_save);
+		MenuItem homeItem = menu.add(R.string.menu_save, R.string.menu_save, 0, mHomeObject.mHomeAid > 0?R.string.button_update:R.string.menu_save);
 		homeItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		return true;
 	}
@@ -98,13 +102,6 @@ public class NewHomeActivity extends BaseActionbarActivity {
 		Intent intent = new Intent(context, NewHomeActivity.class);
 		context.startActivity(intent);
 	}
-	
-
-	public static void startActivity(Context context, int pos) {
-		Intent intent = new Intent(context, NewHomeActivity.class);
-		intent.putExtra("home_index", pos);
-		context.startActivity(intent);
-	}
 
 
 	CreateNewHomeAsyncTask mCreateNewHomeAsyncTask;
@@ -116,13 +113,13 @@ public class NewHomeActivity extends BaseActionbarActivity {
 		
 	}
 	
-	private class CreateNewHomeAsyncTask extends AsyncTask<String, Void, Boolean> {
-		private String mError;
+	private class CreateNewHomeAsyncTask extends AsyncTask<String, Void, HaierResultObject> {
 		@Override
-		protected Boolean doInBackground(String... arg0) {
-			mError = null;
+		protected HaierResultObject doInBackground(String... arg0) {
 			InputStream is = null;
+			HaierResultObject haierResultObject = new HaierResultObject();
 			HomeObject mHomeObject = mProCityDisEditPopView.getHomeObject();
+			mHomeObject.mHomeName = mHomeEditText.getText().toString().trim();
 			final int LENGTH = 6;
 			String[] urls = new String[LENGTH];
 			String[] paths = new String[LENGTH];
@@ -137,37 +134,58 @@ public class NewHomeActivity extends BaseActionbarActivity {
 			urls[4] = "&UID=";
 			paths[4] = String.valueOf(HaierAccountManager.getInstance().getAccountObject().mAccountUid);
 			urls[5] = "&Tag=";
-			paths[5] = mHomeEditText.getText().toString().trim();
+			paths[5] = mHomeObject.mHomeName;
 			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
 			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
 			try {
 				is = NetworkUtils.openContectionLocked(urls, paths, MyApplication.getInstance().getSecurityKeyValuesObject());
 				if (is != null) {
 					String content = NetworkUtils.getContentFromInput(is);
-					HaierResultObject resultObject = HaierResultObject.parse(content);
-					MyApplication.getInstance().showMessageAsync(resultObject.mStatusMessage);
-					NewHomeActivity.this.finish();
+					haierResultObject = HaierResultObject.parse(content);
+					if (haierResultObject.isOpSuccessfully()) {
+						//更新服务器上的数据成功，我们需要更新本地的
+						if (mHomeObject.mHomeAid == -1) {
+							//是新建
+							mHomeObject.mHomeUid = HaierAccountManager.getInstance().getAccountObject().mAccountUid;
+							String data = haierResultObject.mStrData;
+							DebugUtils.logD(TAG, "CreateNewHomeAsyncTask return data " + data);
+							if (!TextUtils.isEmpty(data)) {
+								int index = data.indexOf(":");
+								if (index > 0) {
+									data = data.substring(index+1);
+									DebugUtils.logD(TAG, "CreateNewHomeAsyncTask find aid " + data);
+									mHomeObject.mHomeAid = Long.valueOf(data);
+								}
+							}
+						} 
+						boolean saved = mHomeObject.saveInDatebase(getContentResolver(), null);
+						if (!saved) {
+							MyApplication.getInstance().showMessageAsync(R.string.msg_local_save_op_failed);
+						}
+						//刷新本地家
+						HaierAccountManager.getInstance().initAccountHomes();
+					}
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
-				mError = e.getMessage();
+				haierResultObject.mStatusMessage = e.getMessage();
 			} catch (IOException e) {
 				e.printStackTrace();
-
-				mError = e.getMessage();
+				haierResultObject.mStatusMessage = e.getMessage();
 			} finally {
 				NetworkUtils.closeInputStream(is);
 			}
-			return false;
+			return haierResultObject;
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(HaierResultObject result) {
 			super.onPostExecute(result);
-			if(mError != null) {
-				MyApplication.getInstance().showMessageAsync(mError);
-			}
 			dismissDialog(DIALOG_PROGRESS);
+			MyApplication.getInstance().showMessageAsync(result.mStatusMessage);
+			if(result.isOpSuccessfully()) {
+				NewHomeActivity.this.finish();
+			}
 		}
 
 		@Override

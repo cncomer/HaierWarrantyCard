@@ -154,6 +154,8 @@ public class ProCityDisEditPopView implements OnTouchListener {
 		mProEditView.setInputType(InputType.TYPE_NULL);
 		mCityEditView.setInputType(InputType.TYPE_NULL);
 		mDisEditView.setInputType(InputType.TYPE_NULL);
+		//默认是可编辑的
+		setCanEditable(true);
 	}
 
 	@Override
@@ -340,15 +342,12 @@ public class ProCityDisEditPopView implements OnTouchListener {
 		mCityEditView.setText(mHomeObject.mHomeCity);
 		mDisEditView.setText(mHomeObject.mHomeDis);
 		mPlaceDetail.setText(mHomeObject.mHomePlaceDetail);
-		/*if(mHomeObject.mHomeAid > 0) {
-			mProEditView.setEnabled(false);
-			mCityEditView.setEnabled(false);
-			mDisEditView.setEnabled(false);
-		} else {
-			mProEditView.setEnabled(true);
-			mCityEditView.setEnabled(true);
-			mDisEditView.setEnabled(true);
-		}*/
+	}
+	
+	public void setCanEditable(boolean canEditable) {
+		mProEditView.setEnabled(canEditable);
+		mCityEditView.setEnabled(canEditable);
+		mDisEditView.setEnabled(canEditable);
 	}
 
 	public HomeObject getHomeObject() {

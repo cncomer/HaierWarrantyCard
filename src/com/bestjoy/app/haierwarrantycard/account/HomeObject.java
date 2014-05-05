@@ -108,7 +108,7 @@ public class HomeObject implements InfoInterface{
 	// home table
 	private static final String WHERE_HOME_ACCOUNTID = HaierDBHelper.ACCOUNT_UID + "=?";
 	private static final String WHERE_HOME_ADDRESS_ID = HaierDBHelper.HOME_AID + "=?";
-	private static final String WHERE_HOME_AID_ACCOUNT_UID = WHERE_HOME_ACCOUNTID + " and " + WHERE_HOME_ADDRESS_ID;
+	private static final String WHERE_UID_AND_AID = WHERE_HOME_ACCOUNTID + " and " + WHERE_HOME_ADDRESS_ID;
 	private static final String WHERE_ACCOUNT_ID_AND_HOME_ADDRESS_ID = WHERE_HOME_ACCOUNTID + " and " + WHERE_HOME_ADDRESS_ID;
 	public static final String[] HOME_PROJECTION = new String[]{
 		HaierDBHelper.ACCOUNT_UID,        //0
@@ -215,7 +215,7 @@ public class HomeObject implements InfoInterface{
 			values.put(HaierDBHelper.HOME_DEFAULT, 0);
 		}
 		if (id > 0) {
-			int update = cr.update(BjnoteContent.Homes.CONTENT_URI, values,  WHERE_HOME_AID_ACCOUNT_UID, new String[]{String.valueOf(mHomeUid), String.valueOf(mHomeAid)});
+			int update = cr.update(BjnoteContent.Homes.CONTENT_URI, values,  WHERE_UID_AND_AID, new String[]{String.valueOf(mHomeUid), String.valueOf(mHomeAid)});
 			if (update > 0) {
 				DebugUtils.logD(TAG, "saveInDatebase update exsited aid#" + mHomeAid);
 				return true;
@@ -239,7 +239,7 @@ public class HomeObject implements InfoInterface{
 	
 	private long isExsited(ContentResolver cr, long uid, long aid) {
 		long id = -1;
-		Cursor c = cr.query(BjnoteContent.Homes.CONTENT_URI, HOME_PROJECTION, WHERE_HOME_AID_ACCOUNT_UID, new String[]{String.valueOf(uid), String.valueOf(aid)}, null);
+		Cursor c = cr.query(BjnoteContent.Homes.CONTENT_URI, HOME_PROJECTION, WHERE_UID_AND_AID, new String[]{String.valueOf(uid), String.valueOf(aid)}, null);
 		if (c != null) {
 			if (c.moveToNext()) {
 				id = c.getLong(KEY_HOME_AID);
@@ -258,6 +258,12 @@ public class HomeObject implements InfoInterface{
 	public static int deleteAllHomesInDatabaseForAccount(ContentResolver cr, long uid) {
 		int deleted = cr.delete(BjnoteContent.Homes.CONTENT_URI, WHERE_HOME_ACCOUNTID, new String[]{String.valueOf(uid)});
 		DebugUtils.logD(TAG, "deleteAllHomesInDatabaseForAccount uid#" + uid + ", delete " + deleted);
+		return deleted;
+	}
+	
+	public static int deleteHomeInDatabaseForAccount(ContentResolver cr, long uid, long aid) {
+		int deleted = cr.delete(BjnoteContent.Homes.CONTENT_URI, WHERE_UID_AND_AID, new String[]{String.valueOf(uid), String.valueOf(aid)});
+		DebugUtils.logD(TAG, "deleteHomeInDatabaseForAccount aid#" + aid + ", delete " + deleted);
 		return deleted;
 	}
 	

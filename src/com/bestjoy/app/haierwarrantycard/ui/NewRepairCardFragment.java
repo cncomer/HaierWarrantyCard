@@ -68,7 +68,6 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	private long mBid = -1;
 	
 	private ScrollView mScrollView;
-	private String mMustHaierPinpaiStr = null;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,7 +75,6 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		setHasOptionsMenu(true);
 		getActivity().setTitle(R.string.activity_title_repair);
 		mCalendar = Calendar.getInstance();
-		mMustHaierPinpaiStr = getString(R.string.pinpai_haier);
 	}
 	
 	@Override
@@ -430,7 +428,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		String pinpai = mPinpaiInput.getText().toString().trim();
 		final String bxPhone = mBaoxiuTelInput.getText().toString().trim();
 		//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
-    	if (!mMustHaierPinpaiStr.equals(pinpai)) {
+    	if (!HaierServiceObject.isHaierPinpai(pinpai)) {
     		new AlertDialog.Builder(getActivity())
 	    	.setMessage(R.string.must_haier_confirm_yuyue)
 	    	.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -510,6 +508,9 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		}
 		if (!TextUtils.isEmpty(object.mXingHao)) {
 			mModelInput.setText(object.mXingHao);
+		}
+		if (!TextUtils.isEmpty(object.mBXPhone)) {
+			mBaoxiuTelInput.setText(object.mBXPhone);
 		}
 	}
 	
