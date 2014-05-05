@@ -2,11 +2,12 @@ package com.bestjoy.app.haierwarrantycard.ui;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 import org.apache.http.client.ClientProtocolException;
 
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -19,8 +20,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -43,10 +42,9 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 	private static final String TAG = "HomeManagerActivity";
 	private ListView mHomeListView;
 	private HomeManagerAdapter mHomeManagerAdapter;
-	private MenuItem deleteItem;
-	private MenuItem editItem;
 	private static boolean mIsEditMode;
-	private static ArrayList<String> deleteHomeIDList = new ArrayList<String>();
+	private static HashMap<Long, Boolean> deleteHomeIDList = new HashMap<Long, Boolean>();
+	private boolean mIsFirstOnresume = true;
 	
 	@Override
 	protected boolean checkIntent(Intent intent) {
@@ -64,6 +62,14 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 		mHomeListView.setOnItemClickListener(mHomeManagerAdapter);
 		mHomeListView.setAdapter(mHomeManagerAdapter);
 	}
+	
+	public void onResume() {
+		super.onResume();
+		if (!mIsFirstOnresume) {
+			mHomeManagerAdapter.notifyDataSetChanged();
+		}
+		mIsFirstOnresume = false;
+	}
 
 	public static void startActivity(Context context) {
 		Intent intent = new Intent(context, HomeManagerActivity.class);
@@ -73,13 +79,29 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuItem newHomeItem = menu.add(R.string.menu_create, R.string.menu_create, 0, R.string.menu_create);
-		deleteItem = menu.add(R.string.menu_delete, R.string.menu_delete, 0, R.string.menu_delete);
-		editItem = menu.add(R.string.menu_edit, R.string.menu_edit, 0, R.string.menu_edit);
+		MenuItem deleteItem = menu.add(R.string.menu_delete, R.string.menu_delete, 0, R.string.menu_delete);
+		MenuItem editItem = menu.add(R.string.menu_edit, R.string.menu_edit, 0, R.string.menu_edit);
+		MenuItem doneItem = menu.add(R.string.menu_done, R.string.menu_done, 0, R.string.menu_done);
 		deleteItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		newHomeItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		editItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-		editItem.setVisible(true);
-		deleteItem.setVisible(false);
+		doneItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+		return true;
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		if (mIsEditMode) {
+			menu.findItem(R.string.menu_create).setVisible(false);
+			menu.findItem(R.string.menu_edit).setVisible(false);
+			menu.findItem(R.string.menu_done).setVisible(true);
+			menu.findItem(R.string.menu_delete).setVisible(deleteHomeIDList.size() > 0);
+		} else {
+			menu.findItem(R.string.menu_create).setVisible(true);
+			menu.findItem(R.string.menu_edit).setVisible(true);
+			menu.findItem(R.string.menu_done).setVisible(false);
+			menu.findItem(R.string.menu_delete).setVisible(false);
+		}
 		return true;
 	}
 	
@@ -87,6 +109,7 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case R.string.menu_create:
+			HomeObject.setHomeObject(new HomeObject());
 			NewHomeActivity.startActivity(this);
 			break;
 		case R.string.menu_delete:
@@ -97,15 +120,24 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 			}
 			break;
 		case R.string.menu_edit:
-			editItem.setVisible(false);
-			deleteItem.setVisible(true);
-			mHomeManagerAdapter.notifyDataSetChanged();
 			mIsEditMode = true;
+			mHomeManagerAdapter.notifyDataSetChanged();
+			invalidateOptionsMenu();
+			break;
+		case R.string.menu_done:
+			onMenuDoneClick();
 			break;
 		default:
 			break;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+	
+	private void onMenuDoneClick() {
+		mIsEditMode = false;
+		deleteHomeIDList.clear();
+		mHomeManagerAdapter.notifyDataSetChanged();
+		invalidateOptionsMenu();
 	}
 
 	DeleteHomeAsyncTask mDeleteHomeAsyncTask;
@@ -118,23 +150,36 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 	}
 	
 	private class DeleteHomeAsyncTask extends AsyncTask<Integer, Void, Boolean> {
-		private String mError;
 		@Override
 		protected Boolean doInBackground(Integer... param) {
-			mError = null;
-			for(String mAID : deleteHomeIDList) {
-				delete(mAID);
+			boolean deleted = false;
+			ContentResolver cr = mContext.getContentResolver();
+			long uid = HaierAccountManager.getInstance().getAccountObject().mAccountUid;
+			for(long aid : deleteHomeIDList.keySet()) {
+				deleted = deleteFromService(aid);
+				if (deleted) {
+					//还要删除本地的家数据
+					HomeObject.deleteHomeInDatabaseForAccount(cr, uid, aid);
+				}
 			}
+			deleteHomeIDList.clear();
+			//刷新本地家
+			HaierAccountManager.getInstance().initAccountHomes();
 			return false;
 		}
 
-		private synchronized void delete(String AID) {
+		/**
+		 * 从服务器上删除家数据
+		 * @param AID
+		 * @return
+		 */
+		private synchronized boolean deleteFromService(long aid) {
 			InputStream is = null;
 			final int LENGTH = 2;
 			String[] urls = new String[LENGTH];
 			String[] paths = new String[LENGTH];
 			urls[0] = HaierServiceObject.HOME_DELETE_URL + "AID=";
-			paths[0] = AID;
+			paths[0] = String.valueOf(aid);
 			urls[1] = "&key=";
 			paths[1] = SecurityUtils.MD5.md5(HaierAccountManager.getInstance().getAccountObject().mAccountTel + HaierAccountManager.getInstance().getAccountObject().mAccountPwd);
 			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
@@ -145,25 +190,22 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 					String content = NetworkUtils.getContentFromInput(is);
 					HaierResultObject resultObject = HaierResultObject.parse(content);
 					MyApplication.getInstance().showMessageAsync(resultObject.mStatusMessage);
+					return resultObject.isOpSuccessfully();
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
-				mError = e.getMessage();
 			} catch (IOException e) {
 				e.printStackTrace();
-
-				mError = e.getMessage();
 			} finally {
 				NetworkUtils.closeInputStream(is);
 			}
+			return false;
 		}
 
 		@Override
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
-			if(mError != null) {
-				MyApplication.getInstance().showMessageAsync(mError);
-			}
+			mHomeManagerAdapter.notifyDataSetChanged();
 			dismissDialog(DIALOG_PROGRESS);
 		}
 
@@ -179,11 +221,7 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
 			if(mIsEditMode) {
-				mIsEditMode = false;
-				editItem.setVisible(true);
-				deleteItem.setVisible(false);
-				mHomeManagerAdapter.notifyDataSetChanged();
-				if(deleteHomeIDList != null) deleteHomeIDList.clear();
+				onMenuDoneClick();
 				return true;
 			}
 			break;
@@ -191,7 +229,7 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 		return super.onKeyUp(keyCode, event);
 	}
 
-	public static class HomeManagerAdapter extends BaseAdapter implements ListView.OnItemClickListener{
+	public class HomeManagerAdapter extends BaseAdapter implements ListView.OnItemClickListener{
 
 		private Context _context;
 		private HomeManagerAdapter (Context context) {
@@ -214,7 +252,6 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 		
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			final int index = position;
 			ViewHolder holder = null;
 			if (convertView == null) {
 				convertView = LayoutInflater.from(_context).inflate(R.layout.home_list_item, parent, false);
@@ -230,24 +267,16 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 			if(mIsEditMode) {
 				holder._check.setVisibility(View.VISIBLE);
 			} else {
-				holder._check.setVisibility(View.INVISIBLE);
+				holder._check.setVisibility(View.GONE);
 			}
-			holder._check.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-				@Override
-				public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-					if(isChecked){
-						deleteHomeIDList.add(String.valueOf(HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(index).mHomeAid));
-					}else{
-						deleteHomeIDList.remove(String.valueOf(HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(index).mHomeAid));
-					}
-				}
-			});
-			if(deleteHomeIDList.contains(String.valueOf(HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(index).mHomeAid))) {
+			HomeObject homeObject = HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(position);
+			holder._aid = homeObject.mHomeAid;
+			Boolean checked = deleteHomeIDList.get(holder._aid);
+			if(checked != null && checked) {
 				holder._check.setChecked(true);
 			} else {
 				holder._check.setChecked(false);
 			}
-			HomeObject homeObject = HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(position);
 			String name = homeObject.mHomeName;
 			String nameDtail = homeObject.mHomeProvince + homeObject.mHomeCity + homeObject.mHomeDis;
 			if(TextUtils.isEmpty(name)) name = _context.getString(R.string.my_home);
@@ -258,6 +287,7 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 		
 		private class ViewHolder {
 			private CheckBox _check;
+			private long _aid;
 			private TextView _name, _home_detail;
 			private ImageView _flag;
 		}
@@ -265,10 +295,13 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 		@Override
 		public void onItemClick(AdapterView<?> listView, View view, int pos, long arg3) {
 			if(mIsEditMode) {
-				CheckBox cb = (CheckBox) view.findViewById(R.id.home_checkbox);
-				cb.setChecked(!cb.isChecked());
+				ViewHolder viewHolder = (ViewHolder) view.getTag();
+				viewHolder._check.setChecked(!viewHolder._check.isChecked());
+				deleteHomeIDList.put(viewHolder._aid, viewHolder._check.isChecked());
+				invalidateOptionsMenu();
 			} else {
-				NewHomeActivity.startActivity(listView.getContext(), pos);
+				HomeObject.setHomeObject(HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(pos));
+				NewHomeActivity.startActivity(mContext);
 			}
 		}
 		

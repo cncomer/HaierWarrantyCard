@@ -38,6 +38,7 @@ public class HaierAccountManager {
 //			for(HomeObject homeObject : mHaierAccount.mAccountHomes) {
 //				homeObject.initBaoxiuCards(mContext.getContentResolver());
 //			}
+			mHaierAccount.mAccountHomeCount = mHaierAccount.mAccountHomes.size();
 		}
 	}
 	

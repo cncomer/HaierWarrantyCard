@@ -99,7 +99,7 @@
     <string name="menu_help">帮助</string>
     <string name="menu_about">关于</string>
     <string name="menu_search">搜索</string>
-    <string name="menu_done">确定</string>
+    <string name="menu_done">完成</string>
     <string name="menu_choose">选择</string>
     
     <string name="menu_edit">编辑</string>
@@ -229,6 +229,7 @@
     <string name="menu_new_install">预约安装</string>
      <string name="menu_manage_home">管理家</string>
      <string name="activity_title_new_home">新建家</string>
+     <string name="activity_title_update_home">更新家</string>
      
      <string name="title_scan_history">扫描历史</string>
      <string name="msg_can_not_access_network">抱歉，暂时无法访问服务器，请检查网络，稍后重试</string>
@@ -293,4 +294,5 @@
          <string name="msg_no_bxphone">对不起，该保修卡没有设置售后服务电话</string>
          <string name="must_haier_confirm_yuyue">目前只有海尔产品才接 受电子预约服务，是否直接拨打厂家电话？</string>
          <string name="none_select_tips">没有选择任何条目</string>
+          <string name="msg_local_save_op_failed">服务器上传信息成功，但本地保存失败</string>
 </resources>
