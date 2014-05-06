@@ -49,58 +49,54 @@ public class AccountParser extends InfoInterfaceImpl{
 	 * @param is
 	 * @param goodsObject
 	 * @return
+	 * @throws JSONException 
 	 */
-	public static AccountObject parseJson(InputStream is, final TextView view) {
+	public static AccountObject parseJson(InputStream is, final TextView view) throws JSONException {
 		 DebugUtils.logParser(TAG, "Start parse");
 		if (is == null ) {
 			return null;
 		}
-		 AccountObject accountObject = null;
-		try {
-			JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
-			if (view != null) {
-				MyApplication.getInstance().postAsync(new Runnable() {
+		JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
+		if (view != null) {
+			MyApplication.getInstance().postAsync(new Runnable() {
 
-					@Override
-					public void run() {
-						view.setText(R.string.msg_login_download_accountinfo_wait);
-					}
-				});
-			}
-			accountObject = new AccountObject();
-			//解析userdata
-			parseUserData(jsonObject, accountObject);
-			if (accountObject.mStatusCode == 0) {
-				//如果是失败的，我们提前返回，不用解析其他数据了
-				return accountObject;
-			}
-			
-			if (view != null) {
-				MyApplication.getInstance().postAsync(new Runnable() {
-
-					@Override
-					public void run() {
-						view.setText(R.string.msg_login_download_addressinfo_wait);
-					}
-				});
-			}
-			//解析address
-			parseAddress(jsonObject, accountObject);
-			
-			if (view != null) {
-				MyApplication.getInstance().postAsync(new Runnable() {
-
-					@Override
-					public void run() {
-						view.setText(R.string.msg_login_download_baoxiuinfo_wait);
-					}
-				});
-			}
-			//解析保修卡
-			parseBaoxiuCards(jsonObject, accountObject);
-		} catch (JSONException e) {
-			e.printStackTrace();
+				@Override
+				public void run() {
+					view.setText(R.string.msg_login_download_accountinfo_wait);
+				}
+			});
 		}
+		AccountObject accountObject = new AccountObject();
+		//解析userdata
+		parseUserData(jsonObject, accountObject);
+		if (accountObject.mStatusCode == 0) {
+			//如果是失败的，我们提前返回，不用解析其他数据了
+			return accountObject;
+		}
+		
+		if (view != null) {
+			MyApplication.getInstance().postAsync(new Runnable() {
+
+				@Override
+				public void run() {
+					view.setText(R.string.msg_login_download_addressinfo_wait);
+				}
+			});
+		}
+		//解析address
+		parseAddress(jsonObject, accountObject);
+		
+		if (view != null) {
+			MyApplication.getInstance().postAsync(new Runnable() {
+
+				@Override
+				public void run() {
+					view.setText(R.string.msg_login_download_baoxiuinfo_wait);
+				}
+			});
+		}
+		//解析保修卡
+		parseBaoxiuCards(jsonObject, accountObject);
 		return accountObject;
 	}
 	

@@ -636,7 +636,11 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
     		}
         	if (mBillFile != null) {
         		Bitmap billTempBitmap = ImageHelper.getSmallBitmap(mBillFile.getAbsolutePath(), mAvatorWidth, mAvatorHeight);
-        		result = ImageHelper.bitmapToString(billTempBitmap, 100);
+        		if (billTempBitmap != null) {
+        			result = ImageHelper.bitmapToString(billTempBitmap, 100);
+        		} else{
+        			new Exception("getBase64StringFromBillAvator() getSmallBitmap return null").printStackTrace();
+        		}
         	}
         } else {
         	 result = ImageHelper.bitmapToString(mBillTempBitmap, 100);

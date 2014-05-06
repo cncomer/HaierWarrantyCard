@@ -139,6 +139,7 @@ public class MainActivity extends BaseActionbarActivity {
 		@Override
 		protected Void doInBackground(Void... params) {
 			HaierAccountManager.getInstance().deleteDefaultAccount();
+			HaierAccountManager.getInstance().saveLastUsrTel("");
 			return null;
 		}
 

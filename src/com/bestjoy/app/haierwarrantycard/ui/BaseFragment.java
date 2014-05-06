@@ -206,6 +206,12 @@ public class BaseFragment extends SherlockFragment{
     		dialog.dismiss();
     	}
      }
+    protected void dismissDialog(int id) {
+    	Dialog dialog = mDialogMap.get(id);
+    	if (dialog != null && dialog.isShowing()) {
+    		dialog.dismiss();
+    	}
+     }
     
     protected void removeDialog(int id) {
     	Dialog dialog = mDialogMap.get(id);

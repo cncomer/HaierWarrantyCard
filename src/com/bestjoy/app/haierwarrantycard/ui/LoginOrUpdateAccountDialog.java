@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -72,7 +73,7 @@ public class LoginOrUpdateAccountDialog extends Activity{
 			try {
 				_is = NetworkUtils.openContectionLocked(sb.toString(), mPwd, null);
 				mAccountObject = AccountParser.parseJson(_is, mStatusView);
-				if (mAccountObject.isLogined()) {
+				if (mAccountObject != null && mAccountObject.isLogined()) {
 					boolean saveAccountOk = HaierAccountManager.getInstance().saveAccountObject(LoginOrUpdateAccountDialog.this.getContentResolver(), mAccountObject);
 					if (!saveAccountOk) {
 						//登录成功了，但本地数据保存失败，通常不会走到这里
@@ -83,6 +84,9 @@ public class LoginOrUpdateAccountDialog extends Activity{
 				e.printStackTrace();
 				_error = e.getMessage();
 			} catch (IOException e) {
+				e.printStackTrace();
+				_error = e.getMessage();
+			} catch (JSONException e) {
 				e.printStackTrace();
 				_error = e.getMessage();
 			} finally {
@@ -106,13 +110,15 @@ public class LoginOrUpdateAccountDialog extends Activity{
 				//如果登陆成功
 				if (mAccountObject.isLogined()) {
 					setResult(Activity.RESULT_OK);
-					finish();
 				} else {
 					MyApplication.getInstance().showMessage(mAccountObject.mStatusMessage);
 					setResult(Activity.RESULT_CANCELED);
-					finish();
 				}
+			} else {
+				MyApplication.getInstance().showMessage(R.string.msg_login_failed_general);
+				setResult(Activity.RESULT_CANCELED);
 			}
+			finish();
 		}
 
 		@Override

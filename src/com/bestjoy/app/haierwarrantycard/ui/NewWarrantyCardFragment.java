@@ -4,13 +4,11 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -18,13 +16,11 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -76,6 +72,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	private int mPictureRequest = -1;
 	
 	private BaoxiuCardObject mBaoxiuCardObject;
+	private Handler mHandler;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +81,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		setHasOptionsMenu(true);
 		mCalendar = Calendar.getInstance();
 		mBaoxiuCardObject = new BaoxiuCardObject();
+		mHandler = new Handler();
 		initTempFile();
 	}
 	
@@ -140,6 +138,13 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		super.onDestroyView();
 		PhotoManagerUtilsV2.getInstance().releaseToken(TOKEN);
 		BaoxiuCardObject.showBill(getActivity(), null);
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mBillImageView.setImageBitmap(null);
+		mBaoxiuCardObject.clear();
 	}
 
 	@Override
@@ -203,6 +208,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			mTagInput.setText(object.mCardName);
 			//传递进来的，我们还需要读取发票数据
 			mBaoxiuCardObject = object.clone();
+			//清理一遍可能存在的临时发票资源
+			mBaoxiuCardObject.clear();
 			
 			if (isEditable()) {
 				//如果是已经创建了的，我们不允许修改时间，并且要使用保修卡的购买时间
@@ -724,17 +731,13 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		if (resultCode == Activity.RESULT_OK) {
 			if (REQUEST_BILL == requestCode) {
                 if (mBillTempFile.exists()) {
-                	if (mBillTempFile.exists()) {
-                    	mBaoxiuCardObject.updateBillAvatorTempLocked(mBillTempFile);
-                    	Drawable drawable = mBillImageView.getDrawable();
-                    	mBillImageView.setImageBitmap(mBaoxiuCardObject.mBillTempBitmap);
-                    	if (drawable instanceof BitmapDrawable) {
-                    		Bitmap bitmap = ((BitmapDrawable) drawable).getBitmap();
-                    		if (bitmap != null) {
-                    			bitmap.recycle();
-                    		}
-                    	}
-    				}
+                	mHandler.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							loadFapiaoFromCameraAsync();
+						}
+                		
+                	}, 1000);
 				}
                 return;
 			}
@@ -804,6 +807,36 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 				}
 			}
 		}
+	}
+	
+	private LoadFapiaoTask mLoadFapiaoTask;
+	private void loadFapiaoFromCameraAsync() {
+		AsyncTaskUtils.cancelTask(mLoadFapiaoTask);
+		showDialog(DIALOG_PROGRESS);
+		mLoadFapiaoTask = new LoadFapiaoTask();
+		mLoadFapiaoTask.execute();
+	}
+	private class LoadFapiaoTask extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			mBaoxiuCardObject.updateBillAvatorTempLocked(mBillTempFile);
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			dismissDialog(DIALOG_PROGRESS);
+			mBillImageView.setImageBitmap(mBaoxiuCardObject.mBillTempBitmap);
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			dismissDialog(DIALOG_PROGRESS);
+		}
+		
 	}
 	
 }

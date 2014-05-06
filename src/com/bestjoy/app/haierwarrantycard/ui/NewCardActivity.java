@@ -2,7 +2,9 @@ package com.bestjoy.app.haierwarrantycard.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.ContentObserver;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
@@ -13,6 +15,7 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.shwy.bestjoy.utils.Intents;
@@ -29,6 +32,7 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 	private Bundle mBundles;
 	/**表示是否是第一次进入*/
 	private boolean mIsFirstOnResume = true;
+	private ContentObserver mContentObserver;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -96,6 +100,18 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		
+		//add by chenkai, 针对现新建卡-在登录注册的情况 begin
+		mContentObserver = new ContentObserver(new Handler()) {
+			@Override
+			public void onChange(boolean selfChange) {
+				super.onChange(selfChange);
+				mContent.updateInfoInterface(HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(0));
+				//更新联系人信息，默认是用的账户信息
+				mContent.updateInfoInterface(HaierAccountManager.getInstance().getAccountObject());
+			}
+		};
+		getContentResolver().registerContentObserver(BjnoteContent.Accounts.CONTENT_URI, true, mContentObserver);
+		//add by chenkai, 针对现新建卡-在登录注册的情况 end
 	}
 	
 	@Override
@@ -130,6 +146,13 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 			mContent.updateInfoInterface(HaierAccountManager.getInstance().getAccountObject());
 			mIsFirstOnResume = false;
 		}
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		//add by chenkai, 针对现新建卡-在登录注册的情况
+		getContentResolver().unregisterContentObserver(mContentObserver);
 	}
 
 	@Override
