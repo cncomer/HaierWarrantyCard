@@ -221,7 +221,12 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	    	if (HaierServiceObject.isHaierPinpai(mBaoxiuCardObject.mPinPai)) {
 	    		BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
     			HomeObject.setHomeObject(mHomeObject);
-    			ModleSettings.doChoose(mContext, mBundles);
+    			if (id == R.id.button_onekey_install) {
+    				ModleSettings.doChoose(mContext, ModleSettings.createMyInstallDefaultBundle(mContext));
+    			} else if (id == R.id.button_onekey_repair) {
+    				ModleSettings.doChoose(mContext, ModleSettings.createMyRepairDefaultBundle(mContext));
+    			}
+    			
     			finish();
 	    	} else {
 	    		new AlertDialog.Builder(mContext)

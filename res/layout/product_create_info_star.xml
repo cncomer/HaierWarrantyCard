@@ -67,6 +67,7 @@
 	    <TextView style="@style/ProductInfo"
 	        android:text="@string/product_tel"/>
 	    <EditText android:id="@+id/product_tel_input"
+	        android:autoLink="all"
 	        style="@style/ProductInfoInput"/>
 	</LinearLayout>
 	

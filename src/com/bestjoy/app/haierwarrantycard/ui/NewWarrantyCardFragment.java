@@ -211,16 +211,15 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			//清理一遍可能存在的临时发票资源
 			mBaoxiuCardObject.clear();
 			
+			try {
+				Date date = BaoxiuCardObject.BUY_DATE_TIME_FORMAT.parse(object.mBuyDate);
+				mCalendar.setTime(date);
+				mDatePickBtn.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(date));
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			
 			if (isEditable()) {
-				//如果是已经创建了的，我们不允许修改时间，并且要使用保修卡的购买时间
-				try {
-					Date date = BaoxiuCardObject.BUY_DATE_TIME_FORMAT.parse(object.mBuyDate);
-					mDatePickBtn.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(date));
-				} catch (ParseException e) {
-					e.printStackTrace();
-				}
-				 mDatePickBtn.setEnabled(false);
-				 
 				//如果有发票，我们显示出来
 				if (mBaoxiuCardObject.hasBillAvator()) {
 					PhotoManagerUtilsV2.getInstance().loadLocalPhotoAsync(TOKEN, mBillImageView, mBaoxiuCardObject.getFapiaoPhotoId(), null, PhotoManagerUtilsV2.TaskType.FaPiao);
