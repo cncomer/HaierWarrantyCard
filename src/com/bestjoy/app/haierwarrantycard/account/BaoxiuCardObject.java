@@ -634,7 +634,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
         	if (mBillFile == null) {
     			mBillFile = MyApplication.getInstance().getProductFaPiaoFile(getFapiaoPhotoId());
     		}
-        	if (mBillFile != null) {
+        	if (mBillFile != null && mBillFile.exists()) {
         		Bitmap billTempBitmap = ImageHelper.getSmallBitmap(mBillFile.getAbsolutePath(), mAvatorWidth, mAvatorHeight);
         		if (billTempBitmap != null) {
         			result = ImageHelper.bitmapToString(billTempBitmap, 100);
