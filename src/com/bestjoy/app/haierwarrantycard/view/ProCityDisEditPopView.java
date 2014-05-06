@@ -192,7 +192,9 @@ public class ProCityDisEditPopView implements OnTouchListener {
 				case MotionEvent.ACTION_DOWN:
 					mEditMode = MODE_CITY;
 					if (mHomeObject.mHomeProvince != null) {
-						if(mProID == null) break;
+						if(mProID == null) {
+							mProID = getProIDByName();
+						}
 						mCursor = mContext.getContentResolver().query(
 								BjnoteContent.City.CONTENT_URI, CITY_PROJECTION,
 								DeviceDBHelper.DEVICE_PRO_ID + "=?",
@@ -214,7 +216,9 @@ public class ProCityDisEditPopView implements OnTouchListener {
 				case MotionEvent.ACTION_DOWN:
 					mEditMode = MODE_DISTRICT;
 					if (mHomeObject.mHomeCity != null) {
-						if(mCityID == null) break;
+						if(mCityID == null) {
+							mCityID = getCityIDByName();
+						}
 						mCursor = mContext.getContentResolver().query(
 								BjnoteContent.District.CONTENT_URI, DIS_PROJECTION,
 								DeviceDBHelper.DEVICE_CITY_ID + "=?",
@@ -234,6 +238,24 @@ public class ProCityDisEditPopView implements OnTouchListener {
 		return false;
 	}
 	
+	private String getCityIDByName() {
+		String selection = DeviceDBHelper.DEVICE_CITY_NAME + " like '" + mHomeObject.mHomeCity + "%'";
+		mCursor = mContext.getContentResolver().query(
+				BjnoteContent.City.CONTENT_URI, CITY_PROJECTION, selection, null, null);
+		if(mCursor.moveToNext()) {
+			return mCursor.getString(mCursor.getColumnIndex(DeviceDBHelper.DEVICE_CITY_ID));
+		}
+		return null;
+	}
+	private String getProIDByName() {
+		String selection = DeviceDBHelper.DEVICE_PRO_NAME + " like '" + mHomeObject.mHomeProvince + "%'";
+		mCursor = mContext.getContentResolver().query(
+				BjnoteContent.Province.CONTENT_URI, PRO_PROJECTION, selection, null, null);
+		if(mCursor.moveToNext()) {
+			return mCursor.getString(mCursor.getColumnIndex(DeviceDBHelper.DEVICE_PRO_ID));
+		}
+		return null;
+	}
 	private void initPopWindow(View view) {
 		if (mPopupWindow == null) {
 			mPopupWindow = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
