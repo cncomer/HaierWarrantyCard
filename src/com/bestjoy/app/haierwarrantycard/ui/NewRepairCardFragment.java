@@ -13,6 +13,8 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.app.TimePickerDialog.OnTimeSetListener;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -26,6 +28,7 @@ import android.widget.EditText;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
@@ -34,6 +37,7 @@ import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.ui.NewInstallCardFragment.MyTimePickerDialog;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditPopView;
@@ -485,9 +489,11 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH))
 		.show();
 	}
-	
+
+	Toast mToast;
+	MyTimePickerDialog mMyTimePickerDialog;
 	private void showTimePickerDialog() {
-        new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+		mMyTimePickerDialog = new MyTimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
 			@Override
 			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 				mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -496,11 +502,31 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 						+ "-" + DateUtils.TOPIC_TIME_FORMAT.format(new Date(mCalendar.getTimeInMillis() + 60 * 60 * 1000)));
 			}
         	
-        }, mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE), true)
-        .show();
+        }, mCalendar.get(Calendar.HOUR_OF_DAY), 0, true);
+		mMyTimePickerDialog.show();
+
+		if(mCalendar.get(Calendar.HOUR_OF_DAY) < 8 || mCalendar.get(Calendar.HOUR_OF_DAY) > 19)
+			mMyTimePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setEnabled(false);
 
 	}
-	
+
+	class MyTimePickerDialog extends TimePickerDialog {
+		public MyTimePickerDialog(Context context,
+				OnTimeSetListener callBack, int hourOfDay, int minute,
+				boolean is24HourView) {
+			super(context, callBack, hourOfDay, minute, is24HourView);
+			if(hourOfDay < 8 || hourOfDay > 19) {
+				if(mToast != null) {
+					mToast.setText(R.string.select_time_out_of_service_tips);
+				} else {					
+					mToast = Toast.makeText(this.getContext(), R.string.select_time_out_of_service_tips, Toast.LENGTH_LONG);
+				}
+				mToast.show();
+				//mMyTimePickerDialog.getButton(BUTTON_POSITIVE).setEnabled(false);
+			}
+		}
+	}
+
 	@Override
     public void setScanObjectAfterScan(InfoInterface barCodeObject) {
 		 BaoxiuCardObject object = (BaoxiuCardObject) barCodeObject;

@@ -308,4 +308,7 @@
           <string name="button_qa">常见问题</string>
          <string name="button_policy">保修政策</string>
          <string name="button_guide">使用说明书</string>
+         
+         <string name="select_clock_tips">只能选择整点时钟</string>
+         <string name="select_time_out_of_service_tips">只能选择8:00-19:00之间的时间</string>
 </resources>

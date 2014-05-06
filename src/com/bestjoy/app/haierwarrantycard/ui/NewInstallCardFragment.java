@@ -14,10 +14,12 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +28,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TimePicker;
+import android.widget.Toast;
 
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
@@ -422,7 +425,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	}
 
 	private void showDatePickerDialog() {
-        new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+        new MyDatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
 			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 				mCalendar.set(year, monthOfYear, dayOfMonth);
@@ -434,8 +437,22 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		.show();
 	}
 	
+	class MyDatePickerDialog extends DatePickerDialog {
+		public MyDatePickerDialog(Context context, OnDateSetListener callBack,
+				int year, int monthOfYear, int dayOfMonth) {
+			super(context, callBack, year, monthOfYear, dayOfMonth);
+		}
+
+		@Override
+		public void onDateChanged(DatePicker view, int year, int month, int day) {
+			super.onDateChanged(view, year, month, day);
+		}
+	}
+	
+	Toast mToast;
+	MyTimePickerDialog mMyTimePickerDialog;
 	private void showTimePickerDialog() {
-        new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+		mMyTimePickerDialog = new MyTimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
 			@Override
 			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 				mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
@@ -444,11 +461,56 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 						+ "-" + DateUtils.TOPIC_TIME_FORMAT.format(new Date(mCalendar.getTimeInMillis() + 60 * 60 * 1000)));
 			}
         	
-        }, mCalendar.get(Calendar.HOUR_OF_DAY), mCalendar.get(Calendar.MINUTE), true)
-        .show();
-
+        }, mCalendar.get(Calendar.HOUR_OF_DAY), 0, true);
+		mMyTimePickerDialog.show();
+		
+		if(mCalendar.get(Calendar.HOUR_OF_DAY) < 8 || mCalendar.get(Calendar.HOUR_OF_DAY) > 19)
+			mMyTimePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setEnabled(false);
 	}
 	
+	class MyTimePickerDialog extends TimePickerDialog {
+		public MyTimePickerDialog(Context context,
+				OnTimeSetListener callBack, int hourOfDay, int minute,
+				boolean is24HourView) {
+			super(context, callBack, hourOfDay, minute, is24HourView);
+			if(hourOfDay < 8 || hourOfDay > 19) {
+				if(mToast != null) {
+					mToast.setText(R.string.select_time_out_of_service_tips);
+				} else {					
+					mToast = Toast.makeText(this.getContext(), R.string.select_time_out_of_service_tips, Toast.LENGTH_LONG);
+				}
+				mToast.show();
+				//mMyTimePickerDialog.getButton(BUTTON_POSITIVE).setEnabled(false);
+			}
+		}
+
+		@Override
+		public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+			if(minute != 0) {
+				if(mToast != null) {
+					mToast.setText(R.string.select_clock_tips);
+				} else {					
+					mToast = Toast.makeText(this.getContext(), R.string.select_clock_tips, Toast.LENGTH_LONG);
+				}
+				mToast.show();
+				mMyTimePickerDialog.getButton(BUTTON_POSITIVE).setEnabled(false);
+				return;
+			} else {
+				mMyTimePickerDialog.getButton(BUTTON_POSITIVE).setEnabled(true);
+			}
+			if(hourOfDay < 8 || hourOfDay > 19) {
+				if(mToast != null) {
+					mToast.setText(R.string.select_time_out_of_service_tips);
+				} else {					
+					mToast = Toast.makeText(this.getContext(), R.string.select_time_out_of_service_tips, Toast.LENGTH_LONG);
+				}
+				mToast.show();
+				mMyTimePickerDialog.getButton(BUTTON_POSITIVE).setEnabled(false);
+			} else {
+				mMyTimePickerDialog.getButton(BUTTON_POSITIVE).setEnabled(true);
+			}
+		}
+	}
 	@Override
     public void setScanObjectAfterScan(InfoInterface barCodeObject) {
 		 BaoxiuCardObject object = (BaoxiuCardObject) barCodeObject;
