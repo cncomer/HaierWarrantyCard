@@ -310,9 +310,9 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			urls[8] = "&dstrictid=";
 			paths[8] = mProCityDisEditPopView.getDisID();
 			urls[9] = "&yytime=";
-			paths[9] = BaoxiuCardObject.BUY_TIME_FORMAT.format(mCalendar.getTime());
+			paths[9] = BaoxiuCardObject.BUY_DATE_FORMAT_YUYUE_TIME.format(mCalendar.getTime());
 			urls[10] = "&Desc=";
-			paths[10] = mTagInput.getText().toString().trim();
+			paths[10] = mAskInput.getText().toString().trim();
 			urls[11] = "&service_type=";
 			paths[11] = "T02";//T02为维修
 			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
