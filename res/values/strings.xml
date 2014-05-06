@@ -293,7 +293,7 @@
          <string name="pinpai_haier">海尔</string>
          <string name="msg_pinpai_haier_suppot_only">对不起，目前只支持海尔</string>
          <string name="msg_no_bxphone">对不起，该保修卡没有设置售后服务电话</string>
-         <string name="must_haier_confirm_yuyue">目前只有海尔产品才接 受电子预约服务，是否直接拨打厂家电话？</string>
+         <string name="must_haier_confirm_yuyue">目前只有海尔产品才接受电子预约服务，是否直接拨打厂家电话？</string>
          <string name="none_select_tips">没有选择任何条目</string>
           <string name="msg_local_save_op_failed">服务器上传信息成功，但本地保存失败</string>
          <string name="yuyue_time_too_early_tips">预约时间必须大于当前时间后3个小时</string>
@@ -302,6 +302,8 @@
          <string name="button_onekey_repair">一键报修</string>
          
          <string name="msg_login_failed_general">登录失败，检查网络是否可用</string>
+          <string name="msg_delete_home_confirm">该操作将同时删除选择的家在服务器和本地的数据，将不可恢复，是否确定要这么做?</string>
+           <string name="msg_delete_account_confirm">该操作将删除本地账户数据，包括全部的家信息和保修卡信息，是否确定要这么做?</string>
          
           <string name="button_qa">常见问题</string>
          <string name="button_policy">保修政策</string>

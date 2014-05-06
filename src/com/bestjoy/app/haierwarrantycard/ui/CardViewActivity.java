@@ -34,6 +34,7 @@ import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
+import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
 import com.shwy.bestjoy.utils.NotifyRegistrant;
 
@@ -194,7 +195,8 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 
 	@Override
 	public void onClick(View v) {
-		switch(v.getId()) {
+		int id = v.getId();
+		switch(id) {
 		case R.id.button_speak:
 			mSpeechRecognizerEngine.showIatDialog(mContext);
 			break;
@@ -214,14 +216,31 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			BaoxiuCardObject.showBill(mContext, mBaoxiuCardObject);
 			break;
 		case R.id.button_onekey_install:
-			 BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
-			 HomeObject.setHomeObject(mHomeObject);
-			ModleSettings.doChoose(mContext, mBundles);
-			break;
 		case R.id.button_onekey_repair:
-			 BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
-			 HomeObject.setHomeObject(mHomeObject);
-			ModleSettings.doChoose(mContext, mBundles);
+			//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
+	    	if (HaierServiceObject.isHaierPinpai(mBaoxiuCardObject.mPinPai)) {
+	    		BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
+    			HomeObject.setHomeObject(mHomeObject);
+    			ModleSettings.doChoose(mContext, mBundles);
+    			finish();
+	    	} else {
+	    		new AlertDialog.Builder(mContext)
+		    	.setMessage(R.string.must_haier_confirm_yuyue)
+		    	.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						if (!TextUtils.isEmpty(mBaoxiuCardObject.mBXPhone)) {
+							Intents.callPhone(mContext, mBaoxiuCardObject.mBXPhone);
+						} else {
+							MyApplication.getInstance().showMessage(R.string.msg_no_bxphone);
+						}
+						
+					}
+				})
+				.setNegativeButton(android.R.string.cancel, null)
+				.show();
+	    	}
 			break;
 		}
 		

@@ -1,6 +1,8 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -121,7 +123,17 @@ public class MainActivity extends BaseActionbarActivity {
 	 public boolean onOptionsItemSelected(MenuItem menuItem) {
 		 switch(menuItem.getItemId()) {
 		 case R.string.menu_exit:
-			 deleteAccountAsync();
+			 new AlertDialog.Builder(mContext)
+				.setMessage(R.string.msg_delete_account_confirm)
+				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						deleteAccountAsync();
+					}
+				})
+				.setNegativeButton(android.R.string.cancel, null)
+				.show();
 			 return true;
 		 }
 		 return super.onOptionsItemSelected(menuItem);

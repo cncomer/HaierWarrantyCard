@@ -7,8 +7,10 @@ import java.util.HashMap;
 
 import org.apache.http.client.ClientProtocolException;
 
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -116,7 +118,17 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 			if(deleteHomeIDList.size() <= 0) {
 				MyApplication.getInstance().showMessage(R.string.none_select_tips);
 			} else {				
-				doDeleteHomeAsync();
+				new AlertDialog.Builder(mContext)
+				.setMessage(R.string.msg_delete_home_confirm)
+				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						doDeleteHomeAsync();
+					}
+				})
+				.setNegativeButton(android.R.string.cancel, null)
+				.show();
 			}
 			break;
 		case R.string.menu_edit:
