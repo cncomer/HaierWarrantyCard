@@ -169,6 +169,8 @@
 
                         <TextView
                             android:id="@+id/product_tel_input"
+                            android:autoLink="all"
+                            android:clickable="true"
                             style="@style/ViewProductInfo" />
                     </LinearLayout>
 
@@ -283,6 +285,8 @@
 
                         <TextView
                             android:id="@+id/product_buy_delay_componey_tel"
+                             android:autoLink="all"
+                            android:clickable="true"
                             style="@style/ViewProductInfo" />
                     </LinearLayout>
                     
