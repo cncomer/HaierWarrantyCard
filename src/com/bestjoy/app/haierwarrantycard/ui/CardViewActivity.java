@@ -199,10 +199,14 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			mSpeechRecognizerEngine.showIatDialog(mContext);
 			break;
 		case R.id.button_qa:
-			BrowserActivity.startActivity(mContext, "http://www.haier.com/cn/services_supports/overview/cooling/daily_use/troubles/");
+			if (checkHaierPinpai()) {
+				BrowserActivity.startActivity(mContext, "http://www.haier.com/cn/services_supports/overview/cooling/daily_use/troubles/", mContext.getString(R.string.button_qa));
+			}
 			break;
 		case R.id.button_policy:
-			BrowserActivity.startActivity(mContext, "http://www.haier.com/cn/services_supports/overview/cooling/service_guarantee/warranty/");
+			if (checkHaierPinpai()) {
+				BrowserActivity.startActivity(mContext, "http://www.haier.com/cn/services_supports/overview/cooling/service_guarantee/warranty/", mContext.getString(R.string.button_policy));
+			}
 			break;
 		case R.id.button_guide:
 			break;
@@ -212,15 +216,24 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		case R.id.button_onekey_install:
 			 BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
 			 HomeObject.setHomeObject(mHomeObject);
-			ModleSettings.doChoose(mContext, ModleSettings.createMyInstallDefaultBundle(mContext));
+			ModleSettings.doChoose(mContext, mBundles);
 			break;
 		case R.id.button_onekey_repair:
 			 BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
 			 HomeObject.setHomeObject(mHomeObject);
-			ModleSettings.doChoose(mContext, ModleSettings.createMyRepairDefaultBundle(mContext));
+			ModleSettings.doChoose(mContext, mBundles);
 			break;
 		}
 		
+	}
+	
+	private boolean checkHaierPinpai() {
+		boolean result = HaierServiceObject.isHaierPinpai(mBaoxiuCardObject.mPinPai);
+		if (!result) {
+			//不是海尔的品牌，我们给个提示
+			MyApplication.getInstance().showMessage(R.string.msg_pinpai_haier_suppot_only);
+		}
+		return result;
 	}
 
 	private void showEmptyInputToast(int resId) {

@@ -139,7 +139,7 @@ public class ModleSettings {
 				}
 				return;
 			case R.id.model_feedback:
-				BrowserActivity.startActivity(_context, "http://m.rrs.com/rrsm/track/verify.html");
+				BrowserActivity.startActivity(_context, "http://m.rrs.com/rrsm/track/verify.html", null);
 				return;
 			}
 			

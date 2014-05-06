@@ -57,6 +57,10 @@ public final class BrowserActivity extends BaseActionbarActivity {
 		if (isFinishing()) {
 			return;
 		}
+		String title = getIntent().getStringExtra(Intents.EXTRA_NAME);
+		if (!TextUtils.isEmpty(title)) {
+			setTitle(title);
+		}
 		setContentView(R.layout.activity_browser);
 
 		webView = (WebView) findViewById(R.id.webview);
@@ -135,9 +139,12 @@ public final class BrowserActivity extends BaseActionbarActivity {
 		return !TextUtils.isEmpty(mUrl);
 	}
 	
-	public static void startActivity(Context context, String url) {
+	public static void startActivity(Context context, String url, String title) {
 		Intent intent = new Intent(context, BrowserActivity.class);
 		intent.putExtra(Intents.EXTRA_ADDRESS, url);
+		if (!TextUtils.isEmpty(title)) {
+			intent.putExtra(Intents.EXTRA_NAME, title);
+		}
 		context.startActivity(intent);
 	}
 

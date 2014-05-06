@@ -240,7 +240,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		if (TextUtils.isEmpty(base64Str)) {
 			return;
 		}
-		DebugUtils.logE(TAG, "base64Str.len " + base64Str.length());
+		DebugUtils.logE(TAG, "base64Str.len " + base64Str.length() + " for bid " + cardObject.mBID);
 		base64Str = base64Str.replaceAll(" ", "");
     	if (TextUtils.isEmpty(base64Str)) {
     		 DebugUtils.logE(TAG, "find empty original text encoded by base64, so we just skip decode bill bitmap.");
