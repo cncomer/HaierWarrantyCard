@@ -109,8 +109,15 @@ public class JumpActivity extends Activity {
 	}
 	
 	private void launchMainActivityNoDelay() {
-		MainActivity.startActivityForTop(mContext);
-		finish();
+		MyApplication.getInstance().postDelay(new Runnable() {
+
+			@Override
+			public void run() {
+				MainActivity.startActivityForTop(mContext);
+				finish();
+			}
+			
+		}, 1000);
 		
 	}
 	
