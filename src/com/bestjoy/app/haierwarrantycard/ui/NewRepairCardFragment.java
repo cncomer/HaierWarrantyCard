@@ -525,6 +525,33 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 				//mMyTimePickerDialog.getButton(BUTTON_POSITIVE).setEnabled(false);
 			}
 		}
+
+		@Override
+		public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+			if(minute != 0) {
+				if(mToast != null) {
+					mToast.setText(R.string.select_clock_tips);
+				} else {					
+					mToast = Toast.makeText(this.getContext(), R.string.select_clock_tips, Toast.LENGTH_LONG);
+				}
+				mToast.show();
+				mMyTimePickerDialog.getButton(BUTTON_POSITIVE).setEnabled(false);
+				return;
+			} else {
+				mMyTimePickerDialog.getButton(BUTTON_POSITIVE).setEnabled(true);
+			}
+			if(hourOfDay < 8 || hourOfDay > 19) {
+				if(mToast != null) {
+					mToast.setText(R.string.select_time_out_of_service_tips);
+				} else {					
+					mToast = Toast.makeText(this.getContext(), R.string.select_time_out_of_service_tips, Toast.LENGTH_LONG);
+				}
+				mToast.show();
+				mMyTimePickerDialog.getButton(BUTTON_POSITIVE).setEnabled(false);
+			} else {
+				mMyTimePickerDialog.getButton(BUTTON_POSITIVE).setEnabled(true);
+			}
+		}
 	}
 
 	@Override
