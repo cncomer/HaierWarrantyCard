@@ -287,7 +287,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 				case R.id.model_install:
 				case R.id.model_repair:
 					mBundles.putBoolean(Intents.EXTRA_HAS_REGISTERED, true);
-					NewCardActivity.startIntent(mContext, mBundles);
+					NewCardActivity.startIntentClearTop(mContext, mBundles);
 					finish();
 					break;
 					default ://否则回到主界面

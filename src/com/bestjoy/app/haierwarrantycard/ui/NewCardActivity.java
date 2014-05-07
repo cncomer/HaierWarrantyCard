@@ -215,7 +215,14 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 	
 	public static void startIntent(Context context, Bundle bundle) {
 		Intent intent = new Intent(context, NewCardActivity.class);
+		if (bundle != null) intent.putExtras(bundle);
+		context.startActivity(intent);
+	}
+	
+	public static void startIntentClearTop(Context context, Bundle bundle) {
+		Intent intent = new Intent(context, NewCardActivity.class);
 		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
 		if (bundle != null) intent.putExtras(bundle);
 		context.startActivity(intent);
 	}

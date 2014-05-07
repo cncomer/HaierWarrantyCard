@@ -133,7 +133,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 				case R.id.model_repair:
 //					MyChooseDevicesActivity.startIntent(mContext, ModleSettings.createMyCardDefaultBundle(mContext));
 					mBundles.putBoolean(Intents.EXTRA_HAS_REGISTERED, true);
-					NewCardActivity.startIntent(mContext, mBundles);
+					NewCardActivity.startIntentClearTop(mContext, mBundles);
 					finish();
 					break;
 					default : //其他情况我们回到主界面，海尔要求
