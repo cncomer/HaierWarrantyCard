@@ -61,10 +61,8 @@
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.NewCardActivity"
             android:screenOrientation="portrait"
+            android:launchMode="singleTop"
             android:label="@string/button_new_card" />
-        <activity
-            android:name="com.bestjoy.app.haierwarrantycard.ui.MyCardActivity"
-            android:label="@string/button_my_card" />
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.RepairActivity"
             android:label="@string/activity_title_repair" 

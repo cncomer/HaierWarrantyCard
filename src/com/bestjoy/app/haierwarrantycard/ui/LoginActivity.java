@@ -28,6 +28,7 @@ import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
+import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
 
 public class LoginActivity extends BaseActionbarActivity implements View.OnClickListener{
@@ -40,6 +41,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 	public static AccountObject mAccountObject;
 	/**进入界面请求,如新建我的保修卡进来的*/
 	private int mModelId;
+	private Bundle mBundles;
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
@@ -52,7 +54,8 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 		if (isFinishing()) {
 			return ;
 		}
-		mModelId = ModleSettings.getModelIdFromBundle(getIntent().getExtras());
+		mBundles = getIntent().getExtras();
+		mModelId = ModleSettings.getModelIdFromBundle(mBundles);
 		setContentView(R.layout.activity_login_20140415);
 		initViews();
 	}
@@ -128,7 +131,9 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 				case R.id.model_my_card:
 				case R.id.model_install:
 				case R.id.model_repair:
-					MyChooseDevicesActivity.startIntent(mContext, ModleSettings.createMyCardDefaultBundle(mContext));
+//					MyChooseDevicesActivity.startIntent(mContext, ModleSettings.createMyCardDefaultBundle(mContext));
+					mBundles.putBoolean(Intents.EXTRA_HAS_REGISTERED, true);
+					NewCardActivity.startIntent(mContext, mBundles);
 					finish();
 					break;
 					default : //其他情况我们回到主界面，海尔要求

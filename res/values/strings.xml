@@ -282,16 +282,14 @@
          <string name="msg_app_releasenote">"更新说明:"</string>
           <string name="msg_app_release_time">"更新时间:%s"</string>
            <string name="msg_app_release_size">"软件大小:%s"</string>
-         <string name="button_close">关闭</string>
          <string name="button_install">安装</string>
-         <string name="dialog_msg_media_unmounted">无法访问外置存储卡,请检查....</string>
          <string name="status_downloading">正在下载(%d%%)....</string>
           <string name="dialog_msg_download_unfinish_on_exit">下载未完成，是否取消并退出?</string>
           <string name="dialog_msg_download_unfinish">下载未完成，是否取消?</string>
          <!-- 自动更新 end -->
          
          <string name="pinpai_haier">海尔</string>
-         <string name="msg_pinpai_haier_suppot_only">对不起，目前只支持海尔</string>
+         <string name="msg_pinpai_haier_suppot_only">暂未开放</string>
          <string name="msg_no_bxphone">对不起，该保修卡没有设置售后服务电话</string>
          <string name="must_haier_confirm_yuyue">目前只有海尔产品才接受电子预约服务，是否直接拨打厂家电话？</string>
          <string name="none_select_tips">没有选择任何条目</string>
@@ -305,7 +303,6 @@
           <string name="msg_delete_home_confirm">该操作将同时删除选择的家在服务器和本地的数据，将不可恢复，是否确定要这么做?</string>
            <string name="msg_delete_account_confirm">该操作将删除本地账户数据，包括全部的家信息和保修卡信息，是否确定要这么做?</string>
          
-          <string name="button_qa">常见问题</string>
          <string name="button_policy">保修政策</string>
          <string name="button_guide">使用说明书</string>
          

@@ -280,12 +280,14 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			if (resultCode == Activity.RESULT_OK) {
 				// login successfully
 				MyApplication.getInstance().showMessage(R.string.msg_login_confirm_success);
-				//注册成功，如果是先新建后注册，那么回到选择列表
+				//注册成功，如果是先新建后注册，那么回到新建界面
 				int modelId = ModleSettings.getModelIdFromBundle(mBundles);
 				switch(modelId) {
 				case R.id.model_my_card:
 				case R.id.model_install:
 				case R.id.model_repair:
+					mBundles.putBoolean(Intents.EXTRA_HAS_REGISTERED, true);
+					NewCardActivity.startIntent(mContext, mBundles);
 					finish();
 					break;
 					default ://否则回到主界面

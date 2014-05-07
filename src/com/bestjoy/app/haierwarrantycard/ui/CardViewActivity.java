@@ -202,12 +202,12 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			break;
 		case R.id.button_qa:
 			if (checkHaierPinpai()) {
-				BrowserActivity.startActivity(mContext, "http://www.haier.com/cn/services_supports/overview/cooling/daily_use/troubles/", mContext.getString(R.string.button_qa));
+				BrowserActivity.startActivity(mContext, "http://m.rrs.com/rrsm/qa/qa.html", mContext.getString(R.string.button_qa));
 			}
 			break;
 		case R.id.button_policy:
 			if (checkHaierPinpai()) {
-				BrowserActivity.startActivity(mContext, "http://www.haier.com/cn/services_supports/overview/cooling/service_guarantee/warranty/", mContext.getString(R.string.button_policy));
+				BrowserActivity.startActivity(mContext, "http://m.rrs.com/rrsm/policy_fee/policy_fee.html", mContext.getString(R.string.button_policy));
 			}
 			break;
 		case R.id.button_guide:

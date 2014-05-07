@@ -32,7 +32,10 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 	private Bundle mBundles;
 	/**表示是否是第一次进入*/
 	private boolean mIsFirstOnResume = true;
-	private ContentObserver mContentObserver;
+	/**
+	 * 仅仅用作新建的时候并没有登录，这会导致我们需要前往登录/注册界面，一旦登录成功后会返回该界面这个过程使用，其余情况请忽略改变量.
+	 */
+	private boolean mHasRegistered = false;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -99,19 +102,6 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 		
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
-		
-		//add by chenkai, 针对现新建卡-在登录注册的情况 begin
-		mContentObserver = new ContentObserver(new Handler()) {
-			@Override
-			public void onChange(boolean selfChange) {
-				super.onChange(selfChange);
-				mContent.updateInfoInterface(HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(0));
-				//更新联系人信息，默认是用的账户信息
-				mContent.updateInfoInterface(HaierAccountManager.getInstance().getAccountObject());
-			}
-		};
-		getContentResolver().registerContentObserver(BjnoteContent.Accounts.CONTENT_URI, true, mContentObserver);
-		//add by chenkai, 针对现新建卡-在登录注册的情况 end
 	}
 	
 	@Override
@@ -146,13 +136,18 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 			mContent.updateInfoInterface(HaierAccountManager.getInstance().getAccountObject());
 			mIsFirstOnResume = false;
 		}
+		//add by chenkai, 如果已经前往登录过了，我们需要重新将账户信息和默认家信息填充.
+		if (mHasRegistered) {
+			mHasRegistered = false;
+			mContent.updateInfoInterface(HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(0));
+			//更新联系人信息，默认是用的账户信息
+			mContent.updateInfoInterface(HaierAccountManager.getInstance().getAccountObject());
+		}
 	}
 	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		//add by chenkai, 针对现新建卡-在登录注册的情况
-		getContentResolver().unregisterContentObserver(mContentObserver);
 	}
 
 	@Override
@@ -212,8 +207,15 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 		
 	}
 	
+	public void onNewIntent(Intent intent){
+		super.onNewIntent(intent);
+		DebugUtils.logD(TAG, "onNewIntent " + intent);
+		mHasRegistered = intent.getBooleanExtra(Intents.EXTRA_HAS_REGISTERED, false);
+	}
+	
 	public static void startIntent(Context context, Bundle bundle) {
 		Intent intent = new Intent(context, NewCardActivity.class);
+		intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		if (bundle != null) intent.putExtras(bundle);
 		context.startActivity(intent);
 	}
