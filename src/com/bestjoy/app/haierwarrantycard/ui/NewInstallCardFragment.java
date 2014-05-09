@@ -2,7 +2,6 @@ package com.bestjoy.app.haierwarrantycard.ui;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
@@ -19,7 +18,6 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -424,8 +422,9 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		MyApplication.getInstance().showMessage(getResources().getString(R.string.input_type_please_input) + msg);
 	}
 
+	MyDatePickerDialog mMyDatePickerDialog;
 	private void showDatePickerDialog() {
-        new MyDatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+		mMyDatePickerDialog = new MyDatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
 			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 				mCalendar.set(year, monthOfYear, dayOfMonth);
@@ -433,19 +432,57 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 				mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
 			}
 				
-		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH))
-		.show();
+		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
+		mMyDatePickerDialog.show();
+		
+		if(!checkInstallDate())
+			mMyDatePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setEnabled(false);
 	}
 	
+	private boolean checkInstallDate() {
+		Calendar cal = (Calendar) mCalendar.clone();
+		cal.add(Calendar.DAY_OF_YEAR, 1);
+		return mCalendar.get(Calendar.YEAR) >= cal.get(Calendar.YEAR)
+				&& mCalendar.get(Calendar.MONTH) >= cal.get(Calendar.MONTH)
+				&& mCalendar.get(Calendar.DAY_OF_MONTH) > cal.get(Calendar.DAY_OF_MONTH);
+	}
+	
+	private boolean checkInstallDate(int year, int month, int day) {
+		return year >= mCalendar.get(Calendar.YEAR)
+				&& month >= mCalendar.get(Calendar.MONTH)
+				&& day > mCalendar.get(Calendar.DAY_OF_MONTH)
+				|| year > mCalendar.get(Calendar.YEAR)
+				|| month > mCalendar.get(Calendar.MONTH)
+				&& year >= mCalendar.get(Calendar.YEAR);
+	}
+
 	class MyDatePickerDialog extends DatePickerDialog {
 		public MyDatePickerDialog(Context context, OnDateSetListener callBack,
 				int year, int monthOfYear, int dayOfMonth) {
 			super(context, callBack, year, monthOfYear, dayOfMonth);
+			if(!checkInstallDate()) {
+				if(mToast != null) {
+					mToast.setText(R.string.select_date_out_of_service_tips);
+				} else {
+					mToast = Toast.makeText(this.getContext(), R.string.select_date_out_of_service_tips, Toast.LENGTH_LONG);
+				}
+				mToast.show();
+			}
 		}
 
 		@Override
 		public void onDateChanged(DatePicker view, int year, int month, int day) {
-			super.onDateChanged(view, year, month, day);
+			if(!checkInstallDate(year, month, day)) {
+				if(mToast != null) {
+					mToast.setText(R.string.select_date_out_of_service_tips);
+				} else {
+					mToast = Toast.makeText(this.getContext(), R.string.select_date_out_of_service_tips, Toast.LENGTH_LONG);
+				}
+				mToast.show();
+				mMyDatePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setEnabled(false);
+			} else {
+				mMyDatePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setEnabled(true);
+			}
 		}
 	}
 	
