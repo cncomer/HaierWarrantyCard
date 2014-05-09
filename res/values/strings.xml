@@ -309,4 +309,5 @@
          <string name="select_clock_tips">只能选择整点时钟</string>
          <string name="select_time_out_of_service_tips">只能选择8:00-19:00之间的时间</string>
          <string name="select_date_out_of_service_tips">预约安装时间必须大于今天</string>
+         <string name="product_detail_repair_tips">因为各品牌的保修政策有差异，具体保修时间请以厂家约定的为准。本软件计算仅供参考。</string>
 </resources>

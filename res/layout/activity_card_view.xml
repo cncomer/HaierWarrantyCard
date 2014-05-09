@@ -336,7 +336,12 @@
             </LinearLayout>
             <View
                 android:layout_width="fill_parent"
-                android:layout_height="30dip" />
+                android:layout_height="20dip" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#ff716e6e"
+                android:text="@string/product_detail_repair_tips" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>
