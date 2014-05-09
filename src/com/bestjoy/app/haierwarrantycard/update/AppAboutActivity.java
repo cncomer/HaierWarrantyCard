@@ -46,6 +46,7 @@ public class AppAboutActivity extends BaseActionbarActivity implements View.OnCl
 		
 		mServiceAppInfo = ServiceAppInfo.read();
 		initView();
+		UpdateService.startUpdateServiceForce(mContext);
 	}
 	
 	public void initView() {
@@ -55,6 +56,7 @@ public class AppAboutActivity extends BaseActionbarActivity implements View.OnCl
 			
 			mButtonUpdate = (LinearLayout) findViewById(R.id.button_update);
 			mBtIntroduce = (Button) findViewById(R.id.button_introduce);
+			
 			mBtnHome = (Button) findViewById(R.id.button_home);
 			mBtnHelp = (Button) findViewById(R.id.button_help);
 			
@@ -62,6 +64,10 @@ public class AppAboutActivity extends BaseActionbarActivity implements View.OnCl
 			mBtIntroduce.setOnClickListener(this);
 			mBtnHome.setOnClickListener(this);
 			mBtnHelp.setOnClickListener(this);
+			
+			mBtIntroduce.setVisibility(View.GONE);
+			mBtnHome.setVisibility(View.GONE);
+			mBtnHelp.setVisibility(View.GONE);
 		}
 		mVersionName.setText(mCurrentVersionCodeName);
 		if (mServiceAppInfo != null && mServiceAppInfo.mVersionCode > mCurrentVersion) {

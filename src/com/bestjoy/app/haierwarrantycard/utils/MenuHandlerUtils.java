@@ -9,6 +9,7 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.LoginActivity;
 import com.bestjoy.app.haierwarrantycard.ui.RegisterActivity;
+import com.bestjoy.app.haierwarrantycard.ui.SettingsPreferenceActivity;
 import com.bestjoy.app.haierwarrantycard.update.AppAboutActivity;
 
 public class MenuHandlerUtils {
@@ -36,6 +37,7 @@ public class MenuHandlerUtils {
         	RegisterActivity.startIntent(context, null);
       	   break;
         case R.string.menu_setting:
+        	SettingsPreferenceActivity.startActivity(context);
       	   break;
         case R.string.menu_about:
         	context.startActivity(AppAboutActivity.createIntent(context));
@@ -55,6 +57,8 @@ public class MenuHandlerUtils {
 //    	} else {
 //    		menu.findItem(R.string.menu_login).setVisible(true);
 //    	}
+    	//暂不支持
+    	menu.findItem(R.string.menu_setting).setVisible(false);
 		return true;
 	}
 }

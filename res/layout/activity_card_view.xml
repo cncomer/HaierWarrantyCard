@@ -73,6 +73,7 @@
                     android:layout_marginTop="4dip"
                     android:layout_toRightOf="@+id/avator"
                     android:clickable="true"
+                    android:visibility="gone"
                     android:src="@drawable/button_guide" />
                 
                  <ImageView
@@ -88,6 +89,11 @@
             </RelativeLayout>
 
 
+            <TextView android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dip"
+                android:textSize="10sp"
+                android:text="@string/baoxiu_policy_notice"/>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

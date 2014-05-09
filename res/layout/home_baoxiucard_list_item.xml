@@ -70,7 +70,9 @@
            android:layout_height="wrap_content"
            android:textColor="@color/wt"
            android:singleLine="true"
+           android:textSize="12sp"
             android:layout_marginTop="2dip"
+            android:text="3650天"
            android:layout_gravity="center_horizontal"/>
     </FrameLayout>
     

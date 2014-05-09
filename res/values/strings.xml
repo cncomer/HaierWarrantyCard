@@ -308,4 +308,19 @@
          
          <string name="select_clock_tips">只能选择整点时钟</string>
          <string name="select_time_out_of_service_tips">只能选择8:00-19:00之间的时间</string>
+         <string name="usage_tips">小提示</string>
+         <string name="button_iknown">知道了</string>
+         <string name="baoxiu_policy_notice">因为各品牌的保修政策有差异，具体保修时间请以厂家约定的为准。本软件计算仅供参考</string>
+         <string name="baoxiu_choose_tip">"提供了侧滑菜单来帮助你快速选择需要的产品，你可以通过点击选择按钮，或是从屏幕右边缘向左滑动手指。"</string>
+         
+         <string name="preference_key_account_title">账户设置</string>
+         <string name="preference_key_account_name_title">修改用户名</string>
+         <string name="preference_key_account_password_title">修改账户密码</string>
+         <string name="button_guide">使用说明书</string>
+         <string name="hint_input_old_password">请输入你的当前密码</string>
+         <string name="hint_input_new_password">请输入你的新密码</string>
+         <string name="hint_reinput_new_password">请再次输入你的新密码</string>
+         
+         <string name="msg_input_old_password_error">输入的当前密码有误，请重新输入...</string>
+         <string name="msg_input_new_password_error">你输入的新密码不一致，请确认重新输入</string>
 </resources>

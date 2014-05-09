@@ -125,6 +125,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		 mSaveBtn.setOnClickListener(this);
 			
 		view.findViewById(R.id.button_scan_qrcode).setOnClickListener(this);
+		
+		view.findViewById(R.id.menu_choose).setOnClickListener(this);
 		return view;
 	}
 
@@ -147,7 +149,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		mBillImageView.setImageBitmap(null);
 		mBaoxiuCardObject.clear();
 	}
-
+	
 	@Override
 	public Dialog onCreateDialog(int id) {
 		switch(id) {
@@ -315,6 +317,10 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			 } else {
 				 showDialog(DIALOG_DATA_NOT_CONNECTED);
 			 }
+			break;
+		case R.id.menu_choose:
+			//如果内容为空，我们显示侧边栏
+			((NewCardActivity) getActivity()).getSlidingMenu().showMenu(true);
 			break;
 		}
 		

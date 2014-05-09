@@ -40,20 +40,22 @@ public class UpdateService extends Service implements ComConnectivityManager.Con
 	private static String TAG = "UpdateService";
 	private static final boolean DEBUG = false;
 
+	/**强制检查更新*/
+	public static final String ACTION_UPDATE_CHECK_FORCE = "com.bestjoy.app.haierwarrantycard.intent.ACTION_UPDATE_CHECK_FORCE";
 	/**开始检查更新*/
-	public static final String ACTION_UPDATE_CHECK = "com.shwy.bestjoy.bjnote.varrantcard.intent.ACTION_UPDATE_CHECK";
+	public static final String ACTION_UPDATE_CHECK = "com.bestjoy.app.haierwarrantycard.intent.ACTION_UPDATE_CHECK";
 	/**用户强制立即检查更新*/
-	public static final String ACTION_UPDATE_CHECK_FORCE_BY_USER = "com.shwy.bestjoy.varrantcard.bjnote.intent.ACTION_UPDATE_CHECK_FORCE_BY_USER";
+	public static final String ACTION_UPDATE_CHECK_FORCE_BY_USER = "com.bestjoy.app.haierwarrantycard.intent.ACTION_UPDATE_CHECK_FORCE_BY_USER";
 	/**自动检查开始了*/
-	public static final String ACTION_UPDATE_CHECK_AUTO = "com.shwy.bestjoy.bjnote.varrantcard.intent.ACTION_UPDATE_CHECK_AUTO";
+	public static final String ACTION_UPDATE_CHECK_AUTO = "com.bestjoy.app.haierwarrantycard.intent.ACTION_UPDATE_CHECK_AUTO";
 	/**开始下载*/
-	public static final String ACTION_DOWNLOAD_START = "com.shwy.bestjoy.bjnote.varrantcard.intent.ACTION_DOWNLOAD_START";
+	public static final String ACTION_DOWNLOAD_START = "com.bestjoy.app.haierwarrantycard.intent.ACTION_DOWNLOAD_START";
 	/**结束下载*/
-	public static final String ACTION_DOWNLOAD_END = "com.shwy.bestjoy.bjnote.varrantcard.intent.ACTION_DOWNLOAD_END";
+	public static final String ACTION_DOWNLOAD_END = "com.bestjoy.app.haierwarrantycard.intent.ACTION_DOWNLOAD_END";
 	/**下载进度*/
-	public static final String ACTION_DOWNLOAD_PROGRESS = "com.shwy.bestjoy.bjnote.varrantcard.intent.ACTION_DOWNLOAD_PROGRESS";
+	public static final String ACTION_DOWNLOAD_PROGRESS = "com.bestjoy.app.haierwarrantycard.intent.ACTION_DOWNLOAD_PROGRESS";
 	/**没有网络*/
-	public static final String ACTION_UNAVAILABLE_NETWORK = "com.shwy.bestjoy.bjnote.varrantcard.intent.ACTION_UNAVAILABLE_NETWORK";
+	public static final String ACTION_UNAVAILABLE_NETWORK = "com.bestjoy.app.haierwarrantycard.intent.ACTION_UNAVAILABLE_NETWORK";
 	private Handler mWorkServiceHandler, mHandler;
 	private static final int MSG_CHECK_UPDATE = 1000;
 	/**开始下载*/
@@ -153,7 +155,8 @@ public class UpdateService extends Service implements ComConnectivityManager.Con
 	private void onServiceIntent(String action) {
 		if (ACTION_UPDATE_CHECK.equals(action)
 				|| Intent.ACTION_BOOT_COMPLETED.equals(action)
-				|| Intent.ACTION_USER_PRESENT.equals(action)) {
+				|| Intent.ACTION_USER_PRESENT.equals(action)
+				|| ACTION_UPDATE_CHECK_FORCE.equals(action)) {
 			long currentTime = System.currentTimeMillis();
 			DebugUtils.logD(TAG, "onServiceIntent currentTime" + DateUtils.TOPIC_SUBJECT_DATE_TIME_FORMAT.format(new Date(currentTime)));
 			long lastUpdateCheckTime = ServiceAppInfo.getLatestCheckTime();
@@ -171,6 +174,11 @@ public class UpdateService extends Service implements ComConnectivityManager.Con
 			} else {
 				DebugUtils.logD(TAG, "connectivity is not connected.");
 				return;
+			}
+			
+			if (ACTION_UPDATE_CHECK_FORCE.equals(action)) {
+				DebugUtils.logD(TAG, "force updating....");
+				needCheckUpdate = true;
 			}
 			
 			if (!DEBUG && !needCheckUpdate) {
@@ -334,6 +342,11 @@ public class UpdateService extends Service implements ComConnectivityManager.Con
 	public static void startUpdateServiceOnUserPresent(Context context) {
 		Intent service = new Intent(context, UpdateService.class);
 		service.setAction(Intent.ACTION_USER_PRESENT);
+		context.startService(service);
+	}
+	public static void startUpdateServiceForce(Context context) {
+		Intent service = new Intent(context, UpdateService.class);
+		service.setAction(ACTION_UPDATE_CHECK_FORCE);
 		context.startService(service);
 	}
 }
