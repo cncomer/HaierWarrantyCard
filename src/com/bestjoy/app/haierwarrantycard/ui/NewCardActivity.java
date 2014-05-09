@@ -1,21 +1,21 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.ContentObserver;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
-import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.shwy.bestjoy.utils.Intents;
@@ -32,6 +32,7 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 	private Bundle mBundles;
 	/**表示是否是第一次进入*/
 	private boolean mIsFirstOnResume = true;
+	private static final String  KEY_FIRST_SHOW = "NewCardActivity.first";
 	/**
 	 * 仅仅用作新建的时候并没有登录，这会导致我们需要前往登录/注册界面，一旦登录成功后会返回该界面这个过程使用，其余情况请忽略改变量.
 	 */
@@ -67,7 +68,6 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 		
 		if (mMenu == null) {
 			mMenu = new NewCardChooseFragment();
-			
 		}
 		
 		// set the Above View
@@ -113,12 +113,10 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (getSlidingMenu().isMenuShowing()) {
-			menu.findItem(R.string.menu_choose).setVisible(false);
-			menu.findItem(R.string.menu_search).setVisible(true);
+//			menu.findItem(R.string.menu_search).setVisible(true);
 			menu.findItem(R.string.menu_done).setVisible(true);
 		} else {
-			menu.findItem(R.string.menu_choose).setVisible(true);
-			menu.findItem(R.string.menu_search).setVisible(false);
+//			menu.findItem(R.string.menu_search).setVisible(false);
 			menu.findItem(R.string.menu_done).setVisible(false);
 		}
 		return super.onPrepareOptionsMenu(menu);
@@ -143,6 +141,23 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 			//更新联系人信息，默认是用的账户信息
 			mContent.updateInfoInterface(HaierAccountManager.getInstance().getAccountObject());
 		}
+		
+		boolean first = MyApplication.getInstance().mPreferManager.getBoolean(KEY_FIRST_SHOW, true);
+		if (first) {
+			//第一次，我们需要显示使用向导
+			new AlertDialog.Builder(NewCardActivity.this)
+			.setTitle(R.string.usage_tips)
+			.setMessage(R.string.baoxiu_choose_tip)
+			.setCancelable(false)
+			.setPositiveButton(R.string.button_iknown, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					MyApplication.getInstance().mPreferManager.edit().putBoolean(KEY_FIRST_SHOW, false).commit();
+				}
+			})
+			.show();
+		}
 	}
 	
 	@Override
@@ -154,9 +169,6 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
 		case R.string.menu_search:
-			break;
-		case R.string.menu_choose:
-			getSlidingMenu().showMenu(true);
 			break;
 		case R.string.menu_done:
 			BaoxiuCardObject object = mMenu.getBaoxiuCardObject();

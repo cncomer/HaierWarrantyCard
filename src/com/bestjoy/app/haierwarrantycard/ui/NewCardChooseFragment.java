@@ -6,11 +6,11 @@ import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 
+import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.Cursor;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextPaint;
@@ -189,9 +189,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 	public BaoxiuCardObject getBaoxiuCardObject() {
 		return mBaoxiuCardObject;
 	}
-
-
-
+	
 	private LoadDataAsyncTask mLoadDataAsyncTask;
 	public void loadDataAsync(ListView listview) {
 		AsyncTaskUtils.cancelTask(mLoadDataAsyncTask);
@@ -432,6 +430,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 					mPinpaiListViews.setTag(null);
 					mXinghaoListViews.setTag(null);
 					parent.setVisibility(View.GONE);
+					mXiaolei.performClick();
 				}
 				break;
 			case R.id.xiaolei:
@@ -450,6 +449,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 					mPinpaiListViews.setTag(null);
 					mXinghaoListViews.setTag(null);
 					parent.setVisibility(View.GONE);
+					mPinpai.performClick();
 				}
 				break;
 			case R.id.pinpai:
@@ -466,6 +466,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 					
 					mXinghaoListViews.setTag(null);
 					parent.setVisibility(View.GONE);
+					mXinghao.performClick();
 				}
 				break;
 			case R.id.xinghao:

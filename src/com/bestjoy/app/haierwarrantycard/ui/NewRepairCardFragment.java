@@ -140,6 +140,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		 mYuyueDate.setOnClickListener(this);
 		 mYuyueTime.setOnClickListener(this);
 		 
+		 view.findViewById(R.id.menu_choose).setOnClickListener(this);
 		return view;
 	}
 
@@ -252,6 +253,10 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			break;
 		case R.id.button_save:
 			createRepairCard();
+			break;
+		case R.id.menu_choose:
+			//如果内容为空，我们显示侧边栏
+			((NewCardActivity) getActivity()).getSlidingMenu().showMenu(true);
 			break;
 		}
 		

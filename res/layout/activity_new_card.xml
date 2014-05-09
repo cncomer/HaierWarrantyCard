@@ -145,6 +145,7 @@
 			    <TextView style="@style/ProductInfo"
 			        android:text="@string/product_buy_delay_time"/>
 			    <EditText android:id="@+id/product_buy_delay_time"
+			        android:inputType="numberDecimal"
 			        style="@style/ProductInfoInput"/>
 			</LinearLayout>
 			

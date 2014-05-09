@@ -103,6 +103,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		 mSaveBtn.setOnClickListener(this);
 			
 		view.findViewById(R.id.button_scan_qrcode).setOnClickListener(this);
+		view.findViewById(R.id.menu_choose).setOnClickListener(this);
 		return view;
 	}
 
@@ -209,6 +210,10 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			break;
 		case R.id.button_save:
 			createNewInatallCard();
+			break;
+		case R.id.menu_choose:
+			//如果内容为空，我们显示侧边栏
+			((NewCardActivity) getActivity()).getSlidingMenu().showMenu(true);
 			break;
 		}
 		
