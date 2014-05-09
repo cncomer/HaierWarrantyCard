@@ -58,7 +58,8 @@ public class MenuHandlerUtils {
 //    		menu.findItem(R.string.menu_login).setVisible(true);
 //    	}
     	//暂不支持
-    	menu.findItem(R.string.menu_setting).setVisible(false);
+    	MenuItem item = menu.findItem(R.string.menu_setting);
+    	if (item != null) item.setVisible(false);
 		return true;
 	}
 }

@@ -189,7 +189,7 @@ public class NewHomeActivity extends BaseActionbarActivity {
 			String[] paths = new String[LENGTH];
 			urls[0] = HaierServiceObject.SERVICE_URL + "UpdateAddrByID.ashx?AID=";
 			paths[0] = String.valueOf(mHomeObject.mHomeAid);
-			urls[1] = "&ShenFen==";
+			urls[1] = "&ShenFen=";
 			paths[1] = mHomeObject.mHomeProvince;
 			urls[2] = "&City=";
 			paths[2] = mHomeObject.mHomeCity;
