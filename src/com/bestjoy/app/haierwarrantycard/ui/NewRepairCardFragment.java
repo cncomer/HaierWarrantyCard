@@ -13,7 +13,6 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -37,10 +36,9 @@ import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
-import com.bestjoy.app.haierwarrantycard.ui.NewInstallCardFragment.MyTimePickerDialog;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
-import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditPopView;
+import com.bestjoy.app.haierwarrantycard.view.HaierProCityDisEditPopView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
@@ -56,7 +54,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	//联系人信息
 	private EditText mContactNameInput, mContactTelInput;
 	//private ProCityDisEditView mProCityDisEditView;
-	private ProCityDisEditPopView mProCityDisEditPopView;
+	private HaierProCityDisEditPopView mProCityDisEditPopView;
 	
 	//预约信息
 	private TextView mYuyueDate, mYuyueTime;
@@ -109,7 +107,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		 /*mProCityDisEditView = (ProCityDisEditView) view.findViewById(R.id.home);
 		 //不要显示HomeName输入框
 		 mProCityDisEditView.setHomeEditVisiable(View.GONE);*/
-		 mProCityDisEditPopView = new ProCityDisEditPopView(this.getActivity(), view);
+		 mProCityDisEditPopView = new HaierProCityDisEditPopView(this.getActivity(), view);
 //		 mProCityDisEditPopView.setOnClickListener(new OnClickListener() {
 //
 //			@Override
@@ -295,7 +293,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			String[] paths = new String[LENGTH];
 			getBaoxiuCardObject();
 			HomeObject homeObject = mProCityDisEditPopView.getHomeObject();
-			urls[0] = HaierServiceObject.SERVICE_URL + "AddHaierYuyue.ashx?LeiXin=";
+			urls[0] = HaierServiceObject.SERVICE_URL + "NAddHaierYY.ashx?LeiXin=";//AddHaierYuyue.ashx
 			paths[0] = baoxiuCardObject.mLeiXin;
 			urls[1] = "&PinPai=";
 			paths[1] = baoxiuCardObject.mPinPai;

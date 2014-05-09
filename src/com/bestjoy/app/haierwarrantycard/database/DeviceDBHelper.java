@@ -25,13 +25,13 @@ public class DeviceDBHelper {
 	  public static final String DEVICE_PINPAI_CODE = "Code";
 	  public static final String DEVICE_PINPAI_BXPHONE = "TEL";
 	  
-	  public static final String TABLE_NAME_DEVICE_CITY_ = "T_City";
+	  public static final String TABLE_NAME_DEVICE_CITY = "T_City";
 	  public static final String DEVICE_CITY_ID = "CityID";
 	  public static final String DEVICE_CITY_NAME = "CityName";
 	  public static final String DEVICE_CITY_PID = "ProID";
 	  public static final String DEVICE_CITY_SORT = "CitySort";
 	  
-	  public static final String TABLE_NAME_DEVICE_DISTRICT_ = "T_District";
+	  public static final String TABLE_NAME_DEVICE_DISTRICT = "T_District";
 	  public static final String DEVICE_DIS_ID = "Id";
 	  public static final String DEVICE_DIS_NAME = "DisName";
 	  public static final String DEVICE_DIS_CID = "CityID";
@@ -42,6 +42,19 @@ public class DeviceDBHelper {
 	  public static final String DEVICE_PRO_NAME = "ProName";
 	  public static final String DEVICE_PRO_SORT = "ProSort";
 	  public static final String DEVICE_PRO_REMARK = "ProRemark";
+	  
+	  public static final String TABLE_NAME_DEVICE_HAIERREGION = "HaierRegion";
+	  public static final String DEVICE_HAIER_REGION_CODE = "region_code";
+	  public static final String DEVICE_HAIER_COUNTRY = "country";
+	  public static final String DEVICE_HAIER_PROVICE = "province";
+	  public static final String DEVICE_HAIER_CITY = "city";
+	  public static final String DEVICE_HAIER_REGION_NAME = "region_name";
+	  public static final String DEVICE_HAIER_ADMIN_CODE = "admin_code";
+	  public static final String DEVICE_HAIER_PRO_CODE = "pro_code";
+	  public static final String DEVICE_HAIER_CITY_CODE = "city_code";
+	  public static final String DEVICE_HAIER_AREA_CODE = "area_code";
+	  public static final String DEVICE_HAIER_UPDATE_TIME = "update_time";
+	  public static final String DEVICE_HAIER_POST_CODE = "post_code";
 	  
 	  public static boolean isNeedReinstallDeviceDatabase() {
 		  return VERSION > MyApplication.getInstance().mPreferManager.getInt(KEY_VERSION, 0);

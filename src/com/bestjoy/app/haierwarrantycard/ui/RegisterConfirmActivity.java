@@ -9,10 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -30,8 +27,7 @@ import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
-import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditPopView;
-import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView;
+import com.bestjoy.app.haierwarrantycard.view.HaierProCityDisEditPopView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
@@ -40,7 +36,7 @@ import com.shwy.bestjoy.utils.NetworkUtils;
 public class RegisterConfirmActivity extends BaseActionbarActivity implements View.OnClickListener{
 	private static final String TAG = "RegisterActivity";
 
-	private ProCityDisEditPopView mProCityDisEditPopView;
+	private HaierProCityDisEditPopView mProCityDisEditPopView;
 	
 	private EditText mUsrNameEditText;
 	private EditText usrPwdEditText;
@@ -85,7 +81,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	}
 
 	private void initViews() {
-		 mProCityDisEditPopView = new ProCityDisEditPopView(this); 
+		 mProCityDisEditPopView = new HaierProCityDisEditPopView(this); 
 		 usrHomeNameEditText = (EditText) findViewById(R.id.tag);
 		mUsrNameEditText = (EditText) findViewById(R.id.usr_name);
 		usrPwdEditText = (EditText) findViewById(R.id.usr_pwd);

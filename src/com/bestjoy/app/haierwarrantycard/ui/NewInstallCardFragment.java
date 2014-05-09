@@ -36,7 +36,7 @@ import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
-import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditPopView;
+import com.bestjoy.app.haierwarrantycard.view.HaierProCityDisEditPopView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
@@ -51,7 +51,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	private EditText mTypeInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput, mBeizhuTag;
 	//联系人信息
 	private EditText mContactNameInput, mContactTelInput;
-	private ProCityDisEditPopView mProCityDisEditPopView;
+	private HaierProCityDisEditPopView mProCityDisEditPopView;
 	
 	//预约信息
 	private TextView mYuyueDate, mYuyueTime;
@@ -87,7 +87,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		 view.findViewById(R.id.people_info_divider).setBackgroundResource(R.color.light_blue);
 		 mContactNameInput = (EditText) view.findViewById(R.id.contact_name_input);
 		 mContactTelInput = (EditText) view.findViewById(R.id.contact_tel_input);
-		 mProCityDisEditPopView = new ProCityDisEditPopView(this.getActivity(), view); 
+		 mProCityDisEditPopView = new HaierProCityDisEditPopView(this.getActivity(), view); 
 		 
 		 //预约时间
 		 ((TextView) view.findViewById(R.id.yuyue_info_title)).setTextColor(getResources().getColor(R.color.light_blue));
@@ -249,7 +249,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			String[] paths = new String[LENGTH];
 			getBaoxiuCardObject();
 			HomeObject homeObject = mProCityDisEditPopView.getHomeObject();
-			urls[0] = HaierServiceObject.SERVICE_URL + "AddHaierYuyue.ashx?LeiXin=";
+			urls[0] = HaierServiceObject.SERVICE_URL + "NAddHaierYY.ashx?LeiXin=";//AddHaierYuyue.ashx
 			paths[0] = baoxiuCardObject.mLeiXin;
 			urls[1] = "&PinPai=";
 			paths[1] = baoxiuCardObject.mPinPai;

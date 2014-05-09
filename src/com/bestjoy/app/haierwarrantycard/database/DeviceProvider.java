@@ -26,9 +26,10 @@ public class DeviceProvider extends ContentProvider{
 			DeviceDBHelper.TABLE_NAME_DEVICE_XIAOLEI,
 			DeviceDBHelper.TABLE_NAME_DEVICE_PINPAI,
 			DeviceDBHelper.TABLE_NAME_DEVICE_PROVINCE,
-			DeviceDBHelper.TABLE_NAME_DEVICE_CITY_,
-			DeviceDBHelper.TABLE_NAME_DEVICE_DISTRICT_,
+			DeviceDBHelper.TABLE_NAME_DEVICE_CITY,
+			DeviceDBHelper.TABLE_NAME_DEVICE_DISTRICT,
 //			ContactsDBHelper.TABLE_NAME_MYLIFE_CONSUME,
+			DeviceDBHelper.TABLE_NAME_DEVICE_HAIERREGION,
 	};
 	private static final int BASE = 8;
 	
@@ -49,6 +50,19 @@ public class DeviceProvider extends ContentProvider{
 
 	private static final int DISTRICT = 0x0500;
 	private static final int DISTRICT_ID = 0x0501;
+
+	private static final int HAIER_REGION = 0x0600;
+	private static final int HAIER_REGION_CODE = 0x0601;
+	private static final int HAIER_COUNTROY = 0x0602;
+	private static final int HAIER_PROVINCE = 0x0603;
+	private static final int HAIER_CITY = 0x0604;
+	private static final int HAIER_REGION_NAME = 0x0605;
+	private static final int HAIER_ADMIN_CODE = 0x0606;
+	private static final int HAIER_PRO_CODE = 0x0607;
+	private static final int HAIER_CITY_CODE = 0x0608;
+	private static final int HAIER_AREA_CODE = 0x0609;
+	private static final int HAIER_UPDATE_TIME = 0x0610;
+	private static final int HAIER_POST_CODE = 0x0611;
 	
 	private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 	 static {
@@ -72,6 +86,9 @@ public class DeviceProvider extends ContentProvider{
 
 	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "district", DISTRICT);
 	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "district/#", DISTRICT_ID);
+
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "haierregion", HAIER_REGION);
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "haierregion/#", HAIER_REGION_CODE);
 	        
 	        //TODO 增加
 	 }
@@ -130,6 +147,10 @@ public class DeviceProvider extends ContentProvider{
 			break;
 		case DISTRICT_ID:
 			notify = BjnoteContent.District.CONTENT_URI;
+			break;
+		case HAIER_REGION:
+		case HAIER_REGION_CODE:
+			notify = BjnoteContent.HaierRegion.CONTENT_URI;
 			break;
     	}
     	ContentResolver resolver = context.getContentResolver();
@@ -218,6 +239,8 @@ public class DeviceProvider extends ContentProvider{
 			case CITY_ID:
 			case DISTRICT:
 			case DISTRICT_ID:
+			case HAIER_REGION:
+			case HAIER_REGION_CODE:
         	     result = db.query(table, projection, selection, selectionArgs, null, null, sortOrder);
          }
 		return result;
