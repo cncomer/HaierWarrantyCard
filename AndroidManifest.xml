@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bestjoy.app.haierwarrantycard"
     android:versionCode="5"
-    android:versionName="V1.1" >
+    android:versionName="V1.01" >
 
      <supports-screens
         android:anyDensity="true"

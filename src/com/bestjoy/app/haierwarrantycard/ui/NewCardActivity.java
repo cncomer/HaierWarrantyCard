@@ -113,10 +113,10 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (getSlidingMenu().isMenuShowing()) {
-			menu.findItem(R.string.menu_search).setVisible(true);
+//			menu.findItem(R.string.menu_search).setVisible(true);
 			menu.findItem(R.string.menu_done).setVisible(true);
 		} else {
-			menu.findItem(R.string.menu_search).setVisible(false);
+//			menu.findItem(R.string.menu_search).setVisible(false);
 			menu.findItem(R.string.menu_done).setVisible(false);
 		}
 		return super.onPrepareOptionsMenu(menu);
