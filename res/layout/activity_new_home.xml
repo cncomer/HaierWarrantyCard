@@ -23,7 +23,8 @@
             <EditText
                 android:id="@+id/my_home"
                 style="@style/ProductInfoInput"
-				android:hint="@string/my_home"/>
+				android:hint="@string/my_home"
+				android:layout_width="fill_parent"/>
 		    <include layout="@layout/pcd_edit_layout" />
         </LinearLayout>
 
