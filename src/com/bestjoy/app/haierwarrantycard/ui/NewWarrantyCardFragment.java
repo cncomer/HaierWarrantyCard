@@ -82,6 +82,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		setHasOptionsMenu(true);
 		mCalendar = Calendar.getInstance();
 		mBaoxiuCardObject = new BaoxiuCardObject();
+		//清理一遍可能存在的临时发票资源
+		mBaoxiuCardObject.clear();
 		mHandler = new Handler();
 		initTempFile();
 	}

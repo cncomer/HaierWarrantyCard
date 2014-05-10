@@ -10,6 +10,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.InputType;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -301,6 +302,7 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 				convertView = mInflater.inflate(R.layout.grid_item, null);
 				viewHolder = new ViewHolder();
 				viewHolder._title = (TextView) convertView;
+				viewHolder._title.setGravity(Gravity.CENTER_HORIZONTAL);
 				convertView .setTag(viewHolder);
 			} else {
 				viewHolder = (ViewHolder) convertView.getTag();
