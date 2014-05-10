@@ -57,7 +57,7 @@
            />
     </FrameLayout>
     
-    <FrameLayout android:layout_width="wrap_content"
+    <FrameLayout android:layout_width="50dip"
         android:layout_margin="4dip"
     	android:layout_height="wrap_content">
        <ImageView android:id="@+id/zhengji"
@@ -73,6 +73,7 @@
            android:textSize="12sp"
             android:layout_marginTop="2dip"
             android:text="3650天"
+            android:gravity="center_horizontal"
            android:layout_gravity="center_horizontal"/>
     </FrameLayout>
     
