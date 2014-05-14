@@ -27,6 +27,7 @@ import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
+import com.shwy.bestjoy.utils.SecurityUtils;
 
 public class RegisterActivity extends BaseActionbarActivity implements View.OnClickListener{
 	private static final String TAG = "RegisterActivity";
@@ -95,8 +96,7 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 				return;
 			}
 			if (mYanZhengCodeFromServer != null
-					&& mYanZhengCodeFromServer.equals(mCodeInput.getText()
-							.toString().trim())) {
+					&& mYanZhengCodeFromServer.equals(SecurityUtils.MD5.md5(code))) {
 				Bundle bundle = getIntent().getExtras();
 				if (bundle == null) {
 					bundle = new Bundle();
@@ -169,7 +169,6 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 	
 	private class GetYanZhengCodeAsyncTask extends AsyncTask<String, Void, String> {
 		private String mError;
-		private String mRandCode;
 		@Override
 		protected String doInBackground(String... params) {
 			mError = null;
@@ -177,7 +176,7 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			String url;
 			String path;
 			StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
-			sb.append("SendMessage.ashx?cell=").append(params[0]);
+			sb.append("20140514/SendMessage.ashx?cell=").append(params[0]);
 			url = sb.substring(0, sb.indexOf("=")+1);
 			path = params[0];
 			DebugUtils.logD(TAG, "url : " + url);
@@ -185,10 +184,10 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			DebugUtils.logD(TAG, "sb : " + sb.toString());
 			try {
 				is = NetworkUtils.openContectionLocked(url, path, MyApplication.getInstance().getSecurityKeyValuesObject());
-				DebugUtils.logD(TAG, "is : " + is.toString());
+//				DebugUtils.logD(TAG, "is : " + is.toString());
 				try {
 					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
-					mRandCode = jsonObject.getString("randcode");
+					return jsonObject.getString("randcode");
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
@@ -201,7 +200,7 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			} finally {
 				NetworkUtils.closeInputStream(is);
 			}
-			return mRandCode;
+			return null;
 		}
 
 		@Override
@@ -210,11 +209,14 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			if (mGetYanZhengCodeDialog != null) {
 				mGetYanZhengCodeDialog.hide();
 			}
-			mYanZhengCodeFromServer = result;
-			DebugUtils.logD(TAG, "result data : " + mYanZhengCodeFromServer);
-			if(mYanZhengCodeFromServer == null) {
-				MyApplication.getInstance().showMessage(R.string.msg_input_yanzheng_code_check_net);
+			DebugUtils.logD(TAG, "result data : " + result);
+			if(mError != null) {
+				MyApplication.getInstance().showMessage(mError);
+			} else if ("".equals(result)) {
+				//提示用户已注册过了
+				MyApplication.getInstance().showMessage(R.string.msg_yanzheng_code_msg_has_registered);
 			} else {
+				mYanZhengCodeFromServer = result;
 				MyApplication.getInstance().showMessage(R.string.msg_yanzheng_code_msg_send);
 			}
 		}
