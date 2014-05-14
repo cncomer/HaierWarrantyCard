@@ -88,6 +88,7 @@ public class HaierServiceObject {
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();
+				resultObject.mStatusMessage = e.getMessage();
 			}
 			return resultObject;
 		}

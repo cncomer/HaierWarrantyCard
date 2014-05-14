@@ -1,0 +1,1812 @@
+android.support.v4.app.BackStackState
+android.support.v4.app.BackStackState: android.os.Parcelable$Creator CREATOR
+android.support.v4.app.Fragment$SavedState
+android.support.v4.app.Fragment$SavedState: android.os.Parcelable$Creator CREATOR
+android.support.v4.app.FragmentActivity
+android.support.v4.app.FragmentActivity: FragmentActivity()
+android.support.v4.app.FragmentManagerState
+android.support.v4.app.FragmentManagerState: android.os.Parcelable$Creator CREATOR
+android.support.v4.app.FragmentState
+android.support.v4.app.FragmentState: android.os.Parcelable$Creator CREATOR
+android.support.v4.app.FragmentTabHost
+android.support.v4.app.FragmentTabHost: FragmentTabHost(android.content.Context,android.util.AttributeSet)
+android.support.v4.app.FragmentTabHost$SavedState
+android.support.v4.app.FragmentTabHost$SavedState: android.os.Parcelable$Creator CREATOR
+android.support.v4.app.Watson
+android.support.v4.app.Watson: Watson()
+android.support.v4.content.FileProvider
+android.support.v4.content.ModernAsyncTask$Status: android.support.v4.content.ModernAsyncTask$Status[] values()
+android.support.v4.content.ModernAsyncTask$Status: android.support.v4.content.ModernAsyncTask$Status valueOf(java.lang.String)
+android.support.v4.content.WakefulBroadcastReceiver
+android.support.v4.view.PagerTabStrip
+android.support.v4.view.PagerTabStrip: PagerTabStrip(android.content.Context)
+android.support.v4.view.PagerTabStrip: PagerTabStrip(android.content.Context,android.util.AttributeSet)
+android.support.v4.view.PagerTitleStrip
+android.support.v4.view.PagerTitleStrip: PagerTitleStrip(android.content.Context)
+android.support.v4.view.PagerTitleStrip: PagerTitleStrip(android.content.Context,android.util.AttributeSet)
+android.support.v4.view.ViewPager
+android.support.v4.view.ViewPager: ViewPager(android.content.Context)
+android.support.v4.view.ViewPager: ViewPager(android.content.Context,android.util.AttributeSet)
+android.support.v4.view.ViewPager$LayoutParams
+android.support.v4.view.ViewPager$LayoutParams: ViewPager$LayoutParams(android.content.Context,android.util.AttributeSet)
+android.support.v4.view.ViewPager$SavedState
+android.support.v4.view.ViewPager$SavedState: android.os.Parcelable$Creator CREATOR
+android.support.v4.widget.ContentLoadingProgressBar
+android.support.v4.widget.ContentLoadingProgressBar: ContentLoadingProgressBar(android.content.Context,android.util.AttributeSet)
+android.support.v4.widget.DrawerLayout
+android.support.v4.widget.DrawerLayout: DrawerLayout(android.content.Context,android.util.AttributeSet)
+android.support.v4.widget.DrawerLayout: DrawerLayout(android.content.Context,android.util.AttributeSet,int)
+android.support.v4.widget.DrawerLayout$LayoutParams
+android.support.v4.widget.DrawerLayout$LayoutParams: DrawerLayout$LayoutParams(android.content.Context,android.util.AttributeSet)
+android.support.v4.widget.DrawerLayout$SavedState
+android.support.v4.widget.DrawerLayout$SavedState: android.os.Parcelable$Creator CREATOR
+android.support.v4.widget.SlidingPaneLayout
+android.support.v4.widget.SlidingPaneLayout: SlidingPaneLayout(android.content.Context,android.util.AttributeSet)
+android.support.v4.widget.SlidingPaneLayout: SlidingPaneLayout(android.content.Context,android.util.AttributeSet,int)
+android.support.v4.widget.SlidingPaneLayout$LayoutParams
+android.support.v4.widget.SlidingPaneLayout$LayoutParams: SlidingPaneLayout$LayoutParams(android.content.Context,android.util.AttributeSet)
+android.support.v4.widget.SlidingPaneLayout$SavedState
+android.support.v4.widget.SlidingPaneLayout$SavedState: android.os.Parcelable$Creator CREATOR
+com.actionbarsherlock.app.ActionBar$LayoutParams
+com.actionbarsherlock.app.ActionBar$LayoutParams: ActionBar$LayoutParams(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.app.SherlockActivity
+com.actionbarsherlock.app.SherlockExpandableListActivity
+com.actionbarsherlock.app.SherlockFragmentActivity
+com.actionbarsherlock.app.SherlockFragmentActivity: SherlockFragmentActivity()
+com.actionbarsherlock.app.SherlockListActivity
+com.actionbarsherlock.app.SherlockPreferenceActivity
+com.actionbarsherlock.app.SherlockPreferenceActivity: SherlockPreferenceActivity()
+com.actionbarsherlock.internal.nineoldandroids.view.NineViewGroup
+com.actionbarsherlock.internal.nineoldandroids.view.NineViewGroup: NineViewGroup(android.content.Context)
+com.actionbarsherlock.internal.nineoldandroids.view.NineViewGroup: NineViewGroup(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.nineoldandroids.view.NineViewGroup: NineViewGroup(android.content.Context,android.util.AttributeSet,int)
+com.actionbarsherlock.internal.nineoldandroids.widget.NineFrameLayout
+com.actionbarsherlock.internal.nineoldandroids.widget.NineFrameLayout: NineFrameLayout(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.nineoldandroids.widget.NineLinearLayout
+com.actionbarsherlock.internal.nineoldandroids.widget.NineLinearLayout: NineLinearLayout(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.view.menu.ActionMenuItemView
+com.actionbarsherlock.internal.view.menu.ActionMenuItemView: ActionMenuItemView(android.content.Context)
+com.actionbarsherlock.internal.view.menu.ActionMenuItemView: ActionMenuItemView(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.view.menu.ActionMenuItemView: ActionMenuItemView(android.content.Context,android.util.AttributeSet,int)
+com.actionbarsherlock.internal.view.menu.ActionMenuPresenter$SavedState
+com.actionbarsherlock.internal.view.menu.ActionMenuPresenter$SavedState: android.os.Parcelable$Creator CREATOR
+com.actionbarsherlock.internal.view.menu.ActionMenuView
+com.actionbarsherlock.internal.view.menu.ActionMenuView: ActionMenuView(android.content.Context)
+com.actionbarsherlock.internal.view.menu.ActionMenuView: ActionMenuView(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.view.menu.ActionMenuView$LayoutParams
+com.actionbarsherlock.internal.view.menu.ActionMenuView$LayoutParams: ActionMenuView$LayoutParams(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.view.menu.ListMenuItemView
+com.actionbarsherlock.internal.view.menu.ListMenuItemView: ListMenuItemView(android.content.Context,android.util.AttributeSet,int)
+com.actionbarsherlock.internal.view.menu.ListMenuItemView: ListMenuItemView(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.widget.AbsActionBarView
+com.actionbarsherlock.internal.widget.AbsActionBarView: AbsActionBarView(android.content.Context)
+com.actionbarsherlock.internal.widget.AbsActionBarView: AbsActionBarView(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.widget.AbsActionBarView: AbsActionBarView(android.content.Context,android.util.AttributeSet,int)
+com.actionbarsherlock.internal.widget.ActionBarContainer
+com.actionbarsherlock.internal.widget.ActionBarContainer: ActionBarContainer(android.content.Context)
+com.actionbarsherlock.internal.widget.ActionBarContainer: ActionBarContainer(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.widget.ActionBarContextView
+com.actionbarsherlock.internal.widget.ActionBarContextView: ActionBarContextView(android.content.Context)
+com.actionbarsherlock.internal.widget.ActionBarContextView: ActionBarContextView(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.widget.ActionBarContextView: ActionBarContextView(android.content.Context,android.util.AttributeSet,int)
+com.actionbarsherlock.internal.widget.ActionBarView
+com.actionbarsherlock.internal.widget.ActionBarView: ActionBarView(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.widget.ActionBarView$HomeView
+com.actionbarsherlock.internal.widget.ActionBarView$HomeView: ActionBarView$HomeView(android.content.Context)
+com.actionbarsherlock.internal.widget.ActionBarView$HomeView: ActionBarView$HomeView(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.widget.ActionBarView$SavedState
+com.actionbarsherlock.internal.widget.ActionBarView$SavedState: android.os.Parcelable$Creator CREATOR
+com.actionbarsherlock.internal.widget.CapitalizingButton
+com.actionbarsherlock.internal.widget.CapitalizingButton: CapitalizingButton(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.widget.CapitalizingTextView
+com.actionbarsherlock.internal.widget.CapitalizingTextView: CapitalizingTextView(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.widget.CapitalizingTextView: CapitalizingTextView(android.content.Context,android.util.AttributeSet,int)
+com.actionbarsherlock.internal.widget.IcsAbsSpinner
+com.actionbarsherlock.internal.widget.IcsAbsSpinner: IcsAbsSpinner(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.widget.IcsAbsSpinner: IcsAbsSpinner(android.content.Context,android.util.AttributeSet,int)
+com.actionbarsherlock.internal.widget.IcsAbsSpinner$SavedState
+com.actionbarsherlock.internal.widget.IcsAbsSpinner$SavedState: android.os.Parcelable$Creator CREATOR
+com.actionbarsherlock.internal.widget.IcsAdapterView
+com.actionbarsherlock.internal.widget.IcsAdapterView: IcsAdapterView(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.widget.IcsAdapterView: IcsAdapterView(android.content.Context,android.util.AttributeSet,int)
+com.actionbarsherlock.internal.widget.IcsLinearLayout
+com.actionbarsherlock.internal.widget.IcsLinearLayout: IcsLinearLayout(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.widget.IcsListPopupWindow
+com.actionbarsherlock.internal.widget.IcsListPopupWindow: IcsListPopupWindow(android.content.Context,android.util.AttributeSet,int)
+com.actionbarsherlock.internal.widget.IcsProgressBar
+com.actionbarsherlock.internal.widget.IcsProgressBar: IcsProgressBar(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.widget.IcsProgressBar: IcsProgressBar(android.content.Context,android.util.AttributeSet,int)
+com.actionbarsherlock.internal.widget.IcsProgressBar$SavedState
+com.actionbarsherlock.internal.widget.IcsProgressBar$SavedState: android.os.Parcelable$Creator CREATOR
+com.actionbarsherlock.internal.widget.IcsSpinner
+com.actionbarsherlock.internal.widget.IcsSpinner: IcsSpinner(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.widget.IcsSpinner: IcsSpinner(android.content.Context,android.util.AttributeSet,int)
+com.actionbarsherlock.internal.widget.PopupWindowCompat
+com.actionbarsherlock.internal.widget.PopupWindowCompat: PopupWindowCompat(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.widget.PopupWindowCompat: PopupWindowCompat(android.content.Context,android.util.AttributeSet,int)
+com.actionbarsherlock.internal.widget.ScrollingTabContainerView$TabView
+com.actionbarsherlock.internal.widget.ScrollingTabContainerView$TabView: ScrollingTabContainerView$TabView(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.internal.widget.TabsLinearLayout
+com.actionbarsherlock.internal.widget.TabsLinearLayout: TabsLinearLayout(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.widget.ActivityChooserView
+com.actionbarsherlock.widget.ActivityChooserView: ActivityChooserView(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.widget.ActivityChooserView: ActivityChooserView(android.content.Context,android.util.AttributeSet,int)
+com.actionbarsherlock.widget.SearchView
+com.actionbarsherlock.widget.SearchView: SearchView(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.widget.SearchView$SearchAutoComplete
+com.actionbarsherlock.widget.SearchView$SearchAutoComplete: SearchView$SearchAutoComplete(android.content.Context)
+com.actionbarsherlock.widget.SearchView$SearchAutoComplete: SearchView$SearchAutoComplete(android.content.Context,android.util.AttributeSet)
+com.actionbarsherlock.widget.SearchView$SearchAutoComplete: SearchView$SearchAutoComplete(android.content.Context,android.util.AttributeSet,int)
+com.bestjoy.app.haierwarrantycard.MyApplication
+com.bestjoy.app.haierwarrantycard.MyApplication: MyApplication()
+com.bestjoy.app.haierwarrantycard.database.BjnoteProvider
+com.bestjoy.app.haierwarrantycard.database.BjnoteProvider: BjnoteProvider()
+com.bestjoy.app.haierwarrantycard.database.DeviceProvider
+com.bestjoy.app.haierwarrantycard.database.DeviceProvider: DeviceProvider()
+com.bestjoy.app.haierwarrantycard.qrcode.HistoryActivity
+com.bestjoy.app.haierwarrantycard.qrcode.HistoryActivity: HistoryActivity()
+com.bestjoy.app.haierwarrantycard.qrcode.ViewfinderView
+com.bestjoy.app.haierwarrantycard.qrcode.ViewfinderView: ViewfinderView(android.content.Context,android.util.AttributeSet)
+com.bestjoy.app.haierwarrantycard.service.EmptyService
+com.bestjoy.app.haierwarrantycard.service.EmptyService: EmptyService()
+com.bestjoy.app.haierwarrantycard.service.PhotoManagerService
+com.bestjoy.app.haierwarrantycard.service.PhotoManagerService: PhotoManagerService()
+com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2$TaskType: com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2$TaskType[] values()
+com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2$TaskType: com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2$TaskType valueOf(java.lang.String)
+com.bestjoy.app.haierwarrantycard.ui.BaseActionbarActivity
+com.bestjoy.app.haierwarrantycard.ui.BaseActionbarActivity: BaseActionbarActivity()
+com.bestjoy.app.haierwarrantycard.ui.BaseSlidingFragmentActivity
+com.bestjoy.app.haierwarrantycard.ui.BaseSlidingFragmentActivity: BaseSlidingFragmentActivity()
+com.bestjoy.app.haierwarrantycard.ui.BrowserActivity
+com.bestjoy.app.haierwarrantycard.ui.BrowserActivity: BrowserActivity()
+com.bestjoy.app.haierwarrantycard.ui.CaptureActivity
+com.bestjoy.app.haierwarrantycard.ui.CaptureActivity: CaptureActivity()
+com.bestjoy.app.haierwarrantycard.ui.CaptureActivityHandler$State: com.bestjoy.app.haierwarrantycard.ui.CaptureActivityHandler$State[] values()
+com.bestjoy.app.haierwarrantycard.ui.CaptureActivityHandler$State: com.bestjoy.app.haierwarrantycard.ui.CaptureActivityHandler$State valueOf(java.lang.String)
+com.bestjoy.app.haierwarrantycard.ui.CardViewActivity
+com.bestjoy.app.haierwarrantycard.ui.CardViewActivity: CardViewActivity()
+com.bestjoy.app.haierwarrantycard.ui.ChooseAddressActivity
+com.bestjoy.app.haierwarrantycard.ui.ChooseAddressActivity: ChooseAddressActivity()
+com.bestjoy.app.haierwarrantycard.ui.HomeManagerActivity
+com.bestjoy.app.haierwarrantycard.ui.HomeManagerActivity: HomeManagerActivity()
+com.bestjoy.app.haierwarrantycard.ui.InstallActivity
+com.bestjoy.app.haierwarrantycard.ui.InstallActivity: InstallActivity()
+com.bestjoy.app.haierwarrantycard.ui.JumpActivity
+com.bestjoy.app.haierwarrantycard.ui.JumpActivity: JumpActivity()
+com.bestjoy.app.haierwarrantycard.ui.LoginActivity
+com.bestjoy.app.haierwarrantycard.ui.LoginActivity: LoginActivity()
+com.bestjoy.app.haierwarrantycard.ui.LoginConfirmAddressActivity
+com.bestjoy.app.haierwarrantycard.ui.LoginConfirmAddressActivity: LoginConfirmAddressActivity()
+com.bestjoy.app.haierwarrantycard.ui.LoginOrUpdateAccountDialog
+com.bestjoy.app.haierwarrantycard.ui.LoginOrUpdateAccountDialog: LoginOrUpdateAccountDialog()
+com.bestjoy.app.haierwarrantycard.ui.MainActivity
+com.bestjoy.app.haierwarrantycard.ui.MainActivity: MainActivity()
+com.bestjoy.app.haierwarrantycard.ui.MyChooseDevicesActivity
+com.bestjoy.app.haierwarrantycard.ui.MyChooseDevicesActivity: MyChooseDevicesActivity()
+com.bestjoy.app.haierwarrantycard.ui.NewCardActivity
+com.bestjoy.app.haierwarrantycard.ui.NewCardActivity: NewCardActivity()
+com.bestjoy.app.haierwarrantycard.ui.NewHomeActivity
+com.bestjoy.app.haierwarrantycard.ui.NewHomeActivity: NewHomeActivity()
+com.bestjoy.app.haierwarrantycard.ui.NoParentStateImageView
+com.bestjoy.app.haierwarrantycard.ui.NoParentStateImageView: NoParentStateImageView(android.content.Context,android.util.AttributeSet)
+com.bestjoy.app.haierwarrantycard.ui.PreferencesActivity
+com.bestjoy.app.haierwarrantycard.ui.RegisterActivity
+com.bestjoy.app.haierwarrantycard.ui.RegisterActivity: RegisterActivity()
+com.bestjoy.app.haierwarrantycard.ui.RegisterConfirmActivity
+com.bestjoy.app.haierwarrantycard.ui.RegisterConfirmActivity: RegisterConfirmActivity()
+com.bestjoy.app.haierwarrantycard.ui.RepairActivity
+com.bestjoy.app.haierwarrantycard.ui.RepairActivity: RepairActivity()
+com.bestjoy.app.haierwarrantycard.ui.SettingsPreferenceActivity
+com.bestjoy.app.haierwarrantycard.ui.SettingsPreferenceActivity: SettingsPreferenceActivity()
+com.bestjoy.app.haierwarrantycard.update.AppAboutActivity
+com.bestjoy.app.haierwarrantycard.update.AppAboutActivity: AppAboutActivity()
+com.bestjoy.app.haierwarrantycard.update.BootCompletedReceiver
+com.bestjoy.app.haierwarrantycard.update.BootCompletedReceiver: BootCompletedReceiver()
+com.bestjoy.app.haierwarrantycard.update.ServiceAppInfo
+com.bestjoy.app.haierwarrantycard.update.ServiceAppInfo: android.os.Parcelable$Creator CREATOR
+com.bestjoy.app.haierwarrantycard.update.UpdateActivity
+com.bestjoy.app.haierwarrantycard.update.UpdateActivity: UpdateActivity()
+com.bestjoy.app.haierwarrantycard.update.UpdateActivity$TYPE: com.bestjoy.app.haierwarrantycard.update.UpdateActivity$TYPE[] values()
+com.bestjoy.app.haierwarrantycard.update.UpdateActivity$TYPE: com.bestjoy.app.haierwarrantycard.update.UpdateActivity$TYPE valueOf(java.lang.String)
+com.bestjoy.app.haierwarrantycard.update.UpdateService
+com.bestjoy.app.haierwarrantycard.update.UpdateService: UpdateService()
+com.bestjoy.app.haierwarrantycard.update.UpdateService$TYPE: com.bestjoy.app.haierwarrantycard.update.UpdateService$TYPE[] values()
+com.bestjoy.app.haierwarrantycard.update.UpdateService$TYPE: com.bestjoy.app.haierwarrantycard.update.UpdateService$TYPE valueOf(java.lang.String)
+com.bestjoy.app.haierwarrantycard.view.AddressCompleteEditText
+com.bestjoy.app.haierwarrantycard.view.AddressCompleteEditText: AddressCompleteEditText(android.content.Context)
+com.bestjoy.app.haierwarrantycard.view.AddressCompleteEditText: AddressCompleteEditText(android.content.Context,android.util.AttributeSet)
+com.bestjoy.app.haierwarrantycard.view.LetterSideBar
+com.bestjoy.app.haierwarrantycard.view.LetterSideBar: LetterSideBar(android.content.Context,android.util.AttributeSet,int)
+com.bestjoy.app.haierwarrantycard.view.LetterSideBar: LetterSideBar(android.content.Context,android.util.AttributeSet)
+com.bestjoy.app.haierwarrantycard.view.LetterSideBar: LetterSideBar(android.content.Context)
+com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView
+com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView: ProCityDisEditView(android.content.Context,android.util.AttributeSet)
+com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView: ProCityDisEditView(android.content.Context)
+com.google.zxing.BarcodeFormat: com.google.zxing.BarcodeFormat[] values()
+com.google.zxing.BarcodeFormat: com.google.zxing.BarcodeFormat valueOf(java.lang.String)
+com.google.zxing.DecodeHintType: com.google.zxing.DecodeHintType[] values()
+com.google.zxing.DecodeHintType: com.google.zxing.DecodeHintType valueOf(java.lang.String)
+com.google.zxing.EncodeHintType: com.google.zxing.EncodeHintType[] values()
+com.google.zxing.EncodeHintType: com.google.zxing.EncodeHintType valueOf(java.lang.String)
+com.google.zxing.ResultMetadataType: com.google.zxing.ResultMetadataType[] values()
+com.google.zxing.ResultMetadataType: com.google.zxing.ResultMetadataType valueOf(java.lang.String)
+com.google.zxing.aztec.decoder.Decoder$Table: com.google.zxing.aztec.decoder.Decoder$Table[] values()
+com.google.zxing.aztec.decoder.Decoder$Table: com.google.zxing.aztec.decoder.Decoder$Table valueOf(java.lang.String)
+com.google.zxing.client.result.ParsedResultType: com.google.zxing.client.result.ParsedResultType[] values()
+com.google.zxing.client.result.ParsedResultType: com.google.zxing.client.result.ParsedResultType valueOf(java.lang.String)
+com.google.zxing.common.CharacterSetECI: com.google.zxing.common.CharacterSetECI[] values()
+com.google.zxing.common.CharacterSetECI: com.google.zxing.common.CharacterSetECI valueOf(java.lang.String)
+com.google.zxing.datamatrix.decoder.DecodedBitStreamParser$Mode: com.google.zxing.datamatrix.decoder.DecodedBitStreamParser$Mode[] values()
+com.google.zxing.datamatrix.decoder.DecodedBitStreamParser$Mode: com.google.zxing.datamatrix.decoder.DecodedBitStreamParser$Mode valueOf(java.lang.String)
+com.google.zxing.oned.rss.expanded.decoders.CurrentParsingState$State: com.google.zxing.oned.rss.expanded.decoders.CurrentParsingState$State[] values()
+com.google.zxing.oned.rss.expanded.decoders.CurrentParsingState$State: com.google.zxing.oned.rss.expanded.decoders.CurrentParsingState$State valueOf(java.lang.String)
+com.google.zxing.pdf417.decoder.DecodedBitStreamParser$Mode: com.google.zxing.pdf417.decoder.DecodedBitStreamParser$Mode[] values()
+com.google.zxing.pdf417.decoder.DecodedBitStreamParser$Mode: com.google.zxing.pdf417.decoder.DecodedBitStreamParser$Mode valueOf(java.lang.String)
+com.google.zxing.pdf417.encoder.Compaction: com.google.zxing.pdf417.encoder.Compaction[] values()
+com.google.zxing.pdf417.encoder.Compaction: com.google.zxing.pdf417.encoder.Compaction valueOf(java.lang.String)
+com.google.zxing.qrcode.decoder.ErrorCorrectionLevel: com.google.zxing.qrcode.decoder.ErrorCorrectionLevel[] values()
+com.google.zxing.qrcode.decoder.ErrorCorrectionLevel: com.google.zxing.qrcode.decoder.ErrorCorrectionLevel valueOf(java.lang.String)
+com.google.zxing.qrcode.decoder.Mode: com.google.zxing.qrcode.decoder.Mode[] values()
+com.google.zxing.qrcode.decoder.Mode: com.google.zxing.qrcode.decoder.Mode valueOf(java.lang.String)
+com.iflytek.cloud.Setting
+com.iflytek.cloud.Setting: boolean a
+com.iflytek.cloud.Setting: boolean b
+com.iflytek.cloud.Setting: boolean c
+com.iflytek.cloud.Setting: com.iflytek.cloud.Setting$LOG_LEVEL d
+com.iflytek.cloud.Setting: java.lang.String e
+com.iflytek.cloud.Setting: Setting()
+com.iflytek.cloud.Setting: void saveLogFile(com.iflytek.cloud.Setting$LOG_LEVEL,java.lang.String)
+com.iflytek.cloud.Setting: void showLogcat(boolean)
+com.iflytek.cloud.Setting: void checkNetwork(boolean)
+com.iflytek.cloud.Setting: void setLocationEnable(boolean)
+com.iflytek.cloud.Setting: void <clinit>()
+com.iflytek.cloud.Setting$LOG_LEVEL
+com.iflytek.cloud.Setting$LOG_LEVEL: com.iflytek.cloud.Setting$LOG_LEVEL all
+com.iflytek.cloud.Setting$LOG_LEVEL: com.iflytek.cloud.Setting$LOG_LEVEL detail
+com.iflytek.cloud.Setting$LOG_LEVEL: com.iflytek.cloud.Setting$LOG_LEVEL normal
+com.iflytek.cloud.Setting$LOG_LEVEL: com.iflytek.cloud.Setting$LOG_LEVEL low
+com.iflytek.cloud.Setting$LOG_LEVEL: com.iflytek.cloud.Setting$LOG_LEVEL none
+com.iflytek.cloud.Setting$LOG_LEVEL: com.iflytek.cloud.Setting$LOG_LEVEL[] a
+com.iflytek.cloud.Setting$LOG_LEVEL: com.iflytek.cloud.Setting$LOG_LEVEL[] values()
+com.iflytek.cloud.Setting$LOG_LEVEL: com.iflytek.cloud.Setting$LOG_LEVEL valueOf(java.lang.String)
+com.iflytek.cloud.Setting$LOG_LEVEL: Setting$LOG_LEVEL(java.lang.String,int)
+com.iflytek.cloud.Setting$LOG_LEVEL: void <clinit>()
+com.iflytek.cloud.Version
+com.iflytek.cloud.Version: Version()
+com.iflytek.cloud.Version: java.lang.String getVersion()
+com.iflytek.cloud.a.a
+com.iflytek.cloud.a.a: android.content.SharedPreferences b
+com.iflytek.cloud.a.a: android.content.Context c
+com.iflytek.cloud.a.a: com.iflytek.cloud.a.a a
+com.iflytek.cloud.a.a: boolean d
+com.iflytek.cloud.a.a: long e
+com.iflytek.cloud.a.a: com.iflytek.cloud.a.a c(android.content.Context)
+com.iflytek.cloud.a.a: com.iflytek.cloud.a.a a(android.content.Context)
+com.iflytek.cloud.a.a: a(android.content.Context)
+com.iflytek.cloud.a.a: void a(java.lang.String,long)
+com.iflytek.cloud.a.a: void a(android.location.Location)
+com.iflytek.cloud.a.a: long b(java.lang.String,long)
+com.iflytek.cloud.a.a: float a(java.lang.String)
+com.iflytek.cloud.a.a: boolean b(android.content.Context)
+com.iflytek.cloud.a.a: void <clinit>()
+com.iflytek.cloud.a.b
+com.iflytek.cloud.a.b: com.iflytek.cloud.c.a a
+com.iflytek.cloud.a.b: b(android.content.Context)
+com.iflytek.cloud.a.b: void a(android.content.Context)
+com.iflytek.cloud.a.b: void a(java.lang.String,java.lang.String)
+com.iflytek.cloud.a.b: org.json.JSONObject a(boolean)
+com.iflytek.cloud.a.c
+com.iflytek.cloud.a.c: java.text.SimpleDateFormat c
+com.iflytek.cloud.a.c: java.lang.String d
+com.iflytek.cloud.a.c: java.lang.String e
+com.iflytek.cloud.a.c: int f
+com.iflytek.cloud.a.c: java.lang.String g
+com.iflytek.cloud.a.c: java.lang.String h
+com.iflytek.cloud.a.c: java.lang.String i
+com.iflytek.cloud.a.c: java.util.ArrayList a
+com.iflytek.cloud.a.c: boolean b
+com.iflytek.cloud.a.c: c(java.lang.String,java.lang.String,int)
+com.iflytek.cloud.a.c: boolean a()
+com.iflytek.cloud.a.c: java.lang.String b()
+com.iflytek.cloud.a.c: c(org.json.JSONObject,boolean)
+com.iflytek.cloud.a.c: long c()
+com.iflytek.cloud.a.c: boolean d()
+com.iflytek.cloud.a.c: void e()
+com.iflytek.cloud.a.c: java.util.ArrayList a(java.lang.String)
+com.iflytek.cloud.a.c: java.lang.String a(java.util.ArrayList)
+com.iflytek.cloud.a.c: java.lang.String f()
+com.iflytek.cloud.a.c: java.lang.String toString()
+com.iflytek.cloud.a.c: void <clinit>()
+com.iflytek.cloud.a.d
+com.iflytek.cloud.a.d: com.iflytek.cloud.a.d a
+com.iflytek.cloud.a.d: com.iflytek.cloud.b.e.g b
+com.iflytek.cloud.a.d: com.iflytek.cloud.a.f c
+com.iflytek.cloud.a.d: com.iflytek.cloud.a.d a()
+com.iflytek.cloud.a.d: d()
+com.iflytek.cloud.a.d: void a(android.content.Context)
+com.iflytek.cloud.a.d: void b()
+com.iflytek.cloud.a.d: void c()
+com.iflytek.cloud.a.d: com.iflytek.cloud.a.c b(android.content.Context)
+com.iflytek.cloud.a.d: void a(com.iflytek.cloud.a.c)
+com.iflytek.cloud.a.d: com.iflytek.cloud.b.e.g a(com.iflytek.cloud.a.d,com.iflytek.cloud.b.e.g)
+com.iflytek.cloud.a.d: com.iflytek.cloud.a.f a(com.iflytek.cloud.a.d)
+com.iflytek.cloud.a.d: void b(com.iflytek.cloud.a.d)
+com.iflytek.cloud.a.d: void <clinit>()
+com.iflytek.cloud.a.e
+com.iflytek.cloud.a.e: android.content.Context a
+com.iflytek.cloud.a.e: com.iflytek.cloud.a.d b
+com.iflytek.cloud.a.e: e(com.iflytek.cloud.a.d,android.content.Context)
+com.iflytek.cloud.a.e: void a(java.lang.Exception)
+com.iflytek.cloud.a.e: void a(com.iflytek.cloud.b.e.g,byte[])
+com.iflytek.cloud.a.e: void a(byte[])
+com.iflytek.cloud.a.f
+com.iflytek.cloud.a.f: java.lang.String a
+com.iflytek.cloud.a.f: java.lang.String b
+com.iflytek.cloud.a.f: java.util.Vector c
+com.iflytek.cloud.a.f: java.util.Vector d
+com.iflytek.cloud.a.f: java.lang.Object e
+com.iflytek.cloud.a.f: f()
+com.iflytek.cloud.a.f: boolean a(android.content.Context)
+com.iflytek.cloud.a.f: void a(java.lang.String)
+com.iflytek.cloud.a.f: java.lang.String a()
+com.iflytek.cloud.a.f: java.util.Vector a(org.json.JSONArray,boolean)
+com.iflytek.cloud.a.f: org.json.JSONArray a(java.util.Vector)
+com.iflytek.cloud.a.f: org.json.JSONObject b()
+com.iflytek.cloud.a.f: com.iflytek.cloud.a.c b(android.content.Context)
+com.iflytek.cloud.a.f: void a(com.iflytek.cloud.a.c)
+com.iflytek.cloud.a.f: java.lang.String toString()
+com.iflytek.cloud.b.a.a
+com.iflytek.cloud.b.a.a: com.iflytek.msc.MSCSessionInfo b
+com.iflytek.cloud.b.a.a: com.iflytek.msc.MSCSessionInfo c
+com.iflytek.cloud.b.a.a: byte[] d
+com.iflytek.cloud.b.a.a: a()
+com.iflytek.cloud.b.a.a: int a(android.content.Context,java.lang.String,com.iflytek.cloud.b.b.a)
+com.iflytek.cloud.b.a.a: void a(java.lang.String)
+com.iflytek.cloud.b.a.a: void a(byte[],int)
+com.iflytek.cloud.b.a.a: void a()
+com.iflytek.cloud.b.a.a: void a(byte[],int,int)
+com.iflytek.cloud.b.a.a: int b()
+com.iflytek.cloud.b.a.a: int c()
+com.iflytek.cloud.b.a.a: int b(java.lang.String)
+com.iflytek.cloud.b.a.a: boolean a(java.lang.String,java.lang.String)
+com.iflytek.cloud.b.a.a: java.lang.String c(java.lang.String)
+com.iflytek.cloud.b.a.a: int d(java.lang.String)
+com.iflytek.cloud.b.a.a: java.lang.String e(java.lang.String)
+com.iflytek.cloud.b.a.a: boolean d()
+com.iflytek.cloud.b.a.a: byte[] e()
+com.iflytek.cloud.b.a.a: com.iflytek.cloud.b.b.c$a f()
+com.iflytek.cloud.b.a.b
+com.iflytek.cloud.b.a.b: com.iflytek.cloud.speech.RecognizerListener a
+com.iflytek.cloud.b.a.b: long b
+com.iflytek.cloud.b.a.b: boolean c
+com.iflytek.cloud.b.a.b: boolean d
+com.iflytek.cloud.b.a.b: boolean e
+com.iflytek.cloud.b.a.b: boolean f
+com.iflytek.cloud.b.a.b: int g
+com.iflytek.cloud.b.a.b: long B
+com.iflytek.cloud.b.a.b: boolean h
+com.iflytek.cloud.b.a.b: com.iflytek.cloud.b.a.a i
+com.iflytek.cloud.b.a.b: com.iflytek.cloud.record.d j
+com.iflytek.cloud.b.a.b: int k
+com.iflytek.cloud.b.a.b: int l
+com.iflytek.cloud.b.a.b: java.lang.String m
+com.iflytek.cloud.b.a.b: java.util.concurrent.ConcurrentLinkedQueue n
+com.iflytek.cloud.b.a.b: java.util.concurrent.ConcurrentLinkedQueue o
+com.iflytek.cloud.b.a.b: java.util.ArrayList p
+com.iflytek.cloud.b.a.b: long C
+com.iflytek.cloud.b.a.b: b(android.content.Context,com.iflytek.cloud.c.a)
+com.iflytek.cloud.b.a.b: int a()
+com.iflytek.cloud.b.a.b: java.util.concurrent.ConcurrentLinkedQueue b()
+com.iflytek.cloud.b.a.b: void a(byte[],int)
+com.iflytek.cloud.b.a.b: void a(com.iflytek.cloud.speech.RecognizerListener)
+com.iflytek.cloud.b.a.b: boolean a(boolean)
+com.iflytek.cloud.b.a.b: void c()
+com.iflytek.cloud.b.a.b: void d()
+com.iflytek.cloud.b.a.b: void e()
+com.iflytek.cloud.b.a.b: void f()
+com.iflytek.cloud.b.a.b: void A()
+com.iflytek.cloud.b.a.b: void g()
+com.iflytek.cloud.b.a.b: void d(boolean)
+com.iflytek.cloud.b.a.b: void h()
+com.iflytek.cloud.b.a.b: void i()
+com.iflytek.cloud.b.a.b: boolean j()
+com.iflytek.cloud.b.a.b: void k()
+com.iflytek.cloud.b.a.b: void l()
+com.iflytek.cloud.b.a.b: void m()
+com.iflytek.cloud.b.a.b: void B()
+com.iflytek.cloud.b.a.b: void n()
+com.iflytek.cloud.b.a.b: void a(byte[])
+com.iflytek.cloud.b.a.b: boolean b(boolean)
+com.iflytek.cloud.b.a.b: void a(byte[],boolean)
+com.iflytek.cloud.b.a.b: void a(byte[],int,int)
+com.iflytek.cloud.b.a.b: void a(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.b.a.b: void c(boolean)
+com.iflytek.cloud.b.a.b: void o()
+com.iflytek.cloud.b.a.b: void <clinit>()
+com.iflytek.cloud.b.a.b$1
+com.iflytek.cloud.b.a.b$1: int[] a
+com.iflytek.cloud.b.a.b$1: void <clinit>()
+com.iflytek.cloud.b.a.c
+com.iflytek.cloud.b.a.c: boolean B
+com.iflytek.cloud.b.a.c: c(android.content.Context,com.iflytek.cloud.c.a)
+com.iflytek.cloud.b.a.c: void k()
+com.iflytek.cloud.b.a.c: boolean a(boolean)
+com.iflytek.cloud.b.a.c: void a(byte[],int,int)
+com.iflytek.cloud.b.b.a
+com.iflytek.cloud.b.b.a: int q
+com.iflytek.cloud.b.b.a: int r
+com.iflytek.cloud.b.b.a: java.lang.String s
+com.iflytek.cloud.b.b.a: android.content.Context t
+com.iflytek.cloud.b.b.a: com.iflytek.cloud.c.a a
+com.iflytek.cloud.b.b.a: boolean u
+com.iflytek.cloud.b.b.a: com.iflytek.cloud.b.b.a$a b
+com.iflytek.cloud.b.b.a: long v
+com.iflytek.cloud.b.b.a: int w
+com.iflytek.cloud.b.b.a: com.iflytek.cloud.speech.SpeechError x
+com.iflytek.cloud.b.b.a: org.json.JSONObject y
+com.iflytek.cloud.b.b.a: long z
+com.iflytek.cloud.b.b.a: long A
+com.iflytek.cloud.b.b.a: java.lang.Runnable c
+com.iflytek.cloud.b.b.a: a(android.content.Context)
+com.iflytek.cloud.b.b.a: boolean j()
+com.iflytek.cloud.b.b.a: java.lang.String p()
+com.iflytek.cloud.b.b.a: java.lang.String q()
+com.iflytek.cloud.b.b.a: java.lang.String r()
+com.iflytek.cloud.b.b.a: int s()
+com.iflytek.cloud.b.b.a: void c()
+com.iflytek.cloud.b.b.a: void t()
+com.iflytek.cloud.b.b.a: boolean u()
+com.iflytek.cloud.b.b.a: void a(com.iflytek.cloud.b.b.a$a)
+com.iflytek.cloud.b.b.a: com.iflytek.cloud.b.b.a$a v()
+com.iflytek.cloud.b.b.a: void a(com.iflytek.cloud.c.a)
+com.iflytek.cloud.b.b.a: com.iflytek.cloud.c.a w()
+com.iflytek.cloud.b.b.a: void x()
+com.iflytek.cloud.b.b.a: void e()
+com.iflytek.cloud.b.b.a: void f()
+com.iflytek.cloud.b.b.a: void i()
+com.iflytek.cloud.b.b.a: java.lang.String y()
+com.iflytek.cloud.b.b.a: void a(long,int)
+com.iflytek.cloud.b.b.a: void a()
+com.iflytek.cloud.b.b.a: void a(java.lang.String)
+com.iflytek.cloud.b.b.a: void a(java.lang.String,long,boolean)
+com.iflytek.cloud.b.b.a: void a(java.lang.String,java.lang.String,boolean)
+com.iflytek.cloud.b.b.a: java.lang.String z()
+com.iflytek.cloud.b.b.a: com.iflytek.cloud.b.b.a$a a(com.iflytek.cloud.b.b.a)
+com.iflytek.cloud.b.b.a$a
+com.iflytek.cloud.b.b.a$a: com.iflytek.cloud.b.b.a$a a
+com.iflytek.cloud.b.b.a$a: com.iflytek.cloud.b.b.a$a b
+com.iflytek.cloud.b.b.a$a: com.iflytek.cloud.b.b.a$a c
+com.iflytek.cloud.b.b.a$a: com.iflytek.cloud.b.b.a$a d
+com.iflytek.cloud.b.b.a$a: com.iflytek.cloud.b.b.a$a e
+com.iflytek.cloud.b.b.a$a: com.iflytek.cloud.b.b.a$a f
+com.iflytek.cloud.b.b.a$a: com.iflytek.cloud.b.b.a$a g
+com.iflytek.cloud.b.b.a$a: com.iflytek.cloud.b.b.a$a h
+com.iflytek.cloud.b.b.a$a: com.iflytek.cloud.b.b.a$a[] i
+com.iflytek.cloud.b.b.a$a: com.iflytek.cloud.b.b.a$a[] values()
+com.iflytek.cloud.b.b.a$a: com.iflytek.cloud.b.b.a$a valueOf(java.lang.String)
+com.iflytek.cloud.b.b.a$a: a$a(java.lang.String,int)
+com.iflytek.cloud.b.b.a$a: void <clinit>()
+com.iflytek.cloud.b.b.b
+com.iflytek.cloud.b.b.b: com.iflytek.cloud.b.b.a a
+com.iflytek.cloud.b.b.b: b(com.iflytek.cloud.b.b.a)
+com.iflytek.cloud.b.b.b: void run()
+com.iflytek.cloud.b.b.c
+com.iflytek.cloud.b.b.c: char[] a
+com.iflytek.cloud.b.b.c: c()
+com.iflytek.cloud.b.b.c$a
+com.iflytek.cloud.b.b.c$a: com.iflytek.cloud.b.b.c$a a
+com.iflytek.cloud.b.b.c$a: com.iflytek.cloud.b.b.c$a b
+com.iflytek.cloud.b.b.c$a: com.iflytek.cloud.b.b.c$a c
+com.iflytek.cloud.b.b.c$a: com.iflytek.cloud.b.b.c$a[] d
+com.iflytek.cloud.b.b.c$a: com.iflytek.cloud.b.b.c$a[] values()
+com.iflytek.cloud.b.b.c$a: com.iflytek.cloud.b.b.c$a valueOf(java.lang.String)
+com.iflytek.cloud.b.b.c$a: c$a(java.lang.String,int)
+com.iflytek.cloud.b.b.c$a: void <clinit>()
+com.iflytek.cloud.b.b.d
+com.iflytek.cloud.b.b.d: android.content.Context a
+com.iflytek.cloud.b.b.d: java.lang.Object b
+com.iflytek.cloud.b.b.d: com.iflytek.cloud.c.a c
+com.iflytek.cloud.b.b.d: com.iflytek.cloud.b.b.a d
+com.iflytek.cloud.b.b.d: d(android.content.Context)
+com.iflytek.cloud.b.b.d: void a()
+com.iflytek.cloud.b.b.d: java.lang.String b()
+com.iflytek.cloud.b.b.d: boolean c()
+com.iflytek.cloud.b.b.d: void cancel()
+com.iflytek.cloud.b.b.d: boolean setParameter(java.lang.String,java.lang.String)
+com.iflytek.cloud.b.b.d: java.lang.String getParameter(java.lang.String)
+com.iflytek.cloud.b.b.d: int getSampleRate()
+com.iflytek.cloud.b.b.d: boolean destroy()
+com.iflytek.cloud.b.b.d: boolean d()
+com.iflytek.cloud.b.b.d: void finalize()
+com.iflytek.cloud.b.b.d$a
+com.iflytek.cloud.b.b.d$a: com.iflytek.cloud.speech.SpeechListener b
+com.iflytek.cloud.b.b.d$a: android.os.Handler c
+com.iflytek.cloud.b.b.d$a: com.iflytek.cloud.b.b.d a
+com.iflytek.cloud.b.b.d$a: d$a(com.iflytek.cloud.b.b.d,com.iflytek.cloud.speech.SpeechListener)
+com.iflytek.cloud.b.b.d$a: void onData(byte[])
+com.iflytek.cloud.b.b.d$a: void onEvent(int,android.os.Bundle)
+com.iflytek.cloud.b.b.d$a: void onCompleted(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.b.b.d$a: com.iflytek.cloud.speech.SpeechListener a(com.iflytek.cloud.b.b.d$a)
+com.iflytek.cloud.b.b.e
+com.iflytek.cloud.b.b.e: com.iflytek.cloud.b.b.d$a a
+com.iflytek.cloud.b.b.e: e(com.iflytek.cloud.b.b.d$a,android.os.Looper)
+com.iflytek.cloud.b.b.e: void handleMessage(android.os.Message)
+com.iflytek.cloud.b.c.a
+com.iflytek.cloud.b.c.a: java.lang.Object a
+com.iflytek.cloud.b.c.a: com.iflytek.msc.MSCSessionInfo b
+com.iflytek.cloud.b.c.a: a()
+com.iflytek.cloud.b.c.a: void a(android.content.Context,java.lang.String,java.lang.String,com.iflytek.cloud.b.b.a)
+com.iflytek.cloud.b.c.a: boolean a()
+com.iflytek.cloud.b.c.a: byte[] a(android.content.Context,java.lang.String,byte[],com.iflytek.cloud.b.b.a)
+com.iflytek.cloud.b.c.a: byte[] a(android.content.Context,com.iflytek.cloud.b.b.a)
+com.iflytek.cloud.b.c.a: byte[] a(android.content.Context,com.iflytek.cloud.b.b.a,java.lang.String)
+com.iflytek.cloud.b.c.a: void <clinit>()
+com.iflytek.cloud.b.c.b
+com.iflytek.cloud.b.c.b: java.lang.String a
+com.iflytek.cloud.b.c.b: com.iflytek.cloud.b.c.b$a b
+com.iflytek.cloud.b.c.b: byte[] c
+com.iflytek.cloud.b.c.b: java.lang.String d
+com.iflytek.cloud.b.c.b: java.lang.String e
+com.iflytek.cloud.b.c.b: java.lang.String f
+com.iflytek.cloud.b.c.b: com.iflytek.cloud.b.c.a g
+com.iflytek.cloud.b.c.b: com.iflytek.cloud.speech.SpeechListener h
+com.iflytek.cloud.b.c.b: b(android.content.Context,com.iflytek.cloud.c.a)
+com.iflytek.cloud.b.c.b: void a(com.iflytek.cloud.speech.SpeechListener)
+com.iflytek.cloud.b.c.b: void a(com.iflytek.cloud.speech.SpeechListener,java.lang.String)
+com.iflytek.cloud.b.c.b: void a(com.iflytek.cloud.speech.SpeechListener,java.lang.String,byte[])
+com.iflytek.cloud.b.c.b: void a(com.iflytek.cloud.speech.SpeechListener,java.lang.String,java.lang.String)
+com.iflytek.cloud.b.c.b: void e()
+com.iflytek.cloud.b.c.b: void f()
+com.iflytek.cloud.b.c.b$a
+com.iflytek.cloud.b.c.b$a: com.iflytek.cloud.b.c.b$a a
+com.iflytek.cloud.b.c.b$a: com.iflytek.cloud.b.c.b$a b
+com.iflytek.cloud.b.c.b$a: com.iflytek.cloud.b.c.b$a c
+com.iflytek.cloud.b.c.b$a: com.iflytek.cloud.b.c.b$a d
+com.iflytek.cloud.b.c.b$a: com.iflytek.cloud.b.c.b$a[] e
+com.iflytek.cloud.b.c.b$a: com.iflytek.cloud.b.c.b$a[] values()
+com.iflytek.cloud.b.c.b$a: com.iflytek.cloud.b.c.b$a valueOf(java.lang.String)
+com.iflytek.cloud.b.c.b$a: b$a(java.lang.String,int)
+com.iflytek.cloud.b.c.b$a: void <clinit>()
+com.iflytek.cloud.b.d.a
+com.iflytek.cloud.b.d.a: java.lang.String c
+com.iflytek.cloud.b.d.a: com.iflytek.cloud.b.d.c d
+com.iflytek.cloud.b.d.a: com.iflytek.cloud.b.d.b e
+com.iflytek.cloud.b.d.a: java.util.ArrayList f
+com.iflytek.cloud.b.d.a: int g
+com.iflytek.cloud.b.d.a: int h
+com.iflytek.cloud.b.d.a: long i
+com.iflytek.cloud.b.d.a: java.lang.StringBuilder j
+com.iflytek.cloud.b.d.a: boolean k
+com.iflytek.cloud.b.d.a: int a
+com.iflytek.cloud.b.d.a: int b
+com.iflytek.cloud.b.d.a: a(android.content.Context,com.iflytek.cloud.c.a)
+com.iflytek.cloud.b.d.a: void a(java.lang.String,com.iflytek.cloud.b.d.b)
+com.iflytek.cloud.b.d.a: java.lang.String q()
+com.iflytek.cloud.b.d.a: void e()
+com.iflytek.cloud.b.d.a: void f()
+com.iflytek.cloud.b.d.a: void <clinit>()
+com.iflytek.cloud.b.d.b
+com.iflytek.cloud.b.d.b: void a(java.util.ArrayList,int,int,int,java.lang.String)
+com.iflytek.cloud.b.d.b: void a(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.b.d.c
+com.iflytek.cloud.b.d.c: com.iflytek.msc.MSCSessionInfo b
+com.iflytek.cloud.b.d.c: c()
+com.iflytek.cloud.b.d.c: int a(android.content.Context,java.lang.String,com.iflytek.cloud.b.b.a)
+com.iflytek.cloud.b.d.c: void a(java.lang.String)
+com.iflytek.cloud.b.d.c: void a(byte[])
+com.iflytek.cloud.b.d.c: byte[] a()
+com.iflytek.cloud.b.d.c: int b()
+com.iflytek.cloud.b.d.c: java.lang.String c()
+com.iflytek.cloud.b.d.c: int b(java.lang.String)
+com.iflytek.cloud.b.d.c: java.lang.String c(java.lang.String)
+com.iflytek.cloud.b.d.c: int d(java.lang.String)
+com.iflytek.cloud.b.d.c: java.lang.String e(java.lang.String)
+com.iflytek.cloud.b.d.c: boolean d()
+com.iflytek.cloud.b.e.a
+com.iflytek.cloud.b.e.a: java.lang.String[][] a
+com.iflytek.cloud.b.e.a: java.lang.String[][] b
+com.iflytek.cloud.b.e.a: com.iflytek.cloud.c.a c
+com.iflytek.cloud.b.e.a: boolean d
+com.iflytek.cloud.b.e.a: com.iflytek.cloud.c.a a(android.content.Context)
+com.iflytek.cloud.b.e.a: void b(android.content.Context)
+com.iflytek.cloud.b.e.a: void a(com.iflytek.cloud.c.a,android.content.Context)
+com.iflytek.cloud.b.e.a: java.lang.String a(java.lang.String)
+com.iflytek.cloud.b.e.a: void <clinit>()
+com.iflytek.cloud.b.e.a.a
+com.iflytek.cloud.b.e.a.a: java.lang.String a
+com.iflytek.cloud.b.e.a.a: boolean b
+com.iflytek.cloud.b.e.a.a: void a(java.lang.String,java.lang.String)
+com.iflytek.cloud.b.e.a.a: void a(java.lang.String)
+com.iflytek.cloud.b.e.a.a: void b(java.lang.String)
+com.iflytek.cloud.b.e.a.a: void <clinit>()
+com.iflytek.cloud.b.e.a.b
+com.iflytek.cloud.b.e.a.b: java.io.RandomAccessFile a
+com.iflytek.cloud.b.e.a.b: boolean b
+com.iflytek.cloud.b.e.a.b: java.lang.Object c
+com.iflytek.cloud.b.e.a.b: boolean a()
+com.iflytek.cloud.b.e.a.b: void a(java.lang.String,java.lang.String,java.lang.String)
+com.iflytek.cloud.b.e.a.b: java.lang.String b(java.lang.String,java.lang.String,java.lang.String)
+com.iflytek.cloud.b.e.a.b: void <clinit>()
+com.iflytek.cloud.b.e.a.c
+com.iflytek.cloud.b.e.a.c: boolean b
+com.iflytek.cloud.b.e.a.c: java.util.HashMap a
+com.iflytek.cloud.b.e.a.c: long c
+com.iflytek.cloud.b.e.a.c: java.lang.String d
+com.iflytek.cloud.b.e.a.c: java.lang.String e
+com.iflytek.cloud.b.e.a.c: java.lang.String f
+com.iflytek.cloud.b.e.a.c: java.lang.String g
+com.iflytek.cloud.b.e.a.c: java.lang.String a()
+com.iflytek.cloud.b.e.a.c: void a(java.lang.String,java.lang.String)
+com.iflytek.cloud.b.e.a.c: void <clinit>()
+com.iflytek.cloud.b.e.b
+com.iflytek.cloud.b.e.b: android.util.DisplayMetrics a
+com.iflytek.cloud.b.e.b: java.lang.String a(long)
+com.iflytek.cloud.b.e.b: java.lang.String b(long)
+com.iflytek.cloud.b.e.b: int a(int,int)
+com.iflytek.cloud.b.e.b: void <clinit>()
+com.iflytek.cloud.b.e.c
+com.iflytek.cloud.b.e.c: byte[] a(byte[])
+com.iflytek.cloud.b.e.c: byte[] b(byte[])
+com.iflytek.cloud.b.e.c: java.lang.String a(java.lang.String)
+com.iflytek.cloud.b.e.d
+com.iflytek.cloud.b.e.d: java.lang.String a
+com.iflytek.cloud.b.e.d: java.lang.String a(android.content.Context)
+com.iflytek.cloud.b.e.d: void a(java.lang.String)
+com.iflytek.cloud.b.e.d: boolean a(android.os.MemoryFile,long,java.lang.String)
+com.iflytek.cloud.b.e.d: byte[] b(java.lang.String)
+com.iflytek.cloud.b.e.d: boolean a(byte[],java.lang.String,boolean,int)
+com.iflytek.cloud.b.e.d: void a(java.util.concurrent.ConcurrentLinkedQueue,java.lang.String)
+com.iflytek.cloud.b.e.d: void c(java.lang.String)
+com.iflytek.cloud.b.e.d: void <clinit>()
+com.iflytek.cloud.b.e.e
+com.iflytek.cloud.b.e.e: int a
+com.iflytek.cloud.b.e.e: int b
+com.iflytek.cloud.b.e.e: boolean a(android.content.Context,java.lang.Boolean,android.media.AudioManager$OnAudioFocusChangeListener)
+com.iflytek.cloud.b.e.e: boolean b(android.content.Context,java.lang.Boolean,android.media.AudioManager$OnAudioFocusChangeListener)
+com.iflytek.cloud.b.e.e: void a(android.view.View)
+com.iflytek.cloud.b.e.e: void <clinit>()
+com.iflytek.cloud.b.e.f
+com.iflytek.cloud.b.e.f: int a
+com.iflytek.cloud.b.e.f: boolean a(android.content.Context,android.media.AudioManager$OnAudioFocusChangeListener)
+com.iflytek.cloud.b.e.f: boolean b(android.content.Context,android.media.AudioManager$OnAudioFocusChangeListener)
+com.iflytek.cloud.b.e.f: void a(android.view.View)
+com.iflytek.cloud.b.e.f: void <clinit>()
+com.iflytek.cloud.b.e.g
+com.iflytek.cloud.b.e.g: int a
+com.iflytek.cloud.b.e.g: com.iflytek.cloud.b.e.g$a b
+com.iflytek.cloud.b.e.g: boolean c
+com.iflytek.cloud.b.e.g: java.net.URL d
+com.iflytek.cloud.b.e.g: java.util.ArrayList e
+com.iflytek.cloud.b.e.g: java.lang.Object f
+com.iflytek.cloud.b.e.g: int g
+com.iflytek.cloud.b.e.g: g()
+com.iflytek.cloud.b.e.g: void a(int)
+com.iflytek.cloud.b.e.g: void a(java.lang.String,java.lang.String,byte[])
+com.iflytek.cloud.b.e.g: void a(com.iflytek.cloud.b.e.g$a)
+com.iflytek.cloud.b.e.g: java.net.URL a(java.lang.String,java.lang.String)
+com.iflytek.cloud.b.e.g: void run()
+com.iflytek.cloud.b.e.g: byte[] a(java.io.InputStream)
+com.iflytek.cloud.b.e.g: void b()
+com.iflytek.cloud.b.e.g: void b(byte[])
+com.iflytek.cloud.b.e.g: void a(byte[])
+com.iflytek.cloud.b.e.g: void a(java.lang.Exception)
+com.iflytek.cloud.b.e.g: int c()
+com.iflytek.cloud.b.e.g: void a()
+com.iflytek.cloud.b.e.g: boolean a(java.lang.String)
+com.iflytek.cloud.b.e.g$a
+com.iflytek.cloud.b.e.g$a: void a(com.iflytek.cloud.b.e.g,byte[])
+com.iflytek.cloud.b.e.g$a: void a(byte[])
+com.iflytek.cloud.b.e.g$a: void a(java.lang.Exception)
+com.iflytek.cloud.b.e.h
+com.iflytek.cloud.b.e.h: void a(android.content.Context)
+com.iflytek.cloud.b.e.h: java.lang.String a(android.net.NetworkInfo)
+com.iflytek.cloud.b.e.h: java.lang.String b(android.net.NetworkInfo)
+com.iflytek.cloud.c.a
+com.iflytek.cloud.c.a: java.util.HashMap a
+com.iflytek.cloud.c.a: a()
+com.iflytek.cloud.c.a: a(java.lang.String,java.lang.String[][])
+com.iflytek.cloud.c.a: void a()
+com.iflytek.cloud.c.a: void a(java.lang.String)
+com.iflytek.cloud.c.a: void b(java.lang.String)
+com.iflytek.cloud.c.a: com.iflytek.cloud.c.a b()
+com.iflytek.cloud.c.a: void a(java.lang.String,java.lang.String)
+com.iflytek.cloud.c.a: void a(com.iflytek.cloud.c.a,java.lang.String)
+com.iflytek.cloud.c.a: java.util.HashMap c()
+com.iflytek.cloud.c.a: void a(java.lang.String,java.lang.String,boolean)
+com.iflytek.cloud.c.a: java.lang.Boolean c(java.lang.String)
+com.iflytek.cloud.c.a: java.lang.String toString()
+com.iflytek.cloud.c.a: java.lang.String d(java.lang.String)
+com.iflytek.cloud.c.a: java.lang.String b(java.lang.String,java.lang.String)
+com.iflytek.cloud.c.a: int a(java.lang.String,int)
+com.iflytek.cloud.c.a: boolean a(java.lang.String,boolean)
+com.iflytek.cloud.c.a: void a(java.lang.String[][])
+com.iflytek.cloud.c.a: void d()
+com.iflytek.cloud.c.a: java.lang.Object clone()
+com.iflytek.cloud.c.b
+com.iflytek.cloud.c.b: java.lang.String[][] a
+com.iflytek.cloud.c.b: void <clinit>()
+com.iflytek.cloud.c.c
+com.iflytek.cloud.c.c: java.lang.String a
+com.iflytek.cloud.c.c: int b
+com.iflytek.cloud.c.c: int c
+com.iflytek.cloud.c.c: int d
+com.iflytek.cloud.c.c: java.lang.String a(android.content.Context,com.iflytek.cloud.b.b.a)
+com.iflytek.cloud.c.c: void b(com.iflytek.cloud.c.a)
+com.iflytek.cloud.c.c: boolean a(com.iflytek.cloud.c.a)
+com.iflytek.cloud.c.c: void a(android.content.Context,com.iflytek.cloud.c.a)
+com.iflytek.cloud.c.c: java.lang.String a(android.content.Context,java.lang.String,com.iflytek.cloud.b.b.a)
+com.iflytek.cloud.c.c: java.lang.String b(android.content.Context,com.iflytek.cloud.b.b.a)
+com.iflytek.cloud.c.c: java.lang.String c(android.content.Context,com.iflytek.cloud.b.b.a)
+com.iflytek.cloud.c.c: java.lang.String a(android.content.Context)
+com.iflytek.cloud.c.c: java.lang.String a()
+com.iflytek.cloud.c.c: java.lang.String b()
+com.iflytek.cloud.c.c: boolean a(java.lang.String)
+com.iflytek.cloud.c.c: java.lang.String a(int)
+com.iflytek.cloud.c.c: void <clinit>()
+com.iflytek.cloud.record.PcmPlayer
+com.iflytek.cloud.record.PcmPlayer: android.media.AudioTrack b
+com.iflytek.cloud.record.PcmPlayer: com.iflytek.cloud.record.a c
+com.iflytek.cloud.record.PcmPlayer: android.content.Context d
+com.iflytek.cloud.record.PcmPlayer: com.iflytek.cloud.record.PcmPlayer$b e
+com.iflytek.cloud.record.PcmPlayer: com.iflytek.cloud.record.PcmPlayer$a f
+com.iflytek.cloud.record.PcmPlayer: com.iflytek.cloud.record.PcmPlayer$PLAY_STATE g
+com.iflytek.cloud.record.PcmPlayer: int h
+com.iflytek.cloud.record.PcmPlayer: boolean i
+com.iflytek.cloud.record.PcmPlayer: int j
+com.iflytek.cloud.record.PcmPlayer: boolean k
+com.iflytek.cloud.record.PcmPlayer: boolean l
+com.iflytek.cloud.record.PcmPlayer: java.lang.Object m
+com.iflytek.cloud.record.PcmPlayer: android.media.AudioManager$OnAudioFocusChangeListener a
+com.iflytek.cloud.record.PcmPlayer: int n
+com.iflytek.cloud.record.PcmPlayer: android.os.Handler o
+com.iflytek.cloud.record.PcmPlayer: PcmPlayer(android.content.Context,int,boolean)
+com.iflytek.cloud.record.PcmPlayer: com.iflytek.cloud.record.PcmPlayer$PLAY_STATE a()
+com.iflytek.cloud.record.PcmPlayer: void a(com.iflytek.cloud.record.PcmPlayer$PLAY_STATE)
+com.iflytek.cloud.record.PcmPlayer: void f()
+com.iflytek.cloud.record.PcmPlayer: void b()
+com.iflytek.cloud.record.PcmPlayer: void g()
+com.iflytek.cloud.record.PcmPlayer: boolean c()
+com.iflytek.cloud.record.PcmPlayer: boolean a(com.iflytek.cloud.record.a,com.iflytek.cloud.record.PcmPlayer$a)
+com.iflytek.cloud.record.PcmPlayer: boolean b(com.iflytek.cloud.record.a,com.iflytek.cloud.record.PcmPlayer$a)
+com.iflytek.cloud.record.PcmPlayer: boolean d()
+com.iflytek.cloud.record.PcmPlayer: void e()
+com.iflytek.cloud.record.PcmPlayer: boolean a(com.iflytek.cloud.record.PcmPlayer,boolean)
+com.iflytek.cloud.record.PcmPlayer: com.iflytek.cloud.record.PcmPlayer$a a(com.iflytek.cloud.record.PcmPlayer)
+com.iflytek.cloud.record.PcmPlayer: boolean b(com.iflytek.cloud.record.PcmPlayer)
+com.iflytek.cloud.record.PcmPlayer: boolean c(com.iflytek.cloud.record.PcmPlayer)
+com.iflytek.cloud.record.PcmPlayer: android.content.Context d(com.iflytek.cloud.record.PcmPlayer)
+com.iflytek.cloud.record.PcmPlayer: boolean e(com.iflytek.cloud.record.PcmPlayer)
+com.iflytek.cloud.record.PcmPlayer: com.iflytek.cloud.record.a f(com.iflytek.cloud.record.PcmPlayer)
+com.iflytek.cloud.record.PcmPlayer: com.iflytek.cloud.record.PcmPlayer$PLAY_STATE g(com.iflytek.cloud.record.PcmPlayer)
+com.iflytek.cloud.record.PcmPlayer: com.iflytek.cloud.record.PcmPlayer$PLAY_STATE a(com.iflytek.cloud.record.PcmPlayer,com.iflytek.cloud.record.PcmPlayer$PLAY_STATE)
+com.iflytek.cloud.record.PcmPlayer: void h(com.iflytek.cloud.record.PcmPlayer)
+com.iflytek.cloud.record.PcmPlayer: android.os.Handler i(com.iflytek.cloud.record.PcmPlayer)
+com.iflytek.cloud.record.PcmPlayer: int a(com.iflytek.cloud.record.PcmPlayer,int)
+com.iflytek.cloud.record.PcmPlayer: android.media.AudioTrack j(com.iflytek.cloud.record.PcmPlayer)
+com.iflytek.cloud.record.PcmPlayer: int k(com.iflytek.cloud.record.PcmPlayer)
+com.iflytek.cloud.record.PcmPlayer: android.media.AudioTrack a(com.iflytek.cloud.record.PcmPlayer,android.media.AudioTrack)
+com.iflytek.cloud.record.PcmPlayer: com.iflytek.cloud.record.PcmPlayer$b a(com.iflytek.cloud.record.PcmPlayer,com.iflytek.cloud.record.PcmPlayer$b)
+com.iflytek.cloud.record.PcmPlayer: com.iflytek.cloud.record.PcmPlayer$a a(com.iflytek.cloud.record.PcmPlayer,com.iflytek.cloud.record.PcmPlayer$a)
+com.iflytek.cloud.record.PcmPlayer: int l(com.iflytek.cloud.record.PcmPlayer)
+com.iflytek.cloud.record.PcmPlayer$PLAY_STATE
+com.iflytek.cloud.record.PcmPlayer$PLAY_STATE: com.iflytek.cloud.record.PcmPlayer$PLAY_STATE INIT
+com.iflytek.cloud.record.PcmPlayer$PLAY_STATE: com.iflytek.cloud.record.PcmPlayer$PLAY_STATE BUFFERING
+com.iflytek.cloud.record.PcmPlayer$PLAY_STATE: com.iflytek.cloud.record.PcmPlayer$PLAY_STATE PLAYING
+com.iflytek.cloud.record.PcmPlayer$PLAY_STATE: com.iflytek.cloud.record.PcmPlayer$PLAY_STATE PAUSED
+com.iflytek.cloud.record.PcmPlayer$PLAY_STATE: com.iflytek.cloud.record.PcmPlayer$PLAY_STATE STOPED
+com.iflytek.cloud.record.PcmPlayer$PLAY_STATE: com.iflytek.cloud.record.PcmPlayer$PLAY_STATE[] a
+com.iflytek.cloud.record.PcmPlayer$PLAY_STATE: com.iflytek.cloud.record.PcmPlayer$PLAY_STATE[] values()
+com.iflytek.cloud.record.PcmPlayer$PLAY_STATE: com.iflytek.cloud.record.PcmPlayer$PLAY_STATE valueOf(java.lang.String)
+com.iflytek.cloud.record.PcmPlayer$PLAY_STATE: PcmPlayer$PLAY_STATE(java.lang.String,int)
+com.iflytek.cloud.record.PcmPlayer$PLAY_STATE: void <clinit>()
+com.iflytek.cloud.record.PcmPlayer$a
+com.iflytek.cloud.record.PcmPlayer$a: void a(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.record.PcmPlayer$a: void a()
+com.iflytek.cloud.record.PcmPlayer$a: void b()
+com.iflytek.cloud.record.PcmPlayer$a: void a(int,int,int)
+com.iflytek.cloud.record.PcmPlayer$a: void c()
+com.iflytek.cloud.record.PcmPlayer$b
+com.iflytek.cloud.record.PcmPlayer$b: com.iflytek.cloud.record.PcmPlayer a
+com.iflytek.cloud.record.PcmPlayer$b: PcmPlayer$b(com.iflytek.cloud.record.PcmPlayer)
+com.iflytek.cloud.record.PcmPlayer$b: void run()
+com.iflytek.cloud.record.PcmPlayer$b: PcmPlayer$b(com.iflytek.cloud.record.PcmPlayer,com.iflytek.cloud.record.b)
+com.iflytek.cloud.record.a
+com.iflytek.cloud.record.a: int a
+com.iflytek.cloud.record.a: java.util.ArrayList b
+com.iflytek.cloud.record.a: android.content.Context c
+com.iflytek.cloud.record.a: int d
+com.iflytek.cloud.record.a: int e
+com.iflytek.cloud.record.a: android.os.MemoryFile f
+com.iflytek.cloud.record.a: long g
+com.iflytek.cloud.record.a: int h
+com.iflytek.cloud.record.a: com.iflytek.cloud.record.a$a i
+com.iflytek.cloud.record.a: java.lang.String j
+com.iflytek.cloud.record.a: java.lang.String k
+com.iflytek.cloud.record.a: a(android.content.Context,int,java.lang.String)
+com.iflytek.cloud.record.a: void a(java.lang.String)
+com.iflytek.cloud.record.a: int a()
+com.iflytek.cloud.record.a: void a(java.util.ArrayList,int,int,int)
+com.iflytek.cloud.record.a: boolean b()
+com.iflytek.cloud.record.a: boolean a(int)
+com.iflytek.cloud.record.a: void a(byte[])
+com.iflytek.cloud.record.a: java.lang.String i()
+com.iflytek.cloud.record.a: void c()
+com.iflytek.cloud.record.a: int d()
+com.iflytek.cloud.record.a: com.iflytek.cloud.record.a$a e()
+com.iflytek.cloud.record.a: boolean f()
+com.iflytek.cloud.record.a: boolean g()
+com.iflytek.cloud.record.a: void a(android.media.AudioTrack,int)
+com.iflytek.cloud.record.a: void b(android.media.AudioTrack,int)
+com.iflytek.cloud.record.a: void h()
+com.iflytek.cloud.record.a: void finalize()
+com.iflytek.cloud.record.a$a
+com.iflytek.cloud.record.a$a: long a
+com.iflytek.cloud.record.a$a: long b
+com.iflytek.cloud.record.a$a: int c
+com.iflytek.cloud.record.a$a: int d
+com.iflytek.cloud.record.a$a: com.iflytek.cloud.record.a e
+com.iflytek.cloud.record.a$a: a$a(com.iflytek.cloud.record.a,long,long,int,int)
+com.iflytek.cloud.record.b
+com.iflytek.cloud.record.b: com.iflytek.cloud.record.PcmPlayer a
+com.iflytek.cloud.record.b: b(com.iflytek.cloud.record.PcmPlayer)
+com.iflytek.cloud.record.b: void onAudioFocusChange(int)
+com.iflytek.cloud.record.c
+com.iflytek.cloud.record.c: com.iflytek.cloud.record.PcmPlayer a
+com.iflytek.cloud.record.c: c(com.iflytek.cloud.record.PcmPlayer,android.os.Looper)
+com.iflytek.cloud.record.c: void handleMessage(android.os.Message)
+com.iflytek.cloud.record.d
+com.iflytek.cloud.record.d: short a
+com.iflytek.cloud.record.d: byte[] b
+com.iflytek.cloud.record.d: android.media.AudioRecord c
+com.iflytek.cloud.record.d: com.iflytek.cloud.record.d$a d
+com.iflytek.cloud.record.d: com.iflytek.cloud.record.d$a e
+com.iflytek.cloud.record.d: boolean f
+com.iflytek.cloud.record.d: int g
+com.iflytek.cloud.record.d: int h
+com.iflytek.cloud.record.d: int i
+com.iflytek.cloud.record.d: int j
+com.iflytek.cloud.record.d: d(int,int,int)
+com.iflytek.cloud.record.d: void a(short,int,int)
+com.iflytek.cloud.record.d: int b()
+com.iflytek.cloud.record.d: void a()
+com.iflytek.cloud.record.d: void a(com.iflytek.cloud.record.d$a)
+com.iflytek.cloud.record.d: void run()
+com.iflytek.cloud.record.d: void finalize()
+com.iflytek.cloud.record.d: void c()
+com.iflytek.cloud.record.d$a
+com.iflytek.cloud.record.d$a: void a(byte[],int,int)
+com.iflytek.cloud.record.d$a: void a(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.record.d$a: void c(boolean)
+com.iflytek.cloud.record.d$a: void o()
+com.iflytek.cloud.resource.Resource
+com.iflytek.cloud.resource.Resource: java.util.Locale a
+com.iflytek.cloud.resource.Resource: int TEXT_POWER_LINK
+com.iflytek.cloud.resource.Resource: int TEXT_HELP_LINK
+com.iflytek.cloud.resource.Resource: int TEXT_KNOW
+com.iflytek.cloud.resource.Resource: int TEXT_DETAIL
+com.iflytek.cloud.resource.Resource: int TEXT_CANCEL
+com.iflytek.cloud.resource.Resource: int TEXT_STOP
+com.iflytek.cloud.resource.Resource: int TEXT_SET
+com.iflytek.cloud.resource.Resource: int TEXT_MORE
+com.iflytek.cloud.resource.Resource: int TEXT_RETRY
+com.iflytek.cloud.resource.Resource: int TEXT_AGAIN
+com.iflytek.cloud.resource.Resource: int TEXT_PLAYBACK
+com.iflytek.cloud.resource.Resource: int TEXT_RETRIEVE
+com.iflytek.cloud.resource.Resource: int TEXT_HELP_SMS
+com.iflytek.cloud.resource.Resource: int TEXT_HELP_RECO
+com.iflytek.cloud.resource.Resource: int TITLE_HELP
+com.iflytek.cloud.resource.Resource: int TITLE_CONNECTING
+com.iflytek.cloud.resource.Resource: int TITLE_RECORDING
+com.iflytek.cloud.resource.Resource: int TITLE_RECOGNIZE_WAITING
+com.iflytek.cloud.resource.Resource: int TITLE_AUDIO_REQUEST
+com.iflytek.cloud.resource.Resource: int TITLE_ERROR
+com.iflytek.cloud.resource.Resource: int TITLE_AUDIO_PLAYING
+com.iflytek.cloud.resource.Resource: int TITLE_DATA_UPLOAD
+com.iflytek.cloud.resource.Resource: int TAG_ERROR_CODE
+com.iflytek.cloud.resource.Resource: int TAG_ERROR_UNKNOWN
+com.iflytek.cloud.resource.Resource: Resource()
+com.iflytek.cloud.resource.Resource: void setUILanguage(java.util.Locale)
+com.iflytek.cloud.resource.Resource: java.lang.String getLanguage()
+com.iflytek.cloud.resource.Resource: boolean matchLanguage(java.lang.String)
+com.iflytek.cloud.resource.Resource: boolean a(java.lang.String)
+com.iflytek.cloud.resource.Resource: void setTitle(int,java.lang.String)
+com.iflytek.cloud.resource.Resource: java.lang.String getTitle(int)
+com.iflytek.cloud.resource.Resource: java.lang.String getText(int)
+com.iflytek.cloud.resource.Resource: void setText(int,java.lang.String)
+com.iflytek.cloud.resource.Resource: java.lang.String getErrorDescription(int)
+com.iflytek.cloud.resource.Resource: void setErrorDescription(int,java.lang.String)
+com.iflytek.cloud.resource.Resource: java.lang.String getErrorTag(int)
+com.iflytek.cloud.resource.Resource: void <clinit>()
+com.iflytek.cloud.resource.a
+com.iflytek.cloud.resource.a: java.lang.String[] a
+com.iflytek.cloud.resource.a: java.lang.String[] b
+com.iflytek.cloud.resource.a: java.lang.String[] c
+com.iflytek.cloud.resource.a: java.lang.String[] d
+com.iflytek.cloud.resource.a: void <clinit>()
+com.iflytek.cloud.resource.b
+com.iflytek.cloud.resource.b: java.lang.String[] a
+com.iflytek.cloud.resource.b: java.lang.String[] b
+com.iflytek.cloud.resource.b: java.lang.String[] c
+com.iflytek.cloud.resource.b: java.lang.String[] d
+com.iflytek.cloud.resource.b: void <clinit>()
+com.iflytek.cloud.resource.c
+com.iflytek.cloud.resource.c: java.lang.String[] a
+com.iflytek.cloud.resource.c: java.lang.String[] b
+com.iflytek.cloud.resource.c: java.lang.String[] c
+com.iflytek.cloud.resource.c: java.lang.String[] d
+com.iflytek.cloud.resource.c: void <clinit>()
+com.iflytek.cloud.speech.DataDownloader
+com.iflytek.cloud.speech.DataDownloader: DataDownloader(android.content.Context)
+com.iflytek.cloud.speech.DataDownloader: void downloadData(com.iflytek.cloud.speech.SpeechListener)
+com.iflytek.cloud.speech.DataDownloader: boolean d()
+com.iflytek.cloud.speech.DataUploader
+com.iflytek.cloud.speech.DataUploader: DataUploader(android.content.Context)
+com.iflytek.cloud.speech.DataUploader: void uploadData(com.iflytek.cloud.speech.SpeechListener,java.lang.String,byte[])
+com.iflytek.cloud.speech.DataUploader: boolean d()
+com.iflytek.cloud.speech.ErrorCode
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_END
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LOGIN_END
+com.iflytek.cloud.speech.ErrorCode: int MSP_SUCCESS
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_FAIL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_EXCEPTION
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_GENERAL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_OUT_OF_MEMORY
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_FILE_NOT_FOUND
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NOT_SUPPORT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NOT_IMPLEMENT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_ACCESS
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_INVALID_PARA
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_INVALID_PARA_VALUE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_INVALID_HANDLE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_INVALID_DATA
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NO_LICENSE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NOT_INIT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NULL_HANDLE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_OVERFLOW
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_TIME_OUT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_OPEN_FILE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NOT_FOUND
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NO_ENOUGH_BUFFER
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NO_DATA
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NO_MORE_DATA
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_SKIPPED
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_ALREADY_EXIST
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LOAD_MODULE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_BUSY
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_INVALID_CONFIG
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_VERSION_CHECK
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_CANCELED
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_INVALID_MEDIA_TYPE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_CONFIG_INITIALIZE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_CREATE_HANDLE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_CODING_LIB_NOT_LOAD
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_USER_CANCELLED
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_INVALID_OPERATION
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_GENERAL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_OPENSOCK
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_CONNECTSOCK
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_ACCEPTSOCK
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_SENDSOCK
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_RECVSOCK
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_INVALIDSOCK
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_BADADDRESS
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_BINDSEQUENCE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_NOTOPENSOCK
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_NOTBIND
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_NOTLISTEN
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_CONNECTCLOSE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_NOTDGRAMSOCK
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_DNS
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_NET_INIT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_GENERAL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_PARSE_ERROR
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_BUILD_ERROR
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_PARAM_ERROR
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_CONTENT_EMPTY
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_INVALID_CONTENT_TYPE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_INVALID_CONTENT_LENGTH
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_INVALID_CONTENT_ENCODE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_INVALID_KEY
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_KEY_EMPTY
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_SESSION_ID_EMPTY
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_LOGIN_ID_EMPTY
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_SYNC_ID_EMPTY
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_APP_ID_EMPTY
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_EXTERN_ID_EMPTY
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_INVALID_CMD
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_INVALID_SUBJECT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_INVALID_VERSION
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_NO_CMD
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_NO_SUBJECT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_NO_VERSION
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_MSSP_EMPTY
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_NEW_RESPONSE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_NEW_CONTENT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_INVALID_SESSION_ID
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MSG_INVALID_CONTENT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_DB_GENERAL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_DB_EXCEPTION
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_DB_NO_RESULT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_DB_INVALID_USER
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_DB_INVALID_PWD
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_DB_CONNECT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_DB_INVALID_SQL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_DB_INVALID_APPID
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_RES_GENERAL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_RES_LOAD
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_RES_FREE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_RES_MISSING
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_RES_INVALID_NAME
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_RES_INVALID_ID
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_RES_INVALID_IMG
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_RES_WRITE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_RES_LEAK
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_RES_HEAD
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_RES_DATA
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_RES_SKIP
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_TTS_GENERAL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_TTS_TEXTEND
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_TTS_TEXT_EMPTY
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_REC_GENERAL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_REC_INACTIVE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_REC_GRAMMAR_ERROR
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_REC_NO_ACTIVE_GRAMMARS
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_REC_DUPLICATE_GRAMMAR
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_REC_INVALID_MEDIA_TYPE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_REC_INVALID_LANGUAGE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_REC_URI_NOT_FOUND
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_REC_URI_TIMEOUT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_REC_URI_FETCH_ERROR
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_EP_GENERAL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_EP_NO_SESSION_NAME
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_EP_INACTIVE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_EP_INITIALIZED
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_TUV_GENERAL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_TUV_GETHIDPARAM
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_TUV_TOKEN
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_TUV_CFGFILE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_TUV_RECV_CONTENT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_TUV_VERFAIL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LOGIN_SUCCESS
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LOGIN_NO_LICENSE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LOGIN_SESSIONID_INVALID
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LOGIN_SESSIONID_ERROR
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LOGIN_UNLOGIN
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LOGIN_INVALID_USER
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LOGIN_INVALID_PWD
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LOGIN_SYSTEM_ERROR
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_HCR_GENERAL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_HCR_RESOURCE_NOT_EXIST
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_HCR_CREATE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_HCR_DESTROY
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_HCR_START
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_HCR_APPEND_STROKES
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_HCR_GET_RESULT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_HCR_SET_PREDICT_DATA
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_HCR_GET_PREDICT_RESULT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_HCR_GETRESULT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_HCR_RESOURCE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_AUTH_NO_LICENSE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_AUTH_NO_ENOUGH_LICENSE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_AUTH_INVALID_LICENSE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_AUTH_LICENSE_EXPIRED
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_AUTH_NEED_MORE_DATA
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_AUTH_LICENSE_TO_BE_EXPIRED
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_HTTP_BASE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_ISV_NO_USER
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LUA_BASE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LUA_YIELD
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LUA_ERRRUN
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LUA_ERRSYNTAX
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LUA_ERRMEM
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LUA_ERRERR
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LUA_INVALID_PARAM
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_BASE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_MYSQL_INITFAIL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_REDIS_INITFAIL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_NETDSS_INITFAIL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_TAIR_INITFAIL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_MAIL_SESSION_FAIL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_MAIL_LOGON_FAIL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_MAIL_USER_ILLEGAL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_MAIL_PWD_ERR
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_MAIL_SOCKET_ERR
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_MAIL_INIT_FAIL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_STORE_MNR_NO_INIT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_STORE_MNR_POOL_FULL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_STRATGY_PARAM_ILLEGAL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_STRATGY_PARAM_TOOLOOG
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_PARAM_NULL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_ERR_MORE_TOTAL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_PROC_THRESHOLD
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_SERVER_THRESHOLD
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_PYTHON_NO_EXIST
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_PYTHON_IMPORT_FAILED
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_PYTHON_BAD_FUNC
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_DB_DATA_ILLEGAL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_REDIS_NOT_CONN
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_PMA_NOT_FOUND_STRATEGY
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_TAIR_CONNECT
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_PMC_SERVINFO_INVALID
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_ALARM_GROUP_NULL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_MMP_ALARM_CONTXT_NULL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LMOD_BASE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LMOD_NOT_FOUND
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LMOD_UNEXPECTED_BIN
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LMOD_LOADCODE
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LMOD_PRECALL
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LMOD_RUNTIME_EXCEPTION
+com.iflytek.cloud.speech.ErrorCode: int MSP_ERROR_LMOD_ALREADY_LOADED
+com.iflytek.cloud.speech.ErrorCode: int ERROR_UNKNOWN
+com.iflytek.cloud.speech.ErrorCode: int ERROR_NO_NETWORK
+com.iflytek.cloud.speech.ErrorCode: int ERROR_NETWORK_TIMEOUT
+com.iflytek.cloud.speech.ErrorCode: int ERROR_NET_EXPECTION
+com.iflytek.cloud.speech.ErrorCode: int ERROR_INVALID_RESULT
+com.iflytek.cloud.speech.ErrorCode: int ERROR_NO_MATCH
+com.iflytek.cloud.speech.ErrorCode: int ERROR_AUDIO_RECORD
+com.iflytek.cloud.speech.ErrorCode: int ERROR_NO_SPPECH
+com.iflytek.cloud.speech.ErrorCode: int ERROR_SPEECH_TIMEOUT
+com.iflytek.cloud.speech.ErrorCode: int ERROR_EMPTY_UTTERANCE
+com.iflytek.cloud.speech.ErrorCode: int ERROR_FILE_ACCESS
+com.iflytek.cloud.speech.ErrorCode: int ERROR_PLAY_MEDIA
+com.iflytek.cloud.speech.ErrorCode: int ERROR_INVALID_PARAM
+com.iflytek.cloud.speech.ErrorCode: int ERROR_TEXT_OVERFLOW
+com.iflytek.cloud.speech.ErrorCode: int ERROR_INVALID_DATA
+com.iflytek.cloud.speech.ErrorCode: int ERROR_LOGIN
+com.iflytek.cloud.speech.ErrorCode: int ERROR_PERMISSION_DENIED
+com.iflytek.cloud.speech.ErrorCode: int ERROR_INTERRUPT
+com.iflytek.cloud.speech.ErrorCode: int ERROR_VERSION_LOWER
+com.iflytek.cloud.speech.ErrorCode: int ERROR_COMPONENT_NOT_INSTALLED
+com.iflytek.cloud.speech.ErrorCode: int ERROR_ENGINE_NOT_SUPPORTED
+com.iflytek.cloud.speech.ErrorCode: int ERROR_ENGINE_INIT_FAIL
+com.iflytek.cloud.speech.ErrorCode: int ERROR_ENGINE_CALL_FAIL
+com.iflytek.cloud.speech.ErrorCode: int ERROR_ENGINE_BUSY
+com.iflytek.cloud.speech.ErrorCode: int ERROR_LOCAL_NO_INIT
+com.iflytek.cloud.speech.ErrorCode: int ERROR_LOCAL_RESOURCE
+com.iflytek.cloud.speech.ErrorCode: int ERROR_LOCAL_ENGINE
+com.iflytek.cloud.speech.ErrorCode: int ERROR_IVW_INTERRUPT
+com.iflytek.cloud.speech.ErrorCode: ErrorCode()
+com.iflytek.cloud.speech.RecognizerListener
+com.iflytek.cloud.speech.RecognizerListener: void onVolumeChanged(int)
+com.iflytek.cloud.speech.RecognizerListener: void onBeginOfSpeech()
+com.iflytek.cloud.speech.RecognizerListener: void onEndOfSpeech()
+com.iflytek.cloud.speech.RecognizerListener: void onResult(com.iflytek.cloud.speech.RecognizerResult,boolean)
+com.iflytek.cloud.speech.RecognizerListener: void onError(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.speech.RecognizerListener: void onEvent(int,int,int,java.lang.String)
+com.iflytek.cloud.speech.RecognizerResult
+com.iflytek.cloud.speech.RecognizerResult: java.lang.String a
+com.iflytek.cloud.speech.RecognizerResult: android.os.Parcelable$Creator CREATOR
+com.iflytek.cloud.speech.RecognizerResult: RecognizerResult(android.os.Parcel)
+com.iflytek.cloud.speech.RecognizerResult: RecognizerResult(java.lang.String)
+com.iflytek.cloud.speech.RecognizerResult: int describeContents()
+com.iflytek.cloud.speech.RecognizerResult: java.lang.String getResultString()
+com.iflytek.cloud.speech.RecognizerResult: void writeToParcel(android.os.Parcel,int)
+com.iflytek.cloud.speech.RecognizerResult: void <clinit>()
+com.iflytek.cloud.speech.SpeechConstant
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String APPID
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String WAP_PROXY
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String NET_TIMEOUT
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String KEY_SPEECH_TIMEOUT
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String LANGUAGE
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String ACCENT
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String DOMAIN
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String CLOUD_GRAMMAR
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String AUDIO_SOURCE
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String VAD_BOS
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String VAD_EOS
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String SAMPLE_RATE
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String PARAMS
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String ASR_NBEST
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String ASR_WBEST
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String ASR_PTT
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String RESULT_TYPE
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String SEARCH_AREA
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String SCENE
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String NLP_VERSION
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String AUDIO_FORMAT
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String VOICE_NAME
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String SPEED
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String PITCH
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String VOLUME
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String BACKGROUND_SOUND
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String TTS_BUFFER_TIME
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String STREAM_TYPE
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String KEY_REQUEST_FOCUS
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String DATA_TYPE
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String SUBJECT
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String ASR_AUDIO_PATH
+com.iflytek.cloud.speech.SpeechConstant: java.lang.String TTS_AUDIO_PATH
+com.iflytek.cloud.speech.SpeechConstant: SpeechConstant()
+com.iflytek.cloud.speech.SpeechError
+com.iflytek.cloud.speech.SpeechError: long serialVersionUID
+com.iflytek.cloud.speech.SpeechError: int ERROR_INTERRUPT
+com.iflytek.cloud.speech.SpeechError: int a
+com.iflytek.cloud.speech.SpeechError: java.lang.String b
+com.iflytek.cloud.speech.SpeechError: SpeechError(java.lang.Exception)
+com.iflytek.cloud.speech.SpeechError: SpeechError(int,java.lang.String)
+com.iflytek.cloud.speech.SpeechError: SpeechError(int)
+com.iflytek.cloud.speech.SpeechError: java.lang.String toString()
+com.iflytek.cloud.speech.SpeechError: int getErrorCode()
+com.iflytek.cloud.speech.SpeechError: java.lang.String getErrorDescription()
+com.iflytek.cloud.speech.SpeechError: java.lang.String getHtmlDescription(boolean)
+com.iflytek.cloud.speech.SpeechError: java.lang.String getPlainDescription(boolean)
+com.iflytek.cloud.speech.SpeechEvent
+com.iflytek.cloud.speech.SpeechEvent: int EVENT_NETPREF
+com.iflytek.cloud.speech.SpeechEvent: SpeechEvent()
+com.iflytek.cloud.speech.SpeechListener
+com.iflytek.cloud.speech.SpeechListener: void onEvent(int,android.os.Bundle)
+com.iflytek.cloud.speech.SpeechListener: void onData(byte[])
+com.iflytek.cloud.speech.SpeechListener: void onCompleted(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.speech.SpeechRecognizer
+com.iflytek.cloud.speech.SpeechRecognizer: com.iflytek.cloud.speech.SpeechRecognizer e
+com.iflytek.cloud.speech.SpeechRecognizer: com.iflytek.cloud.speech.SpeechRecognizer createRecognizer(android.content.Context)
+com.iflytek.cloud.speech.SpeechRecognizer: com.iflytek.cloud.speech.SpeechRecognizer getRecognizer()
+com.iflytek.cloud.speech.SpeechRecognizer: SpeechRecognizer(android.content.Context)
+com.iflytek.cloud.speech.SpeechRecognizer: boolean d()
+com.iflytek.cloud.speech.SpeechRecognizer: void startListening(com.iflytek.cloud.speech.RecognizerListener)
+com.iflytek.cloud.speech.SpeechRecognizer: boolean writeAudio(byte[],int,int)
+com.iflytek.cloud.speech.SpeechRecognizer: void stopListening()
+com.iflytek.cloud.speech.SpeechRecognizer: boolean isListening()
+com.iflytek.cloud.speech.SpeechRecognizer: int getUpflowBytes(boolean)
+com.iflytek.cloud.speech.SpeechRecognizer: int getDownflowBytes(boolean)
+com.iflytek.cloud.speech.SpeechRecognizer: void cancel()
+com.iflytek.cloud.speech.SpeechRecognizer: boolean setParameter(java.lang.String,java.lang.String)
+com.iflytek.cloud.speech.SpeechRecognizer: java.lang.String getParameter(java.lang.String)
+com.iflytek.cloud.speech.SpeechRecognizer: boolean destroy()
+com.iflytek.cloud.speech.SpeechRecognizer: void <clinit>()
+com.iflytek.cloud.speech.SpeechSynthesizer
+com.iflytek.cloud.speech.SpeechSynthesizer: com.iflytek.cloud.speech.SpeechSynthesizer createSynthesizer(android.content.Context)
+com.iflytek.cloud.speech.SpeechSynthesizer: com.iflytek.cloud.speech.SpeechSynthesizer getSynthesizer()
+com.iflytek.cloud.speech.SpeechSynthesizer: SpeechSynthesizer(android.content.Context)
+com.iflytek.cloud.speech.SpeechSynthesizer: void startSpeaking(java.lang.String,com.iflytek.cloud.speech.SynthesizerListener)
+com.iflytek.cloud.speech.SpeechSynthesizer: void synthesizeToUri(java.lang.String,java.lang.String,com.iflytek.cloud.speech.SynthesizeToUriListener)
+com.iflytek.cloud.speech.SpeechSynthesizer: void pauseSpeaking()
+com.iflytek.cloud.speech.SpeechSynthesizer: void resumeSpeaking()
+com.iflytek.cloud.speech.SpeechSynthesizer: void stopSpeaking()
+com.iflytek.cloud.speech.SpeechSynthesizer: boolean isSpeaking()
+com.iflytek.cloud.speech.SpeechSynthesizer: void replaySpeaking()
+com.iflytek.cloud.speech.SpeechSynthesizer: int getDownflowBytes(boolean)
+com.iflytek.cloud.speech.SpeechSynthesizer: int getUpflowBytes(boolean)
+com.iflytek.cloud.speech.SpeechSynthesizer: boolean setParameter(java.lang.String,java.lang.String)
+com.iflytek.cloud.speech.SpeechSynthesizer: boolean destroy()
+com.iflytek.cloud.speech.SpeechUnderstander
+com.iflytek.cloud.speech.SpeechUnderstander: com.iflytek.cloud.speech.SpeechUnderstander a
+com.iflytek.cloud.speech.SpeechUnderstander: com.iflytek.cloud.speech.a.a b
+com.iflytek.cloud.speech.SpeechUnderstander: SpeechUnderstander(android.content.Context)
+com.iflytek.cloud.speech.SpeechUnderstander: com.iflytek.cloud.speech.SpeechUnderstander createUnderstander(android.content.Context)
+com.iflytek.cloud.speech.SpeechUnderstander: com.iflytek.cloud.speech.SpeechUnderstander getUnderstander()
+com.iflytek.cloud.speech.SpeechUnderstander: void startUnderstanding(com.iflytek.cloud.speech.SpeechUnderstanderListener)
+com.iflytek.cloud.speech.SpeechUnderstander: boolean isUnderstanding()
+com.iflytek.cloud.speech.SpeechUnderstander: boolean writeAudio(byte[],int,int)
+com.iflytek.cloud.speech.SpeechUnderstander: void stopUnderstanding()
+com.iflytek.cloud.speech.SpeechUnderstander: void cancel()
+com.iflytek.cloud.speech.SpeechUnderstander: boolean setParameter(java.lang.String,java.lang.String)
+com.iflytek.cloud.speech.SpeechUnderstander: java.lang.String getParameter(java.lang.String)
+com.iflytek.cloud.speech.SpeechUnderstander: boolean destroy()
+com.iflytek.cloud.speech.SpeechUnderstander: void <clinit>()
+com.iflytek.cloud.speech.SpeechUnderstander$a
+com.iflytek.cloud.speech.SpeechUnderstander$a: com.iflytek.cloud.speech.SpeechUnderstanderListener b
+com.iflytek.cloud.speech.SpeechUnderstander$a: com.iflytek.cloud.speech.SpeechUnderstander a
+com.iflytek.cloud.speech.SpeechUnderstander$a: SpeechUnderstander$a(com.iflytek.cloud.speech.SpeechUnderstander,com.iflytek.cloud.speech.SpeechUnderstanderListener)
+com.iflytek.cloud.speech.SpeechUnderstander$a: void onEndOfSpeech()
+com.iflytek.cloud.speech.SpeechUnderstander$a: void onVolumeChanged(int)
+com.iflytek.cloud.speech.SpeechUnderstander$a: void onBeginOfSpeech()
+com.iflytek.cloud.speech.SpeechUnderstander$a: void onError(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.speech.SpeechUnderstander$a: void onEvent(int,int,int,java.lang.String)
+com.iflytek.cloud.speech.SpeechUnderstander$a: void onResult(com.iflytek.cloud.speech.RecognizerResult,boolean)
+com.iflytek.cloud.speech.SpeechUnderstanderListener
+com.iflytek.cloud.speech.SpeechUnderstanderListener: void onVolumeChanged(int)
+com.iflytek.cloud.speech.SpeechUnderstanderListener: void onBeginOfSpeech()
+com.iflytek.cloud.speech.SpeechUnderstanderListener: void onEndOfSpeech()
+com.iflytek.cloud.speech.SpeechUnderstanderListener: void onResult(com.iflytek.cloud.speech.UnderstanderResult)
+com.iflytek.cloud.speech.SpeechUnderstanderListener: void onError(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.speech.SpeechUnderstanderListener: void onEvent(int,int,int,java.lang.String)
+com.iflytek.cloud.speech.SpeechUser
+com.iflytek.cloud.speech.SpeechUser: com.iflytek.cloud.speech.SpeechUser e
+com.iflytek.cloud.speech.SpeechUser: java.lang.String f
+com.iflytek.cloud.speech.SpeechUser: java.lang.String g
+com.iflytek.cloud.speech.SpeechUser: com.iflytek.cloud.c.a h
+com.iflytek.cloud.speech.SpeechUser: com.iflytek.cloud.speech.SpeechUser$Login_State i
+com.iflytek.cloud.speech.SpeechUser: com.iflytek.cloud.speech.SpeechUser getUser()
+com.iflytek.cloud.speech.SpeechUser: com.iflytek.cloud.c.a getInitParam()
+com.iflytek.cloud.speech.SpeechUser: void a(java.lang.String)
+com.iflytek.cloud.speech.SpeechUser: SpeechUser()
+com.iflytek.cloud.speech.SpeechUser: com.iflytek.cloud.speech.SpeechUser$Login_State getLoginState()
+com.iflytek.cloud.speech.SpeechUser: boolean login(android.content.Context,java.lang.String,java.lang.String,java.lang.String,com.iflytek.cloud.speech.SpeechListener)
+com.iflytek.cloud.speech.SpeechUser: boolean logout()
+com.iflytek.cloud.speech.SpeechUser: boolean d()
+com.iflytek.cloud.speech.SpeechUser: com.iflytek.cloud.speech.SpeechUser$Login_State a(com.iflytek.cloud.speech.SpeechUser,com.iflytek.cloud.speech.SpeechUser$Login_State)
+com.iflytek.cloud.speech.SpeechUser: void <clinit>()
+com.iflytek.cloud.speech.SpeechUser$Login_State
+com.iflytek.cloud.speech.SpeechUser$Login_State: com.iflytek.cloud.speech.SpeechUser$Login_State Logined
+com.iflytek.cloud.speech.SpeechUser$Login_State: com.iflytek.cloud.speech.SpeechUser$Login_State Unlogin
+com.iflytek.cloud.speech.SpeechUser$Login_State: com.iflytek.cloud.speech.SpeechUser$Login_State[] a
+com.iflytek.cloud.speech.SpeechUser$Login_State: com.iflytek.cloud.speech.SpeechUser$Login_State[] values()
+com.iflytek.cloud.speech.SpeechUser$Login_State: com.iflytek.cloud.speech.SpeechUser$Login_State valueOf(java.lang.String)
+com.iflytek.cloud.speech.SpeechUser$Login_State: SpeechUser$Login_State(java.lang.String,int)
+com.iflytek.cloud.speech.SpeechUser$Login_State: void <clinit>()
+com.iflytek.cloud.speech.SpeechUser$a
+com.iflytek.cloud.speech.SpeechUser$a: com.iflytek.cloud.speech.SpeechUser b
+com.iflytek.cloud.speech.SpeechUser$a: SpeechUser$a(com.iflytek.cloud.speech.SpeechUser,com.iflytek.cloud.speech.SpeechListener)
+com.iflytek.cloud.speech.SpeechUser$a: void onCompleted(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.speech.SynthesizeToUriListener
+com.iflytek.cloud.speech.SynthesizeToUriListener: void onBufferProgress(int)
+com.iflytek.cloud.speech.SynthesizeToUriListener: void onSynthesizeCompleted(java.lang.String,com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.speech.SynthesizerListener
+com.iflytek.cloud.speech.SynthesizerListener: void onSpeakBegin()
+com.iflytek.cloud.speech.SynthesizerListener: void onBufferProgress(int,int,int,java.lang.String)
+com.iflytek.cloud.speech.SynthesizerListener: void onSpeakPaused()
+com.iflytek.cloud.speech.SynthesizerListener: void onSpeakResumed()
+com.iflytek.cloud.speech.SynthesizerListener: void onSpeakProgress(int,int,int)
+com.iflytek.cloud.speech.SynthesizerListener: void onCompleted(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.speech.TextUnderstander
+com.iflytek.cloud.speech.TextUnderstander: TextUnderstander(android.content.Context)
+com.iflytek.cloud.speech.TextUnderstander: void understandText(java.lang.String,com.iflytek.cloud.speech.TextUnderstanderListener)
+com.iflytek.cloud.speech.TextUnderstander: boolean isUnderstanding()
+com.iflytek.cloud.speech.TextUnderstander: void cancel()
+com.iflytek.cloud.speech.TextUnderstander: boolean setParameter(java.lang.String,java.lang.String)
+com.iflytek.cloud.speech.TextUnderstander: java.lang.String getParameter(java.lang.String)
+com.iflytek.cloud.speech.TextUnderstander: boolean destroy()
+com.iflytek.cloud.speech.TextUnderstander$a
+com.iflytek.cloud.speech.TextUnderstander$a: com.iflytek.cloud.speech.TextUnderstanderListener b
+com.iflytek.cloud.speech.TextUnderstander$a: com.iflytek.cloud.speech.TextUnderstander a
+com.iflytek.cloud.speech.TextUnderstander$a: TextUnderstander$a(com.iflytek.cloud.speech.TextUnderstander,com.iflytek.cloud.speech.TextUnderstanderListener)
+com.iflytek.cloud.speech.TextUnderstander$a: void onData(byte[])
+com.iflytek.cloud.speech.TextUnderstander$a: void onCompleted(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.speech.TextUnderstander$a: void onEvent(int,android.os.Bundle)
+com.iflytek.cloud.speech.TextUnderstanderListener
+com.iflytek.cloud.speech.TextUnderstanderListener: void onResult(com.iflytek.cloud.speech.UnderstanderResult)
+com.iflytek.cloud.speech.TextUnderstanderListener: void onError(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.speech.UnderstanderResult
+com.iflytek.cloud.speech.UnderstanderResult: java.lang.String a
+com.iflytek.cloud.speech.UnderstanderResult: android.os.Parcelable$Creator CREATOR
+com.iflytek.cloud.speech.UnderstanderResult: UnderstanderResult(android.os.Parcel)
+com.iflytek.cloud.speech.UnderstanderResult: UnderstanderResult(java.lang.String)
+com.iflytek.cloud.speech.UnderstanderResult: java.lang.String getResultString()
+com.iflytek.cloud.speech.UnderstanderResult: int describeContents()
+com.iflytek.cloud.speech.UnderstanderResult: void writeToParcel(android.os.Parcel,int)
+com.iflytek.cloud.speech.UnderstanderResult: void <clinit>()
+com.iflytek.cloud.speech.a
+com.iflytek.cloud.speech.a: a()
+com.iflytek.cloud.speech.a: com.iflytek.cloud.speech.RecognizerResult a(android.os.Parcel)
+com.iflytek.cloud.speech.a: com.iflytek.cloud.speech.RecognizerResult[] a(int)
+com.iflytek.cloud.speech.a: java.lang.Object[] newArray(int)
+com.iflytek.cloud.speech.a: java.lang.Object createFromParcel(android.os.Parcel)
+com.iflytek.cloud.speech.a.a
+com.iflytek.cloud.speech.a.a: boolean e
+com.iflytek.cloud.speech.a.a: a(android.content.Context)
+com.iflytek.cloud.speech.a.a: void a(java.lang.String)
+com.iflytek.cloud.speech.a.a: void startListening(com.iflytek.cloud.speech.RecognizerListener)
+com.iflytek.cloud.speech.a.a: boolean writeAudio(byte[],int,int)
+com.iflytek.cloud.speech.a.a: void stopListening()
+com.iflytek.cloud.speech.a.a: void cancel()
+com.iflytek.cloud.speech.a.a: int getDownflowBytes(boolean)
+com.iflytek.cloud.speech.a.a: int getUpflowBytes(boolean)
+com.iflytek.cloud.speech.a.a: boolean isListening()
+com.iflytek.cloud.speech.a.a: com.iflytek.cloud.b.b.a a(com.iflytek.cloud.speech.a.a)
+com.iflytek.cloud.speech.a.a: com.iflytek.cloud.b.b.a b(com.iflytek.cloud.speech.a.a)
+com.iflytek.cloud.speech.a.a: android.content.Context c(com.iflytek.cloud.speech.a.a)
+com.iflytek.cloud.speech.a.a: boolean d(com.iflytek.cloud.speech.a.a)
+com.iflytek.cloud.speech.a.a$a
+com.iflytek.cloud.speech.a.a$a: com.iflytek.cloud.speech.RecognizerListener b
+com.iflytek.cloud.speech.a.a$a: boolean c
+com.iflytek.cloud.speech.a.a$a: android.os.Handler d
+com.iflytek.cloud.speech.a.a$a: com.iflytek.cloud.speech.a.a a
+com.iflytek.cloud.speech.a.a$a: a$a(com.iflytek.cloud.speech.a.a,com.iflytek.cloud.speech.RecognizerListener)
+com.iflytek.cloud.speech.a.a$a: void onVolumeChanged(int)
+com.iflytek.cloud.speech.a.a$a: void onEndOfSpeech()
+com.iflytek.cloud.speech.a.a$a: void onResult(com.iflytek.cloud.speech.RecognizerResult,boolean)
+com.iflytek.cloud.speech.a.a$a: void onBeginOfSpeech()
+com.iflytek.cloud.speech.a.a$a: void onError(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.speech.a.a$a: void onEvent(int,int,int,java.lang.String)
+com.iflytek.cloud.speech.a.a$a: void a()
+com.iflytek.cloud.speech.a.a$a: com.iflytek.cloud.speech.RecognizerListener a(com.iflytek.cloud.speech.a.a$a)
+com.iflytek.cloud.speech.a.a$a: boolean b(com.iflytek.cloud.speech.a.a$a)
+com.iflytek.cloud.speech.a.a$a: boolean a(com.iflytek.cloud.speech.a.a$a,boolean)
+com.iflytek.cloud.speech.a.b
+com.iflytek.cloud.speech.a.b: com.iflytek.cloud.speech.a.a$a a
+com.iflytek.cloud.speech.a.b: b(com.iflytek.cloud.speech.a.a$a,android.os.Looper)
+com.iflytek.cloud.speech.a.b: void handleMessage(android.os.Message)
+com.iflytek.cloud.speech.a.c
+com.iflytek.cloud.speech.a.c: android.content.Context e
+com.iflytek.cloud.speech.a.c: com.iflytek.cloud.speech.a.c f
+com.iflytek.cloud.speech.a.c: com.iflytek.cloud.speech.a.c$a g
+com.iflytek.cloud.speech.a.c: com.iflytek.cloud.speech.a.c a(android.content.Context)
+com.iflytek.cloud.speech.a.c: com.iflytek.cloud.speech.a.c e()
+com.iflytek.cloud.speech.a.c: c(android.content.Context)
+com.iflytek.cloud.speech.a.c: void startSpeaking(java.lang.String,com.iflytek.cloud.speech.SynthesizerListener)
+com.iflytek.cloud.speech.a.c: void synthesizeToUri(java.lang.String,java.lang.String,com.iflytek.cloud.speech.SynthesizeToUriListener)
+com.iflytek.cloud.speech.a.c: void pauseSpeaking()
+com.iflytek.cloud.speech.a.c: void replaySpeaking()
+com.iflytek.cloud.speech.a.c: void resumeSpeaking()
+com.iflytek.cloud.speech.a.c: boolean isSpeaking()
+com.iflytek.cloud.speech.a.c: void stopSpeaking()
+com.iflytek.cloud.speech.a.c: int getDownflowBytes(boolean)
+com.iflytek.cloud.speech.a.c: int getUpflowBytes(boolean)
+com.iflytek.cloud.speech.a.c: boolean destroy()
+com.iflytek.cloud.speech.a.c: void <clinit>()
+com.iflytek.cloud.speech.a.c$a
+com.iflytek.cloud.speech.a.c$a: com.iflytek.cloud.record.PcmPlayer f
+com.iflytek.cloud.speech.a.c$a: com.iflytek.cloud.record.a g
+com.iflytek.cloud.speech.a.c$a: com.iflytek.cloud.speech.SynthesizerListener h
+com.iflytek.cloud.speech.a.c$a: com.iflytek.cloud.speech.SynthesizeToUriListener i
+com.iflytek.cloud.speech.a.c$a: int j
+com.iflytek.cloud.speech.a.c$a: boolean k
+com.iflytek.cloud.speech.a.c$a: com.iflytek.cloud.b.d.b l
+com.iflytek.cloud.speech.a.c$a: com.iflytek.cloud.record.PcmPlayer$a m
+com.iflytek.cloud.speech.a.c$a: android.os.Handler n
+com.iflytek.cloud.speech.a.c$a: com.iflytek.cloud.speech.a.c e
+com.iflytek.cloud.speech.a.c$a: c$a(com.iflytek.cloud.speech.a.c,android.content.Context)
+com.iflytek.cloud.speech.a.c$a: void a(java.lang.String,com.iflytek.cloud.c.a,com.iflytek.cloud.speech.SynthesizerListener)
+com.iflytek.cloud.speech.a.c$a: com.iflytek.cloud.record.PcmPlayer$PLAY_STATE e()
+com.iflytek.cloud.speech.a.c$a: void f()
+com.iflytek.cloud.speech.a.c$a: void g()
+com.iflytek.cloud.speech.a.c$a: boolean h()
+com.iflytek.cloud.speech.a.c$a: void a(boolean)
+com.iflytek.cloud.speech.a.c$a: void i()
+com.iflytek.cloud.speech.a.c$a: void j()
+com.iflytek.cloud.speech.a.c$a: boolean destroy()
+com.iflytek.cloud.speech.a.c$a: void a(java.lang.String,java.lang.String,com.iflytek.cloud.c.a,com.iflytek.cloud.speech.SynthesizeToUriListener)
+com.iflytek.cloud.speech.a.c$a: com.iflytek.cloud.speech.SynthesizerListener a(com.iflytek.cloud.speech.a.c$a)
+com.iflytek.cloud.speech.a.c$a: android.os.Handler b(com.iflytek.cloud.speech.a.c$a)
+com.iflytek.cloud.speech.a.c$a: com.iflytek.cloud.record.a c(com.iflytek.cloud.speech.a.c$a)
+com.iflytek.cloud.speech.a.c$a: boolean d(com.iflytek.cloud.speech.a.c$a)
+com.iflytek.cloud.speech.a.c$a: int e(com.iflytek.cloud.speech.a.c$a)
+com.iflytek.cloud.speech.a.c$a: boolean a(com.iflytek.cloud.speech.a.c$a,boolean)
+com.iflytek.cloud.speech.a.c$a: com.iflytek.cloud.record.PcmPlayer$a f(com.iflytek.cloud.speech.a.c$a)
+com.iflytek.cloud.speech.a.c$a: com.iflytek.cloud.record.PcmPlayer g(com.iflytek.cloud.speech.a.c$a)
+com.iflytek.cloud.speech.a.c$a: com.iflytek.cloud.speech.SynthesizeToUriListener h(com.iflytek.cloud.speech.a.c$a)
+com.iflytek.cloud.speech.a.d
+com.iflytek.cloud.speech.a.d: com.iflytek.cloud.speech.a.c$a a
+com.iflytek.cloud.speech.a.d: d(com.iflytek.cloud.speech.a.c$a)
+com.iflytek.cloud.speech.a.d: void a(java.util.ArrayList,int,int,int,java.lang.String)
+com.iflytek.cloud.speech.a.d: void a(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.speech.a.e
+com.iflytek.cloud.speech.a.e: com.iflytek.cloud.speech.a.c$a a
+com.iflytek.cloud.speech.a.e: e(com.iflytek.cloud.speech.a.c$a)
+com.iflytek.cloud.speech.a.e: void a()
+com.iflytek.cloud.speech.a.e: void b()
+com.iflytek.cloud.speech.a.e: void a(int,int,int)
+com.iflytek.cloud.speech.a.e: void a(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.speech.a.e: void c()
+com.iflytek.cloud.speech.a.f
+com.iflytek.cloud.speech.a.f: com.iflytek.cloud.speech.a.c$a a
+com.iflytek.cloud.speech.a.f: f(com.iflytek.cloud.speech.a.c$a,android.os.Looper)
+com.iflytek.cloud.speech.a.f: void handleMessage(android.os.Message)
+com.iflytek.cloud.speech.a.g
+com.iflytek.cloud.speech.a.g: java.lang.String a
+com.iflytek.cloud.speech.a.g: com.iflytek.cloud.speech.a.c$a b
+com.iflytek.cloud.speech.a.g: g(com.iflytek.cloud.speech.a.c$a,android.os.Looper,java.lang.String)
+com.iflytek.cloud.speech.a.g: void handleMessage(android.os.Message)
+com.iflytek.cloud.speech.a.h
+com.iflytek.cloud.speech.a.h: android.os.Handler a
+com.iflytek.cloud.speech.a.h: com.iflytek.cloud.speech.a.c$a b
+com.iflytek.cloud.speech.a.h: h(com.iflytek.cloud.speech.a.c$a,android.os.Handler)
+com.iflytek.cloud.speech.a.h: void a(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.speech.a.h: void a(java.util.ArrayList,int,int,int,java.lang.String)
+com.iflytek.cloud.speech.b
+com.iflytek.cloud.speech.b: b()
+com.iflytek.cloud.speech.b: com.iflytek.cloud.speech.UnderstanderResult a(android.os.Parcel)
+com.iflytek.cloud.speech.b: com.iflytek.cloud.speech.UnderstanderResult[] a(int)
+com.iflytek.cloud.speech.b: java.lang.Object[] newArray(int)
+com.iflytek.cloud.speech.b: java.lang.Object createFromParcel(android.os.Parcel)
+com.iflytek.cloud.ui.RecognizerDialog
+com.iflytek.cloud.ui.RecognizerDialog: RecognizerDialog(android.content.Context)
+com.iflytek.cloud.ui.RecognizerDialog: void setListener(com.iflytek.cloud.ui.RecognizerDialogListener)
+com.iflytek.cloud.ui.RecognizerDialog: void setParameter(java.lang.String,java.lang.String)
+com.iflytek.cloud.ui.RecognizerDialog: int getDownflowBytes(boolean)
+com.iflytek.cloud.ui.RecognizerDialog: int getUpflowBytes(boolean)
+com.iflytek.cloud.ui.RecognizerDialog: void setUILanguage(java.util.Locale)
+com.iflytek.cloud.ui.RecognizerDialog: void show()
+com.iflytek.cloud.ui.RecognizerDialog: void dismiss()
+com.iflytek.cloud.ui.RecognizerDialogListener
+com.iflytek.cloud.ui.RecognizerDialogListener: void onResult(com.iflytek.cloud.speech.RecognizerResult,boolean)
+com.iflytek.cloud.ui.RecognizerDialogListener: void onError(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.ui.a
+com.iflytek.cloud.ui.a: android.widget.LinearLayout d
+com.iflytek.cloud.ui.a: com.iflytek.cloud.ui.a.f e
+com.iflytek.cloud.ui.a: android.view.animation.RotateAnimation f
+com.iflytek.cloud.ui.a: com.iflytek.cloud.speech.SpeechRecognizer g
+com.iflytek.cloud.ui.a: com.iflytek.cloud.ui.RecognizerDialogListener h
+com.iflytek.cloud.ui.a: long i
+com.iflytek.cloud.ui.a: int a
+com.iflytek.cloud.ui.a: com.iflytek.cloud.speech.RecognizerListener j
+com.iflytek.cloud.ui.a: int k
+com.iflytek.cloud.ui.a: a(android.content.Context)
+com.iflytek.cloud.ui.a: void a()
+com.iflytek.cloud.ui.a: void a(com.iflytek.cloud.ui.RecognizerDialogListener)
+com.iflytek.cloud.ui.a: void a(java.lang.String,java.lang.String)
+com.iflytek.cloud.ui.a: void g()
+com.iflytek.cloud.ui.a: void h()
+com.iflytek.cloud.ui.a: void i()
+com.iflytek.cloud.ui.a: void j()
+com.iflytek.cloud.ui.a: void a(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.ui.a: void a(android.widget.TextView,com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.ui.a: void k()
+com.iflytek.cloud.ui.a: void onClick(android.view.View)
+com.iflytek.cloud.ui.a: void b()
+com.iflytek.cloud.ui.a: void c()
+com.iflytek.cloud.ui.a: int a(boolean)
+com.iflytek.cloud.ui.a: int b(boolean)
+com.iflytek.cloud.ui.a: boolean d()
+com.iflytek.cloud.ui.a: int a(com.iflytek.cloud.ui.a)
+com.iflytek.cloud.ui.a: com.iflytek.cloud.ui.a.f b(com.iflytek.cloud.ui.a)
+com.iflytek.cloud.ui.a: void c(com.iflytek.cloud.ui.a)
+com.iflytek.cloud.ui.a: com.iflytek.cloud.ui.RecognizerDialogListener d(com.iflytek.cloud.ui.a)
+com.iflytek.cloud.ui.a: boolean e(com.iflytek.cloud.ui.a)
+com.iflytek.cloud.ui.a: void a(com.iflytek.cloud.ui.a,com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.ui.a: void <clinit>()
+com.iflytek.cloud.ui.a$a
+com.iflytek.cloud.ui.a$a: java.lang.String b
+com.iflytek.cloud.ui.a$a: com.iflytek.cloud.ui.a a
+com.iflytek.cloud.ui.a$a: a$a(com.iflytek.cloud.ui.a,java.lang.String)
+com.iflytek.cloud.ui.a$a: void onClick(android.view.View)
+com.iflytek.cloud.ui.a$a: void updateDrawState(android.text.TextPaint)
+com.iflytek.cloud.ui.a.a
+com.iflytek.cloud.ui.a.a: int a
+com.iflytek.cloud.ui.a.a: android.graphics.drawable.Drawable a(android.content.res.Resources,android.util.TypedValue,java.io.InputStream,java.lang.String,android.graphics.BitmapFactory$Options)
+com.iflytek.cloud.ui.a.a: android.graphics.Bitmap a(android.content.res.Resources,android.util.TypedValue,java.io.InputStream,android.graphics.Rect,android.graphics.BitmapFactory$Options)
+com.iflytek.cloud.ui.a.a: android.graphics.drawable.Drawable a(android.content.res.Resources,android.graphics.Bitmap,byte[],android.graphics.Rect,java.lang.String)
+com.iflytek.cloud.ui.a.a: void <clinit>()
+com.iflytek.cloud.ui.a.b
+com.iflytek.cloud.ui.a.b: com.iflytek.cloud.ui.a.d a
+com.iflytek.cloud.ui.a.b: com.iflytek.cloud.ui.a.b$a b
+com.iflytek.cloud.ui.a.b: b(android.content.Context)
+com.iflytek.cloud.ui.a.b: void onCreate(android.os.Bundle)
+com.iflytek.cloud.ui.a.b: void show()
+com.iflytek.cloud.ui.a.b: void dismiss()
+com.iflytek.cloud.ui.a.b: boolean destroy()
+com.iflytek.cloud.ui.a.b$a
+com.iflytek.cloud.ui.a.b$a: void a()
+com.iflytek.cloud.ui.a.c
+com.iflytek.cloud.ui.a.c: com.iflytek.cloud.ui.a.b a
+com.iflytek.cloud.ui.a.c: c(com.iflytek.cloud.ui.a.b)
+com.iflytek.cloud.ui.a.c: void a()
+com.iflytek.cloud.ui.a.d
+com.iflytek.cloud.ui.a.d: com.iflytek.cloud.ui.a.b$a a
+com.iflytek.cloud.ui.a.d: boolean b
+com.iflytek.cloud.ui.a.d: boolean c
+com.iflytek.cloud.ui.a.d: d(android.content.Context)
+com.iflytek.cloud.ui.a.d: void e()
+com.iflytek.cloud.ui.a.d: void a(com.iflytek.cloud.ui.a.b$a)
+com.iflytek.cloud.ui.a.d: void f()
+com.iflytek.cloud.ui.a.d: void b()
+com.iflytek.cloud.ui.a.d: void c()
+com.iflytek.cloud.ui.a.d: boolean a(android.view.ViewGroup)
+com.iflytek.cloud.ui.a.d: boolean d()
+com.iflytek.cloud.ui.a.e
+com.iflytek.cloud.ui.a.e: java.util.HashMap e
+com.iflytek.cloud.ui.a.e: java.util.HashMap f
+com.iflytek.cloud.ui.a.e: int a
+com.iflytek.cloud.ui.a.e: int b
+com.iflytek.cloud.ui.a.e: int c
+com.iflytek.cloud.ui.a.e: int d
+com.iflytek.cloud.ui.a.e: int[] a()
+com.iflytek.cloud.ui.a.e: int[] b()
+com.iflytek.cloud.ui.a.e: java.io.InputStream b(android.content.Context,java.lang.String)
+com.iflytek.cloud.ui.a.e: android.view.View a(android.content.Context,java.lang.String,android.view.ViewGroup)
+com.iflytek.cloud.ui.a.e: android.graphics.drawable.Drawable a(android.content.Context,java.lang.String)
+com.iflytek.cloud.ui.a.e: android.graphics.drawable.Drawable c(android.content.Context,java.lang.String)
+com.iflytek.cloud.ui.a.e: void <clinit>()
+com.iflytek.cloud.ui.a.f
+com.iflytek.cloud.ui.a.f: android.graphics.drawable.Drawable b
+com.iflytek.cloud.ui.a.f: android.graphics.drawable.Drawable c
+com.iflytek.cloud.ui.a.f: android.graphics.Path a
+com.iflytek.cloud.ui.a.f: f(android.content.Context)
+com.iflytek.cloud.ui.a.f: void a(int)
+com.iflytek.cloud.ui.a.f: void onDraw(android.graphics.Canvas)
+com.iflytek.cloud.ui.a.f: void finalize()
+com.iflytek.cloud.ui.a.f: void onMeasure(int,int)
+com.iflytek.cloud.ui.b
+com.iflytek.cloud.ui.b: com.iflytek.cloud.ui.a a
+com.iflytek.cloud.ui.b: b(com.iflytek.cloud.ui.a)
+com.iflytek.cloud.ui.b: void onBeginOfSpeech()
+com.iflytek.cloud.ui.b: void onVolumeChanged(int)
+com.iflytek.cloud.ui.b: void onEndOfSpeech()
+com.iflytek.cloud.ui.b: void onResult(com.iflytek.cloud.speech.RecognizerResult,boolean)
+com.iflytek.cloud.ui.b: void onError(com.iflytek.cloud.speech.SpeechError)
+com.iflytek.cloud.ui.b: void onEvent(int,int,int,java.lang.String)
+com.iflytek.cloud.util.ContactManager
+com.iflytek.cloud.util.ContactManager: com.iflytek.cloud.util.ContactManager getManager()
+com.iflytek.cloud.util.ContactManager: com.iflytek.cloud.util.ContactManager createManager(android.content.Context,com.iflytek.cloud.util.ContactManager$ContactListener)
+com.iflytek.cloud.util.ContactManager: ContactManager()
+com.iflytek.cloud.util.ContactManager: java.lang.String queryAllContactsName()
+com.iflytek.cloud.util.ContactManager: void asyncQueryAllContactsName()
+com.iflytek.cloud.util.ContactManager$ContactListener
+com.iflytek.cloud.util.ContactManager$ContactListener: void onContactQueryFinish(java.lang.String,boolean)
+com.iflytek.cloud.util.UserWords
+com.iflytek.cloud.util.UserWords: java.util.Hashtable a
+com.iflytek.cloud.util.UserWords: UserWords()
+com.iflytek.cloud.util.UserWords: UserWords(java.lang.String)
+com.iflytek.cloud.util.UserWords: boolean hasKey(java.lang.String)
+com.iflytek.cloud.util.UserWords: boolean putWord(java.lang.String)
+com.iflytek.cloud.util.UserWords: boolean putWord(java.lang.String,java.lang.String)
+com.iflytek.cloud.util.UserWords: boolean putWords(java.util.ArrayList)
+com.iflytek.cloud.util.UserWords: boolean putWords(java.lang.String,java.util.ArrayList)
+com.iflytek.cloud.util.UserWords: boolean a(java.util.ArrayList,java.lang.String)
+com.iflytek.cloud.util.UserWords: boolean a(java.util.ArrayList,java.util.ArrayList)
+com.iflytek.cloud.util.UserWords: java.util.ArrayList getWords()
+com.iflytek.cloud.util.UserWords: java.util.ArrayList getKeys()
+com.iflytek.cloud.util.UserWords: java.util.ArrayList getWords(java.lang.String)
+com.iflytek.cloud.util.UserWords: void a(java.lang.String)
+com.iflytek.cloud.util.UserWords: java.lang.String a()
+com.iflytek.cloud.util.UserWords: java.lang.String toString()
+com.iflytek.cloud.util.a.a
+com.iflytek.cloud.util.a.a: com.iflytek.cloud.util.a.c.a b
+com.iflytek.cloud.util.a.a: android.content.Context a
+com.iflytek.cloud.util.a.a: java.lang.String[] c
+com.iflytek.cloud.util.a.a: java.lang.String[] d
+com.iflytek.cloud.util.a.a: java.util.HashMap e
+com.iflytek.cloud.util.a.a: java.util.HashMap f
+com.iflytek.cloud.util.a.a: java.util.List g
+com.iflytek.cloud.util.a.a: java.util.HashMap h
+com.iflytek.cloud.util.a.a: java.util.HashMap i
+com.iflytek.cloud.util.a.a: a(android.content.Context,com.iflytek.cloud.util.a.c.a)
+com.iflytek.cloud.util.a.a: java.lang.String[] a()
+com.iflytek.cloud.util.a.a: void a(int)
+com.iflytek.cloud.util.a.a: void b()
+com.iflytek.cloud.util.a.a.a
+com.iflytek.cloud.util.a.a.a: java.lang.String a
+com.iflytek.cloud.util.a.a.a: java.lang.String b
+com.iflytek.cloud.util.a.a.a: java.lang.String c
+com.iflytek.cloud.util.a.a.a: java.lang.String d
+com.iflytek.cloud.util.a.a.a: java.lang.String e
+com.iflytek.cloud.util.a.a.a: java.lang.String f
+com.iflytek.cloud.util.a.a.a: java.lang.String g
+com.iflytek.cloud.util.a.a.a: android.os.Parcelable$Creator CREATOR
+com.iflytek.cloud.util.a.a.a: a()
+com.iflytek.cloud.util.a.a.a: a(java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String,java.lang.String)
+com.iflytek.cloud.util.a.a.a: java.lang.String a()
+com.iflytek.cloud.util.a.a.a: java.lang.String b()
+com.iflytek.cloud.util.a.a.a: java.lang.String c()
+com.iflytek.cloud.util.a.a.a: int describeContents()
+com.iflytek.cloud.util.a.a.a: void writeToParcel(android.os.Parcel,int)
+com.iflytek.cloud.util.a.a.a: java.lang.String a(com.iflytek.cloud.util.a.a.a,java.lang.String)
+com.iflytek.cloud.util.a.a.a: java.lang.String b(com.iflytek.cloud.util.a.a.a,java.lang.String)
+com.iflytek.cloud.util.a.a.a: java.lang.String c(com.iflytek.cloud.util.a.a.a,java.lang.String)
+com.iflytek.cloud.util.a.a.a: java.lang.String d(com.iflytek.cloud.util.a.a.a,java.lang.String)
+com.iflytek.cloud.util.a.a.a: java.lang.String e(com.iflytek.cloud.util.a.a.a,java.lang.String)
+com.iflytek.cloud.util.a.a.a: java.lang.String f(com.iflytek.cloud.util.a.a.a,java.lang.String)
+com.iflytek.cloud.util.a.a.a: java.lang.String g(com.iflytek.cloud.util.a.a.a,java.lang.String)
+com.iflytek.cloud.util.a.a.a: void <clinit>()
+com.iflytek.cloud.util.a.a.b
+com.iflytek.cloud.util.a.a.b: b()
+com.iflytek.cloud.util.a.a.b: com.iflytek.cloud.util.a.a.a a(android.os.Parcel)
+com.iflytek.cloud.util.a.a.b: com.iflytek.cloud.util.a.a.a[] a(int)
+com.iflytek.cloud.util.a.a.b: java.lang.Object[] newArray(int)
+com.iflytek.cloud.util.a.a.b: java.lang.Object createFromParcel(android.os.Parcel)
+com.iflytek.cloud.util.a.b
+com.iflytek.cloud.util.a.b: com.iflytek.cloud.util.a.b a
+com.iflytek.cloud.util.a.b: android.content.Context b
+com.iflytek.cloud.util.a.b: int c
+com.iflytek.cloud.util.a.b: com.iflytek.cloud.util.a.c.a d
+com.iflytek.cloud.util.a.b: com.iflytek.cloud.util.a.a e
+com.iflytek.cloud.util.a.b: com.iflytek.cloud.util.a.b$b f
+com.iflytek.cloud.util.a.b: com.iflytek.cloud.util.a.b$a g
+com.iflytek.cloud.util.a.b: android.os.HandlerThread h
+com.iflytek.cloud.util.a.b: com.iflytek.cloud.util.ContactManager$ContactListener i
+com.iflytek.cloud.util.a.b: android.os.Handler j
+com.iflytek.cloud.util.a.b: long k
+com.iflytek.cloud.util.a.b: long l
+com.iflytek.cloud.util.a.b: com.iflytek.cloud.util.a.b a()
+com.iflytek.cloud.util.a.b: com.iflytek.cloud.util.a.b a(android.content.Context,com.iflytek.cloud.util.ContactManager$ContactListener)
+com.iflytek.cloud.util.a.b: b()
+com.iflytek.cloud.util.a.b: java.lang.String queryAllContactsName()
+com.iflytek.cloud.util.a.b: void asyncQueryAllContactsName()
+com.iflytek.cloud.util.a.b: void b()
+com.iflytek.cloud.util.a.b: void c()
+com.iflytek.cloud.util.a.b: void a(com.iflytek.cloud.util.a.b)
+com.iflytek.cloud.util.a.b: void b(com.iflytek.cloud.util.a.b)
+com.iflytek.cloud.util.a.b: long c(com.iflytek.cloud.util.a.b)
+com.iflytek.cloud.util.a.b: long a(com.iflytek.cloud.util.a.b,long)
+com.iflytek.cloud.util.a.b: long d(com.iflytek.cloud.util.a.b)
+com.iflytek.cloud.util.a.b: long b(com.iflytek.cloud.util.a.b,long)
+com.iflytek.cloud.util.a.b: void <clinit>()
+com.iflytek.cloud.util.a.b$a
+com.iflytek.cloud.util.a.b$a: com.iflytek.cloud.util.a.b a
+com.iflytek.cloud.util.a.b$a: b$a(com.iflytek.cloud.util.a.b,android.os.Handler)
+com.iflytek.cloud.util.a.b$a: void onChange(boolean)
+com.iflytek.cloud.util.a.b$b
+com.iflytek.cloud.util.a.b$b: com.iflytek.cloud.util.a.b a
+com.iflytek.cloud.util.a.b$b: b$b(com.iflytek.cloud.util.a.b,android.os.Handler)
+com.iflytek.cloud.util.a.b$b: void onChange(boolean)
+com.iflytek.cloud.util.a.b.a
+com.iflytek.cloud.util.a.b.a: java.lang.String[] d
+com.iflytek.cloud.util.a.b.a: java.lang.String[] e
+com.iflytek.cloud.util.a.b.a: java.lang.String[] f
+com.iflytek.cloud.util.a.b.a: java.lang.String[] g
+com.iflytek.cloud.util.a.b.a: java.lang.String[] h
+com.iflytek.cloud.util.a.b.a: java.lang.String[] i
+com.iflytek.cloud.util.a.b.a: java.lang.String[] j
+com.iflytek.cloud.util.a.b.a: a(android.content.Context)
+com.iflytek.cloud.util.a.b.a: android.net.Uri a()
+com.iflytek.cloud.util.a.b.a: java.lang.String[] b()
+com.iflytek.cloud.util.a.b.a: java.lang.String c()
+com.iflytek.cloud.util.a.b.a: void <clinit>()
+com.iflytek.cloud.util.a.b.b
+com.iflytek.cloud.util.a.b.b: java.lang.String[] d
+com.iflytek.cloud.util.a.b.b: java.lang.String[] e
+com.iflytek.cloud.util.a.b.b: java.lang.String[] f
+com.iflytek.cloud.util.a.b.b: java.lang.String[] g
+com.iflytek.cloud.util.a.b.b: java.lang.String[] h
+com.iflytek.cloud.util.a.b.b: java.lang.String[] i
+com.iflytek.cloud.util.a.b.b: java.lang.String[] j
+com.iflytek.cloud.util.a.b.b: b(android.content.Context)
+com.iflytek.cloud.util.a.b.b: android.net.Uri a()
+com.iflytek.cloud.util.a.b.b: java.lang.String[] b()
+com.iflytek.cloud.util.a.b.b: java.lang.String c()
+com.iflytek.cloud.util.a.b.b: void <clinit>()
+com.iflytek.cloud.util.a.c
+com.iflytek.cloud.util.a.c: com.iflytek.cloud.util.a.b a
+com.iflytek.cloud.util.a.c: c(com.iflytek.cloud.util.a.b)
+com.iflytek.cloud.util.a.c: void run()
+com.iflytek.cloud.util.a.c.a
+com.iflytek.cloud.util.a.c.a: java.lang.String[] a
+com.iflytek.cloud.util.a.c.a: android.content.Context b
+com.iflytek.cloud.util.a.c.a: java.lang.String[] c
+com.iflytek.cloud.util.a.c.a: a(android.content.Context)
+com.iflytek.cloud.util.a.c.a: java.lang.String[] b()
+com.iflytek.cloud.util.a.c.a: java.lang.String c()
+com.iflytek.cloud.util.a.c.a: java.util.HashMap d()
+com.iflytek.cloud.util.a.c.a: java.util.List e()
+com.iflytek.cloud.util.a.c.a: android.net.Uri f()
+com.iflytek.cloud.util.a.c.a: android.net.Uri a()
+com.iflytek.cloud.util.a.c.a: java.util.HashMap a(int)
+com.iflytek.cloud.util.a.c.a: void a(android.content.Context)
+com.iflytek.cloud.util.a.c.a: void <clinit>()
+com.iflytek.cloud.util.a.d
+com.iflytek.cloud.util.a.d: java.lang.String a(java.lang.String)
+com.iflytek.cloud.util.a.d: int a(java.lang.String,java.lang.String,boolean)
+com.iflytek.cloud.util.a.e
+com.iflytek.cloud.util.a.e: java.lang.String[] a
+com.iflytek.cloud.util.a.e: java.lang.String[] b
+com.iflytek.cloud.util.a.e: java.lang.String[] c
+com.iflytek.cloud.util.a.e: java.lang.String a(java.lang.String)
+com.iflytek.cloud.util.a.e: java.lang.String a(java.lang.String[],char)
+com.iflytek.cloud.util.a.e: void <clinit>()
+com.iflytek.msc.MSC
+com.iflytek.msc.MSC: int DebugLog(boolean)
+com.iflytek.msc.MSC: char[] QTTSSessionBegin(byte[],com.iflytek.msc.MSCSessionInfo)
+com.iflytek.msc.MSC: int QTTSTextPut(char[],byte[])
+com.iflytek.msc.MSC: byte[] QTTSAudioGet(char[],com.iflytek.msc.MSCSessionInfo)
+com.iflytek.msc.MSC: int QTTSGetParam(char[],byte[],com.iflytek.msc.MSCSessionInfo)
+com.iflytek.msc.MSC: char[] QTTSAudioInfo(char[])
+com.iflytek.msc.MSC: int QTTSSessionEnd(char[],byte[])
+com.iflytek.msc.MSC: char[] QISRSessionBegin(byte[],byte[],com.iflytek.msc.MSCSessionInfo)
+com.iflytek.msc.MSC: int QISRGetParam(char[],byte[],com.iflytek.msc.MSCSessionInfo)
+com.iflytek.msc.MSC: int QISRSetParam(char[],byte[],byte[])
+com.iflytek.msc.MSC: int QISRAudioWrite(char[],byte[],int,int,com.iflytek.msc.MSCSessionInfo)
+com.iflytek.msc.MSC: byte[] QISRGetResult(char[],com.iflytek.msc.MSCSessionInfo)
+com.iflytek.msc.MSC: int QISRSessionEnd(char[],byte[])
+com.iflytek.msc.MSC: int QMSPLogin(byte[],byte[],byte[])
+com.iflytek.msc.MSC: byte[] QMSPUploadData(byte[],byte[],int,byte[],com.iflytek.msc.MSCSessionInfo)
+com.iflytek.msc.MSC: byte[] QMSPDownloadData(byte[],com.iflytek.msc.MSCSessionInfo)
+com.iflytek.msc.MSC: byte[] QMSPSearch(byte[],byte[],com.iflytek.msc.MSCSessionInfo)
+com.iflytek.msc.MSC: int QMSPLogOut()
+com.iflytek.msc.MSC: void <clinit>()
+com.iflytek.msc.MSCSessionInfo
+com.iflytek.msc.MSCSessionInfo: int errorcode
+com.iflytek.msc.MSCSessionInfo: int epstatues
+com.iflytek.msc.MSCSessionInfo: int rsltstatus
+com.iflytek.msc.MSCSessionInfo: int sesstatus
+com.iflytek.msc.MSCSessionInfo: byte[] buffer
+com.iflytek.msc.MSCSessionInfo: int buflen
+com.iflytek.msc.MSCSessionInfo: MSCSessionInfo()
+com.jeremyfeinstein.slidingmenu.lib.CustomViewAbove
+com.jeremyfeinstein.slidingmenu.lib.CustomViewAbove: CustomViewAbove(android.content.Context,android.util.AttributeSet)
+com.jeremyfeinstein.slidingmenu.lib.CustomViewBehind
+com.jeremyfeinstein.slidingmenu.lib.CustomViewBehind: CustomViewBehind(android.content.Context,android.util.AttributeSet)
+com.jeremyfeinstein.slidingmenu.lib.SlidingMenu
+com.jeremyfeinstein.slidingmenu.lib.SlidingMenu: SlidingMenu(android.content.Context)
+com.jeremyfeinstein.slidingmenu.lib.SlidingMenu: SlidingMenu(android.app.Activity,int)
+com.jeremyfeinstein.slidingmenu.lib.SlidingMenu: SlidingMenu(android.content.Context,android.util.AttributeSet)
+com.jeremyfeinstein.slidingmenu.lib.SlidingMenu: SlidingMenu(android.content.Context,android.util.AttributeSet,int)
+com.jeremyfeinstein.slidingmenu.lib.SlidingMenu$SavedState
+com.jeremyfeinstein.slidingmenu.lib.SlidingMenu$SavedState: android.os.Parcelable$Creator CREATOR
+com.jeremyfeinstein.slidingmenu.lib.app.SlidingActivity
+com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity
+com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity: SlidingFragmentActivity()
+com.jeremyfeinstein.slidingmenu.lib.app.SlidingListActivity
+com.jeremyfeinstein.slidingmenu.lib.app.SlidingPreferenceActivity
+com.shwy.bestjoy.utils.DetectStorage$StorageStat: com.shwy.bestjoy.utils.DetectStorage$StorageStat[] values()
+com.shwy.bestjoy.utils.DetectStorage$StorageStat: com.shwy.bestjoy.utils.DetectStorage$StorageStat valueOf(java.lang.String)

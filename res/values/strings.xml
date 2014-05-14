@@ -329,4 +329,5 @@
          <string name="select_date_out_of_service_tips">预约安装时间必须大于今天</string>
          <string name="product_detail_repair_tips">因为各品牌的保修政策有差异，具体保修时间请以厂家约定的为准。本软件计算仅供参考。</string>
 
+          <string name="title_modify_password">修改密码</string>
 </resources>

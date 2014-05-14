@@ -51,15 +51,12 @@ public class MenuHandlerUtils {
     }
     
     public static boolean onPrepareOptionsMenu(Menu menu, Context context) {
-    	//如果已经登陆了，那么我们不再显示登录菜单
-//    	if (HaierAccountManager.getInstance().hasLoginned()) {
-//    		menu.findItem(R.string.menu_login).setVisible(false);
-//    	} else {
-//    		menu.findItem(R.string.menu_login).setVisible(true);
-//    	}
-    	//暂不支持
-    	MenuItem item = menu.findItem(R.string.menu_setting);
-    	if (item != null) item.setVisible(false);
+    	//如果已经登陆了，那么我们显示设置菜单
+    	if (HaierAccountManager.getInstance().hasLoginned()) {
+    		menu.findItem(R.string.menu_setting).setVisible(true);
+    	} else {
+    		menu.findItem(R.string.menu_setting).setVisible(false);
+    	}
 		return true;
 	}
 }

@@ -115,7 +115,13 @@ public class AccountObject implements InfoInterface{
 		
 		return haierAccount;
 	}
-
+	
+	public boolean updateAccount(ContentResolver cr, ContentValues addtion) {
+		int update = cr.update(BjnoteContent.Accounts.CONTENT_URI, addtion, WHERE_UID, new String[]{String.valueOf(mAccountUid)});
+		DebugUtils.logD(TAG, "saveInDatebase update exsited uid#" + mAccountUid + "# " + (update > 0));
+		return update > 0;
+	}
+	
 	@Override
 	public boolean saveInDatebase(ContentResolver cr, ContentValues addtion) {
 		

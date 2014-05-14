@@ -179,7 +179,11 @@
             android:label="@string/menu_setting"
             android:name="com.bestjoy.app.haierwarrantycard.ui.SettingsPreferenceActivity" />
         
-        
+         <activity
+            android:configChanges="orientation"
+            android:label="@string/title_modify_password"
+            android:name="com.bestjoy.app.haierwarrantycard.ui.ModifyPasswordActivity" />
+         
         <provider android:name="com.bestjoy.app.haierwarrantycard.database.BjnoteProvider"
             android:exported="true"
             android:authorities="com.bestjoy.app.haierwarrantycard.provider.BjnoteProvider"/>

@@ -27,7 +27,7 @@
          
           <Preference
                 android:key="preference_key_account_password"
-                android:fragment="com.bestjoy.app.haierwarrantycard.ui.PasswordModifyFragment"
+                android:persistent="false"
                 android:title="@string/preference_key_account_password_title" />
 
     </PreferenceCategory>

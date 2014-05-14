@@ -15,40 +15,55 @@
  */
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URLEncoder;
+
+import org.apache.http.client.ClientProtocolException;
+
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceScreen;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
-import android.text.TextUtils;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockPreferenceActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject.HaierResultObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
-import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
+import com.shwy.bestjoy.utils.AsyncTaskUtils;
+import com.shwy.bestjoy.utils.ComConnectivityManager;
+import com.shwy.bestjoy.utils.NetworkUtils;
+import com.shwy.bestjoy.utils.SecurityUtils;
 
-public class SettingsPreferenceActivity extends SherlockPreferenceActivity {
+public class SettingsPreferenceActivity extends SherlockPreferenceActivity implements OnPreferenceChangeListener{
 
 	private static final String TAG = "SettingsPreferenceActivity";
 	private static final String KEY_ACCOUNT_NAME = "preference_key_account_name";
 	private static final String KEY_ACCOUNT_PASSWORD = "preference_key_account_password";
+	public static final int DIALOG_DATA_NOT_CONNECTED = 10006;//数据连接不可用
+	public static final int DIALOG_MOBILE_TYPE_CONFIRM = 10007;//
+	public static final int DIALOG_PROGRESS = 10008;
 	private EditTextPreference mAccountName;
 	private Preference mAccountPassword;
+	
+	private String mOldName, mOldPassword;
+	private Context mContext;
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +72,7 @@ public class SettingsPreferenceActivity extends SherlockPreferenceActivity {
         	finish();
         	return;
         }
+        mContext = this;
         addPreferencesFromResource(R.xml.settings_preferences);
         
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -65,9 +81,22 @@ public class SettingsPreferenceActivity extends SherlockPreferenceActivity {
 		mAccountName = (EditTextPreference) getPreferenceScreen().findPreference(KEY_ACCOUNT_NAME);
 		mAccountPassword = (Preference) getPreferenceScreen().findPreference(KEY_ACCOUNT_PASSWORD);
 		
-		mAccountName.setText(HaierAccountManager.getInstance().getAccountObject().mAccountName);
-		mAccountName.setSummary(HaierAccountManager.getInstance().getAccountObject().mAccountName);
+		updateAccountName(HaierAccountManager.getInstance().getAccountObject().mAccountName);
+		mAccountName.setOnPreferenceChangeListener(this);
+    }
+    
+    @Override
+	public void onResume() {
+		super.onResume();
+		//重新获取一次账户密码，有可能之前呗改变了
+		mOldPassword = HaierAccountManager.getInstance().getAccountObject().mAccountPwd;
 		
+	}
+    
+    private void updateAccountName(String name) {
+    	mOldName = name;
+    	mAccountName.setText(name);
+		mAccountName.setSummary(name);
     }
     
     @Override
@@ -100,93 +129,125 @@ public class SettingsPreferenceActivity extends SherlockPreferenceActivity {
 
     }
     
-//    @Override
-//	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
-//    	if (preference == mAccountPassword) {
-//    		PasswordModifyFragment fragment = new PasswordModifyFragment();
-//    		Bundle bundle = new Bundle();
-//    		bundle.putString(KEY_ACCOUNT_PASSWORD, HaierAccountManager.getInstance().getAccountObject().mAccountPwd);
-//    		fragment.setArguments(bundle);
-//    		fragment.show(getFragmentManager(), "PasswordModifyFragment");
-//    		return true;
-//    	}
-//		return super.onPreferenceTreeClick(preferenceScreen, preference);
-//	}
+    @Override
+	public boolean onPreferenceTreeClick(PreferenceScreen preferenceScreen, Preference preference) {
+    	if (preference == mAccountPassword) {
+    		ModifyPasswordActivity.startActivity(this, mOldPassword);
+    		return true;
+    	}
+		return super.onPreferenceTreeClick(preferenceScreen, preference);
+	}
 
-
-    public static class PasswordModifyFragment extends SherlockDialogFragment implements View.OnClickListener{
-
-    	private EditText _oldInput, _newInput, _newReInput;
-    	private Button _saveBtn;
-    	private String _oldPassword;
-		@Override
-		public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-			super.onCreateOptionsMenu(menu, inflater);
-		}
-
-		@Override
-		public boolean onOptionsItemSelected(MenuItem item) {
-			return super.onOptionsItemSelected(item);
-		}
-
-		@Override
-		public void onCreate(Bundle savedInstanceState) {
-			super.onCreate(savedInstanceState);
-			setHasOptionsMenu(true);
-			_oldPassword = getArguments().getString(KEY_ACCOUNT_PASSWORD);
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-			View view = inflater.inflate(R.layout.setting_preference_password, container, false);
-			_oldInput = (EditText) view.findViewById(R.id.title);
-			_newInput = (EditText) view.findViewById(R.id.title);
-			_newReInput = (EditText) view.findViewById(R.id.title);
-			_saveBtn = (Button) view.findViewById(R.id.button_save);
-			
-			_saveBtn.setOnClickListener(this);
-			return view;
-		}
-
-		@Override
-		public void onClick(View v) {
-			switch(v.getId()) {
-			case R.id.button_save:
-				String oldInput = _oldInput.getText().toString().trim();
-				String newInput = _newInput.getText().toString().trim();
-				String newReInput = _newReInput.getText().toString().trim();
-				
-				if (!oldInput.equals(_oldPassword)) {
-					MyApplication.getInstance().showMessage(R.string.msg_input_old_password_error);
-					return;
-				}
-				
-				if (TextUtils.isEmpty(newInput)) {
-					MyApplication.getInstance().showMessage(R.string.hint_input_new_password);
-					return;
-				}
-				
-				if (TextUtils.isEmpty(newReInput)) {
-					MyApplication.getInstance().showMessage(R.string.hint_reinput_new_password);
-					return;
-				}
-				
-				if (!newInput.equals(newReInput)) {
-					MyApplication.getInstance().showMessage(R.string.msg_input_new_password_error);
-					return;
-				}
-				
-				//开始更新密码
-				
-				break;
+	@Override
+	public boolean onPreferenceChange(Preference preference, Object newValue) {
+		if (preference == mAccountName) {
+			String newName = (String) newValue;
+			if (!mOldName.equals(newName.trim())) {
+				//用户名发生变化了，我们需要更新
+				updateAccountNameAsync(newName.trim());
 			}
-			
+			return true;
+		}
+		return false;
+	}
+	
+	  @Override
+	   	public Dialog onCreateDialog(int id) {
+	   		switch(id) {
+	   			 //add by chenkai, 20131201, add network check
+	   	      case DIALOG_DATA_NOT_CONNECTED:
+	   	    	  return ComConnectivityManager.getInstance().onCreateNoNetworkDialog(this);
+	   	      case DIALOG_PROGRESS:
+	   	    	  ProgressDialog progressDialog = new ProgressDialog(this);
+	   	    	  progressDialog.setMessage(getString(R.string.msg_progressdialog_wait));
+	   	    	  progressDialog.setCancelable(false);
+	   	    	  return progressDialog;
+	   		}
+	   		return super.onCreateDialog(id);
+	   	}
+	
+	private UpdateAccountNameTask mUpdateAccountNameTask;
+	private void updateAccountNameAsync(String name) {
+		AsyncTaskUtils.cancelTask(mUpdateAccountNameTask);
+		showDialog(DIALOG_PROGRESS);
+		mUpdateAccountNameTask = new UpdateAccountNameTask(name);
+		mUpdateAccountNameTask.execute();
+	}
+	
+	/**
+	 *    Url:http://115.29.231.29/Haier/UpdateUserName.ashx
+			入参：
+			UserName	y	要更新的名称
+			key	y	Md5(cell+pwd)
+			UID	y	用户ID
+
+	 * @author chenkai
+	 *
+	 */
+	private class UpdateAccountNameTask extends AsyncTask<Void, Void, HaierResultObject> {
+
+		private String _name;
+		public UpdateAccountNameTask(String name) {
+			_name = name;
+		}
+		@Override
+		protected HaierResultObject doInBackground(Void... params) {
+			HaierResultObject haierResultObject = new HaierResultObject();
+			StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
+			sb.append("UpdateUserName.ashx?");
+			String cell = HaierAccountManager.getInstance().getAccountObject().mAccountTel;
+			String pwd = HaierAccountManager.getInstance().getAccountObject().mAccountPwd;
+			long uid = HaierAccountManager.getInstance().getAccountObject().mAccountUid;
+			sb.append("UserName=").append(URLEncoder.encode(_name))
+			.append("&key=").append(SecurityUtils.MD5.md5(cell+pwd))
+			.append("&UID=").append(uid);
+			InputStream is = null;
+			try {
+				 is = NetworkUtils.openContectionLocked(sb.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
+			     if (is != null) {
+			    	 haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
+			    	 if (haierResultObject.isOpSuccessfully()) {
+			    		 //如果更新成功，我们需要同步更新本地数据
+			    		 AccountObject accountObject = HaierAccountManager.getInstance().getAccountObject();
+			    		 accountObject.mAccountName = _name;
+			    		 ContentValues values = new ContentValues();
+			    		 values.put(HaierDBHelper.ACCOUNT_NAME, _name);
+			    		 accountObject.updateAccount(mContext.getContentResolver(), values);
+			    	 }
+			     }
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				haierResultObject.mStatusMessage = e.getMessage();
+			} catch (IOException e) {
+				e.printStackTrace();
+				haierResultObject.mStatusMessage = e.getMessage();
+			} finally {
+				NetworkUtils.closeInputStream(is);
+			}
+			return haierResultObject;
+		}
+
+		@Override
+		protected void onPostExecute(HaierResultObject result) {
+			super.onPostExecute(result);
+			if (result.isOpSuccessfully()) {
+				MyApplication.getInstance().showMessage(R.string.msg_op_successed);
+				updateAccountName(_name);
+			} else {
+				MyApplication.getInstance().showMessage(result.mStatusMessage);
+			}
+			dismissDialog(DIALOG_PROGRESS);
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			dismissDialog(DIALOG_PROGRESS);
+			MyApplication.getInstance().showMessage(R.string.msg_op_canceled);
 		}
 		
-    	
-    }
-
-
+	}
+	
 	public static void startActivity(Context context) {
     	Intent intent = new Intent(context, SettingsPreferenceActivity.class);
     	context.startActivity(intent);

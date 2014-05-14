@@ -166,6 +166,7 @@ public class MainActivity extends BaseActionbarActivity {
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
+			invalidateOptionsMenu();
 			dismissDialog(DIALOG_PROGRESS);
 		}
 		
