@@ -209,7 +209,7 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			if (mGetYanZhengCodeDialog != null) {
 				mGetYanZhengCodeDialog.hide();
 			}
-			DebugUtils.logD(TAG, "result data : " + result);
+//			DebugUtils.logD(TAG, "result data : " + result);
 			if(mError != null) {
 				MyApplication.getInstance().showMessage(mError);
 			} else if ("".equals(result)) {
