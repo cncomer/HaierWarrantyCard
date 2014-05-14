@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -38,6 +39,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.ImageHelper;
 import com.shwy.bestjoy.utils.InfoInterfaceImpl;
 import com.shwy.bestjoy.utils.NetworkUtils;
+import com.shwy.bestjoy.utils.SecurityUtils;
 /**
  * 保修卡对象
  * @author chenkai
@@ -675,6 +677,33 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 			context.startActivity(intent);
 		}
 	}
+	
+	/**
+	 * 当前时间精确到秒base64（20140514121212）
+	 * @return
+	 */
+	public static String getYuyueSecurityTip(String timeStr) {
+		String tip = "";
+		try {
+			DebugUtils.logD(TAG, "getYuyueSecurityTip getTime " + timeStr);
+			tip = Base64.encodeToString(timeStr.getBytes("UTF-8"), Base64.DEFAULT);
+		} catch (UnsupportedEncodingException e) {
+			e.printStackTrace();
+		}
+		DebugUtils.logD(TAG, "getYuyueSecurityTip getTip " + tip);
+		return tip;
+	}
+	/**
+	 * 加密后的字符（md5(md5(cell+tip))）
+	 * @return
+	 */
+	public static String getYuyueSecurityKey(String cell, String tip) {
+		String key = SecurityUtils.MD5.md5(cell+tip);
+		DebugUtils.logD(TAG, "md5(cell+tip) " + key);
+		key = SecurityUtils.MD5.md5(key);
+		DebugUtils.logD(TAG, "md5(md5(cell+tip) " + key);
+		return key;
+	}
 	//add by chenkai for FaPiao end
 	public static  DateFormat BUY_DATE_TIME_FORMAT_ALL = new SimpleDateFormat("yyyyMMddHHmm");
 	public static  DateFormat BUY_DATE_TIME_FORMAT = new SimpleDateFormat("yyyyMMdd");
@@ -684,5 +713,9 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public static  DateFormat BUY_DATE_FORMAT_TIME = new SimpleDateFormat("HH:mm");
 	public static  DateFormat BUY_DATE_FORMAT_YUYUE_TIME = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 	private static long DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
+	
+	//用于tip
+	public static  DateFormat DATE_FORMAT_YUYUE_TIME = new SimpleDateFormat("yyyyMMddHHmmss");
+	
 
 }

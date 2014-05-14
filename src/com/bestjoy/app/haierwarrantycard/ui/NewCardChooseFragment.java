@@ -203,6 +203,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 		private ListView _listView;
 		public LoadDataAsyncTask(ListView listView) {
 			_listView = listView;
+			((CursorAdapter) _listView.getAdapter()).changeCursor(null);
 		}
 
 		@Override
