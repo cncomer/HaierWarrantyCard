@@ -119,7 +119,7 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 //			menu.findItem(R.string.menu_search).setVisible(false);
 			menu.findItem(R.string.menu_done).setVisible(false);
 		}
-		return super.onPrepareOptionsMenu(menu);
+		return true;
 	}
 	
 	@Override

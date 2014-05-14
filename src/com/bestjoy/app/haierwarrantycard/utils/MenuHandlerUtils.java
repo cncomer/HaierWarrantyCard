@@ -52,10 +52,15 @@ public class MenuHandlerUtils {
     
     public static boolean onPrepareOptionsMenu(Menu menu, Context context) {
     	//如果已经登陆了，那么我们显示设置菜单
+    	MenuItem menuItem = menu.findItem(R.string.menu_setting);
     	if (HaierAccountManager.getInstance().hasLoginned()) {
-    		menu.findItem(R.string.menu_setting).setVisible(true);
+    		if (menuItem != null) {
+    			menuItem.setVisible(true);
+    		}
     	} else {
-    		menu.findItem(R.string.menu_setting).setVisible(false);
+    		if (menuItem != null) {
+    			menuItem.setVisible(false);
+    		}
     	}
 		return true;
 	}
