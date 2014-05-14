@@ -52,4 +52,16 @@
 	    <item>@string/menu_goods_preview</item>
 	    <item>@string/menu_goods_capture</item>
 	</string-array>
+	<string-array name="buy_places">
+		<item>@string/buy_place_1</item>
+		<item>@string/buy_place_2</item>
+		<item>@string/buy_place_3</item>
+		<item>@string/buy_place_4</item>
+		<item>@string/buy_place_5</item>
+		<item>@string/buy_place_6</item>
+		<item>@string/buy_place_7</item>
+		<item>@string/buy_place_8</item>
+		<item>@string/buy_place_9</item>
+		<item>@string/buy_place_10</item>
+	</string-array>
 </resources>

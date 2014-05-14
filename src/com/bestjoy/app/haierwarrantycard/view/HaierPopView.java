@@ -1,0 +1,172 @@
+package com.bestjoy.app.haierwarrantycard.view;
+
+import java.util.ArrayList;
+
+import android.app.Activity;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.text.Editable;
+import android.text.InputType;
+import android.view.Display;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
+import android.widget.EditText;
+import android.widget.GridView;
+import android.widget.LinearLayout.LayoutParams;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+
+import com.bestjoy.app.haierwarrantycard.R;
+
+public class HaierPopView implements OnTouchListener {
+	private static final String TAG = "HaierPopView";
+	private static final int COLUMN_NUMBER = 4;
+	private Context mContext;
+	private View popupView;
+	private PopupWindow mPopupWindow;
+	private GridView gridView;
+	private int screenWidth;
+	private int screenHeight;
+	private AddressAdapter mAddressAdapter;
+	private EditText mEditText;
+	
+	ArrayList<String> resultList = new ArrayList<String>();
+
+	public HaierPopView(Context context, View view) {
+		mContext = context;
+		setDataSource(mContext.getResources().getStringArray(R.array.buy_places));
+		initViews(view);
+		initData();
+	}
+
+	
+	private void initViews(View view) {
+		mEditText = (EditText) view.findViewById(R.id.edit_product_buy_tujing);
+		mEditText.setOnTouchListener(this);
+		mEditText.setInputType(InputType.TYPE_NULL);
+	}
+
+	public Editable getText() {
+		return (Editable) mEditText;
+	}
+
+	public void setText(String text) {
+		mEditText.setText(text);
+	}
+	
+	private void initData() {
+		popupView = ((Activity) mContext).getLayoutInflater().inflate(R.layout.layout_popupwindow, null);
+		gridView = (GridView) popupView.findViewById(R.id.gridview);
+
+		final Display display = ((Activity) mContext).getWindow().getWindowManager().getDefaultDisplay();
+		if (display != null) {
+			screenWidth = display.getWidth();
+			screenHeight = display.getHeight();
+		}
+		
+		int size = screenWidth > screenHeight ? screenWidth : screenHeight;
+		
+		gridView.setHorizontalSpacing(((int) (size * 0.015)));
+		gridView.setVerticalSpacing(((int) (size * 0.015)));
+		gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
+		gridView.setNumColumns(GridView.AUTO_FIT);
+		gridView.setColumnWidth(((int) (size * 0.15)));
+		gridView.setOnItemClickListener(gridItemClickListener);
+		mAddressAdapter = new AddressAdapter();
+		gridView.setAdapter(mAddressAdapter);
+	}
+
+	public void setDataSource(String[] strings) {
+		for(String str : strings) {
+			resultList.add(str);
+		}
+	}
+	private void initPopWindow(View view) {
+		if (mPopupWindow == null) {
+			mPopupWindow = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
+			mPopupWindow.setAnimationStyle(R.style.AnimationPreview);  
+			mPopupWindow.setTouchable(true);
+			mPopupWindow.setOutsideTouchable(true);
+			mPopupWindow.setBackgroundDrawable(new BitmapDrawable(mContext.getResources(), (Bitmap) null));
+		}
+		mAddressAdapter.changeAddressData();
+		mPopupWindow.showAsDropDown(view, 0, 0);
+	}
+
+	private OnItemClickListener gridItemClickListener = new OnItemClickListener()
+	{
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
+			if (position < resultList.size()) {
+				mEditText.setText(resultList.get(position));
+			}
+			mPopupWindow.dismiss();
+		}
+	};
+	class AddressAdapter extends BaseAdapter {
+		LayoutInflater mInflater = null;
+
+		public AddressAdapter() {
+			mInflater = LayoutInflater.from(mContext);
+		}
+		public void changeAddressData() {
+			notifyDataSetChanged();
+		}
+		public View getView(int position, View convertView, ViewGroup parent) {
+			ViewHolder viewHolder = null;
+			if (convertView == null) {
+				convertView = mInflater.inflate(R.layout.grid_item, null);
+				viewHolder = new ViewHolder();
+				viewHolder._title = (TextView) convertView;
+				viewHolder._title.setGravity(Gravity.CENTER_HORIZONTAL);
+				convertView .setTag(viewHolder);
+			} else {
+				viewHolder = (ViewHolder) convertView.getTag();
+			}
+			if(position < resultList.size()) {
+				viewHolder._title.setText(resultList.get(position));
+			}
+			convertView.setLayoutParams(new GridView.LayoutParams((int) (parent.getWidth() / COLUMN_NUMBER), 32));
+			return convertView;
+		}
+
+		public int getCount() {
+			return resultList != null ? resultList.size() : 0;
+		}
+
+		public Object getItem(int position) {
+			return resultList.get(position);
+		}
+
+		public long getItemId(int position) {
+			return position;
+		}
+	}
+	
+	private static class ViewHolder {
+		private TextView _title;
+	}
+
+	@Override
+	public boolean onTouch(View view, MotionEvent event) {
+		if(view.getId() == mEditText.getId()) {
+			switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+				break;
+			case MotionEvent.ACTION_UP:
+				initPopWindow(view);
+				break;
+			}
+		}
+		return false;
+	}
+
+}

@@ -328,4 +328,14 @@
          <string name="select_date_out_of_service_tips">预约安装时间必须大于今天</string>
          <string name="product_detail_repair_tips">因为各品牌的保修政策有差异，具体保修时间请以厂家约定的为准。本软件计算仅供参考。</string>
 
+         <string name="buy_place_1">国美</string>
+         <string name="buy_place_2">苏宁</string>
+         <string name="buy_place_3">永乐</string>
+         <string name="buy_place_4">精品店</string>
+         <string name="buy_place_5">五星</string>
+         <string name="buy_place_6">专卖店</string>
+         <string name="buy_place_7">互联网</string>
+         <string name="buy_place_8">电子邮件或短信</string>
+         <string name="buy_place_9">400热线</string>
+         <string name="buy_place_10">其他渠道</string>
 </resources>

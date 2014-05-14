@@ -41,6 +41,7 @@ import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.bestjoy.app.haierwarrantycard.view.HaierPopView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DateUtils;
@@ -57,8 +58,10 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	private TextView mDatePickBtn;
 	private ImageView mBillImageView;
 	private EditText mTypeInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput, mTagInput;
-	private EditText mPriceInput, mTujingInput, mYanbaoTimeInput, mYanbaoComponyInput, mYanbaoTelInput;
+	private EditText mPriceInput, mYanbaoTimeInput, mYanbaoComponyInput, mYanbaoTelInput;
 	private Calendar mCalendar;
+	/**购买途径*/
+	private HaierPopView mHaierPopView;
 	//临时的拍摄照片路径
 	private File mBillTempFile, mAvatorTempFile;
 	/**请求商品预览图*/
@@ -116,7 +119,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		 mDatePickBtn.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
 		 
 		 mPriceInput = (EditText) view.findViewById(R.id.product_buy_cost);
-		 mTujingInput = (EditText) view.findViewById(R.id.product_buy_entry);
+		 //mTujingInput = (EditText) view.findViewById(R.id.product_buy_entry);
+		 mHaierPopView = new HaierPopView(getActivity(), view);
 		 mYanbaoTimeInput = (EditText) view.findViewById(R.id.product_buy_delay_time);
 		 mYanbaoComponyInput = (EditText) view.findViewById(R.id.product_buy_delay_componey);
 		 mYanbaoTelInput = (EditText) view.findViewById(R.id.product_buy_delay_componey_tel);
@@ -193,7 +197,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			mBianhaoInput.getText().clear();
 			mBaoxiuTelInput.getText().clear();
 			mPriceInput.getText().clear();
-			mTujingInput.getText().clear();
+			//mTujingInput.getText().clear();
+			mHaierPopView.getText().clear();
 			mYanbaoTimeInput.getText().clear();
 			mYanbaoComponyInput.getText().clear();
 			mYanbaoTelInput.getText().clear();
@@ -206,7 +211,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			
 			mBaoxiuTelInput.setText(object.mBXPhone);
 			mPriceInput.setText(object.mBuyPrice);
-			mTujingInput.setText(object.mBuyTuJing);
+			//mTujingInput.setText(object.mBuyTuJing);
+			mHaierPopView.setText(object.mBuyTuJing);
 			mYanbaoTimeInput.setText(object.mYanBaoTime);
 			mYanbaoComponyInput.setText(object.mYanBaoDanWei);
 			mYanbaoTelInput.setText(object.mYBPhone);
@@ -271,8 +277,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		
 		mBaoxiuCardObject.mBuyDate = BaoxiuCardObject.BUY_DATE_TIME_FORMAT.format(mCalendar.getTime());
 		mBaoxiuCardObject.mBuyPrice = mPriceInput.getText().toString().trim();
-		mBaoxiuCardObject.mBuyTuJing = mTujingInput.getText().toString().trim();
-		
+		//mBaoxiuCardObject.mBuyTuJing = mTujingInput.getText().toString().trim();
+		mBaoxiuCardObject.mBuyTuJing = mHaierPopView.getText().toString().trim();
 		mBaoxiuCardObject.mYanBaoTime = mYanbaoTimeInput.getText().toString().trim();
 		mBaoxiuCardObject.mYanBaoDanWei = mYanbaoComponyInput.getText().toString().trim();
 		mBaoxiuCardObject.mYBPhone = mYanbaoTelInput.getText().toString().trim();
