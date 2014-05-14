@@ -184,12 +184,13 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			DebugUtils.logD(TAG, "sb : " + sb.toString());
 			try {
 				is = NetworkUtils.openContectionLocked(url, path, MyApplication.getInstance().getSecurityKeyValuesObject());
-//				DebugUtils.logD(TAG, "is : " + is.toString());
+				DebugUtils.logD(TAG, "is : " + is.toString());
 				try {
 					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
 					return jsonObject.getString("randcode");
 				} catch (JSONException e) {
 					e.printStackTrace();
+					mError = e.getMessage();
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
@@ -209,7 +210,7 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			if (mGetYanZhengCodeDialog != null) {
 				mGetYanZhengCodeDialog.hide();
 			}
-//			DebugUtils.logD(TAG, "result data : " + result);
+			DebugUtils.logD(TAG, "result data : " + result);
 			if(mError != null) {
 				MyApplication.getInstance().showMessage(mError);
 			} else if ("".equals(result)) {
