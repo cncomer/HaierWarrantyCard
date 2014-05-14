@@ -66,7 +66,7 @@
     	<string name="button_qa">常见问题</string>
     	<string name="button_call_repair">拨打维修电话</string>
     	<string name="button_ask_online">在线咨询</string>
-    	<string name="button_speek">按住说话</string>
+    	<string name="button_speek">点击说话</string>
        
        <string name="usr_name">用户名</string>
        <string name="usr_pwd">密码</string>
