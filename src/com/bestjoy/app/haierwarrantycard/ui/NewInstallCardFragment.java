@@ -18,6 +18,7 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -249,12 +250,12 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			BaoxiuCardObject baoxiuCardObject = getBaoxiuCardObject();
 			mError = null;
 			InputStream is = null;
-			final int LENGTH = 12;
+			final int LENGTH = 14;
 			String[] urls = new String[LENGTH];
 			String[] paths = new String[LENGTH];
 			getBaoxiuCardObject();
 			HomeObject homeObject = mProCityDisEditPopView.getHomeObject();
-			urls[0] = HaierServiceObject.SERVICE_URL + "NAddHaierYY.ashx?LeiXin=";//AddHaierYuyue.ashx
+			urls[0] = HaierServiceObject.SERVICE_URL + "20140514/NAddHaierYY.ashx?LeiXin=";//AddHaierYuyue.ashx
 			paths[0] = baoxiuCardObject.mLeiXin;
 			urls[1] = "&PinPai=";
 			paths[1] = baoxiuCardObject.mPinPai;
@@ -278,6 +279,13 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			paths[10] = mBeizhuTag.getText().toString().trim();
 			urls[11] = "&service_type=";
 			paths[11] = "T01";//T01为安装
+			
+			String timeStr = BaoxiuCardObject.DATE_FORMAT_YUYUE_TIME.format(new Date());
+			String tip = BaoxiuCardObject.getYuyueSecurityTip(timeStr);
+			urls[12] = "&tip=";
+			paths[12] = tip;
+			urls[13] = "&key=";
+			paths[13] = BaoxiuCardObject.getYuyueSecurityKey(HaierAccountManager.getInstance().getAccountObject().mAccountTel, timeStr);
 			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
 			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
 			try {
@@ -293,6 +301,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
+					mError = e.getMessage();
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
@@ -311,28 +320,31 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			super.onPostExecute(result);
 			dissmissDialog(DIALOG_PROGRESS);
 			if (mError != null) {
-				if (result) {
-					//服务器上传信息成功，但本地保存失败，请重新登录同步数据
-					new AlertDialog.Builder(getActivity())
-					.setTitle(R.string.msg_tip_title)
-		   			.setMessage(mError)
-		   			.setCancelable(false)
-		   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-		   				@Override
-		   				public void onClick(DialogInterface dialog, int which) {
-		   					LoginActivity.startIntent(getActivity(), null);
-		   				}
-		   			})
-		   			.create()
-		   			.show();
-				} else {
-					MyApplication.getInstance().showMessage(mError);
-				}
+//				if (result) {
+//					//服务器上传信息成功，但本地保存失败，请重新登录同步数据
+//					new AlertDialog.Builder(getActivity())
+//					.setTitle(R.string.msg_tip_title)
+//		   			.setMessage(mError)
+//		   			.setCancelable(false)
+//		   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+//		   				@Override
+//		   				public void onClick(DialogInterface dialog, int which) {
+//		   					LoginActivity.startIntent(getActivity(), null);
+//		   				}
+//		   			})
+//		   			.create()
+//		   			.show();
+//				} else {
+//					MyApplication.getInstance().showMessage(mError);
+//				}
+				MyApplication.getInstance().showMessage(mError);
 			} else if (result) {
 				//预约成功
 				getActivity().finish();
 				MyApplication.getInstance().showMessage(R.string.msg_yuyue_sucess);
-				MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
+				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {
+					MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
+				}
 			} else {
 				MyApplication.getInstance().showMessage(mStatusMessage);
 			}
