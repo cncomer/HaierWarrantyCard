@@ -121,7 +121,7 @@
 			        style="@style/ProductInfoInput"/>
 			</LinearLayout>
 			
-             <LinearLayout
+             <!-- <LinearLayout
 			    android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
 			    android:gravity="center_vertical"
@@ -130,7 +130,9 @@
 			        android:text="@string/product_buy_entry"/>
 			    <EditText android:id="@+id/product_buy_entry"
 			        style="@style/ProductInfoInput"/>
-			</LinearLayout>
+			</LinearLayout> -->
+			
+		    <include layout="@layout/pop_win_edit_layout" />
 	
             <View android:background="@color/light_gray"
 		        android:layout_width="fill_parent"
