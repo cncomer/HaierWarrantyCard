@@ -124,7 +124,7 @@ public class MainActivity extends BaseActionbarActivity {
 		 switch(menuItem.getItemId()) {
 		 case R.string.menu_exit:
 			 new AlertDialog.Builder(mContext)
-				.setMessage(R.string.msg_delete_account_confirm)
+				.setMessage(R.string.msg_existing_system_confirm)
 				.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 					
 					@Override

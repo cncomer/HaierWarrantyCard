@@ -66,7 +66,7 @@
     	<string name="button_qa">常见问题</string>
     	<string name="button_call_repair">拨打维修电话</string>
     	<string name="button_ask_online">在线咨询</string>
-    	<string name="button_speek">按住说话</string>
+    	<string name="button_speek">点击说话</string>
        
        <string name="usr_name">用户名</string>
        <string name="usr_pwd">密码</string>
@@ -303,6 +303,7 @@
          <string name="msg_login_failed_general">登录失败，检查网络是否可用</string>
           <string name="msg_delete_home_confirm">该操作将同时删除选择的家在服务器和本地的数据，将不可恢复，是否确定要这么做?</string>
            <string name="msg_delete_account_confirm">该操作将删除本地账户数据，包括全部的家信息和保修卡信息，是否确定要这么做?</string>
+		   <string name="msg_existing_system_confirm">您是要退出吗？正常操作无需退出。退出后再次进入需要重新登录，下载数据有点慢哦。</string>
          
          <string name="button_policy">保修政策</string>
          <string name="button_guide">使用说明书</string>
