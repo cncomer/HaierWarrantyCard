@@ -55,7 +55,7 @@ public class HaierPopView implements OnTouchListener {
 	}
 
 	public Editable getText() {
-		return mEditText.getEditableText();
+		return mEditText.getText();
 	}
 
 	public void setText(String text) {
