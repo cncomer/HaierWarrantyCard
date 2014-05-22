@@ -44,6 +44,7 @@
        <string name="product_brand">品牌</string>
        <string name="product_model">型号</string>
        <string name="product_sn">商品编号</string>
+       <string name="product_baoxiu_date">保修期(年)</string>
        <string name="product_beizhu">备注标签</string>
        <string name="product_time">保修期</string>
        <string name="product_tel">保修电话</string>
@@ -55,6 +56,7 @@
        <string name="product_buy_delay_time">延保时间</string>
        <string name="product_buy_delay_componey">延保单位</string>
        <string name="product_buy_delay_componey_tel">延保电话</string>
+       <string name="product_baoxiu_date_tips">(请核实产品资料标注的保修期)</string>
        
        <string name="product_debug_placeholder">XXXXXXXX</string>
        <string name="product_bill_desc">请拍摄发票或收据，作为保修凭据</string>

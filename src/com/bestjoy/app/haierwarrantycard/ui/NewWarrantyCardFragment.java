@@ -49,6 +49,7 @@ import com.shwy.bestjoy.utils.ImageHelper;
 import com.shwy.bestjoy.utils.InfoInterface;
 import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
+import android.util.Log;
 
 public class NewWarrantyCardFragment extends ModleBaseFragment implements View.OnClickListener{
 	private static final String TAG = "NewWarrantyCardFragment";
@@ -57,7 +58,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	private Button mSaveBtn;
 	private TextView mDatePickBtn;
 	private ImageView mBillImageView;
-	private EditText mTypeInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput, mTagInput;
+	private EditText mTypeInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput, mWyInput, mTagInput;
 	private EditText mPriceInput, mYanbaoTimeInput, mYanbaoComponyInput, mYanbaoTelInput;
 	private Calendar mCalendar;
 	/**购买途径*/
@@ -112,6 +113,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		 mModelInput = (EditText) view.findViewById(R.id.product_model_input);
 		 mBianhaoInput = (EditText) view.findViewById(R.id.product_sn_input);
 		 mBaoxiuTelInput = (EditText) view.findViewById(R.id.product_tel_input);
+		 //保修期
+		 mWyInput = (EditText) view.findViewById(R.id.product_wy_input);
 		 //购买日期
 		 mDatePickBtn = (TextView) view.findViewById(R.id.product_buy_date);
 		 mDatePickBtn.setOnClickListener(this);
@@ -196,6 +199,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			mModelInput.getText().clear();
 			mBianhaoInput.getText().clear();
 			mBaoxiuTelInput.getText().clear();
+			mWyInput.getText().clear();
 			mPriceInput.getText().clear();
 			//mTujingInput.getText().clear();
 			mHaierPopView.getText().clear();
@@ -210,6 +214,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			mBianhaoInput.setText(object.mSHBianHao);
 			
 			mBaoxiuTelInput.setText(object.mBXPhone);
+			mWyInput.setText(object.mWY);
 			mPriceInput.setText(object.mBuyPrice);
 			//mTujingInput.setText(object.mBuyTuJing);
 			mHaierPopView.setText(object.mBuyTuJing);
@@ -274,6 +279,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
 		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
 		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
+		mBaoxiuCardObject.mWY = mWyInput.getText().toString().trim();
 		
 		mBaoxiuCardObject.mBuyDate = BaoxiuCardObject.BUY_DATE_TIME_FORMAT.format(mCalendar.getTime());
 		mBaoxiuCardObject.mBuyPrice = mPriceInput.getText().toString().trim();
@@ -436,6 +442,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			.append("|").append(baoxiuCardObject.mCardName)
 			.append("|").append(baoxiuCardObject.mYBPhone);
 			paramValue.append("|").append(baoxiuCardObject.getBase64StringFromBillAvator());
+			paramValue.append("|").append(baoxiuCardObject.mWY);
 			DebugUtils.logD(TAG, "param " + paramValue.toString());
 			try {
 //				StringBuilder paramValue = new StringBuilder(/*HaierServiceObject.SERVICE_URL + "AddBaoXiu.ashx?"*/"http://115.29.231.29/UploadBaoXiu.asmx/UpLoadData?");
@@ -444,7 +451,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 //					paramValue.append("&imgstr=\"").append(baoxiuCardObject.getBase64StringFromBillAvator().replaceAll("\\+", "*")).append("\"");
 //				}
 //				is = NetworkUtils.openContectionLocked(paramValue.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
-				is = NetworkUtils.openPostContectionLocked("http://115.29.231.29/UploadBaoXiu.asmx/UpdaLoad", "Para", paramValue.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
+				is = NetworkUtils.openPostContectionLocked("http://115.29.231.29/UploadBaoXiu.asmx/AddBaoXiuData", "Para", paramValue.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
 				try {
 					haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
 					DebugUtils.logD(TAG, "StatusCode = " + haierResultObject.mStatusCode);
@@ -613,11 +620,12 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			.append("|").append(baoxiuCardObject.mCardName)
 			.append("|").append(baoxiuCardObject.mYBPhone);
 			paramValue.append("|").append(baoxiuCardObject.getBase64StringFromBillAvator());
+			paramValue.append("|").append(baoxiuCardObject.mWY);
 			DebugUtils.logD(TAG, "param " + paramValue.toString());
 			
 			try {
 //				is = NetworkUtils.openContectionLocked(urls, paths, MyApplication.getInstance().getSecurityKeyValuesObject());
-				is = NetworkUtils.openPostContectionLocked("http://115.29.231.29/UploadBaoXiu.asmx/UpdateBaoXiu", "ara", paramValue.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
+				is = NetworkUtils.openPostContectionLocked("http://115.29.231.29/UploadBaoXiu.asmx/UpdateBaoXiuData", "ara", paramValue.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
 				
 				haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
 				if (haierResultObject.isOpSuccessfully()) {
