@@ -22,12 +22,24 @@ public class HaierServiceObject {
 	public static final String HOME_DELETE_URL = SERVICE_URL + "DeleteAddressByAID.ashx?";
 	
 	private static String mHaierPinpaiName;
-	public static final String BX_PHONE = "400699999";
+	public static final String BX_PHONE_HAIER = "400699999";
+	
+	private static String mKasadiPinpaiName;
+	public static final String BX_PHONE_KASADI = "4006399699";
 	public static void setContext(Context context) {
 		mHaierPinpaiName = context.getString(R.string.pinpai_haier);
+		mKasadiPinpaiName = context.getString(R.string.pinpai_kasadi);
 	}
 	public static boolean isHaierPinpai(String pinpaiName) {
 		return mHaierPinpaiName.equals(pinpaiName);
+	}
+	/**
+	 * 是否是卡萨帝品牌
+	 * @param pinpaiName
+	 * @return
+	 */
+	public static boolean isKasadiPinpai(String pinpaiName) {
+		return mKasadiPinpaiName.equals(pinpaiName);
 	}
 
 	/***
