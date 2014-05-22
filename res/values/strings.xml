@@ -14,7 +14,8 @@
     <string name="button_my_card">我的保修卡</string>
     <string name="button_repair">故障报修</string>
      <string name="button_webview_goback">回退</string>
-    <string name="button_login">"登陆"</string>
+    <string name="button_login">"登录"</string>
+     <string name="menu_back">"返回"</string>
      <string name="button_close">关闭</string>
       <string name="button_save">保存</string>
       <string name="button_next">下一步</string>
@@ -292,6 +293,7 @@
          <!-- 自动更新 end -->
          
          <string name="pinpai_haier">海尔</string>
+         <string name="pinpai_kasadi">卡萨帝</string>
          <string name="msg_pinpai_haier_suppot_only">暂未开放</string>
          <string name="msg_no_bxphone">对不起，该保修卡没有设置售后服务电话</string>
          <string name="must_haier_confirm_yuyue">目前只有海尔产品才接受电子预约服务，是否直接拨打厂家电话？</string>

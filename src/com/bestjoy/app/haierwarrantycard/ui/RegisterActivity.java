@@ -25,6 +25,7 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
+import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
 import com.shwy.bestjoy.utils.SecurityUtils;
@@ -83,6 +84,12 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 
 	@Override
 	public void onClick(View v) {
+		// add by chenkai, 开始前先检查网络 begin
+		if (!ComConnectivityManager.getInstance().isConnected()) {
+			ComConnectivityManager.getInstance().onCreateNoNetworkDialog(this);
+			return;
+		}
+		// add by chekai, 开始前先检查网络 end
 		String tel = mTelInput.getText().toString().trim();
 		String code = mCodeInput.getText().toString().trim();
 		switch (v.getId()) {
