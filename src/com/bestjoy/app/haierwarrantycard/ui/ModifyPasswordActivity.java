@@ -97,6 +97,11 @@ public class ModifyPasswordActivity extends BaseActionbarActivity {
 			return;
 		}
 		
+		if (newInput.length() < 6) {
+			MyApplication.getInstance().showMessage(R.string.msg_usr_pwd_too_short_tips);
+			return;
+		}
+		
 		//开始更新密码
 		updateAccountPwdAsync(newInput);
 	}
