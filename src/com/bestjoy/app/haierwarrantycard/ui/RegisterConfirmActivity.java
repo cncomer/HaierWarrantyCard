@@ -38,10 +38,8 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 
 	private HaierProCityDisEditPopView mProCityDisEditPopView;
 	
-	private EditText mUsrNameEditText;
-	private EditText usrPwdEditText;
-	private EditText usrPwdConfirmEditText;
-	private EditText usrHomeNameEditText;
+	private EditText mUsrNameEditText, usrPwdEditText, usrPwdConfirmEditText, usrHomeNameEditText;
+	private EditText mHomeDetailPlace;
 	private String usrPwdConfirm;
 	
 	private AccountObject mAccountObject;
@@ -81,11 +79,14 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	}
 
 	private void initViews() {
-		 mProCityDisEditPopView = new HaierProCityDisEditPopView(this); 
-		 usrHomeNameEditText = (EditText) findViewById(R.id.tag);
+		mProCityDisEditPopView = new HaierProCityDisEditPopView(this);
+		mProCityDisEditPopView.setHomePlaceDetailVisibility(View.GONE);
+		usrHomeNameEditText = (EditText) findViewById(R.id.tag);
 		mUsrNameEditText = (EditText) findViewById(R.id.usr_name);
 		usrPwdEditText = (EditText) findViewById(R.id.usr_pwd);
 		usrPwdConfirmEditText = (EditText) findViewById(R.id.usr_repwd);
+		
+		mHomeDetailPlace = (EditText) findViewById(R.id.edit_place_detail_bottom);
 		
 		mConfrimReg = (Button) findViewById(R.id.button_save_reg);
 		mConfrimReg.setOnClickListener(this);
@@ -231,6 +232,9 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 				usrPwdConfirm = usrPwdConfirmEditText.getText().toString().trim();
 
 				mHomeObject = mProCityDisEditPopView.getHomeObject();
+				
+				//由于Haier布局的变化，这里需要重新设置一下详细地址
+				mHomeObject.mHomePlaceDetail = mHomeDetailPlace.getText().toString().trim();
 				if(valiInput()) {
 					registerAsync();
 				}
@@ -259,12 +263,16 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			MyApplication.getInstance().showMessage(R.string.msg_input_usr_dis);
 			return false;
 		}
-		if (TextUtils.isEmpty(mHomeObject.mHomePlaceDetail)) {
-			MyApplication.getInstance().showMessage(R.string.msg_input_usr_place_detail);
-			return false;
-		}
 		if (!usrPwdConfirm.equals(mAccountObject.mAccountPwd)) {
 			MyApplication.getInstance().showMessage(R.string.msg_input_pwd_not_match_tips);
+			return false;
+		}
+		if (mAccountObject.mAccountPwd.length() < 6) {
+			MyApplication.getInstance().showMessage(R.string.msg_usr_pwd_too_short_tips);
+			return false;
+		}
+		if (TextUtils.isEmpty(mHomeObject.mHomePlaceDetail)) {
+			MyApplication.getInstance().showMessage(R.string.msg_input_usr_place_detail);
 			return false;
 		}
 		return true;

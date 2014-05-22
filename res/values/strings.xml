@@ -120,6 +120,7 @@
     <string name="input_city_tips">请先选择城市</string>
     <string name="choose_address">选择地址</string>
     <string name="msg_tip_title">提示信息</string>
+    <string name="input_home_place_detail_tips">为方便为您提供便捷的安装维修服务，请您填写详细地址。</string>
     <string name="msg_register_save_fail">注册成功，但无法创建账户，请尝试重新登陆</string>
     
     <string name="msg_progressdialog_wait">操作处理中，请稍后....</string>
@@ -215,6 +216,7 @@
     <string name="msg_input_usr_place_detail">请输入你的详细地址</string>
     <string name="msg_input_usr_pwd">请输入密码</string>
     <string name="msg_input_pwd_not_match_tips">两次密码输入不一致，请重新输入</string>
+    <string name="msg_usr_pwd_too_short_tips">密码不能小于6位</string>
     
     <string name="title_feedback">评价</string>
     

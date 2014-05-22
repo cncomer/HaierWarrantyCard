@@ -80,6 +80,31 @@
                     android:inputType="textPassword"
                     android:hint="@string/usr_repwd_hint" />
             </LinearLayout>
+		    
+			<LinearLayout
+			    android:layout_width="match_parent"
+			    android:layout_height="wrap_content"
+			    android:layout_marginTop="20dip"
+			    android:orientation="horizontal" >
+			
+			    <TextView
+			        android:layout_width="wrap_content"
+			        android:layout_height="wrap_content"
+			        android:text="@string/address"
+			        android:visibility="invisible" />
+			
+			    <EditText
+			        android:id="@+id/edit_place_detail_bottom"
+			        style="@style/ProductInfoInput"
+			        android:layout_weight="1"
+			        android:inputType="none"
+                    android:hint="@string/msg_input_usr_place_detail" />
+			</LinearLayout>
+			
+		    <TextView
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:text="@string/input_home_place_detail_tips" />
 
             <Button
                 android:id="@+id/button_save_reg"

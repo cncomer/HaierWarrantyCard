@@ -38,6 +38,7 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 	private EditText mCityEditView;
 	private EditText mDisEditView;
 	private EditText mPlaceDetail;
+	private TextView mPlaceDetailTextView;
 	private View popupView;
 	private PopupWindow mPopupWindow;
 	private GridView gridView;
@@ -146,6 +147,7 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 		mCityEditView = (EditText) ((Activity) context).findViewById(R.id.edit_city);
 		mDisEditView = (EditText) ((Activity) context).findViewById(R.id.edit_district);
 		mPlaceDetail = (EditText) ((Activity) context).findViewById(R.id.edit_place_detail);
+		mPlaceDetailTextView = (TextView) ((Activity) context).findViewById(R.id.edit_place_detail);
 
 		mProEditView.setOnTouchListener(this);
 		mCityEditView.setOnTouchListener(this);
@@ -159,6 +161,7 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 		mCityEditView = (EditText) view.findViewById(R.id.edit_city);
 		mDisEditView = (EditText) view.findViewById(R.id.edit_district);
 		mPlaceDetail = (EditText) view.findViewById(R.id.edit_place_detail);
+		mPlaceDetailTextView = (TextView) view.findViewById(R.id.edit_place_detail);
 		
 		mProEditView.setOnTouchListener(this);
 		mCityEditView.setOnTouchListener(this);
@@ -170,6 +173,11 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 		setCanEditable(true);
 	}
 
+	public void setHomePlaceDetailVisibility(int visibility) {
+		mPlaceDetailTextView.setVisibility(visibility);
+		mPlaceDetail.setVisibility(visibility);
+	}
+	
 	@Override
 	public boolean onTouch(View view, MotionEvent event) {
 		if (view.getId() == mProEditView.getId()) {
