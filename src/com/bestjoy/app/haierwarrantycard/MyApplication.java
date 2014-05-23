@@ -10,18 +10,12 @@ import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
-import com.bestjoy.app.haierwarrantycard.database.DeviceDBHelper;
-import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
-import com.bestjoy.app.haierwarrantycard.service.PhotoManagerService;
-import com.bestjoy.app.haierwarrantycard.ui.PreferencesActivity;
 import com.bestjoy.app.haierwarrantycard.utils.BeepAndVibrate;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
-import com.bestjoy.app.haierwarrantycard.utils.InstallFileUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.DeviceStorageUtils;
 import com.shwy.bestjoy.utils.DevicesUtils;
-import com.shwy.bestjoy.utils.NotifyRegistrant;
 import com.shwy.bestjoy.utils.SecurityUtils.SecurityKeyValuesObject;
 
 public class MyApplication extends Application{
@@ -268,4 +262,12 @@ public class MyApplication extends Application{
     	return root;
     }
     //add by chenkai, 20131208, updating check end
+    
+    /***
+     * 显示通常的网络连接错误
+     * @return
+     */
+    public String getGernalNetworkError() {
+    	return this.getString(R.string.msg_gernal_network_error);
+    }
 }

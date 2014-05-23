@@ -346,4 +346,6 @@
          <string name="buy_place_8">电子邮件或短信</string>
          <string name="buy_place_9">400热线</string>
          <string name="buy_place_10">其他渠道</string>
+         
+         <string name="msg_gernal_network_error">"请检查您的网络是否通畅"</string>
 </resources>
