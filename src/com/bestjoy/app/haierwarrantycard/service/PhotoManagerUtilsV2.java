@@ -48,6 +48,8 @@ public class PhotoManagerUtilsV2 {
 	private static Bitmap mDefaultCircleTopicBitmap;
 	private static Bitmap mDefaultCirclePhotoBitmap;
 	private static Bitmap mDefaultLoadBitmap;
+	
+	private static Bitmap mDefaultKyBitmap;
 	private Context mContext;
 	private Resources mResources;
 	private static final int MAX_CAPACITY = 100;
@@ -141,7 +143,7 @@ public class PhotoManagerUtilsV2 {
 			mResources = context.getResources();
 			MAX_RESULT_IMAGE_SIZE = mContext.getResources().getDimension(R.dimen.barcode_image_view_size);
 			mCurrentImageSize = MAX_RESULT_IMAGE_SIZE;
-			
+			mDefaultKyBitmap = BitmapFactory.decodeResource(mResources, R.drawable.ky_default);
 		}
 		
 //		initCache();
@@ -347,6 +349,7 @@ public class PhotoManagerUtilsV2 {
 	public Bitmap getDefaultBitmap(TaskType type) {
 		switch(type) {
 		case HOME_DEVICE_AVATOR:
+			return mDefaultKyBitmap;
 		case PREVIEW:
 			default:
 				return mDefaultBitmap; 
