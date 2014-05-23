@@ -131,8 +131,10 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 	
 	public String getDisID() {
 		if(mAdminCode != null) return mAdminCode;
+		String pro = mProEditView.getText().toString().trim();
+		String city = mCityEditView.getText().toString().trim();
 		String dis = mDisEditView.getText().toString().trim();
-		String selection = DeviceDBHelper.DEVICE_HAIER_REGION_NAME + " like '" + dis + "%'";
+		String selection = DeviceDBHelper.DEVICE_HAIER_PROVICE + " like '" + pro + "%' and " + DeviceDBHelper.DEVICE_HAIER_CITY + " like '" + city + "%' and " + DeviceDBHelper.DEVICE_HAIER_REGION_NAME + " like '" + dis + "%'";
 		mCursor = mContext.getContentResolver().query(
 				BjnoteContent.HaierRegion.CONTENT_URI, REGION_PROJECTION, selection, null, null);
 		if(mCursor.moveToNext()) {

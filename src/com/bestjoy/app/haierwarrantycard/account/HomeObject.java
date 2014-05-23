@@ -194,8 +194,8 @@ public class HomeObject implements InfoInterface{
 		return cr.query(BjnoteContent.District.CONTENT_URI, DISTRICT_PROJECTION, selection, null, null);
 	}
 	
-	public static String getDisID(ContentResolver cr, String disName) {
-		String selection = DeviceDBHelper.DEVICE_DIS_NAME + " like '" + disName + "%'";
+	public static String getDisID(ContentResolver cr, String proName, String city, String disName) {
+		String selection = DeviceDBHelper.DEVICE_HAIER_PROVICE + " like '" + proName + "%' and " + DeviceDBHelper.DEVICE_HAIER_CITY + " like '" + city + "%' and " + DeviceDBHelper.DEVICE_DIS_NAME + " like '" + disName + "%'";
 		Cursor cursor = cr.query(BjnoteContent.District.CONTENT_URI, DISTRICT_PROJECTION, selection, null, null);
 		if(cursor.moveToNext()) {
 			return cursor.getString(cursor.getColumnIndex(DeviceDBHelper.DEVICE_DIS_ID));
