@@ -625,7 +625,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			
 			try {
 //				is = NetworkUtils.openContectionLocked(urls, paths, MyApplication.getInstance().getSecurityKeyValuesObject());
-				is = NetworkUtils.openPostContectionLocked("http://115.29.231.29/UploadBaoXiu.asmx/UpdateBaoXiuData", "ara", paramValue.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
+				is = NetworkUtils.openPostContectionLocked("http://115.29.231.29/UploadBaoXiu.asmx/UpdateBaoXiuData", "Para", paramValue.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
 				
 				haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
 				if (haierResultObject.isOpSuccessfully()) {
