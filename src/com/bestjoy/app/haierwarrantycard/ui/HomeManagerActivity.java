@@ -82,7 +82,7 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuItem newHomeItem = menu.add(R.string.menu_create, R.string.menu_create, 0, R.string.menu_create);
 		MenuItem deleteItem = menu.add(R.string.menu_delete, R.string.menu_delete, 0, R.string.menu_delete);
-		MenuItem editItem = menu.add(R.string.menu_edit, R.string.menu_edit, 0, R.string.menu_edit);
+		MenuItem editItem = menu.add(R.string.menu_edit_for_delete, R.string.menu_edit_for_delete, 0, R.string.menu_edit_for_delete);
 		MenuItem doneItem = menu.add(R.string.menu_back, R.string.menu_back, 0, R.string.menu_back);
 		deleteItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 		newHomeItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
@@ -95,12 +95,12 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (mIsEditMode) {
 			menu.findItem(R.string.menu_create).setVisible(false);
-			menu.findItem(R.string.menu_edit).setVisible(false);
+			menu.findItem(R.string.menu_edit_for_delete).setVisible(false);
 			menu.findItem(R.string.menu_back).setVisible(true);
 			menu.findItem(R.string.menu_delete).setVisible(deleteHomeIDList.size() > 0);
 		} else {
 			menu.findItem(R.string.menu_create).setVisible(true);
-			menu.findItem(R.string.menu_edit).setVisible(true);
+			menu.findItem(R.string.menu_edit_for_delete).setVisible(true);
 			menu.findItem(R.string.menu_back).setVisible(false);
 			menu.findItem(R.string.menu_delete).setVisible(false);
 		}
@@ -131,7 +131,7 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 				.show();
 			}
 			break;
-		case R.string.menu_edit:
+		case R.string.menu_edit_for_delete:
 			mIsEditMode = true;
 			mHomeManagerAdapter.notifyDataSetChanged();
 			invalidateOptionsMenu();

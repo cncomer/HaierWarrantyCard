@@ -39,7 +39,6 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 	private HaierProCityDisEditPopView mProCityDisEditPopView;
 	
 	private EditText mUsrNameEditText, usrPwdEditText, usrPwdConfirmEditText, usrHomeNameEditText;
-	private EditText mHomeDetailPlace;
 	private String usrPwdConfirm;
 	
 	private AccountObject mAccountObject;
@@ -85,8 +84,6 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 		mUsrNameEditText = (EditText) findViewById(R.id.usr_name);
 		usrPwdEditText = (EditText) findViewById(R.id.usr_pwd);
 		usrPwdConfirmEditText = (EditText) findViewById(R.id.usr_repwd);
-		
-		mHomeDetailPlace = (EditText) findViewById(R.id.edit_place_detail_bottom);
 		
 		mConfrimReg = (Button) findViewById(R.id.button_save_reg);
 		mConfrimReg.setOnClickListener(this);
@@ -169,7 +166,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 				mError = e.getMessage();
 			} catch (IOException e) {
 				e.printStackTrace();
-				mError = e.getMessage();
+				mError = MyApplication.getInstance().getGernalNetworkError();
 			} finally {
 				NetworkUtils.closeInputStream(is);
 			}
@@ -233,8 +230,6 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 
 				mHomeObject = mProCityDisEditPopView.getHomeObject();
 				
-				//由于Haier布局的变化，这里需要重新设置一下详细地址
-				mHomeObject.mHomePlaceDetail = mHomeDetailPlace.getText().toString().trim();
 				if(valiInput()) {
 					registerAsync();
 				}

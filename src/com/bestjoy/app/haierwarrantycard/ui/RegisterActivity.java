@@ -204,7 +204,7 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 				mError = e.getMessage();
 			} catch (IOException e) {
 				e.printStackTrace();
-				mError = e.getMessage();
+				mError = MyApplication.getInstance().getGernalNetworkError();
 			} finally {
 				NetworkUtils.closeInputStream(is);
 			}

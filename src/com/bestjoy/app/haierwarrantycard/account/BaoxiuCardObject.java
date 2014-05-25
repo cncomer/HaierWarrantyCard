@@ -82,8 +82,8 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public String mBuyDate;
 	public String mBuyPrice;
 	public String mBuyTuJing;
-	/**整机保修时间，浮点型*/
-	public String mWY = "0";
+	/**整机保修时间，浮点型, 默认是1年*/
+	public String mWY = "1";
 	public String mYanBaoTime = "0";
 	public String mYanBaoDanWei;
 	/**用户定义的保修设备名称，如客厅电视机*/

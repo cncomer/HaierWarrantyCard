@@ -85,7 +85,7 @@ public class LoginOrUpdateAccountDialog extends Activity{
 				_error = e.getMessage();
 			} catch (IOException e) {
 				e.printStackTrace();
-				_error = e.getMessage();
+				_error = MyApplication.getInstance().getGernalNetworkError();
 			} catch (JSONException e) {
 				e.printStackTrace();
 				_error = e.getMessage();

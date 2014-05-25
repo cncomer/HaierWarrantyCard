@@ -34,20 +34,14 @@
                 android:orientation="horizontal" >
 
                 <TextView
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
+			        style="@style/ProductInfo"
                     android:text="@string/name" />
 
                 <EditText
                     android:id="@+id/usr_name"
                     style="@style/ProductInfoInput"/>
             </LinearLayout>
-            <EditText
-                android:id="@+id/tag"
-                android:text="@string/my_home"
-                style="@style/ProductInfoInput"/>
-		    <include layout="@layout/pcd_edit_layout" />
-			<LinearLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
@@ -80,26 +74,12 @@
                     android:inputType="textPassword"
                     android:hint="@string/usr_repwd_hint" />
             </LinearLayout>
-		    
-			<LinearLayout
-			    android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-			    android:layout_marginTop="20dip"
-			    android:orientation="horizontal" >
+            <EditText
+                android:id="@+id/tag"
+                android:text="@string/my_home"
+                style="@style/ProductInfoInput"/>
+		    <include layout="@layout/pcd_edit_layout" />
 			
-			    <TextView
-			        android:layout_width="wrap_content"
-			        android:layout_height="wrap_content"
-			        android:text="@string/address"
-			        android:visibility="invisible" />
-			
-			    <EditText
-			        android:id="@+id/edit_place_detail_bottom"
-			        style="@style/ProductInfoInput"
-			        android:layout_weight="1"
-			        android:inputType="none"
-                    android:hint="@string/msg_input_usr_place_detail" />
-			</LinearLayout>
 			
 		    <TextView
 		        android:layout_width="wrap_content"
