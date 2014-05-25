@@ -4,7 +4,7 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 
 public class DeviceDBHelper {
 
-	public static final int VERSION = 6;
+	public static final int VERSION = 8;
 	public static final String KEY_VERSION = "version";
 	//设备数据库
 	  public static final String DB_DEVICE_NAME = "device.db";
