@@ -79,7 +79,6 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 
 	private void initViews() {
 		mProCityDisEditPopView = new HaierProCityDisEditPopView(this);
-		mProCityDisEditPopView.setHomePlaceDetailVisibility(View.GONE);
 		usrHomeNameEditText = (EditText) findViewById(R.id.tag);
 		mUsrNameEditText = (EditText) findViewById(R.id.usr_name);
 		usrPwdEditText = (EditText) findViewById(R.id.usr_pwd);

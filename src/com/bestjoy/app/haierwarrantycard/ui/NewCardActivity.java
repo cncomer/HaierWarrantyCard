@@ -126,8 +126,9 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 	public void onResume() {
 		super.onResume();
 		if (mIsFirstOnResume) {
+			BaoxiuCardObject tmpObject = BaoxiuCardObject.getBaoxiuCardObject();
 			//更新产品信息
-			mContent.updateInfoInterface(BaoxiuCardObject.getBaoxiuCardObject());
+			mContent.updateInfoInterface(tmpObject != null ? tmpObject : new BaoxiuCardObject());
 			//更新家信息
 			mContent.updateInfoInterface(HomeObject.getHomeObject());
 			//更新联系人信息，默认是用的账户信息

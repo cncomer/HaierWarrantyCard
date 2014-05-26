@@ -228,9 +228,11 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			mBaoxiuCardObject.clear();
 			
 			try {
-				Date date = BaoxiuCardObject.BUY_DATE_TIME_FORMAT.parse(object.mBuyDate);
-				mCalendar.setTime(date);
-				mDatePickBtn.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(date));
+				if(object.mBuyDate != null) {
+					Date date = BaoxiuCardObject.BUY_DATE_TIME_FORMAT.parse(object.mBuyDate);
+					mCalendar.setTime(date);
+					mDatePickBtn.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(date));
+				}
 			} catch (ParseException e) {
 				e.printStackTrace();
 			}
