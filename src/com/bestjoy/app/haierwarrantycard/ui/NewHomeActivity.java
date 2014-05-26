@@ -23,13 +23,13 @@ import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
-import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditPopView;
+import com.bestjoy.app.haierwarrantycard.view.HaierProCityDisEditPopView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.NetworkUtils;
 
 public class NewHomeActivity extends BaseActionbarActivity {
 	private static final String TAG = "NewHomeActivity";
-	private ProCityDisEditPopView mProCityDisEditPopView;
+	private HaierProCityDisEditPopView mProCityDisEditPopView;
 	private EditText mHomeEditText;
 	private HomeObject mHomeObject ;
 	@Override
@@ -48,7 +48,7 @@ public class NewHomeActivity extends BaseActionbarActivity {
 		if (mHomeObject.mHomeAid > 0) {
 			setTitle(R.string.activity_title_update_home);
 		}
-		mProCityDisEditPopView = new ProCityDisEditPopView(this);
+		mProCityDisEditPopView = new HaierProCityDisEditPopView(this);
 		mHomeEditText = (EditText) findViewById(R.id.my_home);
 		mProCityDisEditPopView.setHomeObject(mHomeObject);
 		mHomeEditText.setText(mHomeObject.getHomeTag(this));
