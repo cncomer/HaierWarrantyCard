@@ -223,6 +223,10 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		}
 		cardObject.mYBPhone = jsonObject.getString("YBPhone");
 		cardObject.mKY = jsonObject.getString("KY");
+		if ("null".equalsIgnoreCase(cardObject.mKY)) {
+			DebugUtils.logE(TAG, "parseBaoxiuCards find illegal value " + cardObject.mKY + " for ky");
+			cardObject.mKY = "";
+		}
 		//解码发票，如果有的话
 		decodeFapiao(cardObject);
 		return cardObject;

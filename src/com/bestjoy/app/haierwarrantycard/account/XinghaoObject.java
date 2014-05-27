@@ -38,13 +38,14 @@ public class XinghaoObject extends InfoInterfaceImpl{
 		HaierDBHelper.DEVICE_XINGHAO_MN,
 		HaierDBHelper.DEVICE_XINGHAO_KY,
 		HaierDBHelper.DEVICE_XINGHAO_PCODE,
+		HaierDBHelper.DEVICE_XINGHAO_WY
 	};
 	public static final String XINGHAO_CODE_SELECTION = HaierDBHelper.DEVICE_XINGHAO_PCODE + "=?";
 	public static final String XINGHAO_MN_SELECTION = HaierDBHelper.DEVICE_XINGHAO_MN + "=?";
 	public static final String XINGHAO_KY_SELECTION = HaierDBHelper.DEVICE_XINGHAO_KY + "=?";
 	
 	public static final String XINGHAO_CODE_MN_KY_SELECTION = XINGHAO_CODE_SELECTION + " and " + XINGHAO_MN_SELECTION + " and " + XINGHAO_KY_SELECTION;
-	private String mMN, mKY;
+	private String mMN, mKY, mWY;
 	private String mPinpaiCode;
 	
 	public static final String UPDATE_XINGHAO = HaierServiceObject.SERVICE_URL + "GetXinHaoByPinPai.ashx?Code=";
@@ -70,6 +71,7 @@ public class XinghaoObject extends InfoInterfaceImpl{
 					xinghaoObject = new XinghaoObject();
 					xinghaoObject.mMN = object.getString("MN");
 					xinghaoObject.mKY = object.getString("KY");
+					xinghaoObject.mWY = object.getString("WY");
 					xinghaoObject.mPinpaiCode = pinpaiCode;
 					list.add(xinghaoObject);
 				}
@@ -89,6 +91,7 @@ public class XinghaoObject extends InfoInterfaceImpl{
 		values.put(HaierDBHelper.DEVICE_XINGHAO_PCODE, mPinpaiCode);
 		values.put(HaierDBHelper.DEVICE_XINGHAO_MN, mMN);
 		values.put(HaierDBHelper.DEVICE_XINGHAO_KY, mKY);
+		values.put(HaierDBHelper.DEVICE_XINGHAO_WY, mWY);
 		values.put(HaierDBHelper.DATE, new Date().getTime());
 		
 		if (isExsited(cr, mPinpaiCode, mMN, mKY) > 0) {

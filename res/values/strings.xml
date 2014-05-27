@@ -349,4 +349,7 @@
          <string name="buy_place_10">其他渠道</string>
          
          <string name="msg_gernal_network_error">"请检查您的网络是否通畅"</string>
+         <string name="msg_get_yanzhengma_overtime">"本日获取短信验证码超过限制"</string>
+         <string name="msg_get_yanzhengma_gernal_error">"暂时无法获取短信验证码"</string>
+         
 </resources>

@@ -191,13 +191,17 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			DebugUtils.logD(TAG, "sb : " + sb.toString());
 			try {
 				is = NetworkUtils.openContectionLocked(url, path, MyApplication.getInstance().getSecurityKeyValuesObject());
-				DebugUtils.logD(TAG, "is : " + is.toString());
+				if (is == null) {
+					DebugUtils.logE(TAG, "openContectionLocked return null");
+					mError = mContext.getString(R.string.msg_get_yanzhengma_gernal_error);
+					return null;
+				}
 				try {
 					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
 					return jsonObject.getString("randcode");
 				} catch (JSONException e) {
 					e.printStackTrace();
-					mError = e.getMessage();
+					mError = mContext.getString(R.string.msg_get_yanzhengma_gernal_error);
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
@@ -223,6 +227,9 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			} else if ("".equals(result)) {
 				//提示用户已注册过了
 				MyApplication.getInstance().showMessage(R.string.msg_yanzheng_code_msg_has_registered);
+			} else if ("2".equals(result)) {
+				//提示用户本日获取短信验证码超过限制
+				MyApplication.getInstance().showMessage(R.string.msg_get_yanzhengma_overtime);
 			} else {
 				mYanZhengCodeFromServer = result;
 				MyApplication.getInstance().showMessage(R.string.msg_yanzheng_code_msg_send);

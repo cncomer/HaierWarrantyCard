@@ -12,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 1;
+  private static final int DB_VERSION = 2;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -99,6 +99,7 @@ private static final String TAG = "HaierDBHelper";
   public static final String DEVICE_XINGHAO_PCODE = "pcode";
   public static final String DEVICE_XINGHAO_MN = "MN";
   public static final String DEVICE_XINGHAO_KY = "KY";
+  public static final String DEVICE_XINGHAO_WY = "WY";
   
   // Qrcode scan part begin
   public static final String TABLE_SCAN_NAME = "history";
@@ -286,6 +287,7 @@ private static final String TAG = "HaierDBHelper";
 	            DEVICE_XINGHAO_PCODE + " TEXT, " +
 	            DEVICE_XINGHAO_MN + " TEXT, " +
 	            DEVICE_XINGHAO_KY + " TEXT, " +
+	            DEVICE_XINGHAO_WY + " TEXT, " +
 	            DATE + " TEXT);");
   }
   
@@ -318,5 +320,10 @@ private static final String TAG = "HaierDBHelper";
 		    onCreate(sqLiteDatabase);
 		    return;
 		} 
+	  if (oldVersion == 1) {
+		  //版本2我们增加了品牌数据表的wy字段
+		  addTextColumn(sqLiteDatabase, TABLE_NAME_DEVICE_XINGHAO, DEVICE_XINGHAO_WY);
+		  oldVersion = 2;
+	  }
   }
 }
