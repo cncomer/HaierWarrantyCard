@@ -158,6 +158,9 @@ public class ModleSettings {
 		case R.id.model_my_card:
 		case R.id.model_install:
 		case R.id.model_repair:
+			// add by chenkai, 增加预约保养的处理, 2014.05.31 begin
+		case R.id.model_maintenance:
+			// add by chenkai, 增加预约保养的处理, 2014.05.31 end
 			NewCardActivity.startIntent(context, bundle);
 		case R.id.model_feedback:
 			break;
@@ -235,6 +238,20 @@ public class ModleSettings {
 		bundle.putString(Intents.EXTRA_NAME, context.getString(R.string.activity_title_choose_device_general));
 		return bundle;
 	}
+	
+	//add by chenkai, 2014.05.31, 增加一键保养 begin
+	/**
+	 * 可以使用这个来创建保养的Bundle数据
+	 * @param context
+	 * @return
+	 */
+	public static Bundle createMyMaintenanceDefaultBundle(Context context) {
+		Bundle bundle = new Bundle();
+		bundle.putInt(Intents.EXTRA_TYPE, R.id.model_maintenance);
+		bundle.putString(Intents.EXTRA_NAME, context.getString(R.string.activity_title_maintenance));
+		return bundle;
+	}
+	//add by chenkai, 2014.05.31, 增加一键保养 end
 
 	
 	public static int getModelIdFromBundle(Bundle modelBundle) {

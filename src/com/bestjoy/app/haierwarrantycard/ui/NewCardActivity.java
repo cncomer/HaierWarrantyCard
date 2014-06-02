@@ -62,6 +62,11 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 			case R.id.model_repair:
 				mContent = new NewRepairCardFragment();
 				break;
+				// add by chenkai, 增加预约保养Fragment, 2014.05.31 begin
+			case R.id.model_maintenance:
+				mContent = new NewMaintenanceCardFragment();
+				break;
+				// add by chenkai, 增加预约保养Fragment, 2014.05.31 end
 			}
 		}
 		mContent.setArguments(mBundles);

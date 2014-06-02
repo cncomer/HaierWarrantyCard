@@ -74,8 +74,11 @@
                 android:layout_marginTop="10dip"/>
             
 
+            <!-- modify by chenkai, 增加id,在不同的Activity中可以通过id找到View而重新设置text begin -->
 			<TextView style="@style/PeopleInfo"
+			    android:id="@+id/desc"
 	        	android:text="@string/error_des" />
+			<!-- modify by chenkai, 增加id,在不同的Activity中可以通过id找到View而重新设置text end -->
 
             <EditText
                 android:id="@+id/product_ask_online_input"

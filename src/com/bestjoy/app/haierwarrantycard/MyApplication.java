@@ -270,4 +270,39 @@ public class MyApplication extends Application{
     public String getGernalNetworkError() {
     	return this.getString(R.string.msg_gernal_network_error);
     }
+    
+  //add by chenkai, for Usage, 2013-06-05 begin
+    /**return mnt/sdcard/xxx/accountmd目录*/
+    public File getExternalStorageAccountRoot(String accountMd) {
+    	if (!hasExternalStorage()) {
+    		return null;
+    	}
+    	File root =  new File(getExternalStorageRoot("account"), accountMd);
+    	if (!root.exists()) {
+    		root.mkdir();
+    	}
+    	return root;
+    }
+    /**得到SD卡账号对应组件的目录*/
+    public File getExternalStorageModuleRootForAccount(String accountMd, String moduleName) {
+    	if (!hasExternalStorage()) {
+    		return null;
+    	}
+    	File root = new File(getExternalStorageAccountRoot(accountMd), moduleName);
+    	if (!root.exists()) {
+    		root.mkdirs();
+    	}
+    	return root;
+    }
+    /**返回产品使用说明书*/
+    public File getProductUsagePdf(String ky) {
+    	String accountUid = String.valueOf(HaierAccountManager.getInstance().getAccountObject().mAccountUid);
+		File goodsUsagePdfFile =  new File(getExternalStorageModuleRootForAccount(accountUid, "product") , ky + ".pdf");
+		return goodsUsagePdfFile;
+	}
+    /**提示没有SD卡可用*/
+    public void showNoSDCardMountedMessage() {
+    	showMessage(R.string.msg_sd_unavailable);
+    }
+    //add by chenkai, for Usage, 2013-06-05 end
 }

@@ -1,15 +1,22 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
+import org.vudroid.pdfdroid.PdfViewerActivity;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,6 +38,8 @@ import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
+import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.bestjoy.app.haierwarrantycard.utils.FilesLengthUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
@@ -40,12 +49,13 @@ import com.shwy.bestjoy.utils.NotifyRegistrant;
 
 public class CardViewActivity extends BaseActionbarActivity implements View.OnClickListener{
 	private static final String TOKEN = CardViewActivity.class.getName();
+	private static final String TAG = "CardViewActivity";
 	private EditText mAskInput;
 	//private Handler mHandler;
 	private Button mSpeakButton;
 	private SpeechRecognizerEngine mSpeechRecognizerEngine;
 	//按钮
-	private Button mSaveBtn, mOnekeyInstallBtn, mOnekeyRepairBtn;
+	private Button mSaveBtn, mOnekeyInstallBtn, mOnekeyRepairBtn, mOnekeyMaintainenceBtn;
 	//商品信息
 	private TextView mNameInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput;
 	private TextView mDatePickBtn, mPriceInput, mTujingInput, mYanbaoTimeInput, mYanbaoComponyInput, mYanbaoTelInput;
@@ -119,13 +129,23 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		 mOnekeyRepairBtn = (Button) findViewById(R.id.button_onekey_repair);
 		 mOnekeyRepairBtn.setOnClickListener(this);
 		 
+		 //add by chenkai, 2014.05.31，增加一键保养 begin
+		 mOnekeyMaintainenceBtn = (Button) findViewById(R.id.button_onekey_maintenance);
+		 mOnekeyMaintainenceBtn.setOnClickListener(this);
+		 //add by chenkai, 2014.05.31，增加一键保养 end
+		 
 		 populateView();
 		
 	}
 	
 	private void populateView() {
 		 if (!TextUtils.isEmpty(mBaoxiuCardObject.mKY)) {
+			 mGuideView.setVisibility(View.VISIBLE);
 			 PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, mAvatorView, mBaoxiuCardObject.mKY, null, PhotoManagerUtilsV2.TaskType.HOME_DEVICE_AVATOR);
+		 } else {
+			 //设置默认的ky图片
+			 mAvatorView.setImageResource(R.drawable.ky_default);
+			 mGuideView.setVisibility(View.GONE);
 		 }
 		 if (!mBaoxiuCardObject.hasBillAvator()) {
 			 mBillView.setVisibility(View.INVISIBLE);
@@ -211,12 +231,34 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			}
 			break;
 		case R.id.button_guide:
+			//add by chenkai, for Usage, 2014.05.31 begin
+			if (TextUtils.isEmpty(mBaoxiuCardObject.mKY)) {
+				DebugUtils.logE(TAG, "ky is null, so ignore guild button");
+				return;
+			}
+			if (!MyApplication.getInstance().hasExternalStorage()) {
+				//没有SD,我们需要提示用户
+				MyApplication.getInstance().showNoSDCardMountedMessage();
+				return;
+			}
+			File pdfFile = MyApplication.getInstance().getProductUsagePdf(mBaoxiuCardObject.mKY);
+			if (pdfFile.exists()) {
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.fromFile(MyApplication.getInstance().getProductUsagePdf(mBaoxiuCardObject.mKY)));
+				intent.setClass(mContext, PdfViewerActivity.class);
+				startActivity(intent);
+			} else {
+				//开始下载
+				downloadProductUsagePdfAsync();
+			}
+			//add by chenkai, for Usage, 2014.05.31 end
 			break;
 		case R.id.button_bill:
 			BaoxiuCardObject.showBill(mContext, mBaoxiuCardObject);
 			break;
 		case R.id.button_onekey_install:
 		case R.id.button_onekey_repair:
+		//add by chenkai, 2014.05.31，增加一键保养 begin
+		case R.id.button_onekey_maintenance:
 			//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
 	    	if (HaierServiceObject.isHaierPinpai(mBaoxiuCardObject.mPinPai)) {
 	    		BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
@@ -225,8 +267,10 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
     				ModleSettings.doChoose(mContext, ModleSettings.createMyInstallDefaultBundle(mContext));
     			} else if (id == R.id.button_onekey_repair) {
     				ModleSettings.doChoose(mContext, ModleSettings.createMyRepairDefaultBundle(mContext));
+    			} else if (id == R.id.button_onekey_maintenance) {
+    				ModleSettings.doChoose(mContext, ModleSettings.createMyMaintenanceDefaultBundle(mContext));
+    				//add by chenkai, 2014.05.31，增加一键保养 end
     			}
-    			
     			finish();
 	    	} else {
 	    		new AlertDialog.Builder(mContext)
@@ -334,6 +378,102 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		}
 		
 	}
+	
+	//add by chenkai, for Usage, 2014.05.31, begin
+	private DownloadProductUsagePdfTask mDownloadProductUsagePdfTask;
+	private ProgressDialog mDownloadGoodsUsagePdfProgressDialog;
+	private void downloadProductUsagePdfAsync() {
+		showDialog(DIALOG_PROGRESS);
+		AsyncTaskUtils.cancelTask(mDownloadProductUsagePdfTask);
+		mDownloadProductUsagePdfTask = new DownloadProductUsagePdfTask();
+		mDownloadProductUsagePdfTask.execute();
+	}
+	private class DownloadProductUsagePdfTask extends AsyncTask<Void, Integer, Boolean> {
+
+		public long mPdfLength;
+		public String mPdfLengthStr;
+		String mErrorStr;
+		@Override
+		protected Boolean doInBackground(Void... arg0) {
+			mDownloadGoodsUsagePdfProgressDialog = getProgressDialog();
+			String url = HaierServiceObject.getProductUsageUrl(mBaoxiuCardObject.mKY);
+			InputStream is = null;
+			try {
+				HttpResponse response = NetworkUtils.openContectionLockedV2(url, MyApplication.getInstance().getSecurityKeyValuesObject());
+				int code = response.getStatusLine().getStatusCode();
+				DebugUtils.logD(TAG, "DownloadProductUsagePdfTask return StatusCode is " + code);
+				if (code == HttpStatus.SC_OK) {
+					mPdfLength = response.getEntity().getContentLength();
+					DebugUtils.logD(TAG, "DownloadProductUsagePdfTask return length of pdf file is " + mPdfLength);
+					mPdfLengthStr = FilesLengthUtils.computeLengthToString(mPdfLength);
+					is = response.getEntity().getContent();
+					
+					FileOutputStream fos = new FileOutputStream(MyApplication.getInstance().getProductUsagePdf(mBaoxiuCardObject.mKY));
+					byte[] buffer = new byte[4096];
+					int read = is.read(buffer);
+					long readAll  = read;
+					int percent = 0;
+					while(read != -1) {
+						percent = Math.round((100.0f * readAll/mPdfLength)) ;
+						publishProgress(percent);
+						fos.write(buffer, 0, read);
+						read = is.read(buffer);
+						readAll += read;
+					}
+					fos.flush();
+					fos.close();
+					return true;
+				} else if (code == HttpStatus.SC_NOT_FOUND) {
+					mErrorStr = getString(R.string.msg_no_product_usage);
+				}
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				mErrorStr = MyApplication.getInstance().getGernalNetworkError();
+			} catch (IOException e) {
+				e.printStackTrace();
+				mErrorStr = MyApplication.getInstance().getGernalNetworkError();
+			} finally {
+				NetworkUtils.closeInputStream(is);
+			}
+			return false;
+		}
+
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			super.onProgressUpdate(values);
+			if (mDownloadGoodsUsagePdfProgressDialog != null) {
+				mDownloadGoodsUsagePdfProgressDialog.setMessage(getString(R.string.msg_product_usage_downloading_format, values[0], mPdfLengthStr));
+			}
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			dismissDialog(DIALOG_PROGRESS);
+			mDownloadGoodsUsagePdfProgressDialog = null;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+			dismissDialog(DIALOG_PROGRESS);
+			mDownloadGoodsUsagePdfProgressDialog = null;
+			if (result) {
+				MyApplication.getInstance().showMessage(R.string.msg_product_usage_downloading_ok);
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.fromFile(MyApplication.getInstance().getProductUsagePdf(mBaoxiuCardObject.mKY)));
+				intent.setClass(mContext, PdfViewerActivity.class);
+				startActivity(intent);
+			} else {
+				if (TextUtils.isEmpty(mErrorStr)) {
+					MyApplication.getInstance().showMessage(R.string.msg_product_usage_downloading_failed);
+				} else {
+					MyApplication.getInstance().showMessage(mErrorStr);
+					
+				}
+			}
+		}
+	}
+	//add by chenkai, for Usage, 2014.05.31, end
 	
 	/**
 	 * 回到主界面

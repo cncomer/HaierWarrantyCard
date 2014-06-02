@@ -18,4 +18,8 @@
   <item type="id" name="return_scan_result"/>
   <item type="id" name="search_book_contents_failed"/>
   <item type="id" name="search_book_contents_succeeded"/>
+  
+  <!-- add by chenkai, 增加一键保养, 2014.05.31 begin-->
+  <item type="id" name="model_maintenance" />
+  <!-- add by chenkai, 增加一键保养, 2014.05.31 end-->
 </resources>

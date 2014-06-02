@@ -109,4 +109,34 @@ public class HaierServiceObject {
 			return mStatusCode == 1;
 		}
 	}
+	
+	//add by chenkai, for Usage, 2014.05.31 begin
+	/**www.51cck.com/PD前9位数字/PD前13位[.htm][.pdf]*/
+    public static final String GOODS_INTRODUCTION_BASE = "http://www.51cck.com/";
+	/***
+	   * www.51cck.com/KY前9位数字/KY.pdf
+	   * @return
+	   */
+	  public static String getProductUsageUrl(String ky9, String ky) {
+		  StringBuilder sb = new StringBuilder(GOODS_INTRODUCTION_BASE);
+		  sb.append(ky9).append("/").append(ky).append(".pdf");
+		  return sb.toString();
+	  }
+	  /***
+	   * www.51cck.com/KY前9位数字/KY.pdf
+	   * @return
+	   */
+	  public static String getProductUsageUrl(String ky) {
+		  String ky9 = ky.substring(0,9);
+		  return getProductUsageUrl(ky9, ky);
+	  }
+	 //add by chenkai, for Usage, 2014.05.31 end
+	  
+	  /**
+	   * 是否支持直接从服务器下发的验证码短信中提取验证码并回填
+	   * @return
+	   */
+	  public static boolean isSupportReceiveYanZhengMa() {
+		  return true;
+	  }
 }

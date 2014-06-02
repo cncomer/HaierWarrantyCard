@@ -2,18 +2,23 @@ package com.bestjoy.app.haierwarrantycard.ui;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.telephony.SmsMessage;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -33,7 +38,7 @@ import com.shwy.bestjoy.utils.SecurityUtils;
 public class RegisterActivity extends BaseActionbarActivity implements View.OnClickListener{
 	private static final String TAG = "RegisterActivity";
 	
-	private static final int TIME_COUNDOWN = 60000;
+	private static final int TIME_COUNDOWN = 120000;
 	
 	private Button mNextButton;
 	private Button mBtnGetyanzhengma;
@@ -66,7 +71,6 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 		
 		mTelInput = (EditText) findViewById(R.id.usr_tel);
 		mCodeInput = (EditText) findViewById(R.id.usr_validate);
-		mCodeInput.setOnClickListener(this);
 	}
 	
 	 public boolean onCreateOptionsMenu(Menu menu) {
@@ -153,6 +157,7 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 	private GetYanZhengCodeAsyncTask mGetYanZhengCodeAsyncTask;
 	private ProgressDialog mGetYanZhengCodeDialog;
 	private void loadYanzhengCodeAsync(String... param) {
+		mCodeInput.setHint(R.string.usr_validate);
 		AsyncTaskUtils.cancelTask(mGetYanZhengCodeAsyncTask);
 		mGetYanZhengCodeDialog = getProgressDialog();
 		if (mGetYanZhengCodeDialog == null) {
@@ -233,6 +238,11 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			} else {
 				mYanZhengCodeFromServer = result;
 				MyApplication.getInstance().showMessage(R.string.msg_yanzheng_code_msg_send);
+				//add by chenkai, 开始监听验证码短信
+				if (HaierServiceObject.isSupportReceiveYanZhengMa()) {
+					mCodeInput.setHint(R.string.hint_wait_yanzhengma_sms);
+					register();
+				}
 			}
 		}
 
@@ -245,4 +255,64 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 		}
 		
 	}
+	
+	//add by chenkai, 增加读取验证码短信，并回填验证码 begin
+	private static final String SMS_ACTION = "android.provider.Telephony.SMS_RECEIVED";
+	private static final Pattern YANZHENGMA_PATTERN = Pattern.compile(".+(\\d{6})");
+	private YanZhengMaReceiver mYanZhengMaReceiver;
+	private void register() {
+		if (mYanZhengMaReceiver == null) {
+			mYanZhengMaReceiver = new YanZhengMaReceiver();
+			IntentFilter filter = new IntentFilter(SMS_ACTION);
+			filter.setPriority(Integer.MAX_VALUE);
+			registerReceiver(mYanZhengMaReceiver, filter);
+		}
+		
+	}
+	
+	private void unregister() {
+		if (mYanZhengMaReceiver != null) {
+			unregisterReceiver(mYanZhengMaReceiver);
+			mYanZhengMaReceiver = null;
+		}
+	}
+	
+	private class YanZhengMaReceiver extends BroadcastReceiver{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			DebugUtils.logD(TAG, "onReceive intent " + intent);
+			if (SMS_ACTION.equals(intent.getAction())) {
+				//回填验证码
+				SmsMessage[] smsMessages = Intents.getMessagesFromIntent(intent);
+				String message  = smsMessages[0].getMessageBody();
+				String address = smsMessages[0].getOriginatingAddress();
+				DebugUtils.logD(TAG, "message " + message);
+				DebugUtils.logD(TAG, "address " + address);
+				if (!TextUtils.isEmpty(address) 
+						&& address.length() > 11 
+						&& !(address.startsWith("86") || address.startsWith("+86"))
+						&& message.contains(context.getString(R.string.haier_yanzhengma_verify2))) {
+					Matcher matcher = YANZHENGMA_PATTERN.matcher(message);
+					if (matcher.find()) {
+						mCodeInput.setText(matcher.group(1));
+						DebugUtils.logD(TAG, "find yanzhengma " + matcher.group(1));
+						mCodeInput.setHint(R.string.usr_validate);
+						//add by chenkai, 移除监听验证码短信
+						unregister();
+						abortBroadcast();
+					}
+				}
+			}
+		}
+		
+	};
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		//add by chenkai, 移除监听验证码短信
+		if (HaierServiceObject.isSupportReceiveYanZhengMa()) unregister();
+	}
+	//add by chenkai, 增加读取验证码短信，并回填验证码 end
 }
