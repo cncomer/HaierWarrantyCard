@@ -7,17 +7,18 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.Editable;
-import android.text.InputType;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout.LayoutParams;
@@ -26,7 +27,7 @@ import android.widget.TextView;
 
 import com.bestjoy.app.haierwarrantycard.R;
 
-public class HaierPopView implements OnTouchListener {
+public class HaierPopView implements OnTouchListener, OnClickListener {
 	private static final String TAG = "HaierPopView";
 	private static final int COLUMN_NUMBER = 4;
 	private Context mContext;
@@ -37,21 +38,24 @@ public class HaierPopView implements OnTouchListener {
 	private int screenHeight;
 	private AddressAdapter mAddressAdapter;
 	private EditText mEditText;
+	private Button mChooseButton;
 	
 	ArrayList<String> resultList = new ArrayList<String>();
 
-	public HaierPopView(Context context, View view) {
+	public HaierPopView(Context context, View view, int editTextId, int buttonId) {
 		mContext = context;
-		setDataSource(mContext.getResources().getStringArray(R.array.buy_places));
-		initViews(view);
+		//setDataSource(mContext.getResources().getStringArray(R.array.buy_places));
+		initViews(view, editTextId, buttonId);
 		initData();
 	}
 
 	
-	private void initViews(View view) {
-		mEditText = (EditText) view.findViewById(R.id.edit_product_buy_tujing);
-		mEditText.setOnTouchListener(this);
-		mEditText.setInputType(InputType.TYPE_NULL);
+	private void initViews(View view, int editTextId, int buttonId) {
+		mEditText = (EditText) view.findViewById(editTextId);
+		//mEditText.setOnTouchListener(this);
+		//mEditText.setInputType(InputType.TYPE_NULL);
+		mChooseButton = (Button) view.findViewById(buttonId);
+		mChooseButton.setOnClickListener(this);
 	}
 
 	public Editable getText() {
@@ -167,6 +171,19 @@ public class HaierPopView implements OnTouchListener {
 			}
 		}
 		return false;
+	}
+
+
+	@Override
+	public void onClick(View view) {
+		switch(view.getId()) {
+		case R.id.menu_choose_tujing:
+			initPopWindow(view);
+			break;
+		case R.id.menu_choose_yanbao:
+			initPopWindow(view);
+			break;
+		}
 	}
 
 }

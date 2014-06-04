@@ -64,4 +64,9 @@
 		<item>@string/buy_place_9</item>
 		<item>@string/buy_place_10</item>
 	</string-array>
+	<string-array name="yanbao_times">
+		<item>@string/one_year</item>
+		<item>@string/two_year</item>
+		<item>@string/three_year</item>
+	</string-array>
 </resources>

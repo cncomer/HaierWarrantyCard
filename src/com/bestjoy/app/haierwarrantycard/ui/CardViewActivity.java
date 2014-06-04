@@ -164,7 +164,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		}
 		 mPriceInput.setText(mBaoxiuCardObject.mBuyPrice);
 		 mTujingInput.setText(mBaoxiuCardObject.mBuyTuJing);
-		 mYanbaoTimeInput.setText(mBaoxiuCardObject.mYanBaoTime);
+		 mYanbaoTimeInput.setText(mBaoxiuCardObject.mYanBaoTime + getString(R.string.year));
 		 mYanbaoComponyInput.setText(mBaoxiuCardObject.mYanBaoDanWei);
 		 mYanbaoTelInput.setText(mBaoxiuCardObject.mYBPhone);
 		 
