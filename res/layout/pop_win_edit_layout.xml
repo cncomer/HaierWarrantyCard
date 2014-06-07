@@ -13,4 +13,12 @@
         style="@style/ProductInfoInput"
         android:layout_width="fill_parent"
     	android:inputType="none"/>
+    <Button android:id="@+id/menu_choose_tujing"
+        android:layout_width="wrap_content"
+        android:text="@string/menu_choose"
+        style="@style/DefaultShapeButton"
+        android:paddingLeft="8dip"
+        android:paddingRight="8dip"
+        android:textSize="12sp"
+        android:layout_height="30dip"/>
 </LinearLayout>

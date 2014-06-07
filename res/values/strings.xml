@@ -372,6 +372,10 @@
         <string name="hint_wait_yanzhengma_sms">等待验证码.....</string>
         <string name="haier_yanzhengma_verify1">海尔</string>
         <string name="haier_yanzhengma_verify2">注册电子保修卡</string>
-        <!-- add by chenkai, 程序接收验证码短信并回填验证码, 2014.06.01 begin -->
+        <!-- add by chenkai, 程序接收验证码短信并回填验证码, 2014.06.01 end -->
          
+         <string name="year">年</string>
+         <string name="one_year">1年</string>
+         <string name="two_year">2年</string>
+         <string name="three_year">3年</string>
 </resources>
