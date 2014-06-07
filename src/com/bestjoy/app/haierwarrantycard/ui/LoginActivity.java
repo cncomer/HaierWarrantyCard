@@ -107,7 +107,10 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 				}
 				break;
 			case R.id.button_login:
-				String tel = mTelInput.getText().toString().trim();
+				//modify by chenkai, 2014.06.04，去掉号码之间的空白符号 begin
+				//String tel = mTelInput.getText().toString().trim();
+				String tel = mTelInput.getText().toString().trim().replaceAll("[- +]", "");
+				//modify by chenkai, 2014.06.04，去掉号码之间的空白符号 end
 				String pwd = mPasswordInput.getText().toString().trim();
 				if (!TextUtils.isEmpty(tel) && !TextUtils.isEmpty(pwd)) {
 					HaierAccountManager.getInstance().saveLastUsrTel(tel);

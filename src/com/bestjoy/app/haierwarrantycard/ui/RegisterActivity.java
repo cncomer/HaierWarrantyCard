@@ -94,7 +94,10 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 			return;
 		}
 		// add by chekai, 开始前先检查网络 end
-		String tel = mTelInput.getText().toString().trim();
+		//modify by chenkai, 2014.06.04，去掉号码之间的空白符号 begin
+		//String tel = mTelInput.getText().toString().trim();
+		String tel = mTelInput.getText().toString().trim().replaceAll("[- +]", "");
+		//modify by chenkai, 2014.06.04，去掉号码之间的空白符号 end
 		String code = mCodeInput.getText().toString().trim();
 		switch (v.getId()) {
 			case R.id.button_next:
@@ -102,6 +105,12 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 				MyApplication.getInstance().showMessage(R.string.msg_input_usrtel);
 				return;
 			}
+			//add by chenkai, 对手机号码非11位的排除注册, 2014.06.04 begin
+			if (tel.length() < 11) {
+				MyApplication.getInstance().showMessage(R.string.msg_input_usrtel_invalid);
+				return;
+			}
+			//add by chenkai, 对手机号码非11位的排除注册, 2014.06.04 end
 			if(TextUtils.isEmpty(code)) {
 				MyApplication.getInstance().showMessage(R.string.msg_input_yanzheng_code);
 				return;
