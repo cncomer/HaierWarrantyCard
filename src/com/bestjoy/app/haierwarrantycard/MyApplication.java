@@ -3,13 +3,17 @@ package com.bestjoy.app.haierwarrantycard;
 import java.io.File;
 
 import android.app.Application;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.utils.BeepAndVibrate;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
@@ -24,6 +28,8 @@ public class MyApplication extends Application{
 	private Handler mHandler;
 	private static MyApplication mInstance;
 	public SharedPreferences mPreferManager;
+	
+	private InputMethodManager mImMgr;
 	
 	@Override
 	public void onCreate() {
@@ -68,6 +74,10 @@ public class MyApplication extends Application{
 		mPreferManager = PreferenceManager.getDefaultSharedPreferences(this);
 		HaierServiceObject.setContext(this);
 		
+		mImMgr = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+		
+		PhotoManagerUtilsV2.getInstance().setContext(this);
+		
 	}
 	
 	public synchronized static MyApplication getInstance() {
@@ -84,15 +94,6 @@ public class MyApplication extends Application{
 			root.mkdirs();
 		}
 		return root;
-	}
-	
-	public File getAccountsRoot() {
-		File accountsRoot = getAppFilesDir("accounts");
-		
-		if (!accountsRoot.exists()) {
-			accountsRoot.mkdirs();
-		}
-		return accountsRoot;
 	}
 	
 	public File getAccountDir(String accountMd) {
@@ -283,7 +284,7 @@ public class MyApplication extends Application{
     	}
     	return root;
     }
-    /**得到SD卡账号对应组件的目录*/
+    /**得到SD卡账号对应组件的目录,*/
     public File getExternalStorageModuleRootForAccount(String accountMd, String moduleName) {
     	if (!hasExternalStorage()) {
     		return null;
@@ -305,4 +306,24 @@ public class MyApplication extends Application{
     	showMessage(R.string.msg_sd_unavailable);
     }
     //add by chenkai, for Usage, 2013-06-05 end
+    
+    public void hideInputMethod(IBinder token) {
+    	if (mImMgr != null) {
+    		mImMgr.hideSoftInputFromWindow(token, 0);
+    	}
+    }
+    /**
+     * 返回缓存的品牌型号文件，如果有外置SD卡，该文件会存在外置存储卡xxx/account/xxxx/xinghao目录下，否则在手机内部存储中xxx/files/
+     * @param pingpaiCode
+     * @return
+     */
+    public File getCachedXinghaoFile(String pingpaiCode) {
+    	File xinghaoFile =  null;
+    	if (hasExternalStorage()) {
+    		xinghaoFile =  new File(getExternalStorageRoot("xinghao") , pingpaiCode + ".json");
+    	} else {
+    		xinghaoFile =  new File(getAppFilesDir("xinghao") , pingpaiCode + ".json");;
+    	}
+		return xinghaoFile;
+    }
 }

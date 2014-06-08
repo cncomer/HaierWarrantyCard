@@ -1,15 +1,18 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
 
-import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -18,6 +21,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.BaseAdapter;
 import android.widget.CursorAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -33,6 +37,8 @@ import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DebugUtils;
+import com.shwy.bestjoy.utils.InfoInterface;
+import com.shwy.bestjoy.utils.InfoInterfaceImpl;
 import com.shwy.bestjoy.utils.NetworkUtils;
 
 public class NewCardChooseFragment extends SherlockFragment implements View.OnClickListener{
@@ -82,6 +88,8 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 	/**品牌海尔名称，这个用来在用户选择品牌时候做判断，如果是，那么保修卡的电话是400699999*/
 	private String mPinpaiHaierDes = null;
 	
+	private List<InfoInterface> mXinghaoDataList;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -93,23 +101,6 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.new_card_choose_fragment, container, false);
 		mProgressBarLayout = view.findViewById(R.id.progressbarLayout);
-//		mExpandableListView = (ExpandableListView) view.findViewById(R.id.listview);
-//		mExpandableListView.setOnGroupExpandListener(new ExpandableListView.OnGroupExpandListener() {
-//			@Override
-//			public void onGroupExpand(int groupPosition) {
-//				//每次只能显示一组group和child
-//				for (int i = 0; i < mExpandableListViewAdapter.getGroupCount(); i++) {
-//					if (groupPosition != i) {
-//						mExpandableListView.collapseGroup(i);
-//					}
-//				}
-//			}
-//
-//		});
-//		mExpandableListViewAdapter = new ExpandableListViewAdapter();
-//		mExpandableListView.setAdapter(mExpandableListViewAdapter);
-//		mExpandableListView.setGroupIndicator(null);
-//		mExpandableListView.setOnChildClickListener(this);
 		
 		mDalei = (TextView) view.findViewById(R.id.title_dalei);
 		mDalei.setOnClickListener(this);
@@ -141,7 +132,11 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 		initListView(mDaleiListViews);
 		initListView(mXiaoleiListViews);
 		initListView(mPinpaiListViews);
-		initListView(mXinghaoListViews);
+		
+		//型号单独出来
+		mXinghaoListViews.setAdapter(new MyAdapter(mXinghaoListViews.getId()));
+		mXinghaoListViews.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		mXinghaoListViews.setOnItemClickListener(new ListViewItemSelectedListener(mXinghaoListViews.getId()));
 		
 		setListViewVisibility(View.GONE, View.GONE, View.GONE, View.GONE);
 		
@@ -166,7 +161,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 		releaseAdapter((CursorAdapter)mDaleiListViews.getAdapter());
 		releaseAdapter((CursorAdapter)mXiaoleiListViews.getAdapter());
 		releaseAdapter((CursorAdapter)mPinpaiListViews.getAdapter());
-		releaseAdapter((CursorAdapter)mXinghaoListViews.getAdapter());
+		if (mXinghaoDataList != null) mXinghaoDataList.clear();
 	}
 
 	@Override
@@ -203,7 +198,6 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 		private ListView _listView;
 		public LoadDataAsyncTask(ListView listView) {
 			_listView = listView;
-			((CursorAdapter) _listView.getAdapter()).changeCursor(null);
 		}
 
 		@Override
@@ -216,46 +210,11 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 			case R.id.pinpai:
 				return getActivity().getContentResolver().query(BjnoteContent.PinPai.CONTENT_URI, PINPAI_PROJECTION, PINPAI_SELECTION, new String[]{mXiaoleiId}, null);
 			case R.id.xinghao:
-				//对于型号来说，由于要从服务器上获取，所以，这里的而处理与前三者不同，我们先要判断是否本地已经缓存了，有则直接使用，没有则先获取数据保存导本地再查询出来。
-				Cursor c = getActivity().getContentResolver().query(BjnoteContent.XingHao.CONTENT_URI, XinghaoObject.XINGHAO_PROJECTION, XinghaoObject.XINGHAO_CODE_SELECTION, new String[]{mPinPaiCode}, null);
-				//TODO 这里可能需要判断即使已经有数据了，也要重新更新型号列表，如新增，目前咱不住处理
-				if (c != null) {
-					if (c.getCount() > 0) {
-						return c;
-					} else {
-						c.close();
-						//下载型号列表
-						InputStream is = null;
-						try {
-							if (!ComConnectivityManager.getInstance().isConnected()) {
-								//没有网络连接，提示用户
-								MyApplication.getInstance().showMessageAsync(R.string.msg_can_not_access_network);
-								return null;
-							}
-							is = NetworkUtils.openContectionLocked(XinghaoObject.getUpdateUrl(mPinPaiCode), MyApplication.getInstance().getSecurityKeyValuesObject());
-							if (is == null) {
-								DebugUtils.logD(TAG, "can't open connection " + XinghaoObject.getUpdateUrl(mPinPaiCode));
-							} else {
-								MyApplication.getInstance().showMessageAsync(R.string.msg_download_xinghao_wait);
-								List<XinghaoObject> list = XinghaoObject.parse(is, mPinPaiCode);
-								if (list.size() > 0) {
-									DebugUtils.logD(TAG, "find " + list.size() + " records for pinpaiCode " + mPinPaiCode);
-									ContentResolver cr = getActivity().getContentResolver();
-									for(XinghaoObject object:list) {
-										object.saveInDatebase(cr, null);
-									}
-								}
-								return getActivity().getContentResolver().query(BjnoteContent.XingHao.CONTENT_URI, XinghaoObject.XINGHAO_PROJECTION, XinghaoObject.XINGHAO_CODE_SELECTION, new String[]{mPinPaiCode}, null);
-							}
-						} catch (ClientProtocolException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-				}
-				
-				break;
+				//delete by chenkai, 目前不缓存型号到本地 begin
+				//return getLocalOrDownload(R.id.xinghao);
+				mXinghaoDataList = getServiceDataList(R.id.xinghao);
+				return null;
+				//delete by chenkai, 目前不缓存型号到本地 end
 			}
 			return null;
 		}
@@ -269,19 +228,23 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 		@Override
 		protected void onPostExecute(Cursor result) {
 			super.onPostExecute(result);
-			if (result == null || result != null && result.getCount() == 0) {
-				switch(_listView.getId()) {
-				case R.id.dalei:
-				case R.id.xiaolei:
-				case R.id.pinpai:
-					break;
-				case R.id.xinghao:
-					MyApplication.getInstance().showMessageAsync(R.string.msg_download_no_xinghao_wait);
-					break;
+			switch(_listView.getId()) {
+			case R.id.dalei:
+			case R.id.xiaolei:
+			case R.id.pinpai:
+				if (result == null || result != null && result.getCount() == 0) {
+					MyApplication.getInstance().showMessageAsync(R.string.msg_no_local_data);
 				}
-				
+				((CursorAdapter) _listView.getAdapter()).changeCursor(result);
+				break;
+			case R.id.xinghao:
+//				if (result == null || result != null && result.getCount() == 0) {
+//					MyApplication.getInstance().showMessageAsync(R.string.msg_download_no_xinghao_wait);
+//				}
+				((BaseAdapter)_listView.getAdapter()).notifyDataSetChanged();
+				break;
 			}
-			((CursorAdapter) _listView.getAdapter()).changeCursor(result);
+			
 			_listView.setTag(new Object());
 			mProgressBarLayout.setVisibility(View.GONE);
 		}
@@ -347,6 +310,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
 			return LayoutInflater.from(getActivity()).inflate(R.layout.child_textview, parent, false);
 		}
+		
 
 		@Override
 		public void bindView(View view, Context context, Cursor cursor) {
@@ -429,6 +393,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 					mPinpai.setText(R.string.title_pinpai);
 					
 					mXinghaoId = -1;
+					if (mXinghaoDataList != null) mXinghaoDataList.clear();
 					mBaoxiuCardObject.mXingHao = "";
 					mBaoxiuCardObject.mWY = "1";
 					mBaoxiuCardObject.mKY = "";
@@ -454,6 +419,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 					mPinpai.setText(R.string.title_pinpai);
 					
 					mXinghaoId = -1;
+					if (mXinghaoDataList != null) mXinghaoDataList.clear();
 					mBaoxiuCardObject.mXingHao = "";
 					mBaoxiuCardObject.mWY = "1";
 					mBaoxiuCardObject.mKY = "";
@@ -475,6 +441,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 					mPinpai.setText(getGroupTitle(R.string.title_pinpai, mBaoxiuCardObject.mPinPai));
 					
 					mXinghaoId = -1;
+					if (mXinghaoDataList != null) mXinghaoDataList.clear();
 					mBaoxiuCardObject.mXingHao = "";
 					mBaoxiuCardObject.mWY = "1";
 					mBaoxiuCardObject.mKY = "";
@@ -496,6 +463,166 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 				break;
 			}
 			
+		}
+		
+	}
+	
+	
+	private Cursor getLocalOrDownload(int id) {
+		switch(id) {
+		case R.id.xinghao:
+			//对于型号来说，由于要从服务器上获取，所以，这里的而处理与前三者不同，我们先要判断是否本地已经缓存了，有则直接使用，没有则先获取数据保存导本地再查询出来。
+			Cursor c = getActivity().getContentResolver().query(BjnoteContent.XingHao.CONTENT_URI, XinghaoObject.XINGHAO_PROJECTION, XinghaoObject.XINGHAO_CODE_SELECTION, new String[]{mPinPaiCode}, null);
+			//TODO 这里可能需要判断即使已经有数据了，也要重新更新型号列表，如新增，目前咱不住处理
+			if (c != null) {
+				if (c.getCount() > 0) {
+					return c;
+				} else {
+					c.close();
+					//下载型号列表
+					InputStream is = null;
+					try {
+						if (!ComConnectivityManager.getInstance().isConnected()) {
+							//没有网络连接，提示用户
+							MyApplication.getInstance().showMessageAsync(R.string.msg_can_not_access_network);
+							return null;
+						}
+						is = NetworkUtils.openContectionLocked(XinghaoObject.getUpdateUrl(mPinPaiCode), MyApplication.getInstance().getSecurityKeyValuesObject());
+						if (is == null) {
+							DebugUtils.logD(TAG, "can't open connection " + XinghaoObject.getUpdateUrl(mPinPaiCode));
+						} else {
+							MyApplication.getInstance().showMessageAsync(R.string.msg_download_xinghao_wait);
+							List<InfoInterface> list = XinghaoObject.parse(is, mPinPaiCode);
+							if (list.size() > 0) {
+								DebugUtils.logD(TAG, "find " + list.size() + " records for pinpaiCode " + mPinPaiCode);
+								ContentResolver cr = getActivity().getContentResolver();
+								for(InfoInterface object:list) {
+									object.saveInDatebase(cr, null);
+								}
+							}
+							return getActivity().getContentResolver().query(BjnoteContent.XingHao.CONTENT_URI, XinghaoObject.XINGHAO_PROJECTION, XinghaoObject.XINGHAO_CODE_SELECTION, new String[]{mPinPaiCode}, null);
+						}
+					} catch (ClientProtocolException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+			break;
+		}
+		return null;
+	}
+	
+	public List<InfoInterface> getServiceDataList(int id) {
+		switch(id) {
+		case R.id.xinghao:
+			DebugUtils.logD(TAG, "getServiceDataList " + XinghaoObject.getUpdateUrl(mPinPaiCode));
+			InputStream is = null;
+			OutputStream out = null;
+			try {
+				//查看本地是否有缓存
+				File file = MyApplication.getInstance().getCachedXinghaoFile(mPinPaiCode);
+				if (file.exists() && file.length() > 0) {
+					DebugUtils.logD(TAG, "getCachedXinghaoFile exised " + file.getAbsolutePath());
+					is = new FileInputStream(file);
+					DebugUtils.logD(TAG, "parse cachedXinghaoFile " + file.getAbsolutePath());
+					return XinghaoObject.parse(is, mPinPaiCode);
+				} else {
+					//不存在，我们下载型号列表
+					if (!ComConnectivityManager.getInstance().isConnected()) {
+						//没有网络连接，提示用户
+						MyApplication.getInstance().showMessageAsync(R.string.msg_can_not_access_network);
+					} else {
+						DebugUtils.logD(TAG, "getCachedXinghaoFile not exised " + file.getAbsolutePath());
+						is = NetworkUtils.openContectionLocked(XinghaoObject.getUpdateUrl(mPinPaiCode), MyApplication.getInstance().getSecurityKeyValuesObject());
+						if (is == null) {
+							DebugUtils.logD(TAG, "can't open connection " + XinghaoObject.getUpdateUrl(mPinPaiCode));
+							MyApplication.getInstance().showMessageAsync(R.string.msg_download_xinghao_error);
+						} else {
+							MyApplication.getInstance().showMessageAsync(R.string.msg_download_xinghao_wait);
+							out = new FileOutputStream(file);
+							byte[] buffer = new byte[4096];
+							int read = 0;
+							DebugUtils.logD(TAG, "write cachedXinghaoFile " + file.getAbsolutePath());
+							while((read = is.read(buffer)) > 0) {
+								out.write(buffer, 0, read);
+							}
+							out.flush();
+							NetworkUtils.closeOutStream(out);
+							NetworkUtils.closeInputStream(is);
+							is = new FileInputStream(file);
+							DebugUtils.logD(TAG, "parse cachedXinghaoFile " + file.getAbsolutePath());
+							return XinghaoObject.parse(is, mPinPaiCode);
+						}
+					}
+					
+				}
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+				MyApplication.getInstance().showMessageAsync(R.string.msg_download_xinghao_error);
+			} catch (IOException e) {
+				e.printStackTrace();
+				MyApplication.getInstance().showMessageAsync(R.string.msg_download_xinghao_error);
+			} finally {
+				NetworkUtils.closeInputStream(is);
+				NetworkUtils.closeOutStream(out);
+			}
+			break;
+		}
+		return new ArrayList<InfoInterface>();
+	}
+	
+	private class MyAdapter extends BaseAdapter {
+		private int _listViewId;
+
+		public MyAdapter(int listViewId) {
+			_listViewId = listViewId;
+		}
+
+		@Override
+		public int getCount() {
+			if (mXinghaoDataList == null) {
+				return 0;
+			} else {
+				return mXinghaoDataList.size();
+			}
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return mXinghaoDataList.get(position);
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return position + 1;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			ViewHolder viewHoldr = null;
+			if (convertView == null) {
+				convertView = LayoutInflater.from(getActivity()).inflate(R.layout.child_textview, parent, false);
+				viewHoldr = new ViewHolder();
+				convertView.setTag(viewHoldr);
+			} else {
+				viewHoldr = (ViewHolder) convertView.getTag();
+			}
+			viewHoldr._title = (TextView) convertView;
+			switch(_listViewId) {
+			case R.id.xinghao:
+				XinghaoObject object = (XinghaoObject) mXinghaoDataList.get(position);
+				viewHoldr._id = getItemId(position);
+				viewHoldr._pinpaiCode = object.mPinpaiCode;
+				viewHoldr._mn = object.mMN;
+				viewHoldr._ky = object.mKY;
+				viewHoldr._wy = object.mWY;
+				viewHoldr._title.setText(object.mMN);
+				break;
+			}
+			
+			return convertView;
 		}
 		
 	}

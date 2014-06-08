@@ -90,6 +90,8 @@
     <string name="activity_title_choose_device_feedback">选择设备</string>
     
     <string name="title_over_deadline">过保</string>
+    <string name="title_in_deadline">保内</string>
+    <string name="title_in_yanbao">延保</string>
     <string name="title_login">用户登录</string>
     <string name="title_new_user_register">新用户注册</string>
     <string name="product_deadline_placeholder">999天</string>
@@ -242,6 +244,7 @@
      <string name="title_scan_history">扫描历史</string>
      <string name="msg_can_not_access_network">抱歉，暂时无法访问服务器，请检查网络，稍后重试</string>
      <string name="msg_download_xinghao_wait">正在下载型号数据，请稍等...</string>
+     <string name="msg_download_xinghao_error">下载型号数据失败,请稍后重试...</string>
      <string name="msg_download_no_xinghao_wait">服务器还暂时没有该品牌的产品</string>
      <string name="title_dalei">大类</string>
      <string name="title_xiaolei">小类</string>
@@ -375,7 +378,10 @@
         <!-- add by chenkai, 程序接收验证码短信并回填验证码, 2014.06.01 end -->
          
          <string name="year">年</string>
-         <string name="one_year">1年</string>
-         <string name="two_year">2年</string>
-         <string name="three_year">3年</string>
+         <string name="one_year">1</string>
+         <string name="two_year">2</string>
+         <string name="three_year">3</string>
+          <string name="msg_no_local_data">本地数据中没有对应数据</string>
+          
+           <string name="button_onekey_tel">一键直联</string>
 </resources>

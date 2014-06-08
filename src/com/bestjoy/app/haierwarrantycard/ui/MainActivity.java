@@ -36,10 +36,11 @@ public class MainActivity extends BaseActionbarActivity {
 	private ViewPager mAdsViewPager;
 	private boolean mAdsViewPagerIsScrolling = false;
 	
-	private int[] mAddsDrawableId = new int[]{
+	private static int[] mAddsDrawableId = new int[]{
 			R.drawable.ad1,
 			R.drawable.ad2,
 			R.drawable.ad3,
+			R.drawable.ad4,
 	};
 	
 	private Drawable[] mDotDrawableArray;
@@ -48,7 +49,7 @@ public class MainActivity extends BaseActionbarActivity {
 	private ImageView[] mDotsViews = null;
 	private ImageView[] mAdsPagerViews = null;
 	private int mCurrentPagerIndex = 0;
-	private static final int DEFAULT_MAX_ADS_SIZE = 3;
+	private static final int DEFAULT_MAX_ADS_SIZE = mAddsDrawableId.length;
 	
 	private Handler mHandler;
 
@@ -62,8 +63,8 @@ public class MainActivity extends BaseActionbarActivity {
 		setContentView(R.layout.activity_main);
 		mDotsLayout = (LinearLayout) findViewById(R.id.dots);
 		mAdsViewPager = (ViewPager) findViewById(R.id.adsViewPager);
-		this.initViewPagers(3);
-		this.initDots(3);
+		this.initViewPagers(DEFAULT_MAX_ADS_SIZE);
+		this.initDots(DEFAULT_MAX_ADS_SIZE);
 		mAdsViewPager.setAdapter(new AdsViewPagerAdapter());
 		
 		mAdsViewPager.setOnPageChangeListener(new OnPageChangeListener() {

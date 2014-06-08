@@ -223,7 +223,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			mPriceInput.setText(object.mBuyPrice);
 			//mTujingInput.setText(object.mBuyTuJing);
 			mTujingPopView.setText(object.mBuyTuJing);
-			mYanbaoPopView.setText(object.mYanBaoTime + getActivity().getString(R.string.year));
+			mYanbaoPopView.setText(object.mYanBaoTime);
 			//mYanbaoTimeInput.setText(object.mYanBaoTime);
 			mYanbaoComponyInput.setText(object.mYanBaoDanWei);
 			mYanbaoTelInput.setText(object.mYBPhone);
@@ -799,6 +799,9 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		}
 		if (!TextUtils.isEmpty(object.mBXPhone)) {
 			mBaoxiuTelInput.setText(object.mBXPhone);
+		}
+		if (!TextUtils.isEmpty(object.mWY)) {
+			mWyInput.setText(object.mWY);
 		}
 	}
 	

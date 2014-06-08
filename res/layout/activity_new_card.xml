@@ -149,6 +149,8 @@
 			    <EditText android:id="@+id/product_buy_delay_time"
 			        android:inputType="numberDecimal"
 			        style="@style/ProductInfoInput"/>
+			    <TextView style="@style/ProductInfo"
+			        android:text="@string/year"/>
 			    <Button android:id="@+id/menu_choose_yanbao"
 			        android:layout_width="wrap_content"
 			        android:text="@string/menu_choose"

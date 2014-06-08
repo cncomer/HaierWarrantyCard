@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.Editable;
+import android.util.DisplayMetrics;
 import android.view.Display;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import android.widget.LinearLayout.LayoutParams;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 
+import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 
 public class HaierPopView implements OnTouchListener, OnClickListener {
@@ -75,11 +77,13 @@ public class HaierPopView implements OnTouchListener, OnClickListener {
 			screenWidth = display.getWidth();
 			screenHeight = display.getHeight();
 		}
-		
+		DisplayMetrics matrics = new DisplayMetrics();
+		display.getMetrics(matrics);
 		int size = screenWidth > screenHeight ? screenWidth : screenHeight;
-		
-		gridView.setHorizontalSpacing(((int) (size * 0.015)));
-		gridView.setVerticalSpacing(((int) (size * 0.015)));
+		int padding = (int) (matrics.density * 10);
+		gridView.setHorizontalSpacing((int) (matrics.density * 5));
+		gridView.setPadding(padding, padding, padding, padding);
+		gridView.setVerticalSpacing((int) (matrics.density * 5));
 		gridView.setStretchMode(GridView.STRETCH_COLUMN_WIDTH);
 		gridView.setNumColumns(GridView.AUTO_FIT);
 		gridView.setColumnWidth(((int) (size * 0.15)));
@@ -94,6 +98,7 @@ public class HaierPopView implements OnTouchListener, OnClickListener {
 		}
 	}
 	private void initPopWindow(View view) {
+		MyApplication.getInstance().hideInputMethod(mEditText.getWindowToken());
 		if (mPopupWindow == null) {
 			mPopupWindow = new PopupWindow(popupView, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, true);
 			mPopupWindow.setAnimationStyle(R.style.AnimationPreview);  
@@ -138,7 +143,6 @@ public class HaierPopView implements OnTouchListener, OnClickListener {
 			if(position < resultList.size()) {
 				viewHolder._title.setText(resultList.get(position));
 			}
-			convertView.setLayoutParams(new GridView.LayoutParams((int) (parent.getWidth() / COLUMN_NUMBER), 32));
 			return convertView;
 		}
 

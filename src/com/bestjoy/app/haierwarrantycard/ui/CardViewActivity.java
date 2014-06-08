@@ -69,6 +69,8 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	private Handler mHandler;
 	
 	private Bundle mBundles;
+	
+	private TextView mBaoxiuStatusView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -134,6 +136,18 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		 mOnekeyMaintainenceBtn.setOnClickListener(this);
 		 //add by chenkai, 2014.05.31，增加一键保养 end
 		 
+		 if (HaierServiceObject.isHaierPinpai(mBaoxiuCardObject.mPinPai)) {
+			 findViewById(R.id.onekey_for_haier).setVisibility(View.VISIBLE);
+			 findViewById(R.id.onekey_for_other).setVisibility(View.GONE);
+		 } else {
+			 findViewById(R.id.onekey_for_haier).setVisibility(View.GONE);
+			 findViewById(R.id.onekey_for_other).setVisibility(View.VISIBLE);
+			 
+			 findViewById(R.id.button_onekey_tel).setOnClickListener(this);
+		 }
+		 //add by chenkai, 2014.06.06, 保修期状态 begin
+		 mBaoxiuStatusView = (TextView) findViewById(R.id.warranty);
+		//add by chenkai, 2014.06.06, 保修期状态 end
 		 populateView();
 		
 	}
@@ -169,6 +183,19 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		 mYanbaoTelInput.setText(mBaoxiuCardObject.mYBPhone);
 		 
 		 mHomeObject = HomeObject.getHomeObject();
+		 
+		 //add by chenkai, 2014.06.06, 保修期状态 begin
+		 if (mBaoxiuCardObject.getBaoxiuValidity() <= 0) {
+			 //过保
+			 mBaoxiuStatusView.setText(R.string.title_over_deadline);
+		 } else if (mBaoxiuCardObject.getBaoxiuValidityWithoutYanbao() > 0) {
+			 //保内
+			 mBaoxiuStatusView.setText(R.string.title_in_deadline);
+		 } else {
+			 //延保
+			 mBaoxiuStatusView.setText(R.string.title_in_yanbao);
+		 }
+		//add by chenkai, 2014.06.06, 保修期状态 end
 	}
 	
 	
@@ -254,6 +281,9 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			break;
 		case R.id.button_bill:
 			BaoxiuCardObject.showBill(mContext, mBaoxiuCardObject);
+			break;
+		case R.id.button_onekey_tel:
+			Intents.callPhone(mContext, mBaoxiuCardObject.mBXPhone);
 			break;
 		case R.id.button_onekey_install:
 		case R.id.button_onekey_repair:

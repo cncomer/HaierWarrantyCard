@@ -29,7 +29,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.text.TextUtils;
-import android.util.Base64;
+import com.shwy.bestjoy.utils.Base64;
 
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
@@ -490,6 +490,33 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 			}
 		}
 		return mZhengjiValidity;
+	}
+	
+	public int mZhengjiValidityWithoutYanbao = -1;
+	/**返回不包含延保时间的保修期剩余天数*/
+	public int getBaoxiuValidityWithoutYanbao() {
+		if (mZhengjiValidityWithoutYanbao == -1) {
+			if (TextUtils.isEmpty(mWY)) {
+				mWY = "0";
+			}
+			int validity = (int) (Float.valueOf(mWY) * 365 + 0.5f);
+			try {
+				//转换购买日期
+				Date buyDate = BUY_DATE_TIME_FORMAT.parse(mBuyDate);
+				//当前日期
+				Date now = new Date();
+				long passedTimeLong = now.getTime() - buyDate.getTime();
+				if (passedTimeLong < 0) {
+					passedTimeLong = 0;
+				}
+				int passedDay = (int) (passedTimeLong / DAY_IN_MILLISECONDS);
+				mZhengjiValidityWithoutYanbao = validity - passedDay;
+			} catch (ParseException e) {
+				e.printStackTrace();
+				mZhengjiValidityWithoutYanbao = 0;
+			}
+		}
+		return mZhengjiValidityWithoutYanbao;
 	}
 	
 	/**

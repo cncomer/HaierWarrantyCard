@@ -328,7 +328,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			urls[12] = "&tip=";
 			paths[12] = tip;
 			urls[13] = "&key=";
-			paths[13] = BaoxiuCardObject.getYuyueSecurityKey(HaierAccountManager.getInstance().getAccountObject().mAccountTel, timeStr);
+			paths[13] = BaoxiuCardObject.getYuyueSecurityKey(mContactTelInput.getText().toString().trim(), timeStr);
 			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
 			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
 			try {

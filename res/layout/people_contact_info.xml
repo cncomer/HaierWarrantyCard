@@ -31,6 +31,7 @@
 	    <TextView style="@style/ProductInfo"
 	        android:text="@string/usr_tel"/>
 	    <EditText android:id="@+id/contact_tel_input"
+	        android:inputType="number"
 	        style="@style/ProductInfoInput"/>
 	</LinearLayout>
 </LinearLayout>

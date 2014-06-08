@@ -70,6 +70,7 @@ public final class HaierParsedResult extends ParsedResult {
 				<Class>洗共体—双桶洗衣机</Class>   名称
 				<Type>XPB80-1186BS</Type>       型号
 				<BarCode>CA0KQ200M00PAD4AY005</BarCode> 编码
+				<WY>3<WY>  保修期
 			</ProductInfo>
 		</Data>
 	   * @param content
@@ -122,7 +123,9 @@ public final class HaierParsedResult extends ParsedResult {
 		       		    	baoxiuCardObject.mXingHao = nextTextElement(parser);
 		       		    } else if ("BarCode".equals(tag)) {
 		       		    	baoxiuCardObject.mSHBianHao = nextTextElement(parser);
-		       		    } 
+		       		    } else if ("WY".equals(tag)) {
+		       		    	baoxiuCardObject.mWY = nextTextElement(parser);
+		       		    }
 		        	}
 		        }
 			} catch (XmlPullParserException e) {

@@ -19,6 +19,7 @@ import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.shwy.bestjoy.utils.DebugUtils;
+import com.shwy.bestjoy.utils.InfoInterface;
 import com.shwy.bestjoy.utils.InfoInterfaceImpl;
 import com.shwy.bestjoy.utils.NetworkUtils;
 /**
@@ -45,8 +46,8 @@ public class XinghaoObject extends InfoInterfaceImpl{
 	public static final String XINGHAO_KY_SELECTION = HaierDBHelper.DEVICE_XINGHAO_KY + "=?";
 	
 	public static final String XINGHAO_CODE_MN_KY_SELECTION = XINGHAO_CODE_SELECTION + " and " + XINGHAO_MN_SELECTION + " and " + XINGHAO_KY_SELECTION;
-	private String mMN, mKY, mWY;
-	private String mPinpaiCode;
+	public String mMN, mKY, mWY;
+	public String mPinpaiCode;
 	
 	public static final String UPDATE_XINGHAO = HaierServiceObject.SERVICE_URL + "GetXinHaoByPinPai.ashx?Code=";
     public static String getUpdateUrl(String pinpaiCode) {
@@ -54,15 +55,15 @@ public class XinghaoObject extends InfoInterfaceImpl{
     	sb.append(pinpaiCode);
     	return sb.toString();
     }
-	public static List<XinghaoObject> parse(InputStream is, String pinpaiCode) {
-		 List<XinghaoObject> list = new ArrayList<XinghaoObject>();
+	public static List<InfoInterface> parse(InputStream is, String pinpaiCode) {
+		 List<InfoInterface> list = new ArrayList<InfoInterface>();
 		if (is == null) {
 			return list;
 		}
 		try {
 			JSONArray jsonArray = new JSONArray(NetworkUtils.getContentFromInput(is));
 			int len = jsonArray.length();
-			 list = new ArrayList<XinghaoObject>(len);
+			 list = new ArrayList<InfoInterface>(len);
 			if (len > 0) {
 				JSONObject object = null;
 				XinghaoObject xinghaoObject = null;
