@@ -308,7 +308,8 @@
             </LinearLayout>
             <FrameLayout  android:layout_width="match_parent"
 			    android:layout_height="wrap_content"
-                android:layout_marginTop="30dip">
+                android:layout_marginTop="30dip"
+                android:layout_marginBottom="30dip">
                 <LinearLayout android:id="@+id/onekey_for_haier"
 				    android:layout_width="match_parent"
 				    android:layout_height="wrap_content"
@@ -316,27 +317,27 @@
 				    android:orientation="horizontal" >
 	                    
 		            <View
-		                android:layout_width="wrap_content"
+		                android:layout_width="0dip"
 		                android:layout_height="wrap_content"
-		                android:layout_weight="1" />
+		                android:layout_weight="1.0" />
 		            <Button
 		                android:id="@+id/button_onekey_install"
 		                style = "@style/DefaultShapeButton"
 		                android:text="@string/button_onekey_install"
 		                android:textSize="18sp" />
 		            <View
-		                android:layout_width="wrap_content"
+		                android:layout_width="0dip"
 		                android:layout_height="wrap_content"
-		                android:layout_weight="1" />
+		                android:layout_weight="1.0" />
 		            <Button
 		                android:id="@+id/button_onekey_repair"
 		                style = "@style/DefaultShapeButton"
 		                android:text="@string/button_onekey_repair"
 		                android:textSize="18sp" />
 		            <View
-		                android:layout_width="wrap_content"
+		                android:layout_width="0dip"
 		                android:layout_height="wrap_content"
-		                android:layout_weight="1" />
+		                android:layout_weight="1.0" />
 		            <Button
 		                android:id="@+id/button_onekey_maintenance"
 		                style = "@style/DefaultShapeButton"
@@ -345,10 +346,10 @@
 		                android:textSize="18sp" />
 		            
 		            <View
-		                android:layout_width="wrap_content"
+		                android:layout_width="0dip"
 		                android:layout_height="wrap_content"
 		                android:visibility="gone"
-		                android:layout_weight="1" />
+		                android:layout_weight="1.0" />
 	            </LinearLayout>
 	             <LinearLayout android:id="@+id/onekey_for_other"
 				    android:layout_width="match_parent"
@@ -356,18 +357,18 @@
 				    android:gravity="center_vertical"
 				    android:orientation="horizontal" >
 		             <View
-		                android:layout_width="wrap_content"
+		                android:layout_width="0dip"
 		                android:layout_height="wrap_content"
-		                android:layout_weight="1" />
+		                android:layout_weight="1.0" />
 		            <Button
 		                android:id="@+id/button_onekey_tel"
 		                style = "@style/DefaultShapeButton"
 		                android:text="@string/button_onekey_tel"
 		                android:textSize="18sp" />
 		            <View
-		                android:layout_width="wrap_content"
+		                android:layout_width="0dip"
 		                android:layout_height="wrap_content"
-		                android:layout_weight="1" />
+		                android:layout_weight="1.0" />
 		         </LinearLayout>
             </FrameLayout>
         </LinearLayout>
