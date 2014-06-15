@@ -339,6 +339,7 @@
          <string name="msg_input_old_password_error">输入的当前密码有误，请重新输入...</string>
          <string name="msg_input_new_password_error">你输入的新密码不一致，请确认重新输入</string>
          <string name="select_date_out_of_service_tips">预约安装时间必须大于今天</string>
+         <string name="select_repair_date_out_of_service_tips">预约维修时间必须大于今天</string>
          <string name="product_detail_repair_tips">因为各品牌的保修政策有差异，具体保修时间请以厂家约定的为准。本软件计算仅供参考。</string>
 
           <string name="title_modify_password">修改密码</string>
@@ -387,4 +388,7 @@
            <string name="button_onekey_tel">一键直联</string>
            <string name="hint_search_for_xinghao">请输入要检索的型号</string>
            <string name="error_oom_for_fapiao">发票照片分辨率太大了，内存不够，请重新尝试拍摄发票或则将相机的分辨率调低一些.</string>
+           
+         <string name="sure_install_tips">确定预约安装吗?</string>
+         <string name="sure_repair_tips">确定预约维修吗?</string>
 </resources>
