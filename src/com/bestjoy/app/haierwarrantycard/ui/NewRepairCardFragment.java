@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.app.DatePickerDialog.OnDateSetListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -264,9 +265,17 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 
 	private void createRepairCard() {
 		if(HaierAccountManager.getInstance().hasLoginned()) {
-			//如果没有注册，我们前往登陆界面
 			if(checkInput()) {
-				createRepairCardAsync();
+				new AlertDialog.Builder(getActivity())
+		    	.setMessage(R.string.sure_repair_tips)
+		    	.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						createRepairCardAsync();
+					}
+				})
+				.setNegativeButton(android.R.string.cancel, null)
+				.show();
 			}
 		} else {
 			//如果没有注册，我们前往登陆/注册界面，这里传递ModelBundle对象过去，以便做合适的跳转
@@ -489,9 +498,9 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	}
 
 
+	MyDatePickerDialog mMyDatePickerDialog;
 	private void showDatePickerDialog() {
-        new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-			
+		mMyDatePickerDialog = new MyDatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
 			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 				mCalendar.set(year, monthOfYear, dayOfMonth);
@@ -501,8 +510,8 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 				mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
 			}
 				
-		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH))
-		.show();
+		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH)+1);
+		mMyDatePickerDialog.show();
 	}
 
 	Toast mToast;
@@ -523,6 +532,34 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		if(mCalendar.get(Calendar.HOUR_OF_DAY) < 8 || mCalendar.get(Calendar.HOUR_OF_DAY) > 19)
 			mMyTimePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setEnabled(false);
 
+	}
+
+	class MyDatePickerDialog extends DatePickerDialog {
+
+		public MyDatePickerDialog(Context context, OnDateSetListener callBack, int year, int monthOfYear,
+				int dayOfMonth) {
+			super(context, callBack, year, monthOfYear, dayOfMonth);
+		}
+
+		@Override
+		public void onDateChanged(DatePicker view, int year, int month, int day) {
+			Calendar cal=Calendar.getInstance();
+			int y = cal.get(Calendar.YEAR);
+			int m = cal.get(Calendar.MONTH);
+			int d = cal.get(Calendar.DATE);
+			if(year < y || mCalendar.get(Calendar.YEAR) >= y && month < m || mCalendar.get(Calendar.YEAR) >= y && month >= m && day <= d) {
+				if(mToast != null) {
+					mToast.setText(R.string.select_repair_date_out_of_service_tips);
+				} else {
+					mToast = Toast.makeText(this.getContext(), R.string.select_repair_date_out_of_service_tips, Toast.LENGTH_LONG);
+				}
+				mToast.show();
+				mMyDatePickerDialog.getButton(BUTTON_POSITIVE).setEnabled(false);
+				return;
+			} else {
+				mMyDatePickerDialog.getButton(BUTTON_POSITIVE).setEnabled(true);
+			}
+		}
 	}
 
 	class MyTimePickerDialog extends TimePickerDialog {

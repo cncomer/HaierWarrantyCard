@@ -222,9 +222,17 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	
 	private void createNewInatallCard() {
 		if(HaierAccountManager.getInstance().hasLoginned()) {
-			//如果没有注册，我们前往登陆界面
 			if(checkInput()) {
-				createNewInatallCardAsync();
+				new AlertDialog.Builder(getActivity())
+		    	.setMessage(R.string.sure_install_tips)
+		    	.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						createNewInatallCardAsync();
+					}
+				})
+				.setNegativeButton(android.R.string.cancel, null)
+				.show();
 			}
 		} else {
 			//如果没有注册，我们前往登陆/注册界面，这里传递ModelBundle对象过去，以便做合适的跳转
@@ -449,11 +457,8 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 				mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
 			}
 				
-		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
+		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH)+1);
 		mMyDatePickerDialog.show();
-		
-		if(!checkInstallDate())
-			mMyDatePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setEnabled(false);
 	}
 	
 	private boolean checkInstallDate() {
@@ -477,14 +482,6 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		public MyDatePickerDialog(Context context, OnDateSetListener callBack,
 				int year, int monthOfYear, int dayOfMonth) {
 			super(context, callBack, year, monthOfYear, dayOfMonth);
-			if(!checkInstallDate()) {
-				if(mToast != null) {
-					mToast.setText(R.string.select_date_out_of_service_tips);
-				} else {
-					mToast = Toast.makeText(this.getContext(), R.string.select_date_out_of_service_tips, Toast.LENGTH_LONG);
-				}
-				mToast.show();
-			}
 		}
 
 		@Override
