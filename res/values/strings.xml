@@ -99,6 +99,7 @@
     <string name="menu_more">更多</string>
     <string name="menu_login">登录</string>
     <string name="menu_exit">退出</string>
+    <string name="menu_refresh">刷新</string>
     <string name="menu_register">注册</string>
     <string name="menu_setting">设置</string>
     <string name="menu_help">帮助</string>
@@ -384,4 +385,6 @@
           <string name="msg_no_local_data">本地数据中没有对应数据</string>
           
            <string name="button_onekey_tel">一键直联</string>
+           <string name="hint_search_for_xinghao">请输入要检索的型号</string>
+           <string name="error_oom_for_fapiao">发票照片分辨率太大了，内存不够，请重新尝试拍摄发票或则将相机的分辨率调低一些.</string>
 </resources>

@@ -17,6 +17,7 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -90,6 +91,8 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 	
 	private List<InfoInterface> mXinghaoDataList;
 	
+	private MyAdapter mMyAdapter;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -134,7 +137,11 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 		initListView(mPinpaiListViews);
 		
 		//型号单独出来
-		mXinghaoListViews.setAdapter(new MyAdapter(mXinghaoListViews.getId()));
+		//modify by chenkai, 增加型号模糊查询, 2014.06.15 begin
+		//mXinghaoListViews.setAdapter(new MyAdapter(mXinghaoListViews.getId()));
+		mMyAdapter = new MyAdapter(mXinghaoListViews.getId(), null);
+		mXinghaoListViews.setAdapter(mMyAdapter);
+		//modify by chenkai, 增加型号模糊查询, 2014.06.15 end
 		mXinghaoListViews.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		mXinghaoListViews.setOnItemClickListener(new ListViewItemSelectedListener(mXinghaoListViews.getId()));
 		
@@ -222,6 +229,13 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
+			//add by chenkai, 增加型号模糊查询, 2014.06.15 begin
+			switch(_listView.getId()) {
+			case R.id.xinghao:
+				((NewCardActivity)getActivity()).invalidateOptionsMenu();
+				break;
+			}
+			//add by chenkai, 增加型号模糊查询, 2014.06.15 end
 			mProgressBarLayout.setVisibility(View.GONE);
 		}
 
@@ -241,7 +255,11 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 //				if (result == null || result != null && result.getCount() == 0) {
 //					MyApplication.getInstance().showMessageAsync(R.string.msg_download_no_xinghao_wait);
 //				}
-				((BaseAdapter)_listView.getAdapter()).notifyDataSetChanged();
+				//modify by chenkai, 增加型号模糊查询, 2014.06.15 begin
+				//((BaseAdapter)_listView.getAdapter()).notifyDataSetChanged();
+				mMyAdapter.changeData(mXinghaoDataList);
+				((NewCardActivity)getActivity()).invalidateOptionsMenu();
+				//modify by chenkai, 增加型号模糊查询, 2014.06.15 end
 				break;
 			}
 			
@@ -449,6 +467,14 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 					
 					mXinghaoListViews.setTag(null);
 					parent.setVisibility(View.GONE);
+					//add by chenkai, 增加型号模糊查询, 2014.06.15 begin
+					//选择的品牌发生变化时，我们需要清空上一次品牌的型号数据 begin
+					if (mXinghaoDataList != null) {
+						mXinghaoDataList.clear();
+						mMyAdapter.changeData(null);
+					}
+					//选择的品牌发生变化时，我们需要清空上一次品牌的型号数据 end
+					//add by chenkai, 增加型号模糊查询, 2014.06.15 end
 					mXinghao.performClick();
 				}
 				break;
@@ -572,26 +598,33 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 		}
 		return new ArrayList<InfoInterface>();
 	}
-	
+	//modify by chenkai, 增加型号模糊查询, 2014.06.15 begin
 	private class MyAdapter extends BaseAdapter {
 		private int _listViewId;
+		private List _data;
 
-		public MyAdapter(int listViewId) {
+		public MyAdapter(int listViewId, List data) {
 			_listViewId = listViewId;
+			_data = data;
 		}
 
 		@Override
 		public int getCount() {
-			if (mXinghaoDataList == null) {
+			if (_data == null) {
 				return 0;
 			} else {
-				return mXinghaoDataList.size();
+				return _data.size();
 			}
+		}
+		
+		public void changeData(List data) {
+			_data = data;
+			notifyDataSetChanged();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return mXinghaoDataList.get(position);
+			return _data.get(position);
 		}
 
 		@Override
@@ -612,7 +645,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 			viewHoldr._title = (TextView) convertView;
 			switch(_listViewId) {
 			case R.id.xinghao:
-				XinghaoObject object = (XinghaoObject) mXinghaoDataList.get(position);
+				XinghaoObject object = (XinghaoObject) _data.get(position);
 				viewHoldr._id = getItemId(position);
 				viewHoldr._pinpaiCode = object.mPinpaiCode;
 				viewHoldr._mn = object.mMN;
@@ -626,4 +659,66 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 		}
 		
 	}
+	
+	//modify by chenkai, 增加型号模糊查询, 2014.06.15 begin
+	
+		//add by chenkai, 增加型号模糊查询, 2014.06.15 begin
+		public boolean enableFilterXinghao() {
+			return !TextUtils.isEmpty(mPinPaiCode) && mXinghaoDataList.size() > 0;
+		}
+		FilterAsyncTask mFilterAsyncTask = null;
+		public void filterXinghao(String filterText) {
+			DebugUtils.logD(TAG, "start filterXinghao " + filterText);
+			MyAdapter myAdapter = ((MyAdapter)mXinghaoListViews.getAdapter());
+			if (TextUtils.isEmpty(filterText)) {
+				myAdapter.changeData(mXinghaoDataList);
+			} else if (mXinghaoDataList != null && mXinghaoDataList.size() > 0){
+				AsyncTaskUtils.cancelTask(mFilterAsyncTask);
+				mFilterAsyncTask = new FilterAsyncTask();
+				mFilterAsyncTask.execute(filterText);
+			}
+		}
+		
+		private class FilterAsyncTask extends AsyncTask<String, Void, List<InfoInterface>> {
+
+			@Override
+	        protected List<InfoInterface> doInBackground(String... params) {
+				String filter = params[0];
+				List<InfoInterface> result = new ArrayList<InfoInterface>(mXinghaoDataList.size());
+				for(InfoInterface infoInterface:mXinghaoDataList) {
+					if (this.isCancelled()) {
+						DebugUtils.logD(TAG, "FilterAsyncTask is canceled by user");
+						return result;
+					}
+					if (infoInterface instanceof XinghaoObject) {
+						XinghaoObject object = (XinghaoObject)infoInterface;
+						//忽略大小写
+						if (object.mMN.toLowerCase().contains(filter.toLowerCase())) {
+							result.add(infoInterface);
+						}
+					}
+					
+				}
+				DebugUtils.logD(TAG, "end filterXinghao " + filter);
+		        return result;
+	        }
+
+			@Override
+	        protected void onPostExecute(List<InfoInterface> result) {
+		        super.onPostExecute(result);
+		        if (isCancelled()) {
+		        	onCancelled();
+		        	return;
+		        }
+		        mMyAdapter.changeData(result);
+	        }
+
+			@Override
+	        protected void onCancelled() {
+		        super.onCancelled();
+		        mMyAdapter.changeData(null);
+	        }
+			
+		}
+		//add by chenkai, 增加型号模糊查询, 2014.06.15 end
 }

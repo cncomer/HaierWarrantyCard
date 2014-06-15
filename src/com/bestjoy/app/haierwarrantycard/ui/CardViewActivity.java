@@ -135,8 +135,8 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		 mOnekeyMaintainenceBtn = (Button) findViewById(R.id.button_onekey_maintenance);
 		 mOnekeyMaintainenceBtn.setOnClickListener(this);
 		 //add by chenkai, 2014.05.31，增加一键保养 end
-		 
-		 if (HaierServiceObject.isHaierPinpai(mBaoxiuCardObject.mPinPai)) {
+		 //卡萨帝品牌和海尔品牌一样处理,是海尔的品牌
+		 if (HaierServiceObject.isHaierPinpai(mBaoxiuCardObject.mPinPai) || HaierServiceObject.isKasadiPinpai(mBaoxiuCardObject.mPinPai)) {
 			 findViewById(R.id.onekey_for_haier).setVisibility(View.VISIBLE);
 			 findViewById(R.id.onekey_for_other).setVisibility(View.GONE);
 		 } else {
