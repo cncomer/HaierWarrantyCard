@@ -457,8 +457,10 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 				mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
 			}
 				
-		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH)+1);
+		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
 		mMyDatePickerDialog.show();
+		if(!checkInstallDate())
+			mMyDatePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setEnabled(false);
 	}
 	
 	private boolean checkInstallDate() {
@@ -482,6 +484,14 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		public MyDatePickerDialog(Context context, OnDateSetListener callBack,
 				int year, int monthOfYear, int dayOfMonth) {
 			super(context, callBack, year, monthOfYear, dayOfMonth);
+			if(!checkInstallDate()) {
+				if(mToast != null) {
+					mToast.setText(R.string.select_date_out_of_service_tips);
+				} else {
+					mToast = Toast.makeText(this.getContext(), R.string.select_date_out_of_service_tips, Toast.LENGTH_LONG);
+				}
+				mToast.show();
+			}
 		}
 
 		@Override
