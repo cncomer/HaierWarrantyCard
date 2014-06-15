@@ -69,7 +69,6 @@ public class UpdateActivity extends BaseActionbarActivity{
 			return;
 		}
 		setContentView(R.layout.update_activity);
-		setTitle(getString(R.string.format_latest_version, mServiceAppInfo.mVersionName));
 		initView();
 		
 		mCurrentType = TYPE.IDLE;
@@ -94,6 +93,17 @@ public class UpdateActivity extends BaseActionbarActivity{
 		
 	}
 	
+	@Override
+	public void onNewIntent(Intent newIntent) {
+		DebugUtils.logLife(TAG, "onNewIntent " + newIntent);
+		if (newIntent != null) {
+			setIntent(newIntent);
+			mServiceAppInfo = newIntent.getParcelableExtra(EXTRA_APPINFO);
+			DebugUtils.logLife(TAG, "onNewIntent mServiceAppInfo " + mServiceAppInfo.toString(this));
+			initView();
+		}
+	}
+	
 	private void initView() {
 		if (mReleaseNote == null) {
 			mReleaseNote = (TextView) findViewById(R.id.releasenote);
@@ -103,6 +113,7 @@ public class UpdateActivity extends BaseActionbarActivity{
 			mProgressStatus = (TextView) findViewById(R.id.status_view);
 		}
 		mReleaseNote.setText(mServiceAppInfo.buildReleasenote(mContext));
+		setTitle(getString(R.string.format_latest_version, mServiceAppInfo.mVersionName));
 	}
 	
 	/**

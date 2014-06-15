@@ -9,6 +9,8 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -34,6 +36,7 @@ public class MyApplication extends Application{
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		Log.d(TAG, "onCreate()");
 		mHandler = new Handler();
 		mInstance = this;
 		// init all preference default values.
@@ -77,7 +80,9 @@ public class MyApplication extends Application{
 		mImMgr = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
 		
 		PhotoManagerUtilsV2.getInstance().setContext(this);
-		
+		//用于屏幕适配
+		DisplayMetrics display = this.getResources().getDisplayMetrics();
+		Log.d(TAG, display.toString());
 	}
 	
 	public synchronized static MyApplication getInstance() {
@@ -320,10 +325,24 @@ public class MyApplication extends Application{
     public File getCachedXinghaoFile(String pingpaiCode) {
     	File xinghaoFile =  null;
     	if (hasExternalStorage()) {
-    		xinghaoFile =  new File(getExternalStorageRoot("xinghao") , pingpaiCode + ".json");
+    		xinghaoFile =  new File(getCachedXinghaoExternalRoot() , pingpaiCode + ".json");
     	} else {
-    		xinghaoFile =  new File(getAppFilesDir("xinghao") , pingpaiCode + ".json");;
+    		xinghaoFile =  new File(getCachedXinghaoInternalRoot() , pingpaiCode + ".json");;
     	}
 		return xinghaoFile;
+    }
+    /**
+     * 得到sdcard上的型号目录/mnt/sdcard/xxxx/xinghao
+     * @return
+     */
+    public File getCachedXinghaoExternalRoot() {
+    	return getExternalStorageRoot("xinghao");
+    }
+    /**
+     * 得到sdcard上的型号目录/xxx/files/xinghao
+     * @return
+     */
+    public File getCachedXinghaoInternalRoot() {
+    	return getAppFilesDir("xinghao");
     }
 }

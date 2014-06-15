@@ -53,13 +53,21 @@ public class MenuHandlerUtils {
     public static boolean onPrepareOptionsMenu(Menu menu, Context context) {
     	//如果已经登陆了，那么我们显示设置菜单
     	MenuItem menuItem = menu.findItem(R.string.menu_setting);
+    	//如果没有已经登陆了，我们显示家管理菜单
+    	MenuItem menuHomeManagerItem = menu.findItem(R.string.menu_manage_home);
     	if (HaierAccountManager.getInstance().hasLoginned()) {
     		if (menuItem != null) {
     			menuItem.setVisible(true);
     		}
+    		if (menuHomeManagerItem != null) {
+    			menuHomeManagerItem.setVisible(true);
+    		}
     	} else {
     		if (menuItem != null) {
     			menuItem.setVisible(false);
+    		}
+    		if (menuHomeManagerItem != null) {
+    			menuHomeManagerItem.setVisible(false);
     		}
     	}
 		return true;

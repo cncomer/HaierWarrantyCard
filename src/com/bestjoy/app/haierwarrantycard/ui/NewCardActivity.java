@@ -11,6 +11,8 @@ import android.text.TextUtils;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
+import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
@@ -112,16 +114,33 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getSupportMenuInflater().inflate(R.menu.new_card_activity_menu, menu);
+		SearchView searchView = (SearchView) menu.findItem(R.string.menu_search).getActionView();
+		searchView.setQueryHint(getString(R.string.hint_search_for_xinghao));
+		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+
+			@Override
+            public boolean onQueryTextSubmit(String query) {
+				mMenu.filterXinghao(query);
+	            return true;
+            }
+
+			@Override
+            public boolean onQueryTextChange(String newText) {
+				mMenu.filterXinghao(newText);
+	            return true;
+            }
+			
+		});
 		return true;
 	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		if (getSlidingMenu().isMenuShowing()) {
-//			menu.findItem(R.string.menu_search).setVisible(true);
 			menu.findItem(R.string.menu_done).setVisible(true);
+			menu.findItem(R.string.menu_search).setVisible(mMenu.enableFilterXinghao());
 		} else {
-//			menu.findItem(R.string.menu_search).setVisible(false);
+			menu.findItem(R.string.menu_search).setVisible(false);
 			menu.findItem(R.string.menu_done).setVisible(false);
 		}
 		return true;

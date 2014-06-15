@@ -18,6 +18,7 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.ui.NewCardActivity;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.result.HaierParsedResult.HaierBaoxiuCardParser;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
@@ -26,6 +27,7 @@ import com.shwy.bestjoy.utils.NetworkUtils;
 public final class HaierResultHandler extends ResultHandler {
 
 	public static final String QUERY_SERVICE = HaierServiceObject.SERVICE_URL + "TransCode.ashx?oid=";
+	public static final String QUERY_SERVICE_FOR_CODE_128 = HaierServiceObject.SERVICE_URL + "transone.ashx?oid=";
   private static final int[] buttons = {
 	  R.string.button_ignore,
       R.string.menu_new_card,
@@ -70,7 +72,9 @@ public final class HaierResultHandler extends ResultHandler {
         break;
       case 1:
     	  if (ComConnectivityManager.getInstance().isConnected()) {
-    		  queryDeviceInfoFromService(((HaierParsedResult) getResult()).getParam());
+    		  HaierParsedResult result = ((HaierParsedResult) getResult());
+    		  String url = result.getBarcodeFormat() == BarcodeFormat.CODE_128 ? QUERY_SERVICE_FOR_CODE_128 : QUERY_SERVICE;
+    		  queryDeviceInfoFromService(url, result.getParam());
     	  } else {
     		  //no network
     		  MyApplication.getInstance().showMessage(R.string.msg_scan_finish_return_result_no_network);
@@ -81,7 +85,7 @@ public final class HaierResultHandler extends ResultHandler {
   
   private QueryDeviceInfoFromService mQueryDeviceInfoFromService;
   private ProgressDialog mProgressDialog;
-  public void queryDeviceInfoFromService(String param) {
+  public void queryDeviceInfoFromService(String url, String param) {
 	  if (mQueryDeviceInfoFromService!= null) mQueryDeviceInfoFromService.cancelTask(true);
 	  if (mProgressDialog == null) {
 		  mProgressDialog = new ProgressDialog(activity);
@@ -96,24 +100,26 @@ public final class HaierResultHandler extends ResultHandler {
 		});
 	  }
 	  mProgressDialog.show();
-	  mQueryDeviceInfoFromService = new QueryDeviceInfoFromService(param);
+	  mQueryDeviceInfoFromService = new QueryDeviceInfoFromService(url, param);
 	  mQueryDeviceInfoFromService.execute();
   }
   
   private class QueryDeviceInfoFromService extends AsyncTask<Void, Void, Boolean> {
 
 	  private String _param;
+	  private String _url;
 	  private String _error;
 	  private BaoxiuCardObject _baoxiuCardObject;
 	  
-	  public QueryDeviceInfoFromService(String param) {
+	  public QueryDeviceInfoFromService(String url, String param) {
 		  _param = param;
+		  _url = url;
 	  }
 	@Override
 	protected Boolean doInBackground(Void... params) {
 		InputStream is = null;
 		try {
-			is = NetworkUtils.openContectionLocked(QUERY_SERVICE, _param, MyApplication.getInstance().getSecurityKeyValuesObject());
+			is = NetworkUtils.openContectionLocked(_url, _param, MyApplication.getInstance().getSecurityKeyValuesObject());
 			if (is == null) {
 				_error = activity.getResources().getString(R.string.msg_can_not_access_network);
 				return false;

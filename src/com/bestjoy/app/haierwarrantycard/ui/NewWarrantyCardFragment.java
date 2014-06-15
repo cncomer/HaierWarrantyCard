@@ -16,6 +16,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -855,19 +856,45 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		mLoadFapiaoTask = new LoadFapiaoTask();
 		mLoadFapiaoTask.execute();
 	}
-	private class LoadFapiaoTask extends AsyncTask<Void, Void, Void> {
+	private class LoadFapiaoTask extends AsyncTask<Void, Void, Boolean> {
 
+		private Bitmap last = null;
 		@Override
-		protected Void doInBackground(Void... arg0) {
-			mBaoxiuCardObject.updateBillAvatorTempLocked(mBillTempFile);
-			return null;
+        protected void onPreExecute() {
+	        super.onPreExecute();
+	        last = mBaoxiuCardObject.mBillTempBitmap;
+        }
+		@Override
+		protected Boolean doInBackground(Void... arg0) {
+			int tryTime = 0;
+			while (tryTime < 2) {
+				try {
+					mBaoxiuCardObject.updateBillAvatorTempLocked(mBillTempFile);
+					return true;
+				} catch(OutOfMemoryError e) {
+					e.printStackTrace();
+					DebugUtils.logW(TAG, "updateBillAvatorTempLocked oom " + e.getMessage());
+					tryTime ++;
+				}
+			}
+			return false;
 		}
 
 		@Override
-		protected void onPostExecute(Void result) {
+		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
 			dismissDialog(DIALOG_PROGRESS);
-			mBillImageView.setImageBitmap(mBaoxiuCardObject.mBillTempBitmap);
+			if (result) {
+				mBillImageView.setImageBitmap(mBaoxiuCardObject.mBillTempBitmap);
+				if (last != null) {
+					last.recycle();
+				}
+			} else {
+				new AlertDialog.Builder(getActivity())
+				.setMessage(R.string.error_oom_for_fapiao)
+				.setPositiveButton(R.string.button_ok, null)
+				.show();
+			}
 		}
 
 		@Override

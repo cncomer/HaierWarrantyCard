@@ -65,7 +65,6 @@
             <EditText android:gravity="center_vertical"
                     android:id="@+id/usr_validate"
                     style="@style/ProductInfoInputValidate"
-                    android:enabled="false"
                     android:hint="@string/usr_validate"/>
 
             

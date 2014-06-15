@@ -1,5 +1,7 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import java.io.File;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,6 +32,7 @@ import com.bestjoy.app.haierwarrantycard.update.UpdateService;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
 import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
+import com.shwy.bestjoy.utils.FilesUtils;
 
 public class MainActivity extends BaseActionbarActivity {
 	private LinearLayout mDotsLayout;
@@ -110,13 +113,15 @@ public class MainActivity extends BaseActionbarActivity {
      public boolean onCreateOptionsMenu(Menu menu) {
   	     boolean result = super.onCreateOptionsMenu(menu);
   	     MenuItem subMenu1Item = menu.findItem(R.string.menu_more);
-  	     subMenu1Item.getSubMenu().add(1000, R.string.menu_exit, 1005, R.string.menu_exit);
+  	   subMenu1Item.getSubMenu().add(1000, R.string.menu_refresh, 1005, R.string.menu_refresh);
+  	     subMenu1Item.getSubMenu().add(1000, R.string.menu_exit, 1006, R.string.menu_exit);
   	     subMenu1Item.setIcon(R.drawable.abs__ic_menu_moreoverflow_normal_holo_light);
          return result;
      }
 	 
 	 public boolean onPrepareOptionsMenu(Menu menu) {
 		 menu.findItem(R.string.menu_exit).setVisible(HaierAccountManager.getInstance().hasLoginned());
+		 menu.findItem(R.string.menu_refresh).setVisible(HaierAccountManager.getInstance().hasLoginned());
 	     return super.onPrepareOptionsMenu(menu);
 	 }
 	 
@@ -136,6 +141,19 @@ public class MainActivity extends BaseActionbarActivity {
 				.setNegativeButton(android.R.string.cancel, null)
 				.show();
 			 return true;
+		 case R.string.menu_refresh:
+			 if (HaierAccountManager.getInstance().hasLoginned()) {
+				 //做一次登陆操作
+				 //目前只删除本地的所有缓存文件
+				 File dir = MyApplication.getInstance().getCachedXinghaoInternalRoot();
+				 FilesUtils.deleteFile("Updating ", dir);
+				 
+				 dir = MyApplication.getInstance().getCachedXinghaoExternalRoot();
+				 if (dir != null) {
+					 FilesUtils.deleteFile("Updating ", dir);
+				 }
+			 }
+			 break;
 		 }
 		 return super.onOptionsItemSelected(menuItem);
 	 }
