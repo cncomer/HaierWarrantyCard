@@ -2,6 +2,8 @@ package com.bestjoy.app.haierwarrantycard.view;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Context;
@@ -19,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.CursorAdapter;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.LinearLayout.LayoutParams;
@@ -44,27 +47,70 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 	private GridView gridView;
 	private int screenWidth;
 	private int screenHeight;
-	private Cursor mCursor;
 	private int mEditMode;
 	private String mAdminCode;
 	private HomeObject mHomeObject;
-	private AddressAdapter mAddressAdapter;
+	private MyCursorAdapter mAddressAdapter;
 	private static final int MODE_PROVINCE = 1;
 	private static final int MODE_CITY = MODE_PROVINCE + 1;
 	private static final int MODE_DISTRICT = MODE_CITY + 1;
 	
-	private HashSet<String> resultSet = new HashSet<String>();
-	ArrayList<String> resultList = new ArrayList<String>();
+//	private HashSet<String> resultSet = new HashSet<String>();
+//	ArrayList<String> resultList = new ArrayList<String>();
 
-	private static final String[] REGION_PROJECTION = new String[]{
+	private static final String[] PRO_REGION_PROJECTION = new String[]{
+		DeviceDBHelper.DEVICE_HAIER_REGION_CODE + " as _id",
 		DeviceDBHelper.DEVICE_HAIER_REGION_CODE,
-		DeviceDBHelper.DEVICE_HAIER_COUNTRY,
-		DeviceDBHelper.DEVICE_HAIER_PROVICE,
-		DeviceDBHelper.DEVICE_HAIER_CITY,
-		DeviceDBHelper.DEVICE_HAIER_REGION_NAME,
-		DeviceDBHelper.DEVICE_HAIER_ADMIN_CODE,
+		DeviceDBHelper.DEVICE_HAIER_COUNTRY,        //2
+		"DISTINCT " + DeviceDBHelper.DEVICE_HAIER_PROVICE,        //3
+		DeviceDBHelper.DEVICE_HAIER_CITY,           //4
+		DeviceDBHelper.DEVICE_HAIER_REGION_NAME,    //5
+		DeviceDBHelper.DEVICE_HAIER_ADMIN_CODE,	
+		
+		DeviceDBHelper.DEVICE_HAIER_PRO_CODE,  //pro_code    7 
+		DeviceDBHelper.DEVICE_HAIER_CITY_CODE, //city_code   8
+		DeviceDBHelper.DEVICE_HAIER_AREA_CODE, //area_code   9
+		
 	};
 	
+	private static final String[] CITY_REGION_PROJECTION = new String[]{
+		DeviceDBHelper.DEVICE_HAIER_REGION_CODE + " as _id",
+		DeviceDBHelper.DEVICE_HAIER_REGION_CODE,
+		DeviceDBHelper.DEVICE_HAIER_COUNTRY,        //2
+		DeviceDBHelper.DEVICE_HAIER_PROVICE,        //3
+		"DISTINCT " + DeviceDBHelper.DEVICE_HAIER_CITY,  //4
+		DeviceDBHelper.DEVICE_HAIER_REGION_NAME,    //5
+		DeviceDBHelper.DEVICE_HAIER_ADMIN_CODE,
+		
+		DeviceDBHelper.DEVICE_HAIER_PRO_CODE,  //pro_code    7 
+		DeviceDBHelper.DEVICE_HAIER_CITY_CODE, //city_code   8
+		DeviceDBHelper.DEVICE_HAIER_AREA_CODE, //area_code   9
+		
+	};
+	
+	private static final String[] AREA_REGION_PROJECTION = new String[]{
+		DeviceDBHelper.DEVICE_HAIER_REGION_CODE + " as _id",
+		DeviceDBHelper.DEVICE_HAIER_REGION_CODE,
+		DeviceDBHelper.DEVICE_HAIER_COUNTRY,        //2
+		DeviceDBHelper.DEVICE_HAIER_PROVICE,        //3
+		DeviceDBHelper.DEVICE_HAIER_CITY,  //4
+		DeviceDBHelper.DEVICE_HAIER_REGION_NAME,    //5
+		DeviceDBHelper.DEVICE_HAIER_ADMIN_CODE,
+		
+		DeviceDBHelper.DEVICE_HAIER_PRO_CODE,  //pro_code    7 
+		DeviceDBHelper.DEVICE_HAIER_CITY_CODE, //city_code   8
+		DeviceDBHelper.DEVICE_HAIER_AREA_CODE, //area_code   9
+		
+	};
+	
+	//add by chenkai, 根据省市区一起查找区域码 begin
+	private static final int PRO_CODE_INDEX = 7;
+	private static final int CITY_CODE_INDEX = 8;
+	private static final int AREA_CODE_INDEX = 9;
+	private static final int PROVICE_NAME_INDEX = 3;
+	private static final int CITY_NAME_INDEX = 4;
+	private static final int AREA_NAME_INDEX = 5;
+	//add by chenkai, 根据省市区一起查找区域码 end
 	public HaierProCityDisEditPopView(Context context, View view) {
 		mContext = context;
 		mHomeObject = new HomeObject();
@@ -90,10 +136,7 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 	
 	private void initData() {
 		popupView = ((Activity) mContext).getLayoutInflater().inflate(R.layout.layout_popupwindow, null);
-		
-		mAddressAdapter = new AddressAdapter();
 		gridView = (GridView) popupView.findViewById(R.id.gridview);
-		gridView.setAdapter(mAddressAdapter);
 
 		final Display display = ((Activity) mContext).getWindow().getWindowManager().getDefaultDisplay();
 		if (display != null) {
@@ -109,7 +152,7 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 		gridView.setNumColumns(GridView.AUTO_FIT);
 		gridView.setColumnWidth(((int) (size * 0.15)));
 		gridView.setOnItemClickListener(gridItemClickListener);
-		mAddressAdapter = new AddressAdapter();
+		mAddressAdapter = new MyCursorAdapter(mContext, null, false);
 		gridView.setAdapter(mAddressAdapter);
 	}
 
@@ -135,10 +178,13 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 		String city = mCityEditView.getText().toString().trim();
 		String dis = mDisEditView.getText().toString().trim();
 		String selection = DeviceDBHelper.DEVICE_HAIER_PROVICE + "='" + pro + "' and " + DeviceDBHelper.DEVICE_HAIER_CITY + "='" + city + "' and " + DeviceDBHelper.DEVICE_HAIER_REGION_NAME + "='" + dis + "'";
-		mCursor = mContext.getContentResolver().query(
-				BjnoteContent.HaierRegion.CONTENT_URI, REGION_PROJECTION, selection, null, null);
-		if(mCursor.moveToNext()) {
-			mAdminCode = mCursor.getString(mCursor.getColumnIndex(DeviceDBHelper.DEVICE_HAIER_ADMIN_CODE));
+		Cursor cursor = mContext.getContentResolver().query(
+				BjnoteContent.HaierRegion.CONTENT_URI, AREA_REGION_PROJECTION, selection, null, null);
+		if(cursor.moveToNext()) {
+			mAdminCode = cursor.getString(cursor.getColumnIndex(DeviceDBHelper.DEVICE_HAIER_ADMIN_CODE));
+		}
+		if (cursor != null) {
+			cursor.close();
 		}
 		
 		return mAdminCode;
@@ -163,7 +209,7 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 		mCityEditView = (EditText) view.findViewById(R.id.edit_city);
 		mDisEditView = (EditText) view.findViewById(R.id.edit_district);
 		mPlaceDetail = (EditText) view.findViewById(R.id.edit_place_detail);
-		mPlaceDetailTextView = (TextView) view.findViewById(R.id.edit_place_detail);
+		mPlaceDetailTextView = (TextView) view.findViewById(R.id.text_place_detail);
 		
 		mProEditView.setOnTouchListener(this);
 		mCityEditView.setOnTouchListener(this);
@@ -186,12 +232,8 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 			switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					mEditMode = MODE_PROVINCE;
-					mCursor = mContext.getContentResolver().query(BjnoteContent.HaierRegion.CONTENT_URI, REGION_PROJECTION, null, null, null);
-					resultSet.clear();
-					while (mCursor.moveToNext()) {
-						resultSet.add(mCursor.getString(mCursor.getColumnIndex(DeviceDBHelper.DEVICE_HAIER_PROVICE)));
-					}
-					mAddressAdapter.changeAddressData(resultSet);
+					Cursor cursor = mContext.getContentResolver().query(BjnoteContent.HaierRegion.CONTENT_URI, PRO_REGION_PROJECTION, null, null, null);
+					mAddressAdapter.changeCursor(cursor);
 					break;
 				case MotionEvent.ACTION_UP:
 					initPopWindow(view);
@@ -203,12 +245,8 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 					mEditMode = MODE_CITY;
 					if (mHomeObject.mHomeProvince != null) {
 						String where = DeviceDBHelper.DEVICE_HAIER_PROVICE + "='" + mHomeObject.mHomeProvince + "'";
-						mCursor = mContext.getContentResolver().query(BjnoteContent.HaierRegion.CONTENT_URI, REGION_PROJECTION, where, null, null);
-						resultSet.clear();
-						while (mCursor.moveToNext()) {
-							resultSet.add(mCursor.getString(mCursor.getColumnIndex(DeviceDBHelper.DEVICE_HAIER_CITY)));
-						}
-						mAddressAdapter.changeAddressData(resultSet);
+						Cursor cursor = mContext.getContentResolver().query(BjnoteContent.HaierRegion.CONTENT_URI, CITY_REGION_PROJECTION, where, null, null);
+						mAddressAdapter.changeCursor(cursor);
 					}
 					break;
 				case MotionEvent.ACTION_UP:
@@ -225,13 +263,9 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 				case MotionEvent.ACTION_DOWN:
 					mEditMode = MODE_DISTRICT;
 					if (mHomeObject.mHomeCity != null) {
-						String where = DeviceDBHelper.DEVICE_HAIER_CITY + "='" + mHomeObject.mHomeCity + "'";
-						mCursor = mContext.getContentResolver().query(BjnoteContent.HaierRegion.CONTENT_URI, REGION_PROJECTION, where, null, DeviceDBHelper.DEVICE_HAIER_REGION_CODE);
-						resultSet.clear();
-						while (mCursor.moveToNext()) {
-							resultSet.add(mCursor.getString(mCursor.getColumnIndex(DeviceDBHelper.DEVICE_HAIER_REGION_NAME)));
-						}
-						mAddressAdapter.changeAddressData(resultSet);
+						String where = DeviceDBHelper.DEVICE_HAIER_PROVICE + "='" + mHomeObject.mHomeProvince + "' and " + DeviceDBHelper.DEVICE_HAIER_CITY + "='" + mHomeObject.mHomeCity + "'";
+						Cursor cursor = mContext.getContentResolver().query(BjnoteContent.HaierRegion.CONTENT_URI, AREA_REGION_PROJECTION, where, null, DeviceDBHelper.DEVICE_HAIER_REGION_CODE);
+						mAddressAdapter.changeCursor(cursor);
 					}
 					break;
 				case MotionEvent.ACTION_UP:
@@ -258,99 +292,76 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 		
 	}
 
-	private OnItemClickListener gridItemClickListener = new OnItemClickListener()
-	{
+	private OnItemClickListener gridItemClickListener = new OnItemClickListener() {
 		@Override
 		public void onItemClick(AdapterView<?> arg0, View view, int position, long arg3) {
-			switch (mEditMode) {
+			if (position < mAddressAdapter.getCount()) {
+				switch (mEditMode) {
 				case MODE_PROVINCE:
-					if (position < resultList.size()) {
-						mHomeObject.mHomeProvince = resultList.get(position);
-						mProEditView.setText(mHomeObject.mHomeProvince);
-						mCityEditView.getText().clear();
-						mDisEditView.getText().clear();
-					}
+					mHomeObject.mHomeProvince = mAddressAdapter.getItemTitle(position);
+					mProEditView.setText(mHomeObject.mHomeProvince);
+					mCityEditView.getText().clear();
+					mDisEditView.getText().clear();
+					mAdminCode = null;
+					mHomeObject.mHomeCity = null;
 					break;
 				case MODE_CITY:
-					if (position < resultList.size()) {
-						mHomeObject.mHomeCity = resultList.get(position);
-						mCityEditView.setText(mHomeObject.mHomeCity);
-						mDisEditView.getText().clear();
-					}
+					mHomeObject.mHomeCity = mAddressAdapter.getItemTitle(position);
+					mCityEditView.setText(mHomeObject.mHomeCity);
+					mDisEditView.getText().clear();
+					mAdminCode = null;
+					mHomeObject.mHomeDis = null;
 					break;
 				case MODE_DISTRICT:
-					if (position < resultList.size()) {
-						mHomeObject.mHomeDis = resultList.get(position);
-						mDisEditView.setText(mHomeObject.mHomeDis);
-						String where = DeviceDBHelper.DEVICE_HAIER_REGION_NAME + "='" + mHomeObject.mHomeDis + "'";
-						mCursor = mContext.getContentResolver().query(BjnoteContent.HaierRegion.CONTENT_URI, REGION_PROJECTION, where, null, null);
-						if(mCursor.moveToNext()) {
-							mAdminCode = mCursor.getString(mCursor.getColumnIndex(DeviceDBHelper.DEVICE_HAIER_ADMIN_CODE));
-						}
-					}
+					mHomeObject.mHomeDis = mAddressAdapter.getItemTitle(position);
+					mDisEditView.setText(mHomeObject.mHomeDis);
+					mAdminCode = mAddressAdapter.getRegionCode(position);
 					break;
+				
+				}
 			}
 			mPopupWindow.dismiss();
 		}
 	};
-	class AddressAdapter extends BaseAdapter {
-		LayoutInflater mInflater = null;
+	
+	class MyCursorAdapter extends CursorAdapter {
+		public MyCursorAdapter(Context context, Cursor c, boolean autoRequery) {
+			super(context, c, autoRequery);
+		}
+		
+		public String getRegionCode(int position) {
+			long id = getItemId(position);
+			return String.valueOf(id);
+		}
 
-		public AddressAdapter() {
-			mInflater = LayoutInflater.from(mContext);
-		}
-		public void changeAddressData(HashSet<String> resultSet) {
-			resultList.clear();
-			for (String str : resultSet) {  
-				resultList.add(str); 
-			} 
-			notifyDataSetChanged();
-		}
-		public View getView(int position, View convertView, ViewGroup parent) {
-			ViewHolder viewHolder = null;
-			if (convertView == null) {
-				convertView = mInflater.inflate(R.layout.grid_item, null);
-				viewHolder = new ViewHolder();
-				viewHolder._title = (TextView) convertView;
-				viewHolder._title.setGravity(Gravity.CENTER_HORIZONTAL);
-				convertView .setTag(viewHolder);
-			} else {
-				viewHolder = (ViewHolder) convertView.getTag();
-			}
-			if(mEditMode == MODE_PROVINCE) {
-				if (position < resultList.size()) {
-					viewHolder._title.setText(resultList.get(position));
-				}
-			} else if(mEditMode == MODE_CITY) {
-				if (position < resultList.size() && mHomeObject.mHomeProvince != null) {
-					viewHolder._title.setText(resultList.get(position));
-				}
-			} else if (mEditMode == MODE_DISTRICT) {
-				if (position < resultList.size() && mHomeObject.mHomeCity != null) {
-					viewHolder._title.setText(resultList.get(position));
-				}
-			}
+		@Override
+		public View newView(Context context, Cursor cursor, ViewGroup parent) {
+			TextView convertView = (TextView) LayoutInflater.from(context).inflate(R.layout.grid_item, parent, false);
+			convertView.setGravity(Gravity.CENTER_HORIZONTAL);
 			return convertView;
-
+		}
+		
+		public String getItemTitle(int position) {
+			Cursor c = (Cursor) getItem(position);
+			switch(mEditMode) {
+			case MODE_PROVINCE:
+				return c.getString(PROVICE_NAME_INDEX);
+			case MODE_CITY:
+				return c.getString(CITY_NAME_INDEX);
+			case MODE_DISTRICT:
+				return c.getString(AREA_NAME_INDEX);
+			}
+			return "Not defined";
+			
 		}
 
-		public int getCount() {
-			return resultList != null ? resultList.size() :0;
-		}
-
-		public Object getItem(int position) {
-			return resultList.get(position);
-		}
-
-		public long getItemId(int position) {
-			return position;
+		@Override
+		public void bindView(View view, Context context, Cursor cursor) {
+			
+			((TextView) view).setText(getItemTitle(cursor.getPosition()));
 		}
 	}
 	
-	private static class ViewHolder {
-		private TextView _title;
-	}
-
 	public void setHomeObject(HomeObject homeObject) {
 		if(homeObject == null) {
 			homeObject = new HomeObject();
