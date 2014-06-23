@@ -1,5 +1,6 @@
 package com.bestjoy.app.haierwarrantycard.update;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -8,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -38,7 +40,7 @@ public class ServiceAppInfo implements Parcelable{
     public static final String KEY_SERVICE_APP_INFO_IMPORTANCE = "service_app_info_importance";
   
     
-	public static final String DEFAULT_UPDATE_FILE_URL="http://www.mingdown.com/mobile/getVersion.ashx?app=haier";
+	public static final String DEFAULT_UPDATE_FILE_URL="http://www.mingdown.com/mobile/getVersion.ashx?app=";
 	public static final String KEY_VERSION_CODE = "version";
 	public static final String KEY_VERSION_NAME = "versionCodeName";
 	public static final String KEY_DATE = "date";
@@ -64,25 +66,40 @@ public class ServiceAppInfo implements Parcelable{
 	public String mVersionName = "";
 	
 	public long mCheckTime;
-
 	
-	public static ServiceAppInfo getServiceAppInfoLocked() {
+	public String mToken;
+	private SharedPreferences mPreferences;
+	public ServiceAppInfo(String token) {
+		mToken = token;
+		init();
+	}
+	
+	public ServiceAppInfo() {
+		//默认是app信息
+		mToken = MyApplication.PKG_NAME;
+		init();
+	}
+
+	private void init() {
+		mPreferences = MyApplication.getInstance().getSharedPreferences(mToken, Context.MODE_PRIVATE);
+		read();
+	}
+	
+	public boolean getServiceAppInfoLocked() {
 		InputStream is = null;
-		ServiceAppInfo appInfo = null;
 		try {
-			is = NetworkUtils.openContectionLocked(DEFAULT_UPDATE_FILE_URL, MyApplication.getInstance().getSecurityKeyValuesObject());
+			is = NetworkUtils.openContectionLocked(getServiceUrl(), MyApplication.getInstance().getSecurityKeyValuesObject());
 			if (is != null) {
 				String content = NetworkUtils.getContentFromInput(is);
 				JSONObject json = new JSONObject(content);
-				appInfo = new ServiceAppInfo();
-				appInfo.mVersionCode = json.getInt(KEY_VERSION_CODE);
-				appInfo.mReleaseDate = json.getString(KEY_DATE);
-				appInfo.mImportance = json.getInt(KEY_IMPORTANCE);
-				appInfo.mSizeStr = json.getString(KEY_SIZE);
-				appInfo.mApkUrl = json.getString(KEY_APK);
-				appInfo.mReleaseNote = json.getString(KEY_NOTE);
-				appInfo.mVersionName = json.optString(KEY_VERSION_NAME, String.valueOf(appInfo.mVersionCode));
-				appInfo.mCheckTime = System.currentTimeMillis();
+				mVersionCode = json.getInt(KEY_VERSION_CODE);
+				mReleaseDate = json.getString(KEY_DATE);
+				mImportance = json.getInt(KEY_IMPORTANCE);
+				mSizeStr = json.getString(KEY_SIZE);
+				mApkUrl = json.getString(KEY_APK);
+				mReleaseNote = json.getString(KEY_NOTE);
+				mVersionName = json.optString(KEY_VERSION_NAME, String.valueOf(mVersionCode));
+				return true;
 			}
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
@@ -92,12 +109,19 @@ public class ServiceAppInfo implements Parcelable{
 			e.printStackTrace();
 		} finally {
 			NetworkUtils.closeInputStream(is);
+			mCheckTime = System.currentTimeMillis();
 		}
-		return appInfo;
+		return false;
+	}
+	
+	private String getServiceUrl() {
+		StringBuilder sb = new StringBuilder(DEFAULT_UPDATE_FILE_URL);
+		sb.append(mToken);
+		return sb.toString();
 	}
 	
 	public void save() {
-		MyApplication.getInstance().mPreferManager.edit()
+		mPreferences.edit()
 		.putLong(KEY_SERVICE_APP_INFO_CHECK_TIME, mCheckTime)
 		.putInt(KEY_SERVICE_APP_INFO_VERSION_CODE, mVersionCode)
 		.putString(KEY_SERVICE_APP_INFO_VERSION_NAME, mVersionName)
@@ -107,25 +131,27 @@ public class ServiceAppInfo implements Parcelable{
 		.putString(KEY_SERVICE_APP_INFO_RELEASEDATE, mReleaseDate)
 		.putInt(KEY_SERVICE_APP_INFO_IMPORTANCE, mImportance)
 		.commit();
+		updateLatestCheckTime(mCheckTime);
 	}
 	
-	public static ServiceAppInfo read() {
-		ServiceAppInfo appInfo = new ServiceAppInfo();
+	public void read() {
 		
-		appInfo.mCheckTime = MyApplication.getInstance().mPreferManager.getLong(KEY_SERVICE_APP_INFO_CHECK_TIME, -1l);
-		if (appInfo.mCheckTime == -1l) {
-			DebugUtils.logD("AppInfo", "read null from preferences");
-			return null;
+		mCheckTime = mPreferences.getLong(KEY_SERVICE_APP_INFO_CHECK_TIME, -1l);
+		if (mCheckTime == -1l) {
+			DebugUtils.logD("AppInfo", "read mCheckTime from preferences " + mCheckTime);
 		}
-		appInfo.mVersionCode = MyApplication.getInstance().mPreferManager.getInt(KEY_SERVICE_APP_INFO_VERSION_CODE, -1);
-		appInfo.mVersionName = MyApplication.getInstance().mPreferManager.getString(KEY_SERVICE_APP_INFO_VERSION_NAME, "");
-		appInfo.mReleaseNote = MyApplication.getInstance().mPreferManager.getString(KEY_SERVICE_APP_INFO_RELEASENOTE, "");
-		appInfo.mApkUrl = MyApplication.getInstance().mPreferManager.getString(KEY_SERVICE_APP_INFO_APK_URL, "");
+		mVersionCode = mPreferences.getInt(KEY_SERVICE_APP_INFO_VERSION_CODE, -1);
+		mVersionName = mPreferences.getString(KEY_SERVICE_APP_INFO_VERSION_NAME, "");
+		mReleaseNote = mPreferences.getString(KEY_SERVICE_APP_INFO_RELEASENOTE, "");
+		mApkUrl = mPreferences.getString(KEY_SERVICE_APP_INFO_APK_URL, "");
 		
-		appInfo.mSizeStr = MyApplication.getInstance().mPreferManager.getString(KEY_SERVICE_APP_INFO_APK_SIZE, "");
-		appInfo.mReleaseDate = MyApplication.getInstance().mPreferManager.getString(KEY_SERVICE_APP_INFO_RELEASEDATE, "");
-		appInfo.mImportance = MyApplication.getInstance().mPreferManager.getInt(KEY_SERVICE_APP_INFO_IMPORTANCE, IMPORTANCE_OPTIONAL);
-		return appInfo;
+		mSizeStr = mPreferences.getString(KEY_SERVICE_APP_INFO_APK_SIZE, "");
+		mReleaseDate = mPreferences.getString(KEY_SERVICE_APP_INFO_RELEASEDATE, "");
+		mImportance = mPreferences.getInt(KEY_SERVICE_APP_INFO_IMPORTANCE, IMPORTANCE_OPTIONAL);
+	}
+	
+	public boolean hasChecked() {
+		return mCheckTime > 0;
 	}
 	
 	public String buildReleasenote(Context context) {
@@ -136,8 +162,13 @@ public class ServiceAppInfo implements Parcelable{
 		return sb.toString();
 	}
 	
+	/**每次都要从配置文件中读取最后检查更新时间*/
 	public static long getLatestCheckTime() {
 		return MyApplication.getInstance().mPreferManager.getLong(ServiceAppInfo.KEY_SERVICE_APP_INFO_CHECK_TIME, 0);
+	}
+	
+	public static boolean updateLatestCheckTime(long time) {
+		return MyApplication.getInstance().mPreferManager.edit().putLong(ServiceAppInfo.KEY_SERVICE_APP_INFO_CHECK_TIME, time).commit();
 	}
 
 	public String toString(Context context) {
@@ -162,6 +193,7 @@ public class ServiceAppInfo implements Parcelable{
 		dest.writeString(mApkUrl);
 		dest.writeString(mReleaseNote);
 		dest.writeString(mVersionName);
+		dest.writeString(mToken);
 		
 	}
 	
@@ -178,6 +210,7 @@ public class ServiceAppInfo implements Parcelable{
 			appInfo.mApkUrl = source.readString();
 			appInfo.mReleaseNote = source.readString();
 			appInfo.mVersionName = source.readString();
+			appInfo.mToken = source.readString();
 			return appInfo;
 		}
 
@@ -187,6 +220,27 @@ public class ServiceAppInfo implements Parcelable{
 		}
 		
 	};
+	
+	//add by chenkai, 20140618, updating check begin
+    public File buildLocalDownloadAppFile() {
+    	StringBuilder sb = new StringBuilder("Warranty_");
+    	sb.append(String.valueOf(mVersionCode))
+    	.append(mToken)
+    	.append(".temp");
+    	return MyApplication.getInstance().getAppFiles(sb.toString());
+    }
+    
+    public File buildExternalDownloadAppFile() {
+    	if (!MyApplication.getInstance().hasExternalStorage()) {
+    		return null;
+    	}
+    	StringBuilder sb = new StringBuilder("Warranty_");
+    	sb.append(String.valueOf(mVersionCode))
+    	.append(mToken)
+    	.append(".temp");
+    	return new File(MyApplication.getInstance().getExternalStorageRoot(".download"), sb.toString());
+    }
+  //add by chenkai, 20140618, updating check end
 	
 	
 }

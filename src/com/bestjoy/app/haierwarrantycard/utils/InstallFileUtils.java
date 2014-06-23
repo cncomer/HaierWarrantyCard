@@ -1,6 +1,7 @@
 package com.bestjoy.app.haierwarrantycard.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -35,20 +36,41 @@ public class InstallFileUtils {
 			  while ((count = is.read(buffer)) > 0) {
 				  fos.write(buffer, 0, count);
 			  }
+			  fos.flush();
 		  } catch (IOException e) {
 				e.printStackTrace();
 				success = false;
 		  } finally {
 			  NetworkUtils.closeInputStream(is);
-			  if (fos != null) {
-				  try {
-					fos.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-			  }
+			  NetworkUtils.closeOutStream(fos);
 		  }
 		  DebugUtils.logD(TAG, "install " + fileName + " success? " + success);
+		 return success;
+	  }
+	
+	public static boolean installFiles(File src, File out) {
+		 boolean success = true;
+		  DebugUtils.logD(TAG, "start to install File " + src.getAbsolutePath());
+		  InputStream is = null;
+		  FileOutputStream fos = null;
+		  try {
+			  is = new FileInputStream(src);
+			  fos = new FileOutputStream(out);
+			  byte[] buffer = new byte[8192];
+			  int count = 0;
+			  while ((count = is.read(buffer)) > 0) {
+				  fos.write(buffer, 0, count);
+			  }
+			  fos.flush();
+			  NetworkUtils.closeOutStream(fos);
+			  DebugUtils.logD(TAG, "start to save File " + out.getAbsolutePath());
+		  } catch (IOException e) {
+				e.printStackTrace();
+				success = false;
+		  } finally {
+			  NetworkUtils.closeInputStream(is);
+		  }
+		  DebugUtils.logD(TAG, "install " + src.getAbsolutePath() + " success? " + success);
 		 return success;
 	  }
 }

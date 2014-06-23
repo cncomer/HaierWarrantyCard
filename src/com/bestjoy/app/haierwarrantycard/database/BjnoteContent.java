@@ -1,6 +1,6 @@
 package com.bestjoy.app.haierwarrantycard.database;
 
-
+import android.content.ContentResolver;
 import android.net.Uri;
 
 public class BjnoteContent {
@@ -81,5 +81,14 @@ public class BjnoteContent {
     
     public static class HaierRegion extends BjnoteContent{
     	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.DEVICE_CONTENT_URI, "haierregion");
+    }
+    
+    /**调用该类的CONTENT_URI来关闭设备数据库*/
+    public static class CloseDeviceDatabase extends BjnoteContent{
+    	private static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.DEVICE_CONTENT_URI, "closedevice");
+    	/**调用该方法来关闭设备数据库*/
+    	public static void closeDeviceDatabase(ContentResolver cr) {
+    		cr.query(CONTENT_URI, null, null, null, null);
+    	}
     }
 }

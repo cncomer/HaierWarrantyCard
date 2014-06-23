@@ -1,9 +1,11 @@
 package com.bestjoy.app.haierwarrantycard.database;
 
 import com.bestjoy.app.haierwarrantycard.MyApplication;
+import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 
 public class DeviceDBHelper {
 
+	private static final String TAG = "DeviceDBHelper";
 	public static final int VERSION = 9;
 	public static final String KEY_VERSION = "version";
 	//设备数据库
@@ -57,6 +59,23 @@ public class DeviceDBHelper {
 	  public static final String DEVICE_HAIER_POST_CODE = "post_code";
 	  
 	  public static boolean isNeedReinstallDeviceDatabase() {
-		  return VERSION > MyApplication.getInstance().mPreferManager.getInt(KEY_VERSION, 0);
+		  return VERSION > getDeviceDatabaseVersion();
+	  }
+	  
+	  public static int getDeviceDatabaseVersion() {
+		  return MyApplication.getInstance().mPreferManager.getInt(KEY_VERSION, VERSION);
+	  }
+	  /***
+	   * 更新当前设备版本号
+	   * @param version
+	   * @return
+	   */
+	  public static boolean updateDeviceDatabaseVersion(int version) {
+		  int oldVersion = getDeviceDatabaseVersion();
+		  DebugUtils.logD(TAG, "updateDeviceDatabaseVersion oldVersion " + oldVersion + ", newVersion " + version);
+		  if (version > oldVersion) {
+			  return MyApplication.getInstance().mPreferManager.edit().putInt(DeviceDBHelper.KEY_VERSION, version).commit();
+		  }
+		 return false;
 	  }
 }

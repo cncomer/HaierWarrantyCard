@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 
 import org.apache.http.HttpEntity;
@@ -24,6 +25,8 @@ import android.os.Process;
 import android.util.Log;
 
 import com.bestjoy.app.haierwarrantycard.MyApplication;
+import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
+import com.bestjoy.app.haierwarrantycard.database.DeviceDBHelper;
 import com.bestjoy.app.haierwarrantycard.ui.PreferencesActivity;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DateUtils;
@@ -41,21 +44,21 @@ public class UpdateService extends Service implements ComConnectivityManager.Con
 	private static final boolean DEBUG = false;
 
 	/**强制检查更新*/
-	public static final String ACTION_UPDATE_CHECK_FORCE = "com.bestjoy.app.haierwarrantycard.intent.ACTION_UPDATE_CHECK_FORCE";
+	public static final String ACTION_UPDATE_CHECK_FORCE = MyApplication.PKG_NAME + ".intent.ACTION_UPDATE_CHECK_FORCE";
 	/**开始检查更新*/
-	public static final String ACTION_UPDATE_CHECK = "com.bestjoy.app.haierwarrantycard.intent.ACTION_UPDATE_CHECK";
+	public static final String ACTION_UPDATE_CHECK = MyApplication.PKG_NAME + ".intent.ACTION_UPDATE_CHECK";
 	/**用户强制立即检查更新*/
-	public static final String ACTION_UPDATE_CHECK_FORCE_BY_USER = "com.bestjoy.app.haierwarrantycard.intent.ACTION_UPDATE_CHECK_FORCE_BY_USER";
+	public static final String ACTION_UPDATE_CHECK_FORCE_BY_USER = MyApplication.PKG_NAME + ".intent.ACTION_UPDATE_CHECK_FORCE_BY_USER";
 	/**自动检查开始了*/
-	public static final String ACTION_UPDATE_CHECK_AUTO = "com.bestjoy.app.haierwarrantycard.intent.ACTION_UPDATE_CHECK_AUTO";
+	public static final String ACTION_UPDATE_CHECK_AUTO = MyApplication.PKG_NAME + ".intent.ACTION_UPDATE_CHECK_AUTO";
 	/**开始下载*/
-	public static final String ACTION_DOWNLOAD_START = "com.bestjoy.app.haierwarrantycard.intent.ACTION_DOWNLOAD_START";
+	public static final String ACTION_DOWNLOAD_START = MyApplication.PKG_NAME + ".intent.ACTION_DOWNLOAD_START";
 	/**结束下载*/
-	public static final String ACTION_DOWNLOAD_END = "com.bestjoy.app.haierwarrantycard.intent.ACTION_DOWNLOAD_END";
+	public static final String ACTION_DOWNLOAD_END = MyApplication.PKG_NAME + ".intent.ACTION_DOWNLOAD_END";
 	/**下载进度*/
-	public static final String ACTION_DOWNLOAD_PROGRESS = "com.bestjoy.app.haierwarrantycard.intent.ACTION_DOWNLOAD_PROGRESS";
+	public static final String ACTION_DOWNLOAD_PROGRESS = MyApplication.PKG_NAME + ".intent.ACTION_DOWNLOAD_PROGRESS";
 	/**没有网络*/
-	public static final String ACTION_UNAVAILABLE_NETWORK = "com.bestjoy.app.haierwarrantycard.intent.ACTION_UNAVAILABLE_NETWORK";
+	public static final String ACTION_UNAVAILABLE_NETWORK = MyApplication.PKG_NAME + ".intent.ACTION_UNAVAILABLE_NETWORK";
 	private Handler mWorkServiceHandler, mHandler;
 	private static final int MSG_CHECK_UPDATE = 1000;
 	/**开始下载*/
@@ -73,7 +76,6 @@ public class UpdateService extends Service implements ComConnectivityManager.Con
 	private boolean mIsServiceRuinning = false;
 	
 	
-	private ServiceAppInfo mServiceAppInfo;
 	/**下载结束广播。当接到该广播的时候，我们解析字段Intents.EXTRA_RESULT， false表示下载取消了，true表示下载完成*/
 	private Intent mDownloadEndIntent;
 	private Intent mNoNetworkIntent, mDownloadStartIntent, mDownloadProgressIntent;
@@ -87,6 +89,8 @@ public class UpdateService extends Service implements ComConnectivityManager.Con
 	};
 	private TYPE mCurrentType;
 	
+	private ServiceAppInfo mServiceAppInfo, mDatabaseServiceAppInfo;
+	
 	@Override
 	public void onCreate() {
 		super.onCreate();
@@ -97,6 +101,9 @@ public class UpdateService extends Service implements ComConnectivityManager.Con
 		mDownloadProgressIntent = new Intent(ACTION_DOWNLOAD_PROGRESS);
 		
 		mIsServiceRuinning = true;
+		
+		mServiceAppInfo = new ServiceAppInfo(MyApplication.PKG_NAME);
+		mDatabaseServiceAppInfo = new ServiceAppInfo(MyApplication.PKG_NAME + ".db");
 		
 		mHandler = new Handler() {
 			@Override
@@ -114,14 +121,18 @@ public class UpdateService extends Service implements ComConnectivityManager.Con
 				switch(msg.what) {
 				case MSG_CHECK_UPDATE:
 					if(checkUpdate()){
-						DebugUtils.logD(TAG, "checkUpdate and start UpdateActivity");
+						//检查app
+						DebugUtils.logD(TAG, "checkUpdate and start UpdateActivity for app");
 						Intent intent = UpdateActivity.createIntent(UpdateService.this, mServiceAppInfo);
 						intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 						startActivity(intent);
+					} else if (checkDeviceDatabaseUpdate()) {
+						//检查数据库
+						updateDeviceDatabase();
 					}
 					break;
 				case MSG_DOWNLOAD_START:
-					downloadLocked(MyApplication.getInstance().buildLocalDownloadAppFile(mServiceAppInfo.mVersionCode));
+					downloadLocked(mServiceAppInfo.buildExternalDownloadAppFile());
 					break;
 				}
 				super.handleMessage(msg);
@@ -211,23 +222,39 @@ public class UpdateService extends Service implements ComConnectivityManager.Con
 
 	//判断是否需要更新
 	private boolean checkUpdate(){
-		DebugUtils.logD(TAG, "start update checking.......");
+		DebugUtils.logD(TAG, "start update checking......." + mServiceAppInfo.mToken);
 		mIsCheckUpdateRuinning = true;
 		boolean needUpdate = false;
-		SharedPreferences prefs = MyApplication.getInstance().mPreferManager;
-		int currentVersion = prefs.getInt(PreferencesActivity.KEY_LATEST_VERSION, 0);
-		mServiceAppInfo = ServiceAppInfo.getServiceAppInfoLocked();
-		if (mServiceAppInfo != null) {
-			mServiceAppInfo.save();
+		if (mServiceAppInfo.getServiceAppInfoLocked()) {
+			SharedPreferences prefs = MyApplication.getInstance().mPreferManager;
+			int currentVersion = prefs.getInt(PreferencesActivity.KEY_LATEST_VERSION, 0);
 			DebugUtils.logD(TAG, "updateCheckTime = " + DateUtils.TOPIC_SUBJECT_DATE_TIME_FORMAT.format(new Date(mServiceAppInfo.mCheckTime)));
 			DebugUtils.logD(TAG, "currentVersionCode = " + currentVersion);
 			DebugUtils.logD(TAG, "newVersionCode = " + mServiceAppInfo.mVersionCode);
 			mIsCheckUpdateRuinning = false;
 			needUpdate = mServiceAppInfo.mVersionCode > currentVersion;
 		}
-		DebugUtils.logD(TAG, "end update checking.......");
+		mServiceAppInfo.save();
+		DebugUtils.logD(TAG, "end update app checking......." + mServiceAppInfo.mToken);
 		return needUpdate;
 	}
+	
+	//判断是否需要更新
+		private boolean checkDeviceDatabaseUpdate(){
+			DebugUtils.logD(TAG, "start update checking......." + mDatabaseServiceAppInfo.mToken);
+			mIsCheckUpdateRuinning = true;
+			boolean needUpdate = false;
+			if (mDatabaseServiceAppInfo.getServiceAppInfoLocked()) {
+				int currentVersion = DeviceDBHelper.getDeviceDatabaseVersion();
+				DebugUtils.logD(TAG, "updateCheckTime = " + DateUtils.TOPIC_SUBJECT_DATE_TIME_FORMAT.format(new Date(mServiceAppInfo.mCheckTime)));
+				DebugUtils.logD(TAG, "currentVersionCode = " + currentVersion);
+				DebugUtils.logD(TAG, "newVersionCode = " + mDatabaseServiceAppInfo.mVersionCode);
+				mIsCheckUpdateRuinning = false;
+				needUpdate = mDatabaseServiceAppInfo.mVersionCode > currentVersion;
+			}
+			DebugUtils.logD(TAG, "end update app checking......." + mDatabaseServiceAppInfo.mToken);
+			return needUpdate;
+		}
 
 	@Override
 	public void onDestroy() {
@@ -317,6 +344,39 @@ public class UpdateService extends Service implements ComConnectivityManager.Con
 		mDownloadProgressIntent.putExtra(Intents.EXTRA_PROGRESS_MAX, size);
 		sendBroadcast(mDownloadProgressIntent);
 	}
+	
+	private void updateDeviceDatabase() {
+		DebugUtils.logD(TAG, "enter updateDeviceDatabase()");
+		InputStream is = null;
+		OutputStream out = null;
+		try {
+			DebugUtils.logD(TAG, "start download " + mDatabaseServiceAppInfo.mApkUrl);
+	        is = NetworkUtils.openContectionLocked(mDatabaseServiceAppInfo.mApkUrl, MyApplication.getInstance().getSecurityKeyValuesObject());
+	        if (is != null) {
+	        	out = new FileOutputStream(mDatabaseServiceAppInfo.buildLocalDownloadAppFile());
+	        	byte[] buf = new byte[4096];
+                int ch = -1;
+                while ((ch = is.read(buf)) != -1) {
+                	out.write(buf, 0, ch);
+               	 }
+                out.flush();
+	        }
+	        NetworkUtils.closeOutStream(out);
+	        NetworkUtils.closeInputStream(is);
+	        DebugUtils.logD(TAG, "save to " + mDatabaseServiceAppInfo.buildLocalDownloadAppFile().getAbsolutePath());
+	        mDatabaseServiceAppInfo.save();
+	        BjnoteContent.CloseDeviceDatabase.closeDeviceDatabase(getContentResolver());
+	        DebugUtils.logD(TAG, "restart " + getPackageName());
+	        Intent i = getPackageManager().getLaunchIntentForPackage(getPackageName());  
+	        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+	        startActivity(i);
+        } catch (ClientProtocolException e) {
+	        e.printStackTrace();
+        } catch (IOException e) {
+	        e.printStackTrace();
+        }
+	}
+	
 	/**
 	 * 开始下载任务，需要提供要下载的apk的版本号，如果已经有正在下载的任务，
 	 * @param context

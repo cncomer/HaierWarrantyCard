@@ -84,7 +84,7 @@ public class UpdateActivity extends BaseActionbarActivity{
 		if (!MyApplication.getInstance().hasExternalStorage()) {
 			showDialog(DIALOG_MEDIA_UNMOUNTED);
 		} else {
-			mApkFile = MyApplication.getInstance().buildLocalDownloadAppFile(mServiceAppInfo.mVersionCode);
+			mApkFile = mServiceAppInfo.buildExternalDownloadAppFile();
 			if (mApkFile.exists()) {
 				mCurrentType = TYPE.SUCCESS;
 			}

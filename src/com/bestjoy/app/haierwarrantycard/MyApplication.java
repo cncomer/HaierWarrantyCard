@@ -27,6 +27,8 @@ import com.shwy.bestjoy.utils.SecurityUtils.SecurityKeyValuesObject;
 public class MyApplication extends Application{
 	
 	private static final String TAG ="BJfileApp";
+	/**对于不同的保修卡，我们只要确保该变量为正确的应用包名即可*/
+	public static final String PKG_NAME = "com.bestjoy.app.haierwarrantycard";
 	private Handler mHandler;
 	private static MyApplication mInstance;
 	public SharedPreferences mPreferManager;
@@ -345,4 +347,12 @@ public class MyApplication extends Application{
     public File getCachedXinghaoInternalRoot() {
     	return getAppFilesDir("xinghao");
     }
+    
+    public File getAppFiles(String fileName) {
+    	File root = getFilesDir();
+    	if (!root.exists()) {
+    		root.mkdirs();
+    	}
+		return new File(root, fileName);
+	}
 }

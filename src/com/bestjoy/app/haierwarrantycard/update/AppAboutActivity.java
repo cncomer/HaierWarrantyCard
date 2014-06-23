@@ -44,7 +44,7 @@ public class AppAboutActivity extends BaseActionbarActivity implements View.OnCl
 		mCurrentVersion = prefs.getInt(PreferencesActivity.KEY_LATEST_VERSION, 0);
 		mCurrentVersionCodeName = prefs.getString(PreferencesActivity.KEY_LATEST_VERSION_CODE_NAME, "");
 		
-		mServiceAppInfo = ServiceAppInfo.read();
+		mServiceAppInfo = new ServiceAppInfo();
 		initView();
 		UpdateService.startUpdateServiceForce(mContext);
 	}

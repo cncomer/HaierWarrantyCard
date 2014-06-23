@@ -42,7 +42,7 @@ public class JumpActivity extends Activity {
 		super.onCreate(bundle);
 		mContext = this;
 		setContentView(R.layout.splash);
-		mServiceAppInfo = ServiceAppInfo.read();
+		mServiceAppInfo = new ServiceAppInfo();
 		showHelpOnFirstLaunch();
 		
 	}
@@ -75,20 +75,22 @@ public class JumpActivity extends Activity {
 				
 				edit.putBoolean(PreferencesActivity.KEY_LATEST_VERSION_INSTALL, true);
 				edit.putLong(PreferencesActivity.KEY_LATEST_VERSION_LEVEL, 0);
+				edit.putLong(ServiceAppInfo.KEY_SERVICE_APP_INFO_CHECK_TIME, -1);
 				edit.commit();
 				//删除下载更新的临时目录，确保没有其他的安装包了
 				File downloadFile = MyApplication.getInstance().getExternalStorageRoot(".download");
 				if(downloadFile != null) FilesUtils.deleteFile(TAG, downloadFile);
 				launchMainActivityDelay();
+				return;
 			} else {// 不是第一次启动
 					// 是否完成上次下载的更新的安装
 				DebugUtils.logD(TAG, "not FirstLaunch");
-				if (mServiceAppInfo == null) {
+				if (!mServiceAppInfo.hasChecked()) {
 					DebugUtils.logD(TAG, "mServiceAppInfo is null, maybe we do not start to updating check");
 				} else {
-					File localApkFile = MyApplication.getInstance().buildLocalDownloadAppFile(mServiceAppInfo.mVersionCode);
+					File localApkFile = mServiceAppInfo.buildExternalDownloadAppFile();
 					//如果更新包存在，并且更新包的版本高于当前版本，我们认为是下载了更新包当是没有安装
-					if (localApkFile.exists() && mServiceAppInfo.mVersionCode > currentVersion) {
+					if (localApkFile != null && localApkFile.exists() && mServiceAppInfo.mVersionCode > currentVersion) {
 						if (!MyApplication.getInstance().mPreferManager.getBoolean(PreferencesActivity.KEY_LATEST_VERSION_INSTALL, true)) {
 							// 是否放弃安装，如果放弃，且重要程度为1则不在进行提示，否则必须安装
 							if (MyApplication.getInstance().mPreferManager.getLong(PreferencesActivity.KEY_LATEST_VERSION_LEVEL, ServiceAppInfo.IMPORTANCE_OPTIONAL) == ServiceAppInfo.IMPORTANCE_OPTIONAL) {
@@ -101,6 +103,7 @@ public class JumpActivity extends Activity {
 					}
 				}
 				launchMainActivityDelay();
+				return;
 			}
 		} catch (PackageManager.NameNotFoundException e) {
 			e.printStackTrace();
@@ -123,15 +126,30 @@ public class JumpActivity extends Activity {
 	
 	private void launchMainActivityDelay() {
 		final SharedPreferences prefers = MyApplication.getInstance().mPreferManager;
-		if (prefers.getBoolean(PreferencesActivity.KEY_FIRST_STARTUP, true) || DeviceDBHelper.isNeedReinstallDeviceDatabase()) {
+		final ServiceAppInfo databaseServiceAppInfo = new ServiceAppInfo(MyApplication.PKG_NAME + ".db");
+		final File database = databaseServiceAppInfo.buildLocalDownloadAppFile();
+		final boolean needUpdateDeviceDatabase = database.exists() && databaseServiceAppInfo.mVersionCode > DeviceDBHelper.getDeviceDatabaseVersion();
+		if (prefers.getBoolean(PreferencesActivity.KEY_FIRST_STARTUP, true) 
+				|| DeviceDBHelper.isNeedReinstallDeviceDatabase()
+				|| needUpdateDeviceDatabase) {
 			new Thread() {
 				@Override
 				public void run() {
 					//第一次的时候我们需要拷贝数据库
-					if (prefers.getBoolean(PreferencesActivity.KEY_FIRST_STARTUP, true) || DeviceDBHelper.isNeedReinstallDeviceDatabase()) {
+					boolean firstStart = prefers.getBoolean(PreferencesActivity.KEY_FIRST_STARTUP, true);
+					boolean needReinstall = DeviceDBHelper.isNeedReinstallDeviceDatabase();
+					if (firstStart || needReinstall) {
 						InstallFileUtils.installDatabaseFiles(mContext, "device", ".png", ".db");
-						prefers.edit().putBoolean(PreferencesActivity.KEY_FIRST_STARTUP, false)
-						.putInt(DeviceDBHelper.KEY_VERSION, DeviceDBHelper.VERSION).commit();
+						if (firstStart) {
+							prefers.edit().putBoolean(PreferencesActivity.KEY_FIRST_STARTUP, false).commit();
+						}
+						DeviceDBHelper.updateDeviceDatabaseVersion(DeviceDBHelper.VERSION);
+					} else if (needUpdateDeviceDatabase) {
+						if (InstallFileUtils.installFiles(database, getDatabasePath("device.db"))) {
+							DebugUtils.logD(TAG, "delete tem " + database.getAbsolutePath());
+							database.delete();
+							DeviceDBHelper.updateDeviceDatabaseVersion(databaseServiceAppInfo.mVersionCode);
+						}
 					}
 					MyApplication.getInstance().postAsync(new Runnable() {
 						@Override
@@ -143,6 +161,8 @@ public class JumpActivity extends Activity {
 				}
 				
 			}.start();
+		} else {
+			launchMainActivityNoDelay();
 		}
 		
 	}
