@@ -9,6 +9,7 @@ import java.util.Date;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -50,6 +51,8 @@ import com.shwy.bestjoy.utils.ImageHelper;
 import com.shwy.bestjoy.utils.InfoInterface;
 import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
+import com.shwy.bestjoy.utils.SecurityUtils;
+
 import android.util.Log;
 
 public class NewWarrantyCardFragment extends ModleBaseFragment implements View.OnClickListener{
@@ -247,7 +250,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			if (isEditable()) {
 				//如果有发票，我们显示出来
 				if (mBaoxiuCardObject.hasBillAvator()) {
-					PhotoManagerUtilsV2.getInstance().loadLocalPhotoAsync(TOKEN, mBillImageView, mBaoxiuCardObject.getFapiaoPhotoId(), null, PhotoManagerUtilsV2.TaskType.FaPiao);
+					PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, mBillImageView, mBaoxiuCardObject.getFapiaoPhotoId(), null, PhotoManagerUtilsV2.TaskType.FaPiao);
 				}
 				
 				//设置标题为编辑保修卡
@@ -391,119 +394,74 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			DebugUtils.logD(TAG, "CreateNewWarrantyCardAsyncTask for AID " + baoxiuCardObject.mAID);
 			HaierResultObject haierResultObject = new HaierResultObject();
 			InputStream is = null;
-//			final int LENGTH = 15;
-//			String[] keys = new String[LENGTH];
-//			String[] values = new String[LENGTH];
-//			keys[0] = "LeiXin=";
-//			values[0] = baoxiuCardObject.mLeiXin;
-//			keys[1] = "&BuyDate=";
-//			values[1] = baoxiuCardObject.mBuyDate;
-//			keys[2] = "&BuyPrice=";
-//			values[2] = baoxiuCardObject.mBuyPrice;
-//			keys[3] = "&BuyTuJing=";
-//			values[3] = baoxiuCardObject.mBuyTuJing;
-//			keys[4] = "&BXPhone=";
-//			values[4] = baoxiuCardObject.mBXPhone;
-//			keys[5] = "&PinPai=";
-//			values[5] = baoxiuCardObject.mPinPai;
-//			keys[6] = "&UID=";
-//			values[6] = String.valueOf(baoxiuCardObject.mUID);
-//			keys[7] = "&XingHao=";
-//			values[7] = baoxiuCardObject.mXingHao;
-//			keys[8] = "&YanBaoDanWei=";
-//			values[8] = baoxiuCardObject.mYanBaoDanWei;
-//			keys[9] = "&YanBaoTime=";
-//			values[9] = baoxiuCardObject.mYanBaoTime;
-//			keys[10] = "&AID=";
-//			values[10] = String.valueOf(baoxiuCardObject.mAID);
-//			keys[11] = "&SHBianHao=";
-//			values[11] = baoxiuCardObject.mSHBianHao;
-//			keys[12] = "&Tag=";
-//			values[12] = baoxiuCardObject.mCardName;
-//			keys[13] = "&YBPhone=";
-//			values[13] = baoxiuCardObject.mYBPhone;
-//			keys[14] = "&imgstr=";
-//			values[14] = baoxiuCardObject.getBase64StringFromBillAvator().replaceAll("\\+", "*");
-//			DebugUtils.logD(TAG, "urls = " + Arrays.toString(keys));
-//			DebugUtils.logD(TAG, "paths = " + Arrays.toString(values));
-			StringBuilder paramValue = new StringBuilder();
-//			paramValue.append("LeiXin=").append(baoxiuCardObject.mLeiXin)
-//			.append("|BuyDate=").append(baoxiuCardObject.mBuyDate)
-//			.append("|BuyPrice=").append(baoxiuCardObject.mBuyPrice)
-//			.append("|BuyTuJing=").append(baoxiuCardObject.mBuyTuJing)
-//			.append("|BXPhone=").append(baoxiuCardObject.mBXPhone)
-//			.append("|PinPai=").append(baoxiuCardObject.mPinPai)
-//			.append("|UID=").append(String.valueOf(baoxiuCardObject.mUID))
-//			.append("|XingHao=").append(baoxiuCardObject.mXingHao)
-//			.append("|YanBaoDanWei=").append(baoxiuCardObject.mYanBaoDanWei)
-//			.append("|YanBaoTime=").append(baoxiuCardObject.mYanBaoTime)
-//			.append("|AID=").append(String.valueOf(baoxiuCardObject.mAID))	
-//			.append("|SHBianHao=").append(baoxiuCardObject.mSHBianHao)
-//			.append("|Tag=").append(baoxiuCardObject.mCardName)
-//			.append("|YBPhone=").append(baoxiuCardObject.mYBPhone);
-//			paramValue.append("|imgstr=").append(baoxiuCardObject.getBase64StringFromBillAvator());
-			paramValue.append(baoxiuCardObject.mLeiXin)
-			.append("|").append(baoxiuCardObject.mBuyDate)
-			.append("|").append(baoxiuCardObject.mBuyPrice)
-			.append("|").append(baoxiuCardObject.mBuyTuJing)
-			.append("|").append(baoxiuCardObject.mBXPhone)
-			.append("|").append(baoxiuCardObject.mPinPai)
-			.append("|").append(String.valueOf(baoxiuCardObject.mUID))
-			.append("|").append(baoxiuCardObject.mXingHao)
-			.append("|").append(baoxiuCardObject.mYanBaoDanWei)
-			.append("|").append(baoxiuCardObject.mYanBaoTime)
-			.append("|").append(String.valueOf(baoxiuCardObject.mAID))	
-			.append("|").append(baoxiuCardObject.mSHBianHao)
-			.append("|").append(baoxiuCardObject.mCardName)
-			.append("|").append(baoxiuCardObject.mYBPhone);
-			paramValue.append("|").append(baoxiuCardObject.getBase64StringFromBillAvator());
-			paramValue.append("|").append(baoxiuCardObject.mWY);
-			DebugUtils.logD(TAG, "param " + paramValue.toString());
+			//mdofify by chenkai, 修改发票后台同步修改新建更新和登录后台, 20140622 begin
+			//StringBuilder paramValue = new StringBuilder();
+			//paramValue.append(baoxiuCardObject.mLeiXin)
+			//.append("|").append(baoxiuCardObject.mBuyDate)
+			//.append("|").append(baoxiuCardObject.mBuyPrice)
+			//.append("|").append(baoxiuCardObject.mBuyTuJing)
+			//.append("|").append(baoxiuCardObject.mBXPhone)
+			//.append("|").append(baoxiuCardObject.mPinPai)
+			//.append("|").append(String.valueOf(baoxiuCardObject.mUID))
+			//.append("|").append(baoxiuCardObject.mXingHao)
+			//.append("|").append(baoxiuCardObject.mYanBaoDanWei)
+			//.append("|").append(baoxiuCardObject.mYanBaoTime)
+			//.append("|").append(String.valueOf(baoxiuCardObject.mAID))	
+			//.append("|").append(baoxiuCardObject.mSHBianHao)
+			//.append("|").append(baoxiuCardObject.mCardName)
+			//.append("|").append(baoxiuCardObject.mYBPhone);
+			//paramValue.append("|").append(baoxiuCardObject.getBase64StringFromBillAvator());
+			//paramValue.append("|").append(baoxiuCardObject.mWY);
+			//DebugUtils.logD(TAG, "param " + paramValue.toString());
+			AccountObject accountObject = HaierAccountManager.getInstance().getAccountObject();
 			try {
-//				StringBuilder paramValue = new StringBuilder(/*HaierServiceObject.SERVICE_URL + "AddBaoXiu.ashx?"*/"http://115.29.231.29/UploadBaoXiu.asmx/UpLoadData?");
-//				paramValue.append(NetworkUtils.getUrlEncodedString(keys, values));
-//				if (baoxiuCardObject.hasTempBill()) {
-//					paramValue.append("&imgstr=\"").append(baoxiuCardObject.getBase64StringFromBillAvator().replaceAll("\\+", "*")).append("\"");
-//				}
-//				is = NetworkUtils.openContectionLocked(paramValue.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
-				is = NetworkUtils.openPostContectionLocked("http://115.29.231.29/UploadBaoXiu.asmx/AddBaoXiuData", "Para", paramValue.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("AID", baoxiuCardObject.mAID)
+				.put("BuyDate", baoxiuCardObject.mBuyDate)
+				.put("BuyPrice", baoxiuCardObject.mBuyPrice)
+				.put("BuyTuJing", baoxiuCardObject.mBuyTuJing)
+				.put("BXPhone", baoxiuCardObject.mBXPhone)
+				.put("SHBianHao", baoxiuCardObject.mSHBianHao)
+				.put("imgstr", baoxiuCardObject.getBase64StringFromBillAvator())
+				.put("token", SecurityUtils.MD5.md5(accountObject.mAccountTel + accountObject.mAccountPwd)) //md5(cell+pwd)
+				.put("Tag", baoxiuCardObject.mCardName)
+				.put("UID", baoxiuCardObject.mUID)
+				.put("WY", baoxiuCardObject.mWY)
+				.put("XingHao", baoxiuCardObject.mXingHao)
+				.put("YanBaoDanWei", baoxiuCardObject.mYanBaoDanWei)
+				.put("YanBaoTime", baoxiuCardObject.mYanBaoTime)
+				.put("YBPhone", baoxiuCardObject.mYBPhone)
+				.put("LeiXin", baoxiuCardObject.mLeiXin)
+				.put("PinPai", baoxiuCardObject.mPinPai);
+				
+				DebugUtils.logD(TAG, "bjson=" + jsonObject.toString(4));
+				is = NetworkUtils.openPostContectionLocked(HaierServiceObject.getCreateBaoxiucardUri(), "bjson", jsonObject.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
 				try {
 					haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
 					DebugUtils.logD(TAG, "StatusCode = " + haierResultObject.mStatusCode);
 					DebugUtils.logD(TAG, "StatusMessage = " + haierResultObject.mStatusMessage);
 					if (haierResultObject.isOpSuccessfully()) {
-						//在保存前，我们需要回填bid数据
-						String data = haierResultObject.mStrData;
-						DebugUtils.logD(TAG, "Data = " + data);
-						if (data.length() > "Bid:".length()) {
-							data = data.substring("Bid:".length());
-							baoxiuCardObject.mBID = Long.valueOf(data);
-							//如果后台返回了bid,我们根据它向服务器查询保修卡数据，并解析保存在本地。
+						//如果后台返回了保修卡数据,我们解析它保存在本地
+						if (haierResultObject.mJsonData != null) {
+							baoxiuCardObject = BaoxiuCardObject.parseBaoxiuCards(haierResultObject.mJsonData, accountObject);
+							DebugUtils.logE(TAG, "new BID=" + baoxiuCardObject.mBID);
 							if (baoxiuCardObject.mBID > 0) {
-								baoxiuCardObject.clear();
-								NetworkUtils.closeInputStream(is);
-								StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
-								sb.append("GetBaoXiuDataByBID.ashx?BID=").append(baoxiuCardObject.mBID);
-								is = NetworkUtils.openContectionLocked(sb.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
-								if (is != null){
-									haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
-									if (haierResultObject.isOpSuccessfully()) {
-										baoxiuCardObject = BaoxiuCardObject.parseBaoxiuCards(haierResultObject.mJsonData, null);
-										boolean savedOk = baoxiuCardObject.saveInDatebase(getActivity().getContentResolver(), null);
-										if (!savedOk) {
-											//通常不会发生
-											haierResultObject.mStatusMessage = getActivity().getString(R.string.msg_local_save_card_failed);
-										} else {
-											HaierAccountManager.getInstance().updateHomeObject(baoxiuCardObject.mAID);
-										}
-									} 
-									
+								//正常情况
+								boolean savedOk = baoxiuCardObject.saveInDatebase(getActivity().getContentResolver(), null);
+								if (!savedOk) {
+									//通常不会发生
+									haierResultObject.mStatusMessage = getActivity().getString(R.string.msg_local_save_card_failed);
+								} else {
+									HaierAccountManager.getInstance().updateHomeObject(baoxiuCardObject.mAID);
 								}
+								return haierResultObject;
 							}
 						}
+						haierResultObject.mStatusMessage = getActivity().getString(R.string.msg_local_save_card_failed);;
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
+					haierResultObject.mStatusMessage = getActivity().getString(R.string.msg_local_save_card_failed);
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
@@ -511,9 +469,13 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			} catch (IOException e) {
 				e.printStackTrace();
 				haierResultObject.mStatusMessage = e.getMessage();
+			} catch (JSONException e) {
+				e.printStackTrace();
+				haierResultObject.mStatusMessage = e.getMessage();
 			} finally {
 				NetworkUtils.closeInputStream(is);
 			}
+			//mdofify by chenkai, 修改发票后台同步修改新建更新和登录后台, 20140622 end
 			return haierResultObject;
 		}
 
@@ -524,7 +486,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			dissmissDialog(DIALOG_PROGRESS);
 			if (result.isOpSuccessfully()) {
 				//添加成功
-				MyApplication.getInstance().showMessage(R.string.save_success);
+				MyApplication.getInstance().showMessage(result.mStatusMessage);
 				getActivity().finish();
 				mBaoxiuCardObject.clear();
 				MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
@@ -585,62 +547,48 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			DebugUtils.logD(TAG, "UpdateWarrantyCardAsyncTask BID " + baoxiuCardObject.mBID);
 			HaierResultObject haierResultObject = new HaierResultObject();
 			InputStream is = null;
-//			final int LENGTH = 14;
-//			String[] urls = new String[LENGTH];
-//			String[] paths = new String[LENGTH];
-//			urls[0] = HaierServiceObject.SERVICE_URL + "UpdateBaoXiu.ashx?LeiXin=";
-//			paths[0] = baoxiuCardObject.mLeiXin;
-//			urls[1] = "&BuyDate=";
-//			paths[1] = baoxiuCardObject.mBuyDate;
-//			urls[2] = "&BuyPrice=";
-//			paths[2] = baoxiuCardObject.mBuyPrice;
-//			urls[3] = "&BuyTuJing=";
-//			paths[3] = baoxiuCardObject.mBuyTuJing;
-//			urls[4] = "&BXPhone=";
-//			paths[4] = baoxiuCardObject.mBXPhone;
-//			urls[5] = "&PinPai=";
-//			paths[5] = baoxiuCardObject.mPinPai;
-//			urls[6] = "&BID=";
-//			paths[6] = String.valueOf(baoxiuCardObject.mBID);
-//			urls[7] = "&XingHao=";
-//			paths[7] = baoxiuCardObject.mXingHao;
-//			urls[8] = "&YanBaoDanWei=";
-//			paths[8] = baoxiuCardObject.mYanBaoDanWei;
-//			urls[9] = "&YanBaoTime=";
-//			paths[9] = baoxiuCardObject.mYanBaoTime;
-//			urls[10] = "&AID=";
-//			paths[10] = String.valueOf(baoxiuCardObject.mAID);
-//			urls[11] = "&SHBianHao=";
-//			paths[11] = baoxiuCardObject.mSHBianHao;
-//			urls[12] = "&Tag=";
-//			paths[12] = baoxiuCardObject.mCardName;
-//			urls[13] = "&YBPhone=";
-//			paths[13] = baoxiuCardObject.mYBPhone;
-//			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
-//			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
-			
-			StringBuilder paramValue = new StringBuilder();
-			paramValue.append(baoxiuCardObject.mLeiXin)
-			.append("|").append(baoxiuCardObject.mBuyDate)
-			.append("|").append(baoxiuCardObject.mBuyPrice)
-			.append("|").append(baoxiuCardObject.mBuyTuJing)
-			.append("|").append(baoxiuCardObject.mBXPhone)
-			.append("|").append(baoxiuCardObject.mPinPai)
-			.append("|").append(String.valueOf(baoxiuCardObject.mBID))
-			.append("|").append(baoxiuCardObject.mXingHao)
-			.append("|").append(baoxiuCardObject.mYanBaoDanWei)
-			.append("|").append(baoxiuCardObject.mYanBaoTime)
-			.append("|").append(String.valueOf(baoxiuCardObject.mAID))	
-			.append("|").append(baoxiuCardObject.mSHBianHao)
-			.append("|").append(baoxiuCardObject.mCardName)
-			.append("|").append(baoxiuCardObject.mYBPhone);
-			paramValue.append("|").append(baoxiuCardObject.getBase64StringFromBillAvator());
-			paramValue.append("|").append(baoxiuCardObject.mWY);
-			DebugUtils.logD(TAG, "param " + paramValue.toString());
-			
+			//mdofify by chenkai, 修改发票后台同步修改新建更新和登录后台, 20140622 begin
+			//StringBuilder paramValue = new StringBuilder();
+			//paramValue.append(baoxiuCardObject.mLeiXin)
+			//.append("|").append(baoxiuCardObject.mBuyDate)
+			//.append("|").append(baoxiuCardObject.mBuyPrice)
+			//.append("|").append(baoxiuCardObject.mBuyTuJing)
+			//.append("|").append(baoxiuCardObject.mBXPhone)
+			//.append("|").append(baoxiuCardObject.mPinPai)
+			//.append("|").append(String.valueOf(baoxiuCardObject.mBID))
+			//.append("|").append(baoxiuCardObject.mXingHao)
+			//.append("|").append(baoxiuCardObject.mYanBaoDanWei)
+			//.append("|").append(baoxiuCardObject.mYanBaoTime)
+			//.append("|").append(String.valueOf(baoxiuCardObject.mAID))	
+			//.append("|").append(baoxiuCardObject.mSHBianHao)
+			//.append("|").append(baoxiuCardObject.mCardName)
+			//.append("|").append(baoxiuCardObject.mYBPhone);
+			//paramValue.append("|").append(baoxiuCardObject.getBase64StringFromBillAvator());
+			//paramValue.append("|").append(baoxiuCardObject.mWY);
+			//DebugUtils.logD(TAG, "param " + paramValue.toString());
+			AccountObject accountObject = HaierAccountManager.getInstance().getAccountObject();
 			try {
-//				is = NetworkUtils.openContectionLocked(urls, paths, MyApplication.getInstance().getSecurityKeyValuesObject());
-				is = NetworkUtils.openPostContectionLocked("http://115.29.231.29/UploadBaoXiu.asmx/UpdateBaoXiuData", "Para", paramValue.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("AID", baoxiuCardObject.mAID)
+				.put("BuyDate", baoxiuCardObject.mBuyDate)
+				.put("BuyPrice", baoxiuCardObject.mBuyPrice)
+				.put("BuyTuJing", baoxiuCardObject.mBuyTuJing)
+				.put("BXPhone", baoxiuCardObject.mBXPhone)
+				.put("SHBianHao", baoxiuCardObject.mSHBianHao)
+				.put("imgstr", baoxiuCardObject.getBase64StringFromBillAvator())
+				.put("token", SecurityUtils.MD5.md5(accountObject.mAccountTel + accountObject.mAccountPwd)) //md5(cell+pwd)
+				.put("Tag", baoxiuCardObject.mCardName)
+				.put("UID", baoxiuCardObject.mUID)
+				.put("WY", baoxiuCardObject.mWY)
+				.put("XingHao", baoxiuCardObject.mXingHao)
+				.put("YanBaoDanWei", baoxiuCardObject.mYanBaoDanWei)
+				.put("YanBaoTime", baoxiuCardObject.mYanBaoTime)
+				.put("YBPhone", baoxiuCardObject.mYBPhone)
+				.put("LeiXin", baoxiuCardObject.mLeiXin)
+				.put("PinPai", baoxiuCardObject.mPinPai)
+				.put("BID", baoxiuCardObject.mBID);
+				DebugUtils.logD(TAG, "bjson=" + jsonObject.toString(4));
+				is = NetworkUtils.openPostContectionLocked(HaierServiceObject.getUpdateBaoxiucardUri(), "bjson", jsonObject.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
 				
 				haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
 				if (haierResultObject.isOpSuccessfully()) {
@@ -665,9 +613,13 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			} catch (IOException e) {
 				e.printStackTrace();
 				haierResultObject.mStatusMessage = e.getMessage();
+			} catch (JSONException e) {
+				e.printStackTrace();
+				haierResultObject.mStatusMessage = e.getMessage();
 			} finally {
 				NetworkUtils.closeInputStream(is);
 			}
+			//mdofify by chenkai, 修改发票后台同步修改新建更新和登录后台, 20140622 end
 			return haierResultObject;
 		}
 
@@ -677,7 +629,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			mSaveBtn.setEnabled(true);
 			dissmissDialog(DIALOG_PROGRESS);
 			if (result.isOpSuccessfully()) {
-				MyApplication.getInstance().showMessage(R.string.update_success);
+				MyApplication.getInstance().showMessage(result.mStatusMessage);
 				getActivity().finish();
 				mBaoxiuCardObject.clear();
 				MyChooseDevicesActivity.startIntent(getActivity(), getArguments());

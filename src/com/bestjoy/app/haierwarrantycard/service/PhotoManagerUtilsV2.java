@@ -586,7 +586,7 @@ public class PhotoManagerUtilsV2 {
 		case HOME_DEVICE_AVATOR:
 			return HaierServiceObject.getProdcutAvatorUrl(photoId);
 		case FaPiao:
-			return HaierServiceObject.getProdcutFaPiaoUrl(photoId);
+			return HaierServiceObject.getBaoxiucardFapiao(photoId);
 		}
 		return null;
 	}

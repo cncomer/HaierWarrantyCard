@@ -20,6 +20,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
@@ -71,6 +72,8 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	private Bundle mBundles;
 	
 	private TextView mBaoxiuStatusView;
+	
+	private ImageView mFapiaoDownloadView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -78,9 +81,31 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		if (isFinishing()) {
 			return;
 		}
-		mHandler = new Handler();
+		mHandler = new Handler() {
+
+			@Override
+            public void handleMessage(Message msg) {
+	            switch(msg.what) {
+	            case NotifyRegistrant.EVENT_NOTIFY_MESSAGE_RECEIVED:
+	            	Bundle bundle = (Bundle) msg.obj;
+	            	if (bundle.get(Intents.EXTRA_PHOTOID).equals(mBaoxiuCardObject.getFapiaoPhotoId())) {
+	            		//下载完成
+	            		DebugUtils.logD(TAG, "FapiaoTask finished for " + mBaoxiuCardObject.getFapiaoPhotoId());
+	            		File fapiao = MyApplication.getInstance().getProductFaPiaoFile(mBaoxiuCardObject.getFapiaoPhotoId());
+	        			if (fapiao.exists()) {
+	        				DebugUtils.logD(TAG, "FapiaoTask downloaded " + fapiao.getAbsolutePath());
+	        				BaoxiuCardObject.showBill(mContext, mBaoxiuCardObject);
+	        			}
+	            	}
+	            	dismissDialog(DIALOG_PROGRESS);
+	            	return;
+	            }
+	            super.handleMessage(msg);
+            }
+			
+		};
 		BaoxiuCardObject.showBill(mContext, null);
-		NotifyRegistrant.getInstance().register(mHandler);
+		
 		PhotoManagerUtilsV2.getInstance().requestToken(TOKEN);
 		getSupportActionBar().setDisplayShowHomeEnabled(false);
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -280,7 +305,17 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			//add by chenkai, for Usage, 2014.05.31 end
 			break;
 		case R.id.button_bill:
-			BaoxiuCardObject.showBill(mContext, mBaoxiuCardObject);
+			File fapiao = MyApplication.getInstance().getProductFaPiaoFile(mBaoxiuCardObject.getFapiaoPhotoId());
+			if (fapiao.exists()) {
+				BaoxiuCardObject.showBill(mContext, mBaoxiuCardObject);
+			} else {
+				//需要下载
+				showDialog(DIALOG_PROGRESS);
+				if (mFapiaoDownloadView == null) {
+					mFapiaoDownloadView = new ImageView(mContext);
+				}
+				PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, mFapiaoDownloadView, mBaoxiuCardObject.getFapiaoPhotoId(), null, PhotoManagerUtilsV2.TaskType.FaPiao);
+			}
 			break;
 		case R.id.button_onekey_tel:
 			Intents.callPhone(mContext, mBaoxiuCardObject.mBXPhone);
@@ -343,7 +378,19 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	 public void onDestroy() {
 		 super.onDestroy();
 		 PhotoManagerUtilsV2.getInstance().releaseToken(TOKEN);
+		 
+	 }
+	 
+	 @Override
+	 public void onPause() {
+		 super.onPause();
 		 NotifyRegistrant.getInstance().unRegister(mHandler);
+	 }
+	 
+	 @Override
+	 public void onResume() {
+		 super.onResume();
+		 NotifyRegistrant.getInstance().register(mHandler);
 	 }
 
 	@Override

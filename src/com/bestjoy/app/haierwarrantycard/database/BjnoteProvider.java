@@ -318,10 +318,10 @@ public class BjnoteProvider extends ContentProvider{
 		throw new FileNotFoundException("no Image found for uri " + uri);
 	}
 
-	@Override
-	public AssetFileDescriptor openAssetFile(Uri uri, String mode)
-			throws FileNotFoundException {
-		return super.openAssetFile(uri, mode);
-	}
-	
+//	@Override
+//	public AssetFileDescriptor openAssetFile(Uri uri, String mode)
+//			throws FileNotFoundException {
+//		return super.openAssetFile(uri, mode);
+//	}
+//	
 }

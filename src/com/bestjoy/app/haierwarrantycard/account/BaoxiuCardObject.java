@@ -3,9 +3,6 @@ package com.bestjoy.app.haierwarrantycard.account;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -14,7 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,20 +21,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Bitmap.CompressFormat;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.text.TextUtils;
-import com.shwy.bestjoy.utils.Base64;
 
-import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
-import com.shwy.bestjoy.utils.DebugUtils;
+import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.shwy.bestjoy.utils.Base64;
 import com.shwy.bestjoy.utils.ImageHelper;
 import com.shwy.bestjoy.utils.InfoInterfaceImpl;
-import com.shwy.bestjoy.utils.NetworkUtils;
 import com.shwy.bestjoy.utils.SecurityUtils;
 /**
  * 保修卡对象
@@ -65,6 +59,7 @@ import com.shwy.bestjoy.utils.SecurityUtils;
             "WY": 1.0,          整机保修时长，单位是年
             "YBPhone":"400-20098005",  延保电话
             "KY":"101000003"     KY编码，用于显示产品图片
+            "hasimg":"false"  true表示有发票
          }
     ]
  *
@@ -160,7 +155,6 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		cardObject.mSHBianHao = jsonObject.getString("SHBianHao");
 		
 		cardObject.mBXPhone = jsonObject.getString("BXPhone");
-		cardObject.mFPaddr = jsonObject.getString("FPaddr");
 		
 //		if (!TextUtils.isEmpty(cardObject.mFPaddr) && !BaoxiuCardObject.PHOTOID_PLASEHOLDER.equals(cardObject.getFapiaoPhotoId())) {
 //			//如果有发票，我们需要先下载发票
@@ -198,7 +192,14 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 //			}
 //		}
 		
-		cardObject.mBuyDate = jsonObject.getString("BuyDate");
+		String buyDate = jsonObject.getString("BuyDate");
+		if(buyDate != null) {
+			//2010-01-01
+			cardObject.mBuyDate = buyDate.replaceAll("[ -]", "");
+			DebugUtils.logD(TAG, "reset BuyDate from " + buyDate + " to " + cardObject.mBuyDate);
+		} else {
+			cardObject.mBuyDate = "";
+		}
 		cardObject.mBuyPrice = jsonObject.getString("BuyPrice");
 		
 		cardObject.mBuyTuJing = jsonObject.getString("BuyTuJing");
@@ -209,11 +210,12 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		cardObject.mYanBaoDanWei = jsonObject.getString("YanBaoDanWei");
 		
 		cardObject.mCardName = jsonObject.getString("Tag");
-		cardObject.mZhuBx = jsonObject.getString("ZhuBx");
-		if ("null".equals(cardObject.mZhuBx)) {
-			cardObject.mZhuBx = "0";
-		}
-		
+		//delete by chenkai, 不要ZhuBx字段了 begin
+		//cardObject.mZhuBx = jsonObject.getString("ZhuBx");
+		//if ("null".equals(cardObject.mZhuBx)) {
+			//cardObject.mZhuBx = "0";
+		//}
+		//delete by chenkai, 不要ZhuBx字段了 end
 		cardObject.mUID = jsonObject.getLong("UID");
 		cardObject.mAID = jsonObject.getLong("AID");
 		cardObject.mBID = jsonObject.getLong("BID");
@@ -228,7 +230,12 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 			cardObject.mKY = "";
 		}
 		//解码发票，如果有的话
-		decodeFapiao(cardObject);
+		//delete by chenkai, 现在FPaddr不再返回数据了，而是使用hasimg来表示是否存在发票图片 begin
+		//cardObject.mFPaddr = jsonObject.getString("FPaddr");
+		//decodeFapiao(cardObject);
+		boolean hasimg = jsonObject.getBoolean("hasimg");
+		cardObject.mFPaddr = hasimg ? "1" : "0";
+		//delete by chenkai, 现在FPaddr不再返回数据了，而是使用hasimg来表示是否存在发票图片 end
 		return cardObject;
 	}
 	
@@ -631,7 +638,10 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 //		}
 		if (mUID > 0 && mAID > 0 && mBID > 0) {
 			StringBuilder sb = new StringBuilder();
-			sb.append(mUID).append(PHOTOID_SEPERATOR).append(mAID).append(PHOTOID_SEPERATOR).append(mBID);
+			//delete by chenkai, 发票id为md5(aid+bid) begin
+			//sb.append(mUID).append(PHOTOID_SEPERATOR).append(mAID).append(PHOTOID_SEPERATOR).append(mBID);
+			sb.append(SecurityUtils.MD5.md5(String.valueOf(mAID) + String.valueOf(mBID)));
+			//delete by chenkai, 发票id为md5(aid+bid) begin
 			return sb.toString();
 		}
 		return PHOTOID_PLASEHOLDER;
