@@ -59,10 +59,10 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 //	ArrayList<String> resultList = new ArrayList<String>();
 
 	private static final String[] PRO_REGION_PROJECTION = new String[]{
-		DeviceDBHelper.DEVICE_HAIER_REGION_CODE + " as _id",
+		"DISTINCT " + DeviceDBHelper.DEVICE_HAIER_REGION_CODE + " as _id",
 		DeviceDBHelper.DEVICE_HAIER_REGION_CODE,
 		DeviceDBHelper.DEVICE_HAIER_COUNTRY,        //2
-		"DISTINCT " + DeviceDBHelper.DEVICE_HAIER_PROVICE,        //3
+		DeviceDBHelper.DEVICE_HAIER_PROVICE,        //3
 		DeviceDBHelper.DEVICE_HAIER_CITY,           //4
 		DeviceDBHelper.DEVICE_HAIER_REGION_NAME,    //5
 		DeviceDBHelper.DEVICE_HAIER_ADMIN_CODE,	
@@ -74,11 +74,11 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 	};
 	
 	private static final String[] CITY_REGION_PROJECTION = new String[]{
-		DeviceDBHelper.DEVICE_HAIER_REGION_CODE + " as _id",
+		"DISTINCT " + DeviceDBHelper.DEVICE_HAIER_REGION_CODE + " as _id",
 		DeviceDBHelper.DEVICE_HAIER_REGION_CODE,
 		DeviceDBHelper.DEVICE_HAIER_COUNTRY,        //2
 		DeviceDBHelper.DEVICE_HAIER_PROVICE,        //3
-		"DISTINCT " + DeviceDBHelper.DEVICE_HAIER_CITY,  //4
+		DeviceDBHelper.DEVICE_HAIER_CITY,  //4
 		DeviceDBHelper.DEVICE_HAIER_REGION_NAME,    //5
 		DeviceDBHelper.DEVICE_HAIER_ADMIN_CODE,
 		
@@ -232,7 +232,7 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 			switch (event.getAction()) {
 				case MotionEvent.ACTION_DOWN:
 					mEditMode = MODE_PROVINCE;
-					Cursor cursor = mContext.getContentResolver().query(BjnoteContent.HaierRegion.CONTENT_URI, PRO_REGION_PROJECTION, null, null, null);
+					Cursor cursor = mContext.getContentResolver().query(BjnoteContent.HaierRegion.CONTENT_URI, PRO_REGION_PROJECTION, "(" + DeviceDBHelper.DEVICE_HAIER_PROVICE + " IS NOT NULL) GROUP BY (" + DeviceDBHelper.DEVICE_HAIER_PROVICE + ")", null, null);
 					mAddressAdapter.changeCursor(cursor);
 					break;
 				case MotionEvent.ACTION_UP:
@@ -244,7 +244,7 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 				case MotionEvent.ACTION_DOWN:
 					mEditMode = MODE_CITY;
 					if (mHomeObject.mHomeProvince != null) {
-						String where = DeviceDBHelper.DEVICE_HAIER_PROVICE + "='" + mHomeObject.mHomeProvince + "'";
+						String where = DeviceDBHelper.DEVICE_HAIER_PROVICE + "='" + mHomeObject.mHomeProvince + "'" + " and (" + DeviceDBHelper.DEVICE_HAIER_CITY + " IS NOT NULL) GROUP BY (" + DeviceDBHelper.DEVICE_HAIER_CITY + ")";
 						Cursor cursor = mContext.getContentResolver().query(BjnoteContent.HaierRegion.CONTENT_URI, CITY_REGION_PROJECTION, where, null, null);
 						mAddressAdapter.changeCursor(cursor);
 					}
