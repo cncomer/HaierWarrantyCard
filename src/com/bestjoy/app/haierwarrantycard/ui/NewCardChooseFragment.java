@@ -664,7 +664,7 @@ public class NewCardChooseFragment extends SherlockFragment implements View.OnCl
 	
 		//add by chenkai, 增加型号模糊查询, 2014.06.15 begin
 		public boolean enableFilterXinghao() {
-			return !TextUtils.isEmpty(mPinPaiCode) && mXinghaoDataList.size() > 0;
+			return !TextUtils.isEmpty(mPinPaiCode) && mXinghaoDataList != null && mXinghaoDataList.size() > 0;
 		}
 		FilterAsyncTask mFilterAsyncTask = null;
 		public void filterXinghao(String filterText) {

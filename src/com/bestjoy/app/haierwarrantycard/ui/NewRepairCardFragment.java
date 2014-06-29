@@ -14,6 +14,7 @@ import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.app.DatePickerDialog.OnDateSetListener;
+import android.app.TimePickerDialog.OnTimeSetListener;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
@@ -37,6 +38,8 @@ import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.ui.NewInstallCardFragment.MyDatePickerDialog;
+import com.bestjoy.app.haierwarrantycard.ui.NewInstallCardFragment.MyTimePickerDialog;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
 import com.bestjoy.app.haierwarrantycard.view.HaierProCityDisEditPopView;
@@ -456,9 +459,16 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			showEmptyInputToast(R.string.error_des);
 			return false;
 		}
-
-		if(!timeEscapeEnough()) {
-			MyApplication.getInstance().showMessage(R.string.yuyue_time_too_early_tips);
+		if(!checkInstallDate()) {
+			MyApplication.getInstance().showMessage(R.string.select_repair_date_out_of_service_tips);
+			return false;
+		}
+		if(!checkInstallHour()) {
+			MyApplication.getInstance().showMessage(R.string.select_time_out_of_service_tips);
+			return false;
+		}
+		if(!checkInstallMinute()) {
+			MyApplication.getInstance().showMessage(R.string.select_clock_tips);
 			return false;
 		}
 		String pinpai = mPinpaiInput.getText().toString().trim();
@@ -497,24 +507,77 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		MyApplication.getInstance().showMessage(getResources().getString(R.string.input_type_please_input) + msg);
 	}
 
-
 	MyDatePickerDialog mMyDatePickerDialog;
 	private void showDatePickerDialog() {
 		mMyDatePickerDialog = new MyDatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
 			@Override
 			public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 				mCalendar.set(year, monthOfYear, dayOfMonth);
-				//更新日期数据
-//				mGoodsObject.mDate = mCalendar.getTimeInMillis();
 				//更新UI
 				mYuyueDate.setText(DateUtils.TOPIC_DATE_TIME_FORMAT.format(mCalendar.getTime()));
 			}
 				
 		}, mCalendar.get(Calendar.YEAR), mCalendar.get(Calendar.MONTH), mCalendar.get(Calendar.DAY_OF_MONTH));
 		mMyDatePickerDialog.show();
-		mMyDatePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setEnabled(false);
+		if(!checkInstallDate())
+			mMyDatePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setEnabled(false);
+	}
+	
+	private boolean checkInstallDate() {
+		Calendar cal = Calendar.getInstance();
+		return mCalendar.get(Calendar.YEAR) >= cal.get(Calendar.YEAR)
+				&& mCalendar.get(Calendar.MONTH) >= cal.get(Calendar.MONTH)
+				&& mCalendar.get(Calendar.DAY_OF_MONTH) > cal.get(Calendar.DAY_OF_MONTH);
+	}
+	
+	private boolean checkInstallHour() {
+		int hour = mCalendar.get(Calendar.HOUR_OF_DAY);
+		return hour >= 8 && hour <= 19;
+	}
+	
+	private boolean checkInstallMinute() {
+		return mCalendar.get(Calendar.MINUTE) == 0;
+	}
+	
+	private boolean checkInstallDate(int year, int month, int day) {
+		return year >= mCalendar.get(Calendar.YEAR)
+				&& month >= mCalendar.get(Calendar.MONTH)
+				&& day > mCalendar.get(Calendar.DAY_OF_MONTH)
+				|| year > mCalendar.get(Calendar.YEAR)
+				|| month > mCalendar.get(Calendar.MONTH)
+				&& year >= mCalendar.get(Calendar.YEAR);
 	}
 
+	class MyDatePickerDialog extends DatePickerDialog {
+		public MyDatePickerDialog(Context context, OnDateSetListener callBack,
+				int year, int monthOfYear, int dayOfMonth) {
+			super(context, callBack, year, monthOfYear, dayOfMonth);
+			if(!checkInstallDate()) {
+				if(mToast != null) {
+					mToast.setText(R.string.select_date_out_of_service_tips);
+				} else {
+					mToast = Toast.makeText(this.getContext(), R.string.select_date_out_of_service_tips, Toast.LENGTH_LONG);
+				}
+				mToast.show();
+			}
+		}
+
+		@Override
+		public void onDateChanged(DatePicker view, int year, int month, int day) {
+			if(!checkInstallDate(year, month, day)) {
+				if(mToast != null) {
+					mToast.setText(R.string.select_date_out_of_service_tips);
+				} else {
+					mToast = Toast.makeText(this.getContext(), R.string.select_date_out_of_service_tips, Toast.LENGTH_LONG);
+				}
+				mToast.show();
+				mMyDatePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setEnabled(false);
+			} else {
+				mMyDatePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setEnabled(true);
+			}
+		}
+	}
+	
 	Toast mToast;
 	MyTimePickerDialog mMyTimePickerDialog;
 	private void showTimePickerDialog() {
@@ -523,50 +586,17 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
 				mCalendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
 				mCalendar.set(Calendar.MINUTE, minute);
-				mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT.format(mCalendar.getTime())
+				mYuyueTime.setText(DateUtils.TOPIC_TIME_FORMAT .format(mCalendar.getTime())
 						+ "-" + DateUtils.TOPIC_TIME_FORMAT.format(new Date(mCalendar.getTimeInMillis() + 60 * 60 * 1000)));
 			}
         	
         }, mCalendar.get(Calendar.HOUR_OF_DAY), 0, true);
 		mMyTimePickerDialog.show();
-
+		
 		if(mCalendar.get(Calendar.HOUR_OF_DAY) < 8 || mCalendar.get(Calendar.HOUR_OF_DAY) > 19)
 			mMyTimePickerDialog.getButton(TimePickerDialog.BUTTON_POSITIVE).setEnabled(false);
-
 	}
-
-	class MyDatePickerDialog extends DatePickerDialog {
-		public MyDatePickerDialog(Context context, OnDateSetListener callBack, int year, int monthOfYear,
-				int dayOfMonth) {
-			super(context, callBack, year, monthOfYear, dayOfMonth);
-			if(mToast != null) {
-				mToast.setText(R.string.select_date_out_of_service_tips);
-			} else {
-				mToast = Toast.makeText(this.getContext(), R.string.select_date_out_of_service_tips, Toast.LENGTH_LONG);
-			}
-			mToast.show();
-		}
-
-		@Override
-		public void onDateChanged(DatePicker view, int year, int month, int day) {
-			Calendar cal=Calendar.getInstance();
-			int y = cal.get(Calendar.YEAR);
-			int m = cal.get(Calendar.MONTH);
-			int d = cal.get(Calendar.DATE);
-			if(year < y || year == y && month < m || year == y && month == m && day <= d) {
-				if(mToast != null) {
-					mToast.setText(R.string.select_repair_date_out_of_service_tips);
-				} else {
-					mToast = Toast.makeText(this.getContext(), R.string.select_repair_date_out_of_service_tips, Toast.LENGTH_LONG);
-				}
-				mToast.show();
-				mMyDatePickerDialog.getButton(BUTTON_POSITIVE).setEnabled(false);
-			} else {
-				mMyDatePickerDialog.getButton(BUTTON_POSITIVE).setEnabled(true);
-			}
-		}
-	}
-
+	
 	class MyTimePickerDialog extends TimePickerDialog {
 		public MyTimePickerDialog(Context context,
 				OnTimeSetListener callBack, int hourOfDay, int minute,

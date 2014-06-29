@@ -406,8 +406,16 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			showEmptyInputToast(R.string.time);
 			return false;
 		}
-		if(!timeEscapeEnough()) {
-			MyApplication.getInstance().showMessage(R.string.yuyue_time_too_early_tips);
+		if(!checkInstallDate()) {
+			MyApplication.getInstance().showMessage(R.string.select_date_out_of_service_tips);
+			return false;
+		}
+		if(!checkInstallHour()) {
+			MyApplication.getInstance().showMessage(R.string.select_time_out_of_service_tips);
+			return false;
+		}
+		if(!checkInstallMinute()) {
+			MyApplication.getInstance().showMessage(R.string.select_clock_tips);
 			return false;
 		}
 		String pinpai = mPinpaiInput.getText().toString().trim();
@@ -464,11 +472,19 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	}
 	
 	private boolean checkInstallDate() {
-		Calendar cal = (Calendar) mCalendar.clone();
-		cal.add(Calendar.DAY_OF_YEAR, 1);
+		Calendar cal = Calendar.getInstance();
 		return mCalendar.get(Calendar.YEAR) >= cal.get(Calendar.YEAR)
 				&& mCalendar.get(Calendar.MONTH) >= cal.get(Calendar.MONTH)
 				&& mCalendar.get(Calendar.DAY_OF_MONTH) > cal.get(Calendar.DAY_OF_MONTH);
+	}
+	
+	private boolean checkInstallHour() {
+		int hour = mCalendar.get(Calendar.HOUR_OF_DAY);
+		return hour >= 8 && hour <= 19;
+	}
+	
+	private boolean checkInstallMinute() {
+		return mCalendar.get(Calendar.MINUTE) == 0;
 	}
 	
 	private boolean checkInstallDate(int year, int month, int day) {
