@@ -527,7 +527,10 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		Calendar cal = Calendar.getInstance();
 		return mCalendar.get(Calendar.YEAR) >= cal.get(Calendar.YEAR)
 				&& mCalendar.get(Calendar.MONTH) >= cal.get(Calendar.MONTH)
-				&& mCalendar.get(Calendar.DAY_OF_MONTH) > cal.get(Calendar.DAY_OF_MONTH);
+				&& mCalendar.get(Calendar.DAY_OF_MONTH) > cal.get(Calendar.DAY_OF_MONTH)
+				|| mCalendar.get(Calendar.YEAR) > cal.get(Calendar.YEAR)
+				|| mCalendar.get(Calendar.MONTH) > cal.get(Calendar.MONTH)
+				&& mCalendar.get(Calendar.YEAR) >= cal.get(Calendar.YEAR);
 	}
 	
 	private boolean checkInstallHour() {
