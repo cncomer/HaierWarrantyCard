@@ -88,9 +88,11 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	            switch(msg.what) {
 	            case NotifyRegistrant.EVENT_NOTIFY_MESSAGE_RECEIVED:
 	            	Bundle bundle = (Bundle) msg.obj;
+	            	//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 begin 
 	            	if (bundle.get(Intents.EXTRA_PHOTOID).equals(mBaoxiuCardObject.getFapiaoPhotoId())) {
 	            		//下载完成
 	            		DebugUtils.logD(TAG, "FapiaoTask finished for " + mBaoxiuCardObject.getFapiaoPhotoId());
+	            		//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 end 
 	            		File fapiao = MyApplication.getInstance().getProductFaPiaoFile(mBaoxiuCardObject.getFapiaoPhotoId());
 	        			if (fapiao.exists()) {
 	        				DebugUtils.logD(TAG, "FapiaoTask downloaded " + fapiao.getAbsolutePath());
@@ -235,11 +237,30 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		 switch(menuItem.getItemId()) {
 		 case R.string.menu_edit:
 			 //编辑卡片
+			//add by chenkai, 锁定认证字段 20140701 begin
+			 /**
+			  *  2.4 凡是被认证锁定的保修卡，手机端在用户点击编辑按钮时，提醒用户 “该报修卡已经经过厂家认证，无法编辑。”，用户不能进入编辑状态。
+			  * 同样，该产品的发票也不能更改。
+			  */
+			 if (mBaoxiuCardObject.isLocked()) {
+				 MyApplication.getInstance().showLockedEditMode(mContext, R.string.msg_for_card_be_locked_cant_edit, null);
+				 return true;
+			 }
+			//add by chenkai, 锁定认证字段 20140701 end
 			 BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
 			 NewCardActivity.startIntent(mContext, mBundles);
 			 finish();
 			 break;
 		 case R.string.menu_delete:
+			//add by chenkai, 锁定认证字段 20140701 begin
+			 /**
+			  *  2.5已经锁定的保修卡，不允许用户删除。提示用户
+			  */
+			 if (mBaoxiuCardObject.isLocked()) {
+				 MyApplication.getInstance().showLockedEditMode(mContext, R.string.msg_for_card_be_locked_cant_delete, null);
+				 return true;
+			 }
+			//add by chenkai, 锁定认证字段 20140701 end
 			 showDeleteDialog();
 			 break;
 		 }
@@ -314,7 +335,11 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 				if (mFapiaoDownloadView == null) {
 					mFapiaoDownloadView = new ImageView(mContext);
 				}
+				//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 begin 
+				//为了传值給发票下载
+				BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
 				PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, mFapiaoDownloadView, mBaoxiuCardObject.getFapiaoPhotoId(), null, PhotoManagerUtilsV2.TaskType.FaPiao);
+				//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 end 
 			}
 			break;
 		case R.id.button_onekey_tel:
@@ -465,54 +490,67 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		mDownloadProductUsagePdfTask = new DownloadProductUsagePdfTask();
 		mDownloadProductUsagePdfTask.execute();
 	}
-	private class DownloadProductUsagePdfTask extends AsyncTask<Void, Integer, Boolean> {
+	private class DownloadProductUsagePdfTask extends AsyncTask<Void, Integer, HaierResultObject> {
 
 		public long mPdfLength;
 		public String mPdfLengthStr;
-		String mErrorStr;
 		@Override
-		protected Boolean doInBackground(Void... arg0) {
+		protected HaierResultObject doInBackground(Void... arg0) {
 			mDownloadGoodsUsagePdfProgressDialog = getProgressDialog();
-			String url = HaierServiceObject.getProductUsageUrl(mBaoxiuCardObject.mKY);
+			HaierResultObject haierResultObject =  new HaierResultObject();
 			InputStream is = null;
+			FileOutputStream fos = null;
 			try {
-				HttpResponse response = NetworkUtils.openContectionLockedV2(url, MyApplication.getInstance().getSecurityKeyValuesObject());
-				int code = response.getStatusLine().getStatusCode();
-				DebugUtils.logD(TAG, "DownloadProductUsagePdfTask return StatusCode is " + code);
-				if (code == HttpStatus.SC_OK) {
-					mPdfLength = response.getEntity().getContentLength();
-					DebugUtils.logD(TAG, "DownloadProductUsagePdfTask return length of pdf file is " + mPdfLength);
-					mPdfLengthStr = FilesLengthUtils.computeLengthToString(mPdfLength);
-					is = response.getEntity().getContent();
-					
-					FileOutputStream fos = new FileOutputStream(MyApplication.getInstance().getProductUsagePdf(mBaoxiuCardObject.mKY));
-					byte[] buffer = new byte[4096];
-					int read = is.read(buffer);
-					long readAll  = read;
-					int percent = 0;
-					while(read != -1) {
-						percent = Math.round((100.0f * readAll/mPdfLength)) ;
-						publishProgress(percent);
-						fos.write(buffer, 0, read);
-						read = is.read(buffer);
-						readAll += read;
+				is = NetworkUtils.openContectionLocked(HaierServiceObject.getProductPdfUrlForQuery(mBaoxiuCardObject.mKY), MyApplication.getInstance().getSecurityKeyValuesObject());
+				if (is != null) {
+					haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
+					if (haierResultObject.isOpSuccessfully()) {
+						if (TextUtils.isEmpty(haierResultObject.mStrData)) {
+							//没有说明书
+							haierResultObject.mStatusCode = 0;
+							haierResultObject.mStatusMessage = getString(R.string.msg_no_product_usage);
+							return haierResultObject;
+						}
+						//成功，表示有使用说明书
+						NetworkUtils.closeInputStream(is);
+						HttpResponse response = NetworkUtils.openContectionLockedV2(HaierServiceObject.getProductUsageUrl(haierResultObject.mStrData), MyApplication.getInstance().getSecurityKeyValuesObject());
+						int code = response.getStatusLine().getStatusCode();
+						DebugUtils.logD(TAG, "DownloadProductUsagePdfTask return StatusCode is " + code);
+						if (code == HttpStatus.SC_OK) {
+							mPdfLength = response.getEntity().getContentLength();
+							DebugUtils.logD(TAG, "DownloadProductUsagePdfTask return length of pdf file is " + mPdfLength);
+							mPdfLengthStr = FilesLengthUtils.computeLengthToString(mPdfLength);
+							is = response.getEntity().getContent();
+							
+							fos = new FileOutputStream(MyApplication.getInstance().getProductUsagePdf(mBaoxiuCardObject.mKY));
+							byte[] buffer = new byte[4096];
+							int read = is.read(buffer);
+							long readAll  = read;
+							int percent = 0;
+							while(read != -1) {
+								percent = Math.round((100.0f * readAll/mPdfLength)) ;
+								publishProgress(percent);
+								fos.write(buffer, 0, read);
+								read = is.read(buffer);
+								readAll += read;
+							}
+							fos.flush();
+						} else if (code == HttpStatus.SC_NOT_FOUND) {
+							haierResultObject.mStatusMessage = getString(R.string.msg_no_product_usage);
+						}
 					}
-					fos.flush();
-					fos.close();
-					return true;
-				} else if (code == HttpStatus.SC_NOT_FOUND) {
-					mErrorStr = getString(R.string.msg_no_product_usage);
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
-				mErrorStr = MyApplication.getInstance().getGernalNetworkError();
+				haierResultObject.mStatusMessage = MyApplication.getInstance().getGernalNetworkError();
 			} catch (IOException e) {
 				e.printStackTrace();
-				mErrorStr = MyApplication.getInstance().getGernalNetworkError();
+				haierResultObject.mStatusMessage = MyApplication.getInstance().getGernalNetworkError();
 			} finally {
 				NetworkUtils.closeInputStream(is);
+				NetworkUtils.closeOutStream(fos);
 			}
-			return false;
+			return haierResultObject;
 		}
 
 		@Override
@@ -531,22 +569,17 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(HaierResultObject result) {
 			super.onPostExecute(result);
 			dismissDialog(DIALOG_PROGRESS);
 			mDownloadGoodsUsagePdfProgressDialog = null;
-			if (result) {
+			if (result.isOpSuccessfully()) {
 				MyApplication.getInstance().showMessage(R.string.msg_product_usage_downloading_ok);
 				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.fromFile(MyApplication.getInstance().getProductUsagePdf(mBaoxiuCardObject.mKY)));
 				intent.setClass(mContext, PdfViewerActivity.class);
 				startActivity(intent);
 			} else {
-				if (TextUtils.isEmpty(mErrorStr)) {
-					MyApplication.getInstance().showMessage(R.string.msg_product_usage_downloading_failed);
-				} else {
-					MyApplication.getInstance().showMessage(mErrorStr);
-					
-				}
+				MyApplication.getInstance().showMessage(result.mStatusMessage);
 			}
 		}
 	}

@@ -12,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 2;
+  private static final int DB_VERSION = 4;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -65,7 +65,9 @@ private static final String TAG = "HaierDBHelper";
   public static final String CARD_MODEL = "XingHao";
   /**保修电话*/
   public static final String CARD_BXPhone = "BXPhone";
-  /**发票路径*/
+  /**发票文件名*/
+  public static final String CARD_FPname = "FPname";
+  /**发票绝对路径*/
   public static final String CARD_FPaddr = "FPaddr";
   /**购买价格*/
   public static final String CARD_PRICE = "BuyPrice";
@@ -89,6 +91,10 @@ private static final String TAG = "HaierDBHelper";
   public static final String DEVICE_WARRANTY_PERIOD = "warranty_period";
   /**配件保修*/
   public static final String CARD_COMPONENT_VALIDITY = "component_validity";
+  //add by chenkai, 锁定认证字段 20140701 begin
+  /**保修记录是否锁定,如果是1表示这个保修卡是厂家认可的，发票内容不能更改，也不能删除*/
+  public static final String REWARD_STATUS = "rewardStatus";
+  //add by chenkai, 锁定认证字段 20140701 end
   
   //这里是设备表的扩展，如遥控器
   
@@ -252,6 +258,7 @@ private static final String TAG = "HaierDBHelper";
 	            CARD_MODEL + " TEXT, " +
 	            CARD_SERIAL + " TEXT, " +
 	            CARD_BXPhone + " TEXT, " +
+	            CARD_FPname + " TEXT, " +
 	            CARD_FPaddr + " TEXT, " +
 	            CARD_BUT_DATE + " TEXT, " +
 	            CARD_PRICE + " TEXT, " +
@@ -264,6 +271,7 @@ private static final String TAG = "HaierDBHelper";
 	            CARD_YANBAO_TIME_COPMANY_TEL + " TEXT, " +
 	            DEVICE_WARRANTY_PERIOD + " TEXT, " +
 	            CARD_COMPONENT_VALIDITY + " TEXT, " +
+	            REWARD_STATUS + " INTEGER NOT NULL DEFAULT 0, " + //add by chenkai, 锁定认证字段 20140701
 	            DATE + " TEXT" +
 	            ");");
 //	  createTriggerForBaoxiuCardsTable(sqLiteDatabase);
@@ -303,7 +311,7 @@ private static final String TAG = "HaierDBHelper";
   @Override
   public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 	  DebugUtils.logD(TAG, "onUpgrade oldVersion " + oldVersion + " newVersion " + newVersion);
-	  if (newVersion <= 1) {
+	  if (oldVersion < 4 ) {
 			sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_ACCOUNTS);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_HOMES);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CARDS);
@@ -320,10 +328,5 @@ private static final String TAG = "HaierDBHelper";
 		    onCreate(sqLiteDatabase);
 		    return;
 		} 
-	  if (oldVersion == 1) {
-		  //版本2我们增加了品牌数据表的wy字段
-		  addTextColumn(sqLiteDatabase, TABLE_NAME_DEVICE_XINGHAO, DEVICE_XINGHAO_WY);
-		  oldVersion = 2;
-	  }
   }
 }

@@ -60,6 +60,8 @@ import com.shwy.bestjoy.utils.SecurityUtils;
             "YBPhone":"400-20098005",  延保电话
             "KY":"101000003"     KY编码，用于显示产品图片
             "hasimg":"false"  true表示有发票
+            "rewardStatus": "", //add by chenkai, 锁定认证字段 20140701 begin
+            "imgaddr":"http://115.29.231.29/Fapiao/2014-06-27/e60c6c55aceaf5e139291b455f3c0ce0.jpg",  //绝对路径  add by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间
          }
     ]
  *
@@ -72,8 +74,15 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public String mXingHao;
 	public String mSHBianHao;
 	public String mBXPhone;
+	//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 begin
+	/**发票绝对路径，为了保证向后兼容之前的版本，之前版本使用mFPaddr=1表示有发票，拼接出网址，所以要保留该字段。
+	 * 现在不用再拼接了，后台会返回绝对路径，直接存储到mFPaddr字段中去,长度为1才表示有发票.
+	 * */
 	/**这个变量的值为0,1，表示是否有发票*/
-	public String mFPaddr = "0";
+	public String mFPaddr = "";
+	/**发票的名字*/
+	public String mFPName = "";
+	//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 end
 	public String mBuyDate;
 	public String mBuyPrice;
 	public String mBuyTuJing;
@@ -93,6 +102,10 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public long mUID = -1, mAID = -1, mBID = -1;
 	
 	private int mZhengjiValidity = -1, mComponentValidity = -1;
+	
+	 //add by chenkai, 锁定认证字段 20140701 begin
+	public int mRewardStatus = 0;
+	 //add by chenkai, 锁定认证字段 20140701 end
 	
 	public static final String[] PROJECTION = new String[]{
 		HaierDBHelper.ID,
@@ -115,6 +128,8 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		HaierDBHelper.CARD_WY,
 		HaierDBHelper.CARD_YBPhone,          //18
 		HaierDBHelper.CARD_KY,               //19
+		HaierDBHelper.REWARD_STATUS,         //20 add by chenkai, 锁定认证字段 20140701 begin
+		HaierDBHelper.CARD_FPname,           //21 add by chenkai, FaPiao's name 20140701 begin
 	};
 	
 	public static final int KEY_CARD_ID = 0;
@@ -138,6 +153,8 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public static final int KEY_CARD_YBPHONE = 18;
 	public static final int KEY_CARD_KY = 19;
 	
+	public static final int KEY_CARD_REWARDSTATUS = 20; //add by chenkai, 锁定认证字段 20140701
+	public static final int KEY_CARD_FPname = 21; //add by chenkai, FaPiao's name.
 	public static final String WHERE_UID = HaierDBHelper.CARD_UID + "=?";
 	public static final String WHERE_AID = HaierDBHelper.CARD_AID + "=?";
 	public static final String WHERE_BID = HaierDBHelper.CARD_BID + "=?";
@@ -233,9 +250,23 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		//delete by chenkai, 现在FPaddr不再返回数据了，而是使用hasimg来表示是否存在发票图片 begin
 		//cardObject.mFPaddr = jsonObject.getString("FPaddr");
 		//decodeFapiao(cardObject);
-		boolean hasimg = jsonObject.getBoolean("hasimg");
-		cardObject.mFPaddr = hasimg ? "1" : "0";
+		//modify by chenkai, 20140629, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 begin
+		//boolean hasimg = jsonObject.getBoolean("hasimg");
+		//cardObject.mFPaddr = hasimg ? "1" : "0";
+		cardObject.mFPaddr = jsonObject.optString("imgaddr", "");
+		cardObject.mFPName = jsonObject.optString("imgstr", "");
+		//modify by chenkai, 20140629, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 end
 		//delete by chenkai, 现在FPaddr不再返回数据了，而是使用hasimg来表示是否存在发票图片 end
+		
+		//add by chenkai, 锁定认证字段 20140701 begin
+		String rewardStatus = jsonObject.optString("rewardStatus");
+		//如果是null或者是空值，认为是非锁定的，填值为0
+		cardObject.mRewardStatus = (rewardStatus.equalsIgnoreCase("null") || TextUtils.isEmpty(rewardStatus)) ? -1 : 1;
+		if (cardObject.mRewardStatus == 0) {
+			cardObject.mRewardStatus = 1;
+		}
+		 //add by chenkai, 锁定认证字段 20140701 end
+		
 		return cardObject;
 	}
 	
@@ -305,6 +336,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		
 		newBaoxiuCardObject.mBXPhone = mBXPhone;
 		newBaoxiuCardObject.mFPaddr = mFPaddr;
+		newBaoxiuCardObject.mFPName = mFPName;
 		newBaoxiuCardObject.mBuyDate = mBuyDate;
 		newBaoxiuCardObject.mBuyPrice = mBuyPrice;
 		newBaoxiuCardObject.mBuyTuJing = mBuyTuJing;
@@ -312,6 +344,9 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		newBaoxiuCardObject.mYanBaoDanWei = mYanBaoDanWei;
 		newBaoxiuCardObject.mYBPhone = mYBPhone;
 		newBaoxiuCardObject.mKY = mKY;
+		//add by chenkai, 锁定认证字段 20140701 begin
+		newBaoxiuCardObject.mRewardStatus = mRewardStatus;
+		 //add by chenkai, 锁定认证字段 20140701 end
 		return newBaoxiuCardObject;
 	}
 	
@@ -385,6 +420,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
     	baoxiuCardObject.mSHBianHao = c.getString(KEY_CARD_SERIAL);
     	baoxiuCardObject.mBXPhone = c.getString(KEY_CARD_BXPhone);
     	baoxiuCardObject.mFPaddr = c.getString(KEY_CARD_FPaddr);
+    	baoxiuCardObject.mFPName = c.getString(KEY_CARD_FPname);
     	baoxiuCardObject.mBuyDate = c.getString(KEY_CARD_BUT_DATE);
     	baoxiuCardObject.mBuyPrice = c.getString(KEY_CARD_CARD_PRICE);
     	baoxiuCardObject.mBuyTuJing = c.getString(KEY_CARD_BUY_TUJING);
@@ -397,6 +433,9 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
     	baoxiuCardObject.mYBPhone = c.getString(KEY_CARD_YBPHONE);
     	baoxiuCardObject.mKY = c.getString(KEY_CARD_KY);
     	
+    	//add by chenkai, 锁定认证字段 20140701 begin
+    	baoxiuCardObject.mRewardStatus =c.getInt(KEY_CARD_REWARDSTATUS);
+		 //add by chenkai, 锁定认证字段 20140701 end
 		return baoxiuCardObject;
 	}
 
@@ -415,7 +454,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		values.put(HaierDBHelper.CARD_SERIAL, mSHBianHao);
 		values.put(HaierDBHelper.CARD_BXPhone, mBXPhone);
 		values.put(HaierDBHelper.CARD_FPaddr, mFPaddr);
-		
+		values.put(HaierDBHelper.CARD_FPname, mFPName);
 		values.put(HaierDBHelper.CARD_BUT_DATE, mBuyDate);
 		values.put(HaierDBHelper.CARD_PRICE, mBuyPrice);
 		values.put(HaierDBHelper.CARD_BUY_TUJING, mBuyTuJing);
@@ -429,6 +468,10 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		values.put(HaierDBHelper.CARD_KY, mKY);
 		
 		values.put(HaierDBHelper.DATE, new Date().getTime());
+		
+		//add by chenkai, 锁定认证字段 20140701 begin
+		values.put(HaierDBHelper.REWARD_STATUS, mRewardStatus);
+		//add by chenkai, 锁定认证字段 20140701 end
 		
 		if (id > 0) {
 			int update = cr.update(BjnoteContent.BaoxiuCard.CONTENT_URI, values,  WHERE_UID_AND_AID_AND_BID, selectionArgs);
@@ -594,7 +637,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	private static final int mAvatorWidth = 320, mAvatorHeight = 480;
 	public static final String PHOTOID_SEPERATOR = "_";
 	/**占位符号*/
-	public static final String PHOTOID_PLASEHOLDER = "00_00_00";
+	public static final String PHOTOID_PLASEHOLDER = "00";
 	/**临时拍摄的照片路径，当保存成功的时候会将该文件路径重命名为mBillAvator*/
 	public Bitmap mBillTempBitmap;
 	/**本地发票图片路径*/
@@ -615,7 +658,9 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	 * @return
 	 */
 	public boolean hasBillAvator() {
-		return mFPaddr != null && mFPaddr.equals("1");
+		//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 begin
+		return !TextUtils.isEmpty(mFPaddr) && mFPaddr.startsWith("http");
+		//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 end
 	}
 	/**
 	 * 添加发票时候使用，用来表示是否有临时的拍摄发票文件，有的话，我们认为是要上传的
@@ -636,22 +681,56 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 //			photoId = photoId.replaceAll("/", "_");
 //			return photoId;
 //		}
-		if (mUID > 0 && mAID > 0 && mBID > 0) {
+		//delete by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 begin
+		/*if (mUID > 0 && mAID > 0 && mBID > 0) {
 			StringBuilder sb = new StringBuilder();
 			//delete by chenkai, 发票id为md5(aid+bid) begin
 			//sb.append(mUID).append(PHOTOID_SEPERATOR).append(mAID).append(PHOTOID_SEPERATOR).append(mBID);
 			sb.append(SecurityUtils.MD5.md5(String.valueOf(mAID) + String.valueOf(mBID)));
 			//delete by chenkai, 发票id为md5(aid+bid) begin
 			return sb.toString();
+		}*/
+		//delete by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 end
+		//add by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 begin
+		if (false && !TextUtils.isEmpty(mFPName) && mFPName.length() > 0) {
+			//有发票，我们攫取文件名
+		    //如e60c6c55aceaf5e139291b455f3c0ce0.jpg 得到 e60c6c55aceaf5e139291b455f3c0ce0.jpg
+			int index = mFPName.lastIndexOf(".");
+			if (index > 0) {
+				DebugUtils.logD(TAG, "getFapiaoPhotoId() " + mFPName.substring(0, index));
+				return mFPName.substring(0, index);
+			}
+			
+		} else if (hasBillAvator()) {
+			//"imgaddr": "http://115.29.231.29/Fapiao/2014-06-27/e60c6c55aceaf5e139291b
+			//如果有发票，我们提取e60c6c55aceaf5e139291b455f3c0ce0文件名
+			int indexStart = mFPaddr.lastIndexOf("/");
+			int indexEnd = mFPaddr.lastIndexOf(".");
+			if (indexStart > 0 && indexEnd > 0) {
+				DebugUtils.logD(TAG, "getFapiaoPhotoId() " + mFPaddr.substring(indexStart+1, indexEnd));
+				return mFPaddr.substring(indexStart+1, indexEnd);
+			}
 		}
+		//add by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 end
+		DebugUtils.logD(TAG, "getFapiaoPhotoId() " + PHOTOID_PLASEHOLDER);
 		return PHOTOID_PLASEHOLDER;
 	}
+	//add by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 begin
+	/***
+	 * 返回远程发票的绝对路径
+	 * @return
+	 */
+	public String getFapiaoServicePath() {
+		return mFPaddr;
+	}
+	//add by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 end
 	
 	/**保存临时的发票拍摄作为该商品的使用发票预览图*/
 	public boolean saveBillAvatorTempFileLocked() {
 		if (mBillTempBitmap != null) {
 			File newPath = MyApplication.getInstance().getProductFaPiaoFile(getFapiaoPhotoId());
 			boolean result = ImageHelper.bitmapToFile(mBillTempBitmap, newPath, 100);
+			DebugUtils.logD(TAG, "saveBillAvatorTempFileLocked to " + newPath);
 			if (result) {
 				mBillFile = newPath;
 				if (mBillTempFile != null && mBillTempFile.exists()) {
@@ -708,6 +787,11 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 			mBillTempFile.delete();
 			mBillTempFile = null;
 		}
+		File temp = MyApplication.getInstance().getProductFaPiaoFile(PHOTOID_PLASEHOLDER);
+		if (temp.exists()) {
+			DebugUtils.logW(TAG, "clear() delete " + temp.getAbsolutePath());
+			temp.delete();
+		}
 	}
 	
 	public static void showBill(Context context, BaoxiuCardObject baociuCardObject) {
@@ -758,5 +842,11 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	//用于tip
 	public static  DateFormat DATE_FORMAT_YUYUE_TIME = new SimpleDateFormat("yyyyMMddHHmmss");
 	
+	//add by chenkai, 锁定认证字段 20140701 begin
+	/**是否保修卡被锁定了*/
+	public boolean isLocked() {
+		return mRewardStatus == 1;
+	}
+	//add by chenkai, 锁定认证字段 20140701 end
 
 }

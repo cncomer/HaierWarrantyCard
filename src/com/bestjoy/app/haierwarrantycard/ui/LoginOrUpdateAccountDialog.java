@@ -67,11 +67,13 @@ public class LoginOrUpdateAccountDialog extends Activity{
 			_error = null;
 			mAccountObject = null;
 			_is = null;
-			StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
-			sb.append("20140611/login.ashx?cell=").append(mTel)
-			.append("&pwd=");
+			//modify by chenkai, 20140701, 将登录和更新调用的地址抽离出来，以便修改 begin
+			//StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
+			//sb.append("20140625/login.ashx?cell=").append(mTel)
+			//.append("&pwd=");
 			try {
-				_is = NetworkUtils.openContectionLocked(sb.toString(), mPwd, null);
+				_is = NetworkUtils.openContectionLocked(HaierServiceObject.getLoginOrUpdateUrl(mTel, mPwd), null);
+				//modify by chenkai, 20140701, 将登录和更新调用的地址抽离出来，以便修改 end
 				mAccountObject = AccountParser.parseJson(_is, mStatusView);
 				if (mAccountObject != null && mAccountObject.isLogined()) {
 					boolean saveAccountOk = HaierAccountManager.getInstance().saveAccountObject(LoginOrUpdateAccountDialog.this.getContentResolver(), mAccountObject);

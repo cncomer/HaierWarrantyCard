@@ -129,15 +129,20 @@ public class JumpActivity extends Activity {
 		final ServiceAppInfo databaseServiceAppInfo = new ServiceAppInfo(MyApplication.PKG_NAME + ".db");
 		final File database = databaseServiceAppInfo.buildLocalDownloadAppFile();
 		final boolean needUpdateDeviceDatabase = database.exists() && databaseServiceAppInfo.mVersionCode > DeviceDBHelper.getDeviceDatabaseVersion();
-		if (prefers.getBoolean(PreferencesActivity.KEY_FIRST_STARTUP, true) 
-				|| DeviceDBHelper.isNeedReinstallDeviceDatabase()
+		final boolean firstStart = prefers.getBoolean(PreferencesActivity.KEY_FIRST_STARTUP, true);
+		final boolean needReinstall = DeviceDBHelper.isNeedReinstallDeviceDatabase();
+		StringBuilder sb = new StringBuilder("launchMainActivityDelay()");
+		sb.append("\n").append("firstStart=").append(firstStart);
+		sb.append("\n").append("needReinstall=").append(needReinstall);
+		sb.append("\n").append("needUpdateDeviceDatabase=").append(needUpdateDeviceDatabase);
+		DebugUtils.logD(TAG, sb.toString());
+		if (firstStart 
+				|| needReinstall
 				|| needUpdateDeviceDatabase) {
 			new Thread() {
 				@Override
 				public void run() {
 					//第一次的时候我们需要拷贝数据库
-					boolean firstStart = prefers.getBoolean(PreferencesActivity.KEY_FIRST_STARTUP, true);
-					boolean needReinstall = DeviceDBHelper.isNeedReinstallDeviceDatabase();
 					if (firstStart || needReinstall) {
 						InstallFileUtils.installDatabaseFiles(mContext, "device", ".png", ".db");
 						if (firstStart) {

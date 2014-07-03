@@ -250,7 +250,11 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			if (isEditable()) {
 				//如果有发票，我们显示出来
 				if (mBaoxiuCardObject.hasBillAvator()) {
+					//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 begin 
+					//为了传值給发票下载
+					BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
 					PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, mBillImageView, mBaoxiuCardObject.getFapiaoPhotoId(), null, PhotoManagerUtilsV2.TaskType.FaPiao);
+					//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 end 
 				}
 				
 				//设置标题为编辑保修卡
@@ -446,6 +450,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 							baoxiuCardObject = BaoxiuCardObject.parseBaoxiuCards(haierResultObject.mJsonData, accountObject);
 							DebugUtils.logE(TAG, "new BID=" + baoxiuCardObject.mBID);
 							if (baoxiuCardObject.mBID > 0) {
+//								//将临时图片存成发票,如果没有改变，则什么操作也不做
+//								baoxiuCardObject.saveBillAvatorTempFileLocked();
 								//正常情况
 								boolean savedOk = baoxiuCardObject.saveInDatebase(getActivity().getContentResolver(), null);
 								if (!savedOk) {
@@ -480,16 +486,35 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		}
 
 		@Override
-		protected void onPostExecute(HaierResultObject result) {
+		protected void onPostExecute(final HaierResultObject result) {
 			super.onPostExecute(result);
 			mSaveBtn.setEnabled(true);
 			dissmissDialog(DIALOG_PROGRESS);
 			if (result.isOpSuccessfully()) {
 				//添加成功
-				MyApplication.getInstance().showMessage(result.mStatusMessage);
-				getActivity().finish();
-				mBaoxiuCardObject.clear();
-				MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
+				//add by chenkai, 锁定认证字段 20140701 begin
+				 /**
+				  *  2.3 rewardStatus=1锁定保修卡的饿时候，提醒用户:
+				  */
+				 if (mBaoxiuCardObject.isLocked()) {
+					 MyApplication.getInstance().showLockedEditMode(getActivity(), result.mStatusMessage, new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+//							MyApplication.getInstance().showMessage(result.mStatusMessage);
+							getActivity().finish();
+							mBaoxiuCardObject.clear();
+							MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
+						}
+					});
+				 } else {
+					 MyApplication.getInstance().showMessage(result.mStatusMessage);
+					getActivity().finish();
+					mBaoxiuCardObject.clear();
+					MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
+				 }
+				//add by chenkai, 锁定认证字段 20140701 end
+				
 			} else {
 				MyApplication.getInstance().showMessage(result.mStatusMessage);
 			}
@@ -592,18 +617,27 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 				
 				haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
 				if (haierResultObject.isOpSuccessfully()) {
-					//将临时图片存成发票
-					boolean savedBill = baoxiuCardObject.saveBillAvatorTempFileLocked();
-					if (savedBill) {
-						baoxiuCardObject.mFPaddr = "1";
-					}
-					boolean updated = baoxiuCardObject.saveInDatebase(getActivity().getContentResolver(), null);
-					if (!updated) {
-						//通常不会发生
-						DebugUtils.logD(TAG, "UpdateWarrantyCardAsyncTask " + getActivity().getString(R.string.msg_local_save_card_failed));
-					} else {
-						//更新家以便设备列表能够看到
-						HaierAccountManager.getInstance().updateHomeObject(baoxiuCardObject.mAID);
+					
+					if (haierResultObject.mJsonData != null) {
+						baoxiuCardObject = BaoxiuCardObject.parseBaoxiuCards(haierResultObject.mJsonData, accountObject);
+						DebugUtils.logE(TAG, "updated BID=" + baoxiuCardObject.mBID);
+						if (baoxiuCardObject.mBID > 0) {
+							//将临时图片存成发票,如果没有改变，则什么操作也不做
+							//baoxiuCardObject.saveBillAvatorTempFileLocked();
+							//如果后台返回了保修卡数据,我们解析它保存在本地
+							//正常情况
+							boolean updated = baoxiuCardObject.saveInDatebase(getActivity().getContentResolver(), null);
+							if (!updated) {
+								//通常不会发生
+								//通常不会发生
+								DebugUtils.logD(TAG, "UpdateWarrantyCardAsyncTask " + getActivity().getString(R.string.msg_local_save_card_failed));
+								haierResultObject.mStatusMessage = getActivity().getString(R.string.msg_local_save_card_failed);
+							} else {
+								//更新家以便设备列表能够看到
+								HaierAccountManager.getInstance().updateHomeObject(baoxiuCardObject.mAID);
+							}
+							return haierResultObject;
+						}
 					}
 				}
 						
@@ -624,15 +658,34 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		}
 
 		@Override
-		protected void onPostExecute(HaierResultObject result) {
+		protected void onPostExecute(final HaierResultObject result) {
 			super.onPostExecute(result);
 			mSaveBtn.setEnabled(true);
 			dissmissDialog(DIALOG_PROGRESS);
 			if (result.isOpSuccessfully()) {
-				MyApplication.getInstance().showMessage(result.mStatusMessage);
-				getActivity().finish();
-				mBaoxiuCardObject.clear();
-				MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
+				//添加成功
+				//add by chenkai, 锁定认证字段 20140701 begin
+				 /**
+				  *  2.3 rewardStatus=1锁定保修卡的饿时候，提醒用户:
+				  */
+				 if (mBaoxiuCardObject.isLocked()) {
+					 MyApplication.getInstance().showLockedEditMode(getActivity(), result.mStatusMessage, new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+//							MyApplication.getInstance().showMessage(result.mStatusMessage);
+							getActivity().finish();
+							mBaoxiuCardObject.clear();
+							MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
+						}
+					});
+				 } else {
+					 MyApplication.getInstance().showMessage(result.mStatusMessage);
+					getActivity().finish();
+					mBaoxiuCardObject.clear();
+					MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
+				 }
+				//add by chenkai, 锁定认证字段 20140701 end
 			} else {
 				MyApplication.getInstance().showMessage(result.mStatusMessage);
 			}

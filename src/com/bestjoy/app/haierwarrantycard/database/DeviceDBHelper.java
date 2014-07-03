@@ -6,7 +6,7 @@ import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 public class DeviceDBHelper {
 
 	private static final String TAG = "DeviceDBHelper";
-	public static final int VERSION = 9;
+	public static final int VERSION = 13;
 	public static final String KEY_VERSION = "version";
 	//设备数据库
 	  public static final String DB_DEVICE_NAME = "device.db";
@@ -63,7 +63,7 @@ public class DeviceDBHelper {
 	  }
 	  
 	  public static int getDeviceDatabaseVersion() {
-		  return MyApplication.getInstance().mPreferManager.getInt(KEY_VERSION, VERSION);
+		  return MyApplication.getInstance().mPreferManager.getInt(KEY_VERSION, 0);
 	  }
 	  /***
 	   * 更新当前设备版本号

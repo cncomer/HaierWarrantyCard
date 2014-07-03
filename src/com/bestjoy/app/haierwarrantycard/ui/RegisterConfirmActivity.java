@@ -222,8 +222,6 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			case R.id.button_save_reg:
 				DebugUtils.logD(TAG, "button_save onClick");
 				mAccountObject.mAccountName = mUsrNameEditText.getText().toString().trim();
-				mAccountObject.mAccountName = mUsrNameEditText.getText().toString().trim();
-				mAccountObject.mAccountPwd = usrPwdEditText.getText().toString().trim();
 				mAccountObject.mAccountPwd = usrPwdEditText.getText().toString().trim();
 				usrPwdConfirm = usrPwdConfirmEditText.getText().toString().trim();
 

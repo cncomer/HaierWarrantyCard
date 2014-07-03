@@ -2,8 +2,11 @@ package com.bestjoy.app.haierwarrantycard;
 
 import java.io.File;
 
+import android.app.AlertDialog;
 import android.app.Application;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.Handler;
@@ -355,4 +358,22 @@ public class MyApplication extends Application{
     	}
 		return new File(root, fileName);
 	}
+  //add by chenkai, 锁定认证字段 20140701 begin
+    /**显示认证锁定的保修卡提示框*/
+    public AlertDialog showLockedEditMode(Context context, String msg, DialogInterface.OnClickListener callback) {
+    	AlertDialog dialog = new AlertDialog.Builder(context)
+	    	.setMessage(msg)
+	    	.setPositiveButton(android.R.string.ok, callback)
+			.show();
+    	return dialog;
+    }
+    public AlertDialog showLockedEditMode(Context context, int msgId, DialogInterface.OnClickListener callback) {
+    	AlertDialog dialog = new AlertDialog.Builder(context)
+	    	.setMessage(msgId)
+	    	.setCancelable(false)
+	    	.setPositiveButton(android.R.string.ok, callback)
+			.show();
+    	return dialog;
+    }
+  //add by chenkai, 锁定认证字段 20140701 begin
 }

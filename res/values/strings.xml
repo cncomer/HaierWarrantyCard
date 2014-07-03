@@ -391,4 +391,10 @@
            
          <string name="sure_install_tips">确定预约安装吗?</string>
          <string name="sure_repair_tips">确定预约维修吗?</string>
+         
+         <!-- add by chenkai, 锁定认证字段 20140701 begin -->
+         <string name="msg_for_card_be_locked">"亲爱的用户，感谢您注册海尔产品。我们赠送您180天/365天（这里要看是0.5还是1）的整机延保期，如果产品有任何问题，欢迎使用电子保修卡预约安装/维修/咨询服务。"</string>
+         <string name="msg_for_card_be_locked_cant_edit">"该报修卡已经经过厂家认证，无法编辑。"</string>
+         <string name="msg_for_card_be_locked_cant_delete">"该报修卡已经经过厂家认证，无法删除。"</string>
+         <!-- add by chenkai, 锁定认证字段 20140701 end -->
 </resources>

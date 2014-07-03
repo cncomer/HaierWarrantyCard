@@ -6,7 +6,10 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.shwy.bestjoy.utils.SecurityUtils;
+import com.shwy.bestjoy.utils.UrlEncodeStringBuilder;
 
 
 public class HaierServiceObject {
@@ -56,13 +59,13 @@ public class HaierServiceObject {
 	//modify by chenkai, 修改发票后台同步修改新建更新和登录后台, 20140622 begin
 		public static String getCreateBaoxiucardUri() {
 			StringBuilder sb = new StringBuilder(SERVICE_URL);
-			sb.append("20140611/AddBaoXiu.ashx");
+			sb.append("20140625/AddBaoXiu.ashx");
 			return sb.toString();
 		}
 		
 		public static String getUpdateBaoxiucardUri() {
 			StringBuilder sb = new StringBuilder(SERVICE_URL);
-			sb.append("20140611/updateBaoXiu.ashx");
+			sb.append("20140625/updateBaoXiu.ashx");
 			return sb.toString();
 		}
 		
@@ -73,9 +76,12 @@ public class HaierServiceObject {
 		 * @return
 		 */
 		public static String getBaoxiucardFapiao(String photoId) {
-			StringBuilder sb = new StringBuilder(FAPIAO_URL);
-			sb.append(photoId).append(".jpg");
-			return sb.toString();
+			//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 begin
+			//StringBuilder sb = new StringBuilder(FAPIAO_URL);
+			//sb.append(photoId).append(".jpg");
+			//return sb.toString();
+			return BaoxiuCardObject.getBaoxiuCardObject().getFapiaoServicePath();
+			//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 end
 		}
 		//modify by chenkai, 修改发票后台同步修改新建更新和登录后台, 20140622 end
 	/**
@@ -91,6 +97,20 @@ public class HaierServiceObject {
 		return sb.toString();
 	}
 	
+	//add by chenkai, 20140701, 将登录和更新调用的地址抽离出来，以便修改 begin
+	/**
+	 * 返回登陆调用URL
+	 * @param tel
+	 * @param pwd
+	 * @return
+	 */
+	public static String getLoginOrUpdateUrl(String tel, String pwd) {
+		UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder(HaierServiceObject.SERVICE_URL);
+		sb.append("20140625/login.ashx?cell=").append(tel)
+		.append("&pwd=").appendUrlEncodedString(pwd);
+		return sb.toString();
+	}
+	//add by chenkai, 20140701, 将登录和更新调用的地址抽离出来，以便修改 end
 	
 	
 	public static class HaierResultObject {
@@ -140,14 +160,27 @@ public class HaierServiceObject {
 		  return sb.toString();
 	  }
 	  /***
-	   * www.51cck.com/KY前9位数字/KY.pdf
+	   * http://www.51cck.com/haier/264574251GD0N5T00W.pdf
 	   * @return
 	   */
-	  public static String getProductUsageUrl(String ky) {
-		  String ky9 = ky.substring(0,9);
-		  return getProductUsageUrl(ky9, ky);
+	  public static String getProductUsageUrl(String file) {
+		  StringBuilder sb = new StringBuilder(GOODS_INTRODUCTION_BASE);
+		  sb.append("haier/").append(file);
+		  return sb.toString();
 	  }
 	 //add by chenkai, for Usage, 2014.05.31 end
+	  
+	  /**
+	   * 查询是否有使用说明书,http://115.29.231.29/haier/getPDfByKy.ashx?KY=2050100P1&token=df6037a3709a77279dde4334c4038178
+	   * @param ky 产品的9位KY
+	   * @param token Md5(KY)
+	   * @return
+	   */
+	  public static String getProductPdfUrlForQuery(String ky) {
+		  StringBuilder sb = new StringBuilder(SERVICE_URL);
+		  sb.append("getPDfByKy.ashx?KY=").append(ky).append("&token=").append(SecurityUtils.MD5.md5(ky));
+		  return sb.toString();
+	  }
 	  
 	  /**
 	   * 是否支持直接从服务器下发的验证码短信中提取验证码并回填
