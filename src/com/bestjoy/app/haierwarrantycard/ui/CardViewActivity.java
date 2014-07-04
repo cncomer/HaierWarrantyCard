@@ -319,8 +319,8 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 				//Intent intent = new Intent(Intent.ACTION_VIEW, Uri.fromFile(MyApplication.getInstance().getProductUsagePdf(mBaoxiuCardObject.mKY)));
 				//intent.setClass(mContext, PdfViewerActivity.class);
 
-				 Intent intent = new Intent(this, PdfViewerActivity2.class);
-			     intent.putExtra(PdfViewerActivity2.EXTRA_PDFFILENAME, MyApplication.getInstance().getProductUsagePdf(mBaoxiuCardObject.mKY).toString());
+				Intent intent = new Intent(this, PdfViewerActivity2.class);
+				intent.putExtra(PdfViewerActivity2.EXTRA_PDFFILENAME, MyApplication.getInstance().getProductUsagePdf(mBaoxiuCardObject.mKY).getAbsolutePath());
 				startActivity(intent);
 			} else {
 				//开始下载
