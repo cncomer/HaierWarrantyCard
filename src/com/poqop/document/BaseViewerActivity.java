@@ -71,7 +71,10 @@ public abstract class BaseViewerActivity extends Activity implements DecodingPro
         {
             public void run()
             {
-                getWindow().setFeatureInt(Window.FEATURE_INDETERMINATE_PROGRESS, currentlyDecoding == 0 ? 10000 : currentlyDecoding);
+                try {
+                	getWindow().setFeatureInt(Window.FEATURE_INDETERMINATE_PROGRESS, currentlyDecoding == 0 ? 10000 : currentlyDecoding);
+                } catch (final Throwable e) {
+                }
             }
         });
     }

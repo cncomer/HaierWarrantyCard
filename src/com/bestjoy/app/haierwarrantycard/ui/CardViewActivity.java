@@ -9,7 +9,7 @@ import java.text.ParseException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
-import org.vudroid.pdfdroid.PdfViewerActivity2;
+import org.vudroid.pdfdroid.PdfViewerActivity;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -316,11 +316,9 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			}
 			File pdfFile = MyApplication.getInstance().getProductUsagePdf(mBaoxiuCardObject.mKY);
 			if (pdfFile.exists()) {
-				//Intent intent = new Intent(Intent.ACTION_VIEW, Uri.fromFile(MyApplication.getInstance().getProductUsagePdf(mBaoxiuCardObject.mKY)));
-				//intent.setClass(mContext, PdfViewerActivity.class);
+				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.fromFile(MyApplication.getInstance().getProductUsagePdf(mBaoxiuCardObject.mKY)));
+				intent.setClass(mContext, PdfViewerActivity.class);
 
-				Intent intent = new Intent(this, PdfViewerActivity2.class);
-				intent.putExtra(PdfViewerActivity2.EXTRA_PDFFILENAME, MyApplication.getInstance().getProductUsagePdf(mBaoxiuCardObject.mKY).getAbsolutePath());
 				startActivity(intent);
 			} else {
 				//开始下载
@@ -579,7 +577,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			if (result.isOpSuccessfully()) {
 				MyApplication.getInstance().showMessage(R.string.msg_product_usage_downloading_ok);
 				Intent intent = new Intent(Intent.ACTION_VIEW, Uri.fromFile(MyApplication.getInstance().getProductUsagePdf(mBaoxiuCardObject.mKY)));
-				intent.setClass(mContext, PdfViewerActivity2.class);
+				intent.setClass(mContext, PdfViewerActivity.class);
 				startActivity(intent);
 			} else {
 				MyApplication.getInstance().showMessage(result.mStatusMessage);

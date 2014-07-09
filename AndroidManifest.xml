@@ -203,16 +203,6 @@
             </intent-filter>
         </activity>
         <!-- add by chenkai, for Usage PDF阅读界面, 2014.05.31 end-->
-          <activity android:name="org.vudroid.pdfdroid.PdfViewerActivity2" 
-              android:configChanges="orientation|keyboardHidden"
-              android:label="@string/app_label_mingdown_pdf">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-                <data android:mimeType="application/pdf"/>
-            </intent-filter>
-        </activity>
          
         <provider android:name="com.bestjoy.app.haierwarrantycard.database.BjnoteProvider"
             android:exported="true"
