@@ -25,6 +25,7 @@ import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.ImageHelper;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 public abstract class BaseActionbarActivity extends SherlockFragmentActivity {
 	private static final String TAG = "BaseActionbarActivity";
@@ -48,6 +49,7 @@ public abstract class BaseActionbarActivity extends SherlockFragmentActivity {
 			return;
 		}
 		mContext = this;
+		PushAgent.getInstance(mContext).onAppStart();
 	}
 	//add by chenkai, 20140726 增加youmeng统计时长 begin
 	@Override

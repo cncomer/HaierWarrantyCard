@@ -26,6 +26,7 @@ import android.widget.EditText;
 
 import com.actionbarsherlock.view.Menu;
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject.HaierResultObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
@@ -188,70 +189,63 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 		mGetYanZhengCodeAsyncTask.execute(param);
 	}
 	
-	private class GetYanZhengCodeAsyncTask extends AsyncTask<String, Void, String> {
-		private String mError;
+	private class GetYanZhengCodeAsyncTask extends AsyncTask<String, Void, HaierResultObject> {
 		@Override
-		protected String doInBackground(String... params) {
-			mError = null;
+		protected HaierResultObject doInBackground(String... params) {
 			InputStream is = null;
-			String url;
-			String path;
-			StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
-			sb.append("20140514/SendMessage.ashx?cell=").append(params[0]);
-			url = sb.substring(0, sb.indexOf("=")+1);
-			path = params[0];
-			DebugUtils.logD(TAG, "url : " + url);
-			DebugUtils.logD(TAG, "path : " + path);
-			DebugUtils.logD(TAG, "sb : " + sb.toString());
+			HaierResultObject result = new HaierResultObject();
 			try {
-				is = NetworkUtils.openContectionLocked(url, path, MyApplication.getInstance().getSecurityKeyValuesObject());
+				JSONObject queryJsonObject = new JSONObject();
+				queryJsonObject.put("cell", params[0]);
+				DebugUtils.logD(TAG, "GetYanZhengCodeAsyncTask run--queryJsonObject " + queryJsonObject.toString(4));
+				String desQuery = SecurityUtils.DES.enCrypto(queryJsonObject.toString().getBytes(), HaierServiceObject.DES_PASSWORD);
+				DebugUtils.logD(TAG, "GetYanZhengCodeAsyncTask DES QueryJsonObject " + desQuery);
+				is = NetworkUtils.openContectionLocked(HaierServiceObject.getYanzhengmaUrl("para", desQuery), MyApplication.getInstance().getSecurityKeyValuesObject());
 				if (is == null) {
 					DebugUtils.logE(TAG, "openContectionLocked return null");
-					mError = mContext.getString(R.string.msg_get_yanzhengma_gernal_error);
-					return null;
+					result.mStatusMessage = mContext.getString(R.string.msg_get_yanzhengma_gernal_error);
+					return result;
 				}
-				try {
-					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
-					return jsonObject.getString("randcode");
-				} catch (JSONException e) {
-					e.printStackTrace();
-					mError = mContext.getString(R.string.msg_get_yanzhengma_gernal_error);
-				}
+				result = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
-				mError = e.getMessage();
+				result.mStatusMessage = e.getMessage();
 			} catch (IOException e) {
 				e.printStackTrace();
-				mError = MyApplication.getInstance().getGernalNetworkError();
+				result.mStatusMessage= MyApplication.getInstance().getGernalNetworkError();
+			} catch (JSONException e) {
+				e.printStackTrace();
+				result.mStatusMessage= e.getMessage();
 			} finally {
 				NetworkUtils.closeInputStream(is);
 			}
-			return null;
+			return result;
 		}
 
 		@Override
-		protected void onPostExecute(String result) {
+		protected void onPostExecute(HaierResultObject result) {
 			super.onPostExecute(result);
 			if (mGetYanZhengCodeDialog != null) {
 				mGetYanZhengCodeDialog.hide();
 			}
-			DebugUtils.logD(TAG, "result data : " + result);
-			if(mError != null) {
-				MyApplication.getInstance().showMessage(mError);
-			} else if ("".equals(result)) {
+			//statuscode 0 已注册  1 获取验证码成功
+			if (result.isOpSuccessfully()) {
 				//提示用户已注册过了
-				MyApplication.getInstance().showMessage(R.string.msg_yanzheng_code_msg_has_registered);
-			} else if ("2".equals(result)) {
-				//提示用户本日获取短信验证码超过限制
-				MyApplication.getInstance().showMessage(R.string.msg_get_yanzhengma_overtime);
-			} else {
-				mYanZhengCodeFromServer = result;
-				MyApplication.getInstance().showMessage(R.string.msg_yanzheng_code_msg_send);
-				//add by chenkai, 开始监听验证码短信
-				if (HaierServiceObject.isSupportReceiveYanZhengMa()) {
-					mCodeInput.setHint(R.string.hint_wait_yanzhengma_sms);
-					register();
+				mYanZhengCodeFromServer = result.mJsonData.optString("randcode", "");
+				if (mYanZhengCodeFromServer.equals("")) {
+					MyApplication.getInstance().showMessage(R.string.msg_yanzheng_code_msg_has_registered);
+					return;
+				} else {
+					MyApplication.getInstance().showMessage(R.string.msg_yanzheng_code_msg_send);
+					//add by chenkai, 开始监听验证码短信
+					if (HaierServiceObject.isSupportReceiveYanZhengMa()) {
+						mCodeInput.setHint(R.string.hint_wait_yanzhengma_sms);
+						register();
+					}
 				}
+			} else {
+				MyApplication.getInstance().showMessage(result.mStatusMessage);
+				mYanZhengCodeFromServer = "";
 			}
 		}
 
@@ -271,6 +265,7 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 	private YanZhengMaReceiver mYanZhengMaReceiver;
 	private void register() {
 		if (mYanZhengMaReceiver == null) {
+			DebugUtils.logD(TAG, "register mYanZhengMaReceiver");
 			mYanZhengMaReceiver = new YanZhengMaReceiver();
 			IntentFilter filter = new IntentFilter(SMS_ACTION);
 			filter.setPriority(Integer.MAX_VALUE);
@@ -281,6 +276,7 @@ public class RegisterActivity extends BaseActionbarActivity implements View.OnCl
 	
 	private void unregister() {
 		if (mYanZhengMaReceiver != null) {
+			DebugUtils.logD(TAG, "unregister mYanZhengMaReceiver");
 			unregisterReceiver(mYanZhengMaReceiver);
 			mYanZhengMaReceiver = null;
 		}

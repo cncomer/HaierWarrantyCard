@@ -238,16 +238,18 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		 switch(menuItem.getItemId()) {
 		 case R.string.menu_edit:
 			 //编辑卡片
+			//delete by chenkai, 20140726, 允许编辑不允许删除 begin
 			//add by chenkai, 锁定认证字段 20140701 begin
 			 /**
 			  *  2.4 凡是被认证锁定的保修卡，手机端在用户点击编辑按钮时，提醒用户 “该报修卡已经经过厂家认证，无法编辑。”，用户不能进入编辑状态。
-			  * 同样，该产品的发票也不能更改。
+			  * 同样，该产品的发票也不能更改。 
 			  */
-			 if (mBaoxiuCardObject.isLocked()) {
+			 /*if (mBaoxiuCardObject.isLocked()) {
 				 MyApplication.getInstance().showLockedEditMode(mContext, R.string.msg_for_card_be_locked_cant_edit, null);
 				 return true;
-			 }
+			 }*/
 			//add by chenkai, 锁定认证字段 20140701 end
+			//delete by chenkai, 20140726, 允许编辑不允许删除 begin
 			 BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
 			 NewCardActivity.startIntent(mContext, mBundles);
 			 finish();

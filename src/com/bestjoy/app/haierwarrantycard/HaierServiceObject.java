@@ -29,6 +29,8 @@ public class HaierServiceObject {
 	
 	private static String mKasadiPinpaiName;
 	public static final String BX_PHONE_KASADI = "4006399699";
+	
+	public static final String DES_PASSWORD = "Haier@1.";
 	public static void setContext(Context context) {
 		mHaierPinpaiName = context.getString(R.string.pinpai_haier);
 		mKasadiPinpaiName = context.getString(R.string.pinpai_kasadi);
@@ -112,7 +114,43 @@ public class HaierServiceObject {
 	}
 	//add by chenkai, 20140701, 将登录和更新调用的地址抽离出来，以便修改 end
 	
+	//add by chenkai, 20140726, 将注册调用的地址抽离出来，以便修改 begin
+		/**
+		 * 返回登陆调用URL
+		 * @param para
+		 * @param jsonString
+		 * @return
+		 */
+		public static String getRegisterUrl(String para, String jsonString) {
+			UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder(HaierServiceObject.SERVICE_URL);
+			sb.append("20140718/Register.ashx?")
+			.append(para).append("=").appendUrlEncodedString(jsonString);
+			return sb.toString();
+		}
+		//add by chenkai, 20140726, 将注册调用的地址抽离出来，以便修改 end
 	
+		//add by chenkai, 20140726, 将发送短信抽离出来，以便修改 begin
+		/**
+		 * 返回登陆调用URL
+		 * @param para
+		 * @param jsonString
+		 * @return
+		 */
+		public static String getFindPasswordUrl(String para, String jsonString) {
+			UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder(HaierServiceObject.SERVICE_URL);
+			sb.append("20140726/SendMessage.ashx?")
+			.append(para).append("=").appendUrlEncodedString(jsonString);
+			return sb.toString();
+		}
+		
+		public static String getYanzhengmaUrl(String para, String jsonString) {
+			UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder(HaierServiceObject.SERVICE_URL);
+			sb.append("20140726/SendMessage.ashx?")
+			.append(para).append("=").appendUrlEncodedString(jsonString);
+			return sb.toString();
+		}
+		//add by chenkai, 20140726, 将发送短信抽离出来，以便修改 end
+		
 	public static class HaierResultObject {
 		public int mStatusCode = 0;
 		public String mStatusMessage;
@@ -122,6 +160,7 @@ public class HaierServiceObject {
 		public static HaierResultObject parse(String content) {
 			HaierResultObject resultObject = new HaierResultObject();
 			if (TextUtils.isEmpty(content)) {
+				DebugUtils.logD("HaierResultObject", "content is empty = " + content);
 				return resultObject;
 			}
 			try {

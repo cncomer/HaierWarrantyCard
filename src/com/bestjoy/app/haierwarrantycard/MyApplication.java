@@ -47,7 +47,7 @@ public class MyApplication extends Application{
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		MobclickAgent.setDebugMode(true);
+		MobclickAgent.setDebugMode(false);
 		Log.d(TAG, "onCreate()");
 		mHandler = new Handler();
 		mInstance = this;

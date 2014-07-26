@@ -22,6 +22,7 @@ import com.actionbarsherlock.view.Menu;
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject.HaierResultObject;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
@@ -31,6 +32,7 @@ import com.bestjoy.app.haierwarrantycard.view.HaierProCityDisEditPopView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
+import com.shwy.bestjoy.utils.SecurityUtils;
 
 
 public class RegisterConfirmActivity extends BaseActionbarActivity implements View.OnClickListener{
@@ -106,100 +108,61 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 		mRegisterAsyncTask.execute(param);
 	}
 
-	private class RegisterAsyncTask extends AsyncTask<String, Void, Boolean> {
-		private String mError;
+	private class RegisterAsyncTask extends AsyncTask<String, Void, HaierResultObject> {
 		@Override
-		protected Boolean doInBackground(String... params) {
-			mError = null;
+		protected HaierResultObject doInBackground(String... params) {
 			InputStream is = null;
-			final int LENGTH = 8;
-			String[] urls = new String[LENGTH];
-			String[] paths = new String[LENGTH];
-			urls[0] = HaierServiceObject.SERVICE_URL + "Register.ashx?cell=";
-			paths[0] = mAccountObject.mAccountTel;
-			urls[1] = "&UserName=";
-			paths[1] = mAccountObject.mAccountName;
-			urls[2] = "&Shen=";
-			paths[2] = mHomeObject.mHomeProvince;
-			urls[3] = "&Shi=";
-			paths[3] = mHomeObject.mHomeCity;
-			urls[4] = "&Qu=";
-			paths[4] = mHomeObject.mHomeDis;
-			urls[5] = "&detail=";
-			paths[5] = mHomeObject.mHomePlaceDetail;
-			urls[6] = "&pwd=";
-			paths[6] = mAccountObject.mAccountPwd;
-			urls[7] = "&Tag=";
-			paths[7] = usrHomeNameEditText.getText().toString().trim();
-			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
-			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
+			HaierResultObject haierResultObject = new HaierResultObject();
 			try {
-				is = NetworkUtils.openContectionLocked(urls, paths, MyApplication.getInstance().getSecurityKeyValuesObject());
-				try {
-					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
-					mAccountObject.mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
-					mAccountObject.mStatusMessage = jsonObject.getString("StatusMessage");
-					DebugUtils.logD(TAG, "StatusCode = " + mAccountObject.mStatusCode);
-					DebugUtils.logD(TAG, "StatusMessage = " + mAccountObject.mStatusMessage);
-					if (mAccountObject.mStatusCode == 1) {
-						String data = jsonObject.getString("Data");
-						DebugUtils.logD(TAG, "Data = " + data);
-						mAccountObject.mAccountUid = Long.parseLong(data.substring(data.indexOf(":")+1));
-						DebugUtils.logD(TAG, "Uid = " + mAccountObject.mAccountUid);
-						
-//						mAccountObject.mAccountHomes.add(mHomeObject);
-//						boolean saveResult = HaierAccountManager.getInstance().saveAccountObject(getContentResolver(), mAccountObject);
-//					    if (!saveResult) {
-//					    	//注册成功，但无法创建账户，请尝试重新登陆
-//					    	mError = mContext.getString(R.string.msg_register_save_fail);
-//					    }
-					    return true;
-					} else {
-						mError = mAccountObject.mStatusMessage;
-					}
-				} catch (JSONException e) {
-					e.printStackTrace();
+				JSONObject jsonQueryObject = new JSONObject();
+				jsonQueryObject.put("cell", mAccountObject.mAccountTel)
+				.put("UserName", mAccountObject.mAccountName)
+				.put("Shen", mHomeObject.mHomeProvince)
+				.put("Shi", mHomeObject.mHomeCity)
+				.put("Qu", mHomeObject.mHomeDis)
+				.put("detail", mHomeObject.mHomePlaceDetail)
+				.put("pwd", mAccountObject.mAccountPwd)
+				.put("Tag", usrHomeNameEditText.getText().toString().trim());
+				DebugUtils.logD(TAG, "jsonQueryObject=" + jsonQueryObject.toString(4));
+				String desQueryObject = SecurityUtils.DES.enCrypto(jsonQueryObject.toString().getBytes(), HaierServiceObject.DES_PASSWORD);
+				DebugUtils.logD(TAG, "desQueryObject=" + desQueryObject);
+				is = NetworkUtils.openContectionLocked(HaierServiceObject.getRegisterUrl("para", desQueryObject), MyApplication.getInstance().getSecurityKeyValuesObject());
+				if (is == null) {
+					throw new IOException();
+				}
+				haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
+				if (haierResultObject.isOpSuccessfully()) {
+					String dataStr = haierResultObject.mStrData;
+					DebugUtils.logD(TAG, "Data = " + dataStr);
+					mAccountObject.mAccountUid = Long.parseLong(dataStr.substring(dataStr.indexOf(":")+1));
+					DebugUtils.logD(TAG, "Uid = " + mAccountObject.mAccountUid);
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
-				mError = e.getMessage();
+				haierResultObject.mStatusMessage = e.getMessage();
 			} catch (IOException e) {
 				e.printStackTrace();
-				mError = MyApplication.getInstance().getGernalNetworkError();
+				haierResultObject.mStatusMessage = MyApplication.getInstance().getGernalNetworkError();
+			} catch (JSONException e) {
+				e.printStackTrace();
+				haierResultObject.mStatusMessage = e.getMessage();
 			} finally {
 				NetworkUtils.closeInputStream(is);
 			}
-			return false;
+			return haierResultObject;
 		}
 
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(HaierResultObject result) {
 			super.onPostExecute(result);
 			mConfrimReg.setEnabled(true);
-			if (mError != null) {
-//				if (result) {
-//					//注册成功，但无法创建账户，请尝试重新登陆
-//					new AlertDialog.Builder(mContext)
-//					.setTitle(R.string.msg_tip_title)
-//		   			.setMessage(mError)
-//		   			.setCancelable(false)
-//		   			.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-//		   				@Override
-//		   				public void onClick(DialogInterface dialog, int which) {
-//		   					LoginActivity.startIntent(mContext, null);
-//		   				}
-//		   			})
-//		   			.create()
-//		   			.show();
-//				} else {
-//					MyApplication.getInstance().showMessage(mError);
-//				}
-				MyApplication.getInstance().showMessage(mError);
-			} else if (result) {
+			if (result.isOpSuccessfully()) {
 				//注册后，我们要做一次登陆
-				MyApplication.getInstance().showMessage(mAccountObject.mStatusMessage);
+				MyApplication.getInstance().showMessage(result.mStatusMessage);
 				HaierAccountManager.getInstance().saveLastUsrTel(mAccountObject.mAccountTel);
 				startActivityForResult(LoginOrUpdateAccountDialog.createLoginOrUpdate(mContext, true, mAccountObject.mAccountTel, mAccountObject.mAccountPwd), REQUEST_LOGIN);
+			} else {
+				MyApplication.getInstance().showMessage(result.mStatusMessage);
 			}
 			dismissDialog(DIALOG_PROGRESS);
 		}

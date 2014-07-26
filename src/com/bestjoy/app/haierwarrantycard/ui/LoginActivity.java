@@ -22,6 +22,7 @@ import com.actionbarsherlock.view.Menu;
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject.HaierResultObject;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
@@ -30,6 +31,7 @@ import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
+import com.shwy.bestjoy.utils.SecurityUtils;
 
 public class LoginActivity extends BaseActionbarActivity implements View.OnClickListener{
 	private static final String TAG = "NewCardActivity";
@@ -157,57 +159,43 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 		mFidnPasswordTask = new FidnPasswordTask();
 		mFidnPasswordTask.execute();
 	}
-	private class FidnPasswordTask extends AsyncTask<Void, Void, Boolean> {
+	private class FidnPasswordTask extends AsyncTask<Void, Void, HaierResultObject> {
 
-		/**
-		 * 用例：http://115.29.231.29/Haier/GetPwd.ashx?cell=18621951097
-		 * {
-              "StatusCode": "1",                     0是错误码，可能是未注册，或是手机号码格式错误
-              "StatusMessage": "成功返回密码", 
-              "Data": ""
-            }
-
-		 */
-		private String _errMsg = null;
 		@Override
-		protected Boolean doInBackground(Void... params) {
-			StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
-			sb.append("GetPwd.ashx?cell=").append(mTelInput.getText().toString().trim());
+		protected HaierResultObject doInBackground(Void... params) {
+			HaierResultObject result = new HaierResultObject();
+			
 			InputStream is = null;
 			try {
-				is = NetworkUtils.openContectionLocked(sb.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
-			    if (is == null) {
-			    	return false;
+				JSONObject queryJsonObject = new JSONObject();
+				queryJsonObject.put("cell", mTelInput.getText().toString().trim());
+				DebugUtils.logD(TAG, "FidnPasswordTask run--queryJsonObject " + queryJsonObject.toString(4));
+				String desQuery = SecurityUtils.DES.enCrypto(queryJsonObject.toString().getBytes(), HaierServiceObject.DES_PASSWORD);
+				DebugUtils.logD(TAG, "FidnPasswordTask DES QueryJsonObject " + desQuery);
+				
+				is = NetworkUtils.openContectionLocked(HaierServiceObject.getFindPasswordUrl("para", desQuery), MyApplication.getInstance().getSecurityKeyValuesObject());
+			    if (is != null) {
+			    	result = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
 			    }
-				JSONObject resultObject = new JSONObject(NetworkUtils.getContentFromInput(is));
-				String code = resultObject.getString("StatusCode");
-				_errMsg = resultObject.getString("StatusMessage");
-				
-				return "1".equals(code);
-				
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();
-				_errMsg = e.getMessage();
+				result.mStatusMessage = e.getMessage();
 			} catch (IOException e) {
 				e.printStackTrace();
-				_errMsg = e.getMessage();
+				result.mStatusMessage = MyApplication.getInstance().getGernalNetworkError();
 			} catch (JSONException e) {
 				e.printStackTrace();
-				_errMsg = e.getMessage();
+				result.mStatusMessage = e.getMessage();
 			} finally {
 				NetworkUtils.closeInputStream(is);
 			}
-			return false;
+			return result;
 		}
 		@Override
-		protected void onPostExecute(Boolean result) {
+		protected void onPostExecute(HaierResultObject result) {
 			super.onPostExecute(result);
 			dismissDialog(DIALOG_PROGRESS);
-			if (result) {
-				MyApplication.getInstance().showMessage(R.string.msg_find_password_success);
-			} else {
-				MyApplication.getInstance().showMessage(_errMsg);
-			}
+			MyApplication.getInstance().showMessage(result.mStatusMessage);
 		}
 		@Override
 		protected void onCancelled() {

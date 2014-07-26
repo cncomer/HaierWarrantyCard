@@ -24,6 +24,7 @@ import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.ImageHelper;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 /**
  * 需要SlidingMenu能力，需要实现继承该类
  * @author chenkai
@@ -51,6 +52,7 @@ public abstract class BaseSlidingFragmentActivity extends SlidingFragmentActivit
 			return;
 		}
 		mContext = this;
+		PushAgent.getInstance(mContext).onAppStart();
 	}
 	
 	//add by chenkai, 20140726 增加youmeng统计时长 begin

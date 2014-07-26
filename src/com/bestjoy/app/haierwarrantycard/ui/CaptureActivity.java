@@ -53,6 +53,7 @@ import com.google.zxing.client.result.ResultHandler;
 import com.google.zxing.client.result.ResultHandlerFactory;
 import com.shwy.bestjoy.utils.Intents;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 public final class CaptureActivity extends Activity implements SurfaceHolder.Callback {
 
@@ -137,6 +138,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
     historyManager.trimHistory();
     
     media = BeepAndVibrate.getInstance();
+    
+    PushAgent.getInstance(this).onAppStart();
   }
 
   @Override
