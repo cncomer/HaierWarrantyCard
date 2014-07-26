@@ -40,6 +40,7 @@ import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.bestjoy.app.haierwarrantycard.utils.DialogUtils;
 import com.bestjoy.app.haierwarrantycard.utils.FilesLengthUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
@@ -580,7 +581,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 				intent.setClass(mContext, PdfViewerActivity.class);
 				startActivity(intent);
 			} else {
-				MyApplication.getInstance().showMessage(result.mStatusMessage);
+				DialogUtils.createSimpleConfirmAlertDialog(mContext, result.mStatusMessage, null);
 			}
 		}
 	}
