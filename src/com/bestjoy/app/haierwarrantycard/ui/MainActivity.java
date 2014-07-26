@@ -30,9 +30,9 @@ import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.update.UpdateService;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
-import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.FilesUtils;
+import com.umeng.message.PushAgent;
 
 public class MainActivity extends BaseActionbarActivity {
 	private LinearLayout mDotsLayout;
@@ -94,6 +94,10 @@ public class MainActivity extends BaseActionbarActivity {
 		
 		ModleSettings.addModelsAdapter(this, (ListView) findViewById(R.id.listview));
 		UpdateService.startUpdateServiceOnAppLaunch(mContext);
+		
+		//启动推送功能
+		PushAgent mPushAgent = PushAgent.getInstance(mContext);
+		mPushAgent.enable();
 	}
 	
 	@Override
