@@ -48,7 +48,7 @@ public final class HistoryActivity extends BaseActionbarActivity implements OnIt
 	}
 
 	@Override
-	protected void onResume() {
+	public void onResume() {
 		super.onResume();
 		List<HistoryItem> items = historyManager.buildHistoryItems();
 		adapter.clear();

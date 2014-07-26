@@ -18,6 +18,7 @@ import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.ImageHelper;
 import com.shwy.bestjoy.utils.InfoInterface;
 import com.shwy.bestjoy.utils.Intents;
+import com.umeng.analytics.MobclickAgent;
 
 public class BaseFragment extends SherlockFragment{
 
@@ -234,4 +235,18 @@ public class BaseFragment extends SherlockFragment{
    	}
    	
    	private HashMap<Integer, Dialog> mDialogMap = new HashMap<Integer, Dialog>();
+   	
+  //add by chenkai, 20140726 增加youmeng统计页面 begin
+  	@Override
+  	public void onResume() {
+  		super.onResume();
+  		MobclickAgent.onPageStart(getClass().getSimpleName()); //统计页面
+  	}
+  	
+  	@Override
+  	public void onPause() {
+  		super.onPause();
+  		MobclickAgent.onPageEnd(getClass().getSimpleName());
+  	}
+   //add by chenkai, 20140726 增加youmeng统计页面 end
 }

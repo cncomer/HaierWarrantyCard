@@ -222,6 +222,9 @@
                 <action android:name="com.bestjoy.app.haierwarrantycard.service.intent.emptyservice" />
             </intent-filter>
         </service>
+        
+        <meta-data android:value="53d10bdc56240bbd060b0728" android:name="UMENG_APPKEY"></meta-data>
+		<meta-data android:value="Haier" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>

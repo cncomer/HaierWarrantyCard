@@ -52,6 +52,7 @@ import com.google.zxing.client.result.ResultButtonListener;
 import com.google.zxing.client.result.ResultHandler;
 import com.google.zxing.client.result.ResultHandlerFactory;
 import com.shwy.bestjoy.utils.Intents;
+import com.umeng.analytics.MobclickAgent;
 
 public final class CaptureActivity extends Activity implements SurfaceHolder.Callback {
 
@@ -141,6 +142,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   @Override
   protected void onResume() {
     super.onResume();
+    MobclickAgent.onResume(this);
 
     SurfaceView surfaceView = (SurfaceView) findViewById(R.id.preview_view);
     SurfaceHolder surfaceHolder = surfaceView.getHolder();
@@ -167,6 +169,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
   @Override
   protected void onPause() {
     super.onPause();
+    MobclickAgent.onPause(this);
     if (handler != null) {
       handler.quitSynchronously();
       handler = null;
