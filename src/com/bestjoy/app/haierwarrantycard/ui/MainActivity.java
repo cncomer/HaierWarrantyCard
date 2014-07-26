@@ -44,6 +44,7 @@ public class MainActivity extends BaseActionbarActivity {
 			R.drawable.ad2,
 			R.drawable.ad3,
 			R.drawable.ad4,
+			R.drawable.ad5,
 	};
 	
 	private Drawable[] mDotDrawableArray;
@@ -95,9 +96,6 @@ public class MainActivity extends BaseActionbarActivity {
 		ModleSettings.addModelsAdapter(this, (ListView) findViewById(R.id.listview));
 		UpdateService.startUpdateServiceOnAppLaunch(mContext);
 		
-		//启动推送功能
-		PushAgent mPushAgent = PushAgent.getInstance(mContext);
-		mPushAgent.enable();
 	}
 	
 	@Override
