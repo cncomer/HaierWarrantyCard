@@ -124,7 +124,7 @@ public abstract class BaseBrowserActivity extends BaseActionbarActivity {
     }
 
     @Override
-    protected void onResume() {
+    public void onResume() {
         super.onResume();
         recentAdapter.setUris(viewerPreferences.getRecent());
     }

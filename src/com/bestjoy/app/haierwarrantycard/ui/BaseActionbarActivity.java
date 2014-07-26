@@ -24,6 +24,7 @@ import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.ImageHelper;
+import com.umeng.analytics.MobclickAgent;
 
 public abstract class BaseActionbarActivity extends SherlockFragmentActivity {
 	private static final String TAG = "BaseActionbarActivity";
@@ -48,7 +49,19 @@ public abstract class BaseActionbarActivity extends SherlockFragmentActivity {
 		}
 		mContext = this;
 	}
+	//add by chenkai, 20140726 增加youmeng统计时长 begin
+	@Override
+	public void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
 	
+	@Override
+	public void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
+	//add by chenkai, 20140726 增加youmeng统计时长 end
     protected abstract boolean checkIntent(Intent intent);
 	
 	public static final int DIALOG_PICTURE_CHOOSE_CONFIRM = 10002;

@@ -2,16 +2,21 @@ package com.bestjoy.app.haierwarrantycard;
 
 import java.io.File;
 
+import org.json.JSONObject;
+
 import android.app.AlertDialog;
 import android.app.Application;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.net.wifi.WifiManager;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
+import android.telephony.TelephonyManager;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
@@ -26,6 +31,7 @@ import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.DeviceStorageUtils;
 import com.shwy.bestjoy.utils.DevicesUtils;
 import com.shwy.bestjoy.utils.SecurityUtils.SecurityKeyValuesObject;
+import com.umeng.analytics.MobclickAgent;
 
 public class MyApplication extends Application{
 	
@@ -41,6 +47,7 @@ public class MyApplication extends Application{
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		MobclickAgent.setDebugMode(true);
 		Log.d(TAG, "onCreate()");
 		mHandler = new Handler();
 		mInstance = this;
@@ -88,6 +95,7 @@ public class MyApplication extends Application{
 		//用于屏幕适配
 		DisplayMetrics display = this.getResources().getDisplayMetrics();
 		Log.d(TAG, display.toString());
+		Log.d(TAG, getDeviceInfo(this));
 	}
 	
 	public synchronized static MyApplication getInstance() {
@@ -376,4 +384,36 @@ public class MyApplication extends Application{
     	return dialog;
     }
   //add by chenkai, 锁定认证字段 20140701 begin
+    
+    
+    
+
+	public static String getDeviceInfo(Context context) {
+	    try{
+	        JSONObject json = new JSONObject();
+	        TelephonyManager tm = (android.telephony.TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+	  
+	        String device_id = tm.getDeviceId();
+	      
+	        WifiManager wifi = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+	          
+	        String mac = wifi.getConnectionInfo().getMacAddress();
+	        json.put("mac", mac);
+	      
+	       if(TextUtils.isEmpty(device_id) ){
+	            device_id = mac;
+	       }
+	      
+	      if( TextUtils.isEmpty(device_id) ){
+	           device_id = android.provider.Settings.Secure.getString(context.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+	      }
+	      
+	      json.put("device_id", device_id);
+	      return json.toString();
+	    }catch(Exception e){
+	      e.printStackTrace();
+	    }
+	    return null;
+	}
+                  
 }

@@ -23,6 +23,7 @@ import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
 import com.jeremyfeinstein.slidingmenu.lib.app.SlidingFragmentActivity;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.ImageHelper;
+import com.umeng.analytics.MobclickAgent;
 /**
  * 需要SlidingMenu能力，需要实现继承该类
  * @author chenkai
@@ -51,6 +52,20 @@ public abstract class BaseSlidingFragmentActivity extends SlidingFragmentActivit
 		}
 		mContext = this;
 	}
+	
+	//add by chenkai, 20140726 增加youmeng统计时长 begin
+	@Override
+	public void onResume() {
+		super.onResume();
+		MobclickAgent.onResume(this);
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
+	//add by chenkai, 20140726 增加youmeng统计时长 end
 	
     protected abstract boolean checkIntent(Intent intent);
 	

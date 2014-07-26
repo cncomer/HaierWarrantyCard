@@ -289,7 +289,7 @@
             android:value="3ce4df1ea16bbdc4be4030fa709ff839" >
         </meta-data>
 		<!-- 消息推送代码结束 -->
-        
+		<meta-data android:value="Haier" android:name="UMENG_CHANNEL"/>
     </application>
 
 </manifest>
