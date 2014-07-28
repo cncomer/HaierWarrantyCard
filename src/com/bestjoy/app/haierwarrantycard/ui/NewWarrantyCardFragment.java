@@ -43,6 +43,7 @@ import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.bestjoy.app.haierwarrantycard.utils.DialogUtils;
 import com.bestjoy.app.haierwarrantycard.view.HaierPopView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
@@ -438,12 +439,15 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 				.put("LeiXin", baoxiuCardObject.mLeiXin)
 				.put("PinPai", baoxiuCardObject.mPinPai);
 				
-				DebugUtils.logD(TAG, "bjson=" + jsonObject.toString(4));
+				DebugUtils.logD(TAG, "bjson=" + jsonObject.toString());
 				is = NetworkUtils.openPostContectionLocked(HaierServiceObject.getCreateBaoxiucardUri(), "bjson", jsonObject.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
 				try {
-					haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
-					DebugUtils.logD(TAG, "StatusCode = " + haierResultObject.mStatusCode);
-					DebugUtils.logD(TAG, "StatusMessage = " + haierResultObject.mStatusMessage);
+					String content = NetworkUtils.getContentFromInput(is);
+					if (TextUtils.isEmpty(content)) {
+						haierResultObject.mStatusCode = -99;
+						return haierResultObject;
+					}
+					haierResultObject = HaierResultObject.parse(content);
 					if (haierResultObject.isOpSuccessfully()) {
 						//如果后台返回了保修卡数据,我们解析它保存在本地
 						if (haierResultObject.mJsonData != null) {
@@ -490,6 +494,10 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			super.onPostExecute(result);
 			mSaveBtn.setEnabled(true);
 			dissmissDialog(DIALOG_PROGRESS);
+			if (result.mStatusCode == -99) {
+				DialogUtils.createSimpleConfirmAlertDialog(getActivity(), getActivity().getString(R.string.msg_get_no_content_from_server), null);
+				return;
+			}
 			if (result.isOpSuccessfully()) {
 				//添加成功
 				//add by chenkai, 锁定认证字段 20140701 begin

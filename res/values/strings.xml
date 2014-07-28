@@ -267,6 +267,7 @@
      <string name="msg_input_tel_when_find_password">请先输入要找回密码的手机号码</string>
      <string name="msg_find_password_success">密码已成功找回，请查看短信</string>
       <string name="msg_local_save_card_failed">服务器上传信息成功，但本地保存失败，请重新登录同步数据</string>
+      <string name="msg_get_no_content_from_server">抱歉，服务器没有返回数据，请重试，如果多次提示该错误，请反馈給开发者，非常感谢.</string>
       <string name="title_baoxiucard_info">保修卡信息</string>
       <string name="msg_cant_show_bill">"请先拍摄发票"</string>
       
@@ -398,4 +399,10 @@
          <string name="msg_for_card_be_locked_cant_edit">"该报修卡已经经过厂家认证，无法编辑。"</string>
          <string name="msg_for_card_be_locked_cant_delete">"该报修卡已经经过厂家认证，无法删除。"</string>
          <!-- add by chenkai, 锁定认证字段 20140701 end -->
+         
+         <string name="tel_not_register">当前手机号码未注册,请先注册</string>
+         
+          <string name="menu_goto">跳转到</string>
+          <string name="menu_fullscreen">全屏</string>
+          <string name="menu_fullscreen2">全屏</string>
 </resources>

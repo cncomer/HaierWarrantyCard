@@ -1,14 +1,20 @@
 package com.poqop.document;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.*;
+import android.view.Gravity;
+import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
+import com.actionbarsherlock.view.Window;
+import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.ui.BaseActionbarActivity;
 import com.poqop.document.events.CurrentPageListener;
 import com.poqop.document.events.DecodingProgressListener;
 import com.poqop.document.models.CurrentPageModel;
@@ -16,7 +22,7 @@ import com.poqop.document.models.DecodingProgressModel;
 import com.poqop.document.models.ZoomModel;
 import com.poqop.document.views.PageViewZoomControls;
 
-public abstract class BaseViewerActivity extends Activity implements DecodingProgressListener, CurrentPageListener
+public abstract class BaseViewerActivity extends BaseActionbarActivity implements DecodingProgressListener, CurrentPageListener
 {
     private static final int MENU_EXIT = 0;
     private static final int MENU_GOTO = 1;
@@ -35,6 +41,8 @@ public abstract class BaseViewerActivity extends Activity implements DecodingPro
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
+        viewerPreferences = new ViewerPreferences(this);
+        final SharedPreferences sharedPreferences = getSharedPreferences(DOCUMENT_VIEW_STATE_PREFERENCES, 0);
         super.onCreate(savedInstanceState);
         initDecodeService();
         final ZoomModel zoomModel = new ZoomModel();
@@ -50,19 +58,17 @@ public abstract class BaseViewerActivity extends Activity implements DecodingPro
         documentView.setDecodeService(decodeService);
         decodeService.open(getIntent().getData());
 
-        viewerPreferences = new ViewerPreferences(this);
-
         final FrameLayout frameLayout = createMainContainer();
         frameLayout.addView(documentView);
         frameLayout.addView(createZoomControls(zoomModel));
-        setFullScreen();
+       
         setContentView(frameLayout);
-
-        final SharedPreferences sharedPreferences = getSharedPreferences(DOCUMENT_VIEW_STATE_PREFERENCES, 0);
         documentView.goToPage(sharedPreferences.getInt(getIntent().getData().toString(), 0));
         documentView.showDocument();
 
         viewerPreferences.addRecent(getIntent().getData());
+        
+        setFullScreen();
     }
 
     public void decodingProgressChanged(final int currentlyDecoding)
@@ -72,7 +78,8 @@ public abstract class BaseViewerActivity extends Activity implements DecodingPro
             public void run()
             {
                 try {
-                	getWindow().setFeatureInt(Window.FEATURE_INDETERMINATE_PROGRESS, currentlyDecoding == 0 ? 10000 : currentlyDecoding);
+                	setSupportProgress(currentlyDecoding == 0 ? 10000 : currentlyDecoding);
+//                	getSherlock().setFeatureInt(Window.FEATURE_INDETERMINATE_PROGRESS, currentlyDecoding == 0 ? 10000 : currentlyDecoding);
                 } catch (final Throwable e) {
                 }
             }
@@ -110,14 +117,10 @@ public abstract class BaseViewerActivity extends Activity implements DecodingPro
 
     private void setFullScreen()
     {
-        if (viewerPreferences.isFullScreen())
-        {
-            getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        }
-        else
-        {
-            getWindow().requestFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
+        if (viewerPreferences.isFullScreen()) {
+        	getSupportActionBar().hide();
+        }  else {
+        	getSupportActionBar().show();
         }
     }
 
@@ -166,13 +169,26 @@ public abstract class BaseViewerActivity extends Activity implements DecodingPro
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
-        menu.add(0, MENU_EXIT, 0, "Exit");
-        menu.add(0, MENU_GOTO, 0, "Go to page");
-        final MenuItem menuItem = menu.add(0, MENU_FULL_SCREEN, 0, "Full screen").setCheckable(true).setChecked(viewerPreferences.isFullScreen());
-        setFullScreenMenuItemText(menuItem);
+    public boolean onCreateOptionsMenu(Menu menu)  {
+    	SubMenu subMenu1 = menu.addSubMenu(1000, R.string.menu_more, 1000, R.string.menu_more);
+    	getSupportMenuInflater().inflate(R.menu.pdfviewer_activity_actionbarmenu, subMenu1);
+    	MenuItem subMenu1Item = subMenu1.getItem();
+    	 subMenu1Item.setIcon(R.drawable.abs__ic_menu_moreoverflow_normal_holo_dark);
+         subMenu1Item.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+    	getSupportMenuInflater().inflate(R.menu.pdfviewer_activity_menu, menu);
         return true;
+    }
+    
+    public boolean onPrepareOptionsMenu(Menu menu) {
+    	MenuItem menuItem = menu.findItem(R.string.menu_fullscreen);
+    	MenuItem menuItem2 = menu.findItem(R.string.menu_fullscreen2);
+    	if (menuItem != null) {
+    		menuItem.setChecked(viewerPreferences.isFullScreen());
+    	}
+    	if (menuItem2 != null) {
+    		menuItem2.setChecked(viewerPreferences.isFullScreen());
+    	}
+    	return true;
     }
 
     private void setFullScreenMenuItemText(MenuItem menuItem)
@@ -185,26 +201,26 @@ public abstract class BaseViewerActivity extends Activity implements DecodingPro
     {
         switch (item.getItemId())
         {
-            case MENU_EXIT:
+            case R.string.menu_exit:
                 System.exit(0);
                 return true;
-            case MENU_GOTO:
+            case R.string.menu_goto:
                 showDialog(DIALOG_GOTO);
                 return true;
-            case MENU_FULL_SCREEN:
+            case R.string.menu_fullscreen:
+            case R.string.menu_fullscreen2:
                 item.setChecked(!item.isChecked());
-                setFullScreenMenuItemText(item);
                 viewerPreferences.setFullScreen(item.isChecked());
 
-                finish();
-                startActivity(getIntent());
+                setFullScreen();
+                invalidateOptionsMenu();
                 return true;
         }
-        return false;
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
-    protected Dialog onCreateDialog(int id)
+    public Dialog onCreateDialog(int id)
     {
         switch (id)
         {

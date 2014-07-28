@@ -18,6 +18,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
@@ -37,10 +38,12 @@ public abstract class BaseActionbarActivity extends SherlockFragmentActivity {
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//		getSupportActionBar().setDisplayHomeAsUpEnabled(true);d
 		//abs__home
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		getSupportActionBar().setDisplayShowHomeEnabled(false);
+		//if (!getSherlock().hasFeature(android.view.Window.FEATURE_NO_TITLE)) {
+			getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+			getSupportActionBar().setDisplayShowHomeEnabled(false);
+		//}
 		
 		DebugUtils.logD(TAG, "onCreate()");
 		if (!checkIntent(getIntent())) {

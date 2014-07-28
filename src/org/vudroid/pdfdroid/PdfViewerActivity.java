@@ -1,5 +1,7 @@
 package org.vudroid.pdfdroid;
 
+import android.content.Intent;
+
 import com.poqop.document.BaseViewerActivity;
 import com.poqop.document.DecodeService;
 import com.poqop.document.DecodeServiceBase;
@@ -12,4 +14,9 @@ public class PdfViewerActivity extends BaseViewerActivity
     {
         return new DecodeServiceBase(new PdfContext());
     }
+
+	@Override
+	protected boolean checkIntent(Intent intent) {
+		return true;
+	}
 }

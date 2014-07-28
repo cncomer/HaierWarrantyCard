@@ -259,10 +259,10 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			 /**
 			  *  2.5已经锁定的保修卡，不允许用户删除。提示用户
 			  */
-			 if (mBaoxiuCardObject.isLocked()) {
+			 /*if (mBaoxiuCardObject.isLocked()) {
 				 MyApplication.getInstance().showLockedEditMode(mContext, R.string.msg_for_card_be_locked_cant_delete, null);
 				 return true;
-			 }
+			 }*/
 			//add by chenkai, 锁定认证字段 20140701 end
 			 showDeleteDialog();
 			 break;
