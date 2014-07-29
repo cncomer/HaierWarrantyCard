@@ -196,8 +196,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 		protected void onPostExecute(HaierResultObject result) {
 			super.onPostExecute(result);
 			dismissDialog(DIALOG_PROGRESS);
-			if (!result.isOpSuccessfully()) {
-				//由于注册和找回密码是用的是同一个后台，所以，在找回密码的时候，这里可能存在用户并未注册，点击找回密码实际上是发送的注册验证码，0是已注册，1是获取验证码成功
+			if (result.isOpSuccessfully()) {
 				MyApplication.getInstance().showMessage(result.mStatusMessage);
 			} else {
 				DialogUtils.createSimpleConfirmAlertDialog(mContext, mContext.getString(R.string.tel_not_register), null);

@@ -421,7 +421,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		String pinpai = mPinpaiInput.getText().toString().trim();
 		final String bxPhone = mBaoxiuTelInput.getText().toString().trim();
 		//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
-    	if (!HaierServiceObject.isHaierPinpai(pinpai)) {
+    	if (!HaierServiceObject.isHaierPinpai(pinpai) || !HaierServiceObject.isKasadiPinpai(pinpai)) {
     		new AlertDialog.Builder(getActivity())
 	    	.setMessage(R.string.must_haier_confirm_yuyue)
 	    	.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -473,12 +473,20 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	
 	private boolean checkInstallDate() {
 		Calendar cal = Calendar.getInstance();
-		return mCalendar.get(Calendar.YEAR) >= cal.get(Calendar.YEAR)
+		int sameYear = mCalendar.get(Calendar.YEAR) - cal.get(Calendar.YEAR);
+		int sameMonth = mCalendar.get(Calendar.MONTH) - cal.get(Calendar.MONTH);
+		int sameDay = mCalendar.get(Calendar.DAY_OF_MONTH) - cal.get(Calendar.DAY_OF_MONTH);
+		
+		return sameYear > 0
+				|| (sameYear == 0 && sameMonth > 0)
+				|| (sameYear == 0 && sameMonth == 0 && sameDay > 0);
+		
+		/*return mCalendar.get(Calendar.YEAR) >= cal.get(Calendar.YEAR)
 				&& mCalendar.get(Calendar.MONTH) >= cal.get(Calendar.MONTH)
 				&& mCalendar.get(Calendar.DAY_OF_MONTH) > cal.get(Calendar.DAY_OF_MONTH)
 				|| mCalendar.get(Calendar.YEAR) > cal.get(Calendar.YEAR)
 				|| mCalendar.get(Calendar.MONTH) > cal.get(Calendar.MONTH)
-				&& mCalendar.get(Calendar.YEAR) >= cal.get(Calendar.YEAR);
+				&& mCalendar.get(Calendar.YEAR) >= cal.get(Calendar.YEAR);*/
 	}
 	
 	private boolean checkInstallHour() {
@@ -491,12 +499,13 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	}
 	
 	private boolean checkInstallDate(int year, int month, int day) {
-		return year >= mCalendar.get(Calendar.YEAR)
-				&& month >= mCalendar.get(Calendar.MONTH)
-				&& day > mCalendar.get(Calendar.DAY_OF_MONTH)
-				|| year > mCalendar.get(Calendar.YEAR)
-				|| month > mCalendar.get(Calendar.MONTH)
-				&& year >= mCalendar.get(Calendar.YEAR);
+		Calendar cal = Calendar.getInstance();
+		int sameYear = year - cal.get(Calendar.YEAR);
+		int sameMonth = month - cal.get(Calendar.MONTH);
+		int sameDay = day - cal.get(Calendar.DAY_OF_MONTH);
+		return sameYear > 0
+				|| (sameYear == 0 && sameMonth > 0)
+				|| (sameYear == 0 && sameMonth == 0 && sameDay > 0);
 	}
 
 	class MyDatePickerDialog extends DatePickerDialog {

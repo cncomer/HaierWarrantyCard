@@ -138,14 +138,14 @@ public class HaierServiceObject {
 		 */
 		public static String getFindPasswordUrl(String para, String jsonString) {
 			UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder(HaierServiceObject.SERVICE_URL);
-			sb.append("20140726/SendMessage.ashx?")
+			sb.append("20140726/forgetpwd.ashx?")
 			.append(para).append("=").appendUrlEncodedString(jsonString);
 			return sb.toString();
 		}
 		
 		public static String getYanzhengmaUrl(String para, String jsonString) {
 			UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder(HaierServiceObject.SERVICE_URL);
-			sb.append("20140726/SendMessage.ashx?")
+			sb.append("20140726/GetYanZheng.ashx?")
 			.append(para).append("=").appendUrlEncodedString(jsonString);
 			return sb.toString();
 		}

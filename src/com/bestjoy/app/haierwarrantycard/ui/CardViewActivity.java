@@ -99,8 +99,8 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	        				DebugUtils.logD(TAG, "FapiaoTask downloaded " + fapiao.getAbsolutePath());
 	        				BaoxiuCardObject.showBill(mContext, mBaoxiuCardObject);
 	        			}
+	        			dismissDialog(DIALOG_PROGRESS);
 	            	}
-	            	dismissDialog(DIALOG_PROGRESS);
 	            	return;
 	            }
 	            super.handleMessage(msg);
@@ -354,7 +354,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		//add by chenkai, 2014.05.31，增加一键保养 begin
 		case R.id.button_onekey_maintenance:
 			//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
-	    	if (HaierServiceObject.isHaierPinpai(mBaoxiuCardObject.mPinPai)) {
+	    	if (HaierServiceObject.isHaierPinpai(mBaoxiuCardObject.mPinPai) || HaierServiceObject.isKasadiPinpai(mBaoxiuCardObject.mPinPai)) {
 	    		BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
     			HomeObject.setHomeObject(mHomeObject);
     			if (id == R.id.button_onekey_install) {
