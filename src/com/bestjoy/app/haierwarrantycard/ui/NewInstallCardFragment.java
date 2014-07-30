@@ -18,7 +18,6 @@ import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -43,6 +42,7 @@ import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
 import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
+import com.shwy.bestjoy.utils.UrlEncodeStringBuilder;
 
 public class NewInstallCardFragment extends ModleBaseFragment implements View.OnClickListener{
 	private static final String TAG = "NewInstallCardFragment";
@@ -258,46 +258,30 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			BaoxiuCardObject baoxiuCardObject = getBaoxiuCardObject();
 			mError = null;
 			InputStream is = null;
-			final int LENGTH = 14;
-			String[] urls = new String[LENGTH];
-			String[] paths = new String[LENGTH];
 			getBaoxiuCardObject();
 			HomeObject homeObject = mProCityDisEditPopView.getHomeObject();
-			urls[0] = HaierServiceObject.SERVICE_URL + "20140514/NAddHaierYY.ashx?LeiXin=";//AddHaierYuyue.ashx
-			paths[0] = baoxiuCardObject.mLeiXin;
-			urls[1] = "&PinPai=";
-			paths[1] = baoxiuCardObject.mPinPai;
-			urls[2] = "&XingHao=";
-			paths[2] = baoxiuCardObject.mXingHao;
-			urls[3] = "&SHBianhao=";
-			paths[3] = baoxiuCardObject.mSHBianHao;
-			urls[4] = "&BxPhone=";
-			paths[4] = baoxiuCardObject.mBXPhone;
-			urls[5] = "&UserName=";
-			paths[5] = mContactNameInput.getText().toString().trim();
-			urls[6] = "&Cell=";
-			paths[6] = mContactTelInput.getText().toString().trim();
-			urls[7] = "&address=";
-			paths[7] = homeObject.mHomePlaceDetail;
-			urls[8] = "&dstrictid=";
-			paths[8] = mProCityDisEditPopView.getDisID();
-			urls[9] = "&yytime=";
-			paths[9] = BaoxiuCardObject.BUY_DATE_FORMAT_YUYUE_TIME.format(mCalendar.getTime());
-			urls[10] = "&Desc=";
-			paths[10] = mBeizhuTag.getText().toString().trim();
-			urls[11] = "&service_type=";
-			paths[11] = "T01";//T01为安装
-			
-			String timeStr = BaoxiuCardObject.DATE_FORMAT_YUYUE_TIME.format(new Date());
-			String tip = BaoxiuCardObject.getYuyueSecurityTip(timeStr);
-			urls[12] = "&tip=";
-			paths[12] = tip;
-			urls[13] = "&key=";
-			paths[13] = BaoxiuCardObject.getYuyueSecurityKey(mContactTelInput.getText().toString().trim(), timeStr);
-			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
-			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
 			try {
-				is = NetworkUtils.openContectionLocked(urls, paths, MyApplication.getInstance().getSecurityKeyValuesObject());
+				UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder(HaierServiceObject.SERVICE_URL)
+				.append("20140514/NAddHaierYY.ashx?")
+				.append("LeiXin=").appendUrlEncodedStringNotNull(baoxiuCardObject.mLeiXin)
+				.append("&PinPai=").appendUrlEncodedStringNotNull(baoxiuCardObject.mPinPai)
+				.append("&XingHao=").appendUrlEncodedStringNotNull(baoxiuCardObject.mXingHao)
+				.append("&SHBianhao=").appendUrlEncodedStringNotNull(baoxiuCardObject.mSHBianHao)
+				.append("&BxPhone=").appendUrlEncodedStringNotNull(baoxiuCardObject.mBXPhone)
+				.append("&UserName=").appendUrlEncodedStringNotNull(mContactNameInput.getText().toString().trim())
+				.append("&Cell=").appendUrlEncodedStringNotNull(mContactTelInput.getText().toString().trim())
+				.append("&address=").appendUrlEncodedStringNotNull(homeObject.mHomePlaceDetail)
+				.append("&dstrictid=").appendUrlEncodedStringNotNull(mProCityDisEditPopView.getDisID())
+				.append("&yytime=").appendUrlEncodedStringNotNull(BaoxiuCardObject.BUY_DATE_FORMAT_YUYUE_TIME.format(mCalendar.getTime()))
+				.append("&Desc=").appendUrlEncodedStringNotNull(mBeizhuTag.getText().toString().trim())
+				.append("&service_type=").appendUrlEncodedStringNotNull("T01");//T01为安装
+				
+				String timeStr = BaoxiuCardObject.DATE_FORMAT_YUYUE_TIME.format(new Date());
+				String tip = BaoxiuCardObject.getYuyueSecurityTip(timeStr);
+				sb.append("&tip=").appendUrlEncodedStringNotNull(tip);
+				sb.append("&key=").appendUrlEncodedStringNotNull(BaoxiuCardObject.getYuyueSecurityKey(mContactTelInput.getText().toString().trim(), timeStr));
+				DebugUtils.logD(TAG, "CreateNewInatallCardAsyncTask request=" + sb.toString());
+				is = NetworkUtils.openContectionLocked(sb.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
 				try {
 					JSONObject jsonObject = new JSONObject(NetworkUtils.getContentFromInput(is));
 					mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
