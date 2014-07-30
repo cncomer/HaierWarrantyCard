@@ -85,6 +85,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 			@Override
 			public void onChange(boolean selfChange) {
 				super.onChange(selfChange);
+				DebugUtils.logD(TAG, "mContentObserver.onChange()");
 				loadHomesAsync();
 			}
 		};
@@ -131,6 +132,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 
 	private LoadHomesAsyncTask mLoadHomesAsyncTask;
 	private void loadHomesAsync() {
+		DebugUtils.logD(TAG, "loadHomesAsync()");
 		AsyncTaskUtils.cancelTask(mLoadHomesAsyncTask);
 		mLoadHomesAsyncTask = new LoadHomesAsyncTask();
 		mLoadHomesAsyncTask.execute();
@@ -208,7 +210,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 			if (HaierAccountManager.getInstance().getAccountObject() == null) {
 				return 0;
 			}
-			return HaierAccountManager.getInstance().getAccountObject().mAccountHomeCount;
+			return HaierAccountManager.getInstance().getAccountObject().mAccountHomes.size();
 		}
 
 	}
