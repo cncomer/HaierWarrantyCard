@@ -522,8 +522,9 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 			if (TextUtils.isEmpty(mYanBaoTime)) {
 				mYanBaoTime = "0";
 			}
-			int validity = (int) ((Float.valueOf(mWY) + Float.valueOf(mYanBaoTime)) * 365 + 0.5f);
+			
 			try {
+				int validity = (int) ((Float.valueOf(mWY) + Float.valueOf(mYanBaoTime)) * 365 + 0.5f);
 				//转换购买日期
 				Date buyDate = BUY_DATE_TIME_FORMAT.parse(mBuyDate);
 				//当前日期
@@ -535,6 +536,10 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 				int passedDay = (int) (passedTimeLong / DAY_IN_MILLISECONDS);
 				mZhengjiValidity = validity - passedDay;
 			} catch (ParseException e) {
+				e.printStackTrace();
+				mZhengjiValidity = 0;
+			} catch (NumberFormatException e) {
+				DebugUtils.logE(TAG, "getBaoxiuValidity() NumberFormatException " + e.getMessage()); 
 				e.printStackTrace();
 				mZhengjiValidity = 0;
 			}
