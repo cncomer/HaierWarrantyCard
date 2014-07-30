@@ -246,6 +246,7 @@
      <string name="msg_can_not_access_network">抱歉，暂时无法访问服务器，请检查网络，稍后重试</string>
      <string name="msg_download_xinghao_wait">正在下载型号数据，请稍等...</string>
      <string name="msg_download_xinghao_error">下载型号数据失败,请稍后重试...</string>
+     <string name="msg_download_xinghao_oom_error">型号数据太大,不能正常解析,请稍后重试...</string>
      <string name="msg_download_no_xinghao_wait">服务器还暂时没有该品牌的产品</string>
      <string name="title_dalei">大类</string>
      <string name="title_xiaolei">小类</string>
