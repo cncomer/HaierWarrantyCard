@@ -421,7 +421,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		String pinpai = mPinpaiInput.getText().toString().trim();
 		final String bxPhone = mBaoxiuTelInput.getText().toString().trim();
 		//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
-    	if (!HaierServiceObject.isHaierPinpai(pinpai) || !HaierServiceObject.isKasadiPinpai(pinpai)) {
+    	if (!HaierServiceObject.isHaierPinpai(pinpai) && !HaierServiceObject.isKasadiPinpai(pinpai)) {
     		new AlertDialog.Builder(getActivity())
 	    	.setMessage(R.string.must_haier_confirm_yuyue)
 	    	.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {

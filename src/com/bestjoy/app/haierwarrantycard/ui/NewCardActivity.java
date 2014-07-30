@@ -51,6 +51,7 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 		if (savedInstanceState != null) {
 			mContent = (ModleBaseFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mContent");
 			mMenu = (NewCardChooseFragment) getSupportFragmentManager().getFragment(savedInstanceState, "mMenu");
+			DebugUtils.logW(TAG, "savedInstanceState != null, we try to get Fragment from FragmentManager, mContent=" + mContent + ", mMenu=" + mMenu);
 		}
 		int type = mBundles.getInt(Intents.EXTRA_TYPE);
 		if (mContent == null) {
@@ -70,26 +71,38 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 				break;
 				// add by chenkai, 增加预约保养Fragment, 2014.05.31 end
 			}
+			// set the Above View
+			setContentView(R.layout.content_frame);
+			getSupportFragmentManager()
+			.beginTransaction()
+			.add(R.id.content_frame, mContent)
+			.commit();
+		} else {
+			// set the Above View
+			setContentView(R.layout.content_frame);
+			getSupportFragmentManager()
+			.beginTransaction()
+			.replace(R.id.content_frame, mContent)
+			.commit();
 		}
 		mContent.setArguments(mBundles);
 		
 		if (mMenu == null) {
 			mMenu = new NewCardChooseFragment();
+			// set the Behind View
+			setBehindContentView(R.layout.menu_frame);
+			getSupportFragmentManager()
+			.beginTransaction()
+			.add(R.id.menu_frame, mMenu)
+			.commit();
+		} else {
+			// set the Behind View
+			setBehindContentView(R.layout.menu_frame);
+			getSupportFragmentManager()
+			.beginTransaction()
+			.replace(R.id.menu_frame, mMenu)
+			.commit();
 		}
-		
-		// set the Above View
-		setContentView(R.layout.content_frame);
-		getSupportFragmentManager()
-		.beginTransaction()
-		.replace(R.id.content_frame, mContent)
-		.commit();
-		
-		// set the Behind View
-		setBehindContentView(R.layout.menu_frame);
-		getSupportFragmentManager()
-		.beginTransaction()
-		.replace(R.id.menu_frame, mMenu)
-		.commit();
 		
 		// customize the SlidingMenu
 		SlidingMenu sm = getSlidingMenu();
@@ -271,6 +284,14 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 			DebugUtils.logD(TAG, "checkIntent failed, due to mBundles is null");
 		}
 		return mBundles != null;
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		DebugUtils.logW(TAG, "onSaveInstanceState(), we try to save Fragment to FragmentManager, mContent=" + mContent + ", mMenu=" + mMenu);
+		getSupportFragmentManager().putFragment(outState, "mContent", mContent);
+		getSupportFragmentManager().putFragment(outState, "mMenu", mMenu);
 	}
 	
 }

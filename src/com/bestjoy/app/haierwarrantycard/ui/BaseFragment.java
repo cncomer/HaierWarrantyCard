@@ -14,6 +14,7 @@ import android.net.Uri;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.ImageHelper;
 import com.shwy.bestjoy.utils.InfoInterface;
@@ -21,6 +22,7 @@ import com.shwy.bestjoy.utils.Intents;
 import com.umeng.analytics.MobclickAgent;
 
 public class BaseFragment extends SherlockFragment{
+	private static final String TAG = "BaseFragment";
 
 	/**请求扫描条码*/
 	public static final int REQUEST_SCAN = 10000;
@@ -149,6 +151,10 @@ public class BaseFragment extends SherlockFragment{
 	}
        
    	public Dialog onCreateDialog(int id) {
+   		if (getActivity() == null) {
+   			DebugUtils.logW(TAG, "onCreateDialog() id = " + id + ", getActivity()=" + getActivity());
+   			return null;
+   		}
    		switch(id) {
    		case DIALOG_PICTURE_CHOOSE_CONFIRM:
    			return new AlertDialog.Builder(getActivity())
@@ -240,13 +246,26 @@ public class BaseFragment extends SherlockFragment{
   	@Override
   	public void onResume() {
   		super.onResume();
+  		DebugUtils.logD(TAG, "onResume() this=" + this.getClass().getSimpleName());
   		MobclickAgent.onPageStart(getClass().getSimpleName()); //统计页面
   	}
   	
   	@Override
   	public void onPause() {
   		super.onPause();
+  		DebugUtils.logD(TAG, "onPause() this=" + this.getClass().getSimpleName());
   		MobclickAgent.onPageEnd(getClass().getSimpleName());
   	}
    //add by chenkai, 20140726 增加youmeng统计页面 end
+  	
+  	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		DebugUtils.logD(TAG, "onDestroyView() this=" + this.getClass().getSimpleName());
+	}
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		DebugUtils.logD(TAG, "onDestroy() this=" + this.getClass().getSimpleName());
+	}
 }

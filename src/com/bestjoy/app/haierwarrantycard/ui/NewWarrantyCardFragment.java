@@ -23,6 +23,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
+import android.os.Message;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,7 +84,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	
 	private BaoxiuCardObject mBaoxiuCardObject;
 	private Handler mHandler;
-
+	
+	private boolean mNeedLoadFapiao = false;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -95,6 +97,17 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		mBaoxiuCardObject.clear();
 		mHandler = new Handler();
 		initTempFile();
+	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		DebugUtils.logD(TAG, "onResume() mNeedLoadFapiao=" + mNeedLoadFapiao);
+		if (mNeedLoadFapiao) {
+			mNeedLoadFapiao = false;
+			loadFapiaoFromCameraAsync();
+		}
+		
 	}
 	
 	private void initTempFile() {
@@ -781,13 +794,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		if (resultCode == Activity.RESULT_OK) {
 			if (REQUEST_BILL == requestCode) {
                 if (mBillTempFile.exists()) {
-                	mHandler.postDelayed(new Runnable() {
-						@Override
-						public void run() {
-							loadFapiaoFromCameraAsync();
-						}
-                		
-                	}, 1000);
+                	mNeedLoadFapiao = true;
 				}
                 return;
 			}
