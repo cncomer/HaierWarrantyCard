@@ -71,6 +71,7 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 				break;
 				// add by chenkai, 增加预约保养Fragment, 2014.05.31 end
 			}
+			mContent.setArguments(mBundles);
 			// set the Above View
 			setContentView(R.layout.content_frame);
 			getSupportFragmentManager()
@@ -85,7 +86,6 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 			.replace(R.id.content_frame, mContent)
 			.commit();
 		}
-		mContent.setArguments(mBundles);
 		
 		if (mMenu == null) {
 			mMenu = new NewCardChooseFragment();
