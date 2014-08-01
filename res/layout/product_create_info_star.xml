@@ -92,6 +92,7 @@
 	    <EditText android:id="@+id/product_wy_input"
 	        android:layout_width="50dip"
 	        android:layout_height="wrap_content"
+	        android:inputType="number"
 	        android:background="@drawable/edit_text_holo_light"/>
 	    <TextView style="@style/ProductInfo"
 	        android:singleLine="true"
