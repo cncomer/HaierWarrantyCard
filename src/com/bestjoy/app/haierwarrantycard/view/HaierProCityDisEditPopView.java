@@ -394,4 +394,11 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 		
 		return mHomeObject;
 	}
+	
+	public void clear() {
+		if (mAddressAdapter != null) {
+			mAddressAdapter.changeCursor(null);
+			mAddressAdapter = null;
+		}
+	}
 }

@@ -118,14 +118,15 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 			break;
 		default:
 			//当选择了一个Home时候，我们要设置HomeObject对象
-			HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
-			boolean handle = ModleSettings.onActionBarMenuSelected(item, mContext, mBundle);
-			if (! handle) {
-				return super.onOptionsItemSelected(item);
+			if (mMyPagerAdapter.getCount() > 0) {
+				HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
+				boolean handle = ModleSettings.onActionBarMenuSelected(item, mContext, mBundle);
+				if (!handle) {
+					return super.onOptionsItemSelected(item);
+				}
 			}
-			break;
 		}
-		return false;
+		return super.onOptionsItemSelected(item);
 		
 	}
 

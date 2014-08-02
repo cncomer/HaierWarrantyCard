@@ -217,8 +217,12 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 		@Override
 		protected void onPostExecute(Boolean result) {
 			super.onPostExecute(result);
-			mHomeManagerAdapter.notifyDataSetChanged();
 			dismissDialog(DIALOG_PROGRESS);
+			if (mHomeManagerAdapter.getCount() == 0) {
+				MainActivity.startActivityForTop(mContext);
+			} else {
+				mHomeManagerAdapter.notifyDataSetChanged();
+			}
 		}
 
 		@Override

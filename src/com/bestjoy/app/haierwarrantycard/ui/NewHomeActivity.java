@@ -236,6 +236,7 @@ public class NewHomeActivity extends BaseActionbarActivity {
 			dismissDialog(DIALOG_PROGRESS);
 			MyApplication.getInstance().showMessageAsync(result.mStatusMessage);
 			if(result.isOpSuccessfully()) {
+				mProCityDisEditPopView.clear();
 				NewHomeActivity.this.finish();
 			}
 		}
