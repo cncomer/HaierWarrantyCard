@@ -115,7 +115,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 			//管理家
 	    	//HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
 	    	HomeManagerActivity.startActivity(mContext);
-			break;
+			return true;
 		default:
 			//当选择了一个Home时候，我们要设置HomeObject对象
 			if (mMyPagerAdapter.getCount() > 0) {
