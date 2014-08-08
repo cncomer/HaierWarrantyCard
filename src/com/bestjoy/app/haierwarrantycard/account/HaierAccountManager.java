@@ -66,7 +66,9 @@ public class HaierAccountManager {
 	public AccountObject getAccountObject() {
 		return mHaierAccount;
 	}
-	
+	public long getCurrentAccountId() {
+		return mHaierAccount != null ? mHaierAccount.mAccountUid : -1; 
+	}
 	public boolean hasLoginned() {
 		return mHaierAccount != null && mHaierAccount.mAccountId > 0;
 	}

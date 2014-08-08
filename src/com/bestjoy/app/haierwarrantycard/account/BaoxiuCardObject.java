@@ -407,6 +407,17 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		}
 		return list;
 	}
+    public static BaoxiuCardObject getBaoxiuCardObject(ContentResolver cr, long uid, long aid, long bid) {
+    	BaoxiuCardObject object = null;
+		Cursor c = cr.query(BjnoteContent.BaoxiuCard.CONTENT_URI, PROJECTION, WHERE_UID_AND_AID_AND_BID, new String[]{String.valueOf(uid), String.valueOf(aid), String.valueOf(bid)}, null);
+		if (c != null) {
+			if (c.moveToNext()) {
+				object = getFromBaoxiuCardsCursor(c);
+			}
+			c.close();
+		}
+		return object;
+	}
     
     public static BaoxiuCardObject getFromBaoxiuCardsCursor(Cursor c) {
     	BaoxiuCardObject baoxiuCardObject = new BaoxiuCardObject();

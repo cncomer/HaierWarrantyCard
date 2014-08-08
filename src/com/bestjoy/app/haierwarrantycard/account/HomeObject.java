@@ -314,13 +314,14 @@ public class HomeObject implements InfoInterface{
 	
 	public static HomeObject getHomeObject(ContentResolver cr, long uid, long aid) {
 		Cursor c = cr.query(BjnoteContent.Homes.CONTENT_URI, HOME_PROJECTION, WHERE_ACCOUNT_ID_AND_HOME_ADDRESS_ID, new String[]{String.valueOf(uid), String.valueOf(aid)}, null);
+		HomeObject homeObject = null;
 		if (c != null) {
 			if (c.moveToNext()) {
-				return getFromHomeSCursor(c, cr);
+				homeObject = getFromHomeSCursor(c, cr);
 			}
 			c.close();
 		}
-		return null;
+		return homeObject;
 	}
 	/**
 	 * 从数据库中找所有该HomeObject的保修卡，并附值给mBaoxiuCards成员
