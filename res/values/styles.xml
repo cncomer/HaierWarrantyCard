@@ -19,6 +19,7 @@
      <style name="AppTheme" parent="Theme.Sherlock.Light.DarkActionBar">
         <item name="actionBarStyle">@style/Widget.Styled.ActionBar</item>
         <item name="android:actionBarStyle">@style/Widget.Styled.ActionBar</item>
+        <item name="android:windowBackground">@color/wt</item>
         <!--  item name="android:windowFullscreen">true</item-->
     </style>
      <style name="AppTheme.MainActivityActionBar">
