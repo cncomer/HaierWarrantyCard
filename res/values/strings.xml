@@ -293,6 +293,11 @@
          <string name="msg_app_has_latest">"已是最新版本"</string>
          <string name="app_about_title">"关于海尔电子保修卡"</string>
          <string name="format_latest_version">"可用更新%s"</string>
+         <string name="format_current_sw_version">"版本 %s"</string>
+         <string name="format_current_db_version">"型号库版本 %s"</string>
+         <string name="msg_current_device_token">"设备Token(单击复制)"</string>
+         <string name="format_current_device_token_copy">"设备Token(%s)已经复制到剪贴板，请在文本框中粘贴"</string>
+         <string name="msg_current_device_token_null">"设备Token(未注册)"</string>
          <string name="msg_app_releasenote">"更新说明:"</string>
           <string name="msg_app_release_time">"更新时间:%s"</string>
            <string name="msg_app_release_size">"软件大小:%s"</string>
@@ -406,4 +411,6 @@
           <string name="menu_goto">跳转到</string>
           <string name="menu_fullscreen">全屏</string>
           <string name="menu_fullscreen2">全屏</string>
+          
+          <string name="menu_ymessage">我的广播</string>
 </resources>

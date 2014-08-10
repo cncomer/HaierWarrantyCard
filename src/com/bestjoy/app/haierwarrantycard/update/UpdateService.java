@@ -28,6 +28,7 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.database.DeviceDBHelper;
 import com.bestjoy.app.haierwarrantycard.ui.PreferencesActivity;
+import com.bestjoy.app.haierwarrantycard.utils.YouMengMessageHelper;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.DebugUtils;
@@ -74,6 +75,9 @@ public class UpdateService extends Service implements ComConnectivityManager.Con
 	private boolean mIsCheckUpdateRuinning = false;
 	/**表示服务是否正在运行*/
 	private boolean mIsServiceRuinning = false;
+	
+	public static final String ACTION_CHECK_DEVICE_TOKEN = MyApplication.PKG_NAME + ".intent.ACTION_CHECK_DEVICE_TOKEN";
+	private static final int MSG_CHECK_DEVICE_TOKEN = 1003;
 	
 	
 	/**下载结束广播。当接到该广播的时候，我们解析字段Intents.EXTRA_RESULT， false表示下载取消了，true表示下载完成*/
@@ -133,6 +137,14 @@ public class UpdateService extends Service implements ComConnectivityManager.Con
 					break;
 				case MSG_DOWNLOAD_START:
 					downloadLocked(mServiceAppInfo.buildExternalDownloadAppFile());
+					break;
+				case MSG_CHECK_DEVICE_TOKEN:
+					if (!YouMengMessageHelper.getInstance().getDeviceTotkeStatus()) {
+						YouMengMessageHelper.getInstance().postDeviceTokenToServiceLocked();
+						DebugUtils.logD(TAG, "sendEmptyMessageDelayed(MSG_CHECK_DEVICE_TOKEN, 30000");
+						mWorkServiceHandler.sendEmptyMessageDelayed(MSG_CHECK_DEVICE_TOKEN, 30000);
+						
+					}
 					break;
 				}
 				super.handleMessage(msg);
@@ -216,6 +228,9 @@ public class UpdateService extends Service implements ComConnectivityManager.Con
 					mIsDownloadTaskRunning = false;
 				}
 			}
+		} else if (ACTION_CHECK_DEVICE_TOKEN.equals(action)) {
+			DebugUtils.logD(TAG, "sendEmptyMessage(MSG_CHECK_DEVICE_TOKEN)");
+			mWorkServiceHandler.sendEmptyMessage(MSG_CHECK_DEVICE_TOKEN);
 		}
 	}
 
@@ -407,6 +422,11 @@ public class UpdateService extends Service implements ComConnectivityManager.Con
 	public static void startUpdateServiceForce(Context context) {
 		Intent service = new Intent(context, UpdateService.class);
 		service.setAction(ACTION_UPDATE_CHECK_FORCE);
+		context.startService(service);
+	}
+	public static void startCheckDeviceTokenToService(Context context) {
+		Intent service = new Intent(context, UpdateService.class);
+		service.setAction(ACTION_CHECK_DEVICE_TOKEN);
 		context.startService(service);
 	}
 }

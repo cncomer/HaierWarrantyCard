@@ -12,9 +12,11 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.SystemClock;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,13 +32,18 @@ import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.update.UpdateService;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
+import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.bestjoy.app.haierwarrantycard.utils.YouMengMessageHelper;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
+import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.FilesUtils;
 import com.umeng.message.PushAgent;
+import com.umeng.message.UmengRegistrar;
 
 public class MainActivity extends BaseActionbarActivity {
 	private LinearLayout mDotsLayout;
 	private ViewPager mAdsViewPager;
+	private static final String TAG = "MainActivity";
 	private boolean mAdsViewPagerIsScrolling = false;
 	
 	private static int[] mAddsDrawableId = new int[]{
@@ -96,6 +103,7 @@ public class MainActivity extends BaseActionbarActivity {
 		ModleSettings.addModelsAdapter(this, (ListView) findViewById(R.id.listview));
 		UpdateService.startUpdateServiceOnAppLaunch(mContext);
 		
+		YouMengMessageHelper.getInstance().startCheckDeviceTokenAsync();
 	}
 	
 	@Override
@@ -109,6 +117,12 @@ public class MainActivity extends BaseActionbarActivity {
 	public void onStop() {
 		super.onStop();
 		mHandler.removeCallbacks(mChangeAdsRunnable);
+	}
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		YouMengMessageHelper.getInstance().cancelCheckDeviceTokenTask();
 	}
 	
 	 @Override

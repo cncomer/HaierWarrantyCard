@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.ClipboardManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -13,9 +15,10 @@ import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.bestjoy.app.haierwarrantycard.database.DeviceDBHelper;
 import com.bestjoy.app.haierwarrantycard.ui.BaseActionbarActivity;
 import com.bestjoy.app.haierwarrantycard.ui.PreferencesActivity;
-import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
+import com.bestjoy.app.haierwarrantycard.utils.YouMengMessageHelper;
 import com.shwy.bestjoy.utils.DebugUtils;
 
 public class AppAboutActivity extends BaseActionbarActivity implements View.OnClickListener{
@@ -26,7 +29,7 @@ public class AppAboutActivity extends BaseActionbarActivity implements View.OnCl
 	
 	private ServiceAppInfo mServiceAppInfo;
 	
-	private TextView mVersionName, mUpdateStatus;
+	private TextView mVersionName, mUpdateStatus, mDbVersionName, mDeviceToken;
 	private LinearLayout mButtonUpdate;
 	
 	private Button mBtnHelp, mBtnHome, mBtIntroduce;
@@ -52,6 +55,8 @@ public class AppAboutActivity extends BaseActionbarActivity implements View.OnCl
 	public void initView() {
 		if (mButtonUpdate == null) {
 			mVersionName = (TextView) findViewById(R.id.app_version_name);
+			mDbVersionName = (TextView) findViewById(R.id.app_db_version_name);
+			mDeviceToken = (TextView) findViewById(R.id.app_device_token);
 			mUpdateStatus = (TextView) findViewById(R.id.desc_update);
 			
 			mButtonUpdate = (LinearLayout) findViewById(R.id.button_update);
@@ -69,7 +74,17 @@ public class AppAboutActivity extends BaseActionbarActivity implements View.OnCl
 			mBtnHome.setVisibility(View.GONE);
 			mBtnHelp.setVisibility(View.GONE);
 		}
-		mVersionName.setText(mCurrentVersionCodeName);
+		mVersionName.setText(getString(R.string.format_current_sw_version, mCurrentVersionCodeName));
+		mDbVersionName.setText(getString(R.string.format_current_db_version, DeviceDBHelper.getDeviceDatabaseVersion()));
+		String deviceToken = YouMengMessageHelper.getInstance().getDeviceTotke();
+		if (TextUtils.isEmpty(deviceToken)) {
+			mDeviceToken.setText(R.string.msg_current_device_token_null);
+			mDeviceToken.setOnClickListener(null);
+		} else {
+			mDeviceToken.setText(R.string.msg_current_device_token);
+			mDeviceToken.setOnClickListener(this);
+		}
+		
 		if (mServiceAppInfo != null && mServiceAppInfo.mVersionCode > mCurrentVersion) {
 			//发现新版本
 			mButtonUpdate.setEnabled(true);
@@ -102,6 +117,11 @@ public class AppAboutActivity extends BaseActionbarActivity implements View.OnCl
 		case R.id.button_home:
 			break;
 		case R.id.button_help:
+			break;
+		case R.id.app_device_token://单击复制device token导剪贴板
+			ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+			cm.setText(YouMengMessageHelper.getInstance().getDeviceTotke());
+			MyApplication.getInstance().showMessage(getString(R.string.format_current_device_token_copy, YouMengMessageHelper.getInstance().getDeviceTotke()));
 			break;
 		}
 		

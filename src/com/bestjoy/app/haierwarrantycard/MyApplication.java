@@ -26,12 +26,17 @@ import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.utils.BeepAndVibrate;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
+import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.bestjoy.app.haierwarrantycard.utils.YouMengMessageHelper;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.DeviceStorageUtils;
 import com.shwy.bestjoy.utils.DevicesUtils;
 import com.shwy.bestjoy.utils.SecurityUtils.SecurityKeyValuesObject;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
+import com.umeng.message.UmengMessageHandler;
+import com.umeng.message.entity.UMessage;
 
 public class MyApplication extends Application{
 	
@@ -96,6 +101,9 @@ public class MyApplication extends Application{
 		DisplayMetrics display = this.getResources().getDisplayMetrics();
 		Log.d(TAG, display.toString());
 		Log.d(TAG, getDeviceInfo(this));
+		
+		YouMengMessageHelper.getInstance().setContext(this);
+		
 	}
 	
 	public synchronized static MyApplication getInstance() {
@@ -384,10 +392,6 @@ public class MyApplication extends Application{
     	return dialog;
     }
   //add by chenkai, 锁定认证字段 20140701 begin
-    
-    
-    
-
 	public static String getDeviceInfo(Context context) {
 	    try{
 	        JSONObject json = new JSONObject();

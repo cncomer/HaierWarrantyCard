@@ -31,8 +31,8 @@ import com.umeng.message.PushAgent;
 public abstract class BaseActionbarActivity extends SherlockFragmentActivity {
 	private static final String TAG = "BaseActionbarActivity";
 
-	private static final int CurrentPictureGalleryRequest = 11000;
-	private static final int CurrentPictureCameraRequest = 11001;
+	public static final int CurrentPictureGalleryRequest = 11000;
+	public static final int CurrentPictureCameraRequest = 11001;
 	private int mCurrentPictureRequest;
 	protected Context mContext;
 	

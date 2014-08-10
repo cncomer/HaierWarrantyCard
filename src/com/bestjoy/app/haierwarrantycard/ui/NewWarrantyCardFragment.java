@@ -102,7 +102,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	@Override
 	public void onResume() {
 		super.onResume();
-		DebugUtils.logD(TAG, "onResume() mNeedLoadFapiao=" + mNeedLoadFapiao);
+		DebugUtils.logD(TAG, "onResume() mNeedLoadFapiao=" + mNeedLoadFapiao + ", mBillTempFile=" + mBillTempFile);
 		if (mNeedLoadFapiao) {
 			mNeedLoadFapiao = false;
 			loadFapiaoFromCameraAsync();
@@ -179,6 +179,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		super.onDestroy();
 		mBillImageView.setImageBitmap(null);
 		mBaoxiuCardObject.clear();
+		removeDialog(DIALOG_PROGRESS);
 	}
 	
 	@Override
@@ -340,7 +341,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 				onCapturePhoto();
 			} else {
 				//如果有，我们显示操作选项，查看或是拍摄发票
-				showDialog(DIALOG_BILL_OP_CONFIRM);
+				onCreateDialog(DIALOG_BILL_OP_CONFIRM).show();
 			}
 			break;
 		case R.id.button_scan_qrcode:

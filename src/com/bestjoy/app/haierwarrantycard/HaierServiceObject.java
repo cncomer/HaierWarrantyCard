@@ -156,6 +156,7 @@ public class HaierServiceObject {
 		public String mStatusMessage;
 		public JSONObject mJsonData;
 		public String mStrData;
+		public String mRawString;
 		
 		public static HaierResultObject parse(String content) {
 			HaierResultObject resultObject = new HaierResultObject();
@@ -164,6 +165,7 @@ public class HaierServiceObject {
 				return resultObject;
 			}
 			try {
+				resultObject.mRawString = content;
 				JSONObject jsonObject = new JSONObject(content);
 				resultObject.mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
 				resultObject.mStatusMessage = jsonObject.getString("StatusMessage");
@@ -183,6 +185,11 @@ public class HaierServiceObject {
 		
 		public boolean isOpSuccessfully() {
 			return mStatusCode == 1;
+		}
+		
+		@Override
+		public String toString() {
+			return mRawString;
 		}
 	}
 	
@@ -227,5 +234,18 @@ public class HaierServiceObject {
 	   */
 	  public static boolean isSupportReceiveYanZhengMa() {
 		  return true;
+	  }
+	  
+	  /**
+	   * http://115.29.231.29/Haier/Apple/RegisterDevice.ashx?UID=1&pushtoken=test&devicetype=android
+	   * @return
+	   */
+	  public static String getUpdateDeviceTokenUrl(String uid, String deviceToken, String deviceType) {
+		  UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder(SERVICE_URL);
+		  sb.append("Apple/RegisterDevice.ashx?UID=").appendUrlEncodedString(uid)
+		  .append("&pushtoken=").appendUrlEncodedString(deviceToken)
+		  .append("&devicetype=").appendUrlEncodedString(deviceType);
+		  return sb.toString();
+		  
 	  }
 }

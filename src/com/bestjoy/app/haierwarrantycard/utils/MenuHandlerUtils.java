@@ -10,12 +10,15 @@ import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.LoginActivity;
 import com.bestjoy.app.haierwarrantycard.ui.RegisterActivity;
 import com.bestjoy.app.haierwarrantycard.ui.SettingsPreferenceActivity;
+import com.bestjoy.app.haierwarrantycard.ui.YMessageListActivity;
 import com.bestjoy.app.haierwarrantycard.update.AppAboutActivity;
 
 public class MenuHandlerUtils {
 	
     public static void onCreateOptionsMenu(Menu menu) {
+    	
         SubMenu subMenu1 = menu.addSubMenu(1000, R.string.menu_more, 1000, R.string.menu_more);
+        subMenu1.add(1000, R.string.menu_ymessage, 1000, R.string.menu_ymessage);
         subMenu1.add(1000, R.string.menu_login, 1001, R.string.menu_login);
         subMenu1.add(1000, R.string.menu_register, 1002, R.string.menu_register);
         subMenu1.add(1000, R.string.menu_setting, 1003, R.string.menu_setting);
@@ -42,6 +45,10 @@ public class MenuHandlerUtils {
         case R.string.menu_about:
         	context.startActivity(AppAboutActivity.createIntent(context));
       	   break;
+        case R.string.menu_ymessage:
+        	//Ymessage历史记录
+        	YMessageListActivity.startActivity(context);
+        	break;
 //        case R.string.menu_exit:
 //        	HaierAccountManager.getInstance().deleteDefaultAccount();
 //        	break;

@@ -83,6 +83,34 @@ public class BjnoteContent {
     	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.DEVICE_CONTENT_URI, "haierregion");
     }
     
+    public static class YMESSAGE extends BjnoteContent{
+    	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.CONTENT_URI, "ymessage");
+    	
+    	public static String[] PROJECTION = new String[]{
+    		HaierDBHelper.ID,
+    		HaierDBHelper.YOUMENG_MESSAGE_ID,
+    		HaierDBHelper.YOUMENG_TITLE,
+    		HaierDBHelper.YOUMENG_TEXT,
+    		HaierDBHelper.YOUMENG_MESSAGE_ACTIVITY,
+    		HaierDBHelper.YOUMENG_MESSAGE_URL,
+    		HaierDBHelper.YOUMENG_MESSAGE_CUSTOM,
+    		HaierDBHelper.YOUMENG_MESSAGE_RAW, 
+    		HaierDBHelper.DATE,
+    	};
+    	
+    	public static final int INDEX_ID = 0;
+    	public static final int INDEX_MESSAGE_ID = 1;
+    	public static final int INDEX_TITLE = 2;
+    	public static final int INDEX_TEXT = 3;
+    	public static final int INDEX_MESSAGE_ACTIVITY = 4;
+    	public static final int INDEX_MESSAGE_URL = 5;
+    	public static final int INDEX_MESSAGE_CUSTOM = 6;
+    	public static final int INDEX_MESSAGE_RAW = 7;
+    	public static final int INDEX_DATE = 8;
+    	
+    	public static final String WHERE_YMESSAGE_ID = HaierDBHelper.YOUMENG_MESSAGE_ID + "=?";
+    }
+    
     /**调用该类的CONTENT_URI来关闭设备数据库*/
     public static class CloseDeviceDatabase extends BjnoteContent{
     	private static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.DEVICE_CONTENT_URI, "closedevice");

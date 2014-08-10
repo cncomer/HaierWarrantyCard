@@ -27,17 +27,17 @@ public class BaseFragment extends SherlockFragment{
 	/**请求扫描条码*/
 	public static final int REQUEST_SCAN = 10000;
 	
-	private static final int CurrentPictureGalleryRequest = 101000;
-	private static final int CurrentPictureCameraRequest = 101001;
+	private static final int CurrentPictureGalleryRequest = BaseActionbarActivity.CurrentPictureGalleryRequest;
+	private static final int CurrentPictureCameraRequest = BaseActionbarActivity.CurrentPictureCameraRequest;
 	
-	public static final int DIALOG_PICTURE_CHOOSE_CONFIRM = 101002;
+	public static final int DIALOG_PICTURE_CHOOSE_CONFIRM = BaseActionbarActivity.DIALOG_PICTURE_CHOOSE_CONFIRM;
 	//add by chenkai, 20131208, for updating check
 	/**SD不可用*/
-	protected static final int DIALOG_MEDIA_UNMOUNTED = 101003;
+	protected static final int DIALOG_MEDIA_UNMOUNTED = BaseActionbarActivity.DIALOG_MEDIA_UNMOUNTED;
 	
-	public static final int DIALOG_DATA_NOT_CONNECTED = 101006;//数据连接不可用
-	public static final int DIALOG_MOBILE_TYPE_CONFIRM = 101007;//
-	public static final int DIALOG_PROGRESS = 101008;
+	public static final int DIALOG_DATA_NOT_CONNECTED = BaseActionbarActivity.DIALOG_DATA_NOT_CONNECTED;//数据连接不可用
+	public static final int DIALOG_MOBILE_TYPE_CONFIRM = BaseActionbarActivity.DIALOG_MOBILE_TYPE_CONFIRM;//
+	public static final int DIALOG_PROGRESS = BaseActionbarActivity.DIALOG_PROGRESS;
 	private ProgressDialog mProgressDialog;
 	
 	private int mCurrentPictureRequest = -1;
@@ -208,19 +208,28 @@ public class BaseFragment extends SherlockFragment{
     }
     
     protected void dissmissDialog(int id) {
+    	Activity activity = getActivity();
+    	DebugUtils.logD(TAG, "dissmissDialog id=" + id + ", activity=" + activity + ", this=" + this);
+    	if (activity != null) {
+    		activity.dismissDialog(id);
+    		return;
+    	}
     	Dialog dialog = mDialogMap.get(id);
     	if (dialog != null && dialog.isShowing()) {
     		dialog.dismiss();
     	}
      }
     protected void dismissDialog(int id) {
-    	Dialog dialog = mDialogMap.get(id);
-    	if (dialog != null && dialog.isShowing()) {
-    		dialog.dismiss();
-    	}
+    	dissmissDialog(id);
      }
     
     protected void removeDialog(int id) {
+    	Activity activity = getActivity();
+    	DebugUtils.logD(TAG, "removeDialog id=" + id + ", activity=" + activity + ", this=" + this);
+    	if (activity != null) {
+    		activity.removeDialog(id);
+    		return;
+    	}
     	Dialog dialog = mDialogMap.get(id);
     	if (dialog != null) {
     		dialog.dismiss();
@@ -230,6 +239,12 @@ public class BaseFragment extends SherlockFragment{
      }
     
    	public void showDialog(int id) {
+   		Activity activity = getActivity();
+    	DebugUtils.logD(TAG, "showDialog id=" + id + ", activity=" + activity + ", this=" + this);
+    	if (activity != null) {
+    		activity.showDialog(id);
+    		return;
+    	}
    		Dialog dialog = mDialogMap.get(id);
    		if (dialog == null) {
    			dialog = onCreateDialog(id);

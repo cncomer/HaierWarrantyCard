@@ -24,6 +24,7 @@ import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2.TaskType;
+import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 
 public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemClickListener{
@@ -61,6 +62,8 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 		if (savedInstanceState != null) {
 			mAid = savedInstanceState.getLong("aid");
 			mUid = savedInstanceState.getLong("uid");
+			DebugUtils.logD(TOKEN, "onCreate() savedInstanceState!=null, mAid="+ mAid + ", mUid="+mUid + ",loadCardsAsync()");
+			loadCardsAsync();
 		}
 		PhotoManagerUtilsV2.getInstance().requestToken(TOKEN);
 		mContentObserver = new ContentObserver(new Handler()) {

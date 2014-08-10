@@ -65,10 +65,13 @@
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.MainActivity"
             android:theme="@style/AppTheme.MainActivityActionBar"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:label="@string/app_name" />
         
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.NewCardActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateAlwaysHidden|adjustResize"
             android:label="@string/button_new_card" />
@@ -79,17 +82,21 @@
 			android:windowSoftInputMode="stateAlwaysHidden|adjustPan"/>
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.InstallActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:label="@string/activity_title_install" />
         
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.LoginActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"
             android:excludeFromRecents="true"
+            android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:label="@string/title_login_confirm" />
          <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.LoginConfirmAddressActivity"
             android:windowSoftInputMode="stateHidden|adjustResize"
+            android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:excludeFromRecents="true"
             android:label="@string/title_login" />
@@ -97,7 +104,8 @@
         
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.MyChooseDevicesActivity"
-            android:configChanges="orientation"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:label="@string/activity_title_choose_device_general">
@@ -108,7 +116,8 @@
         </activity>
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.RegisterConfirmActivity"
-            android:configChanges="orientation"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:label="@string/title_new_user_register" />
@@ -120,7 +129,8 @@
             android:label="@string/title_new_user_register" />
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.ChooseAddressActivity"
-            android:configChanges="orientation"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:excludeFromRecents="true"
             android:launchMode="singleTop"
             android:label="@string/choose_address" />
@@ -138,32 +148,40 @@
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.LoginOrUpdateAccountDialog"
             android:excludeFromRecents="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
         
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.BrowserActivity"
-            android:configChanges="orientation"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:excludeFromRecents="true"
             android:label="@string/title_feedback" />
         
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.CardViewActivity"
-            android:configChanges="orientation"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:label="@string/title_baoxiucard_info" />
         
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.HomeManagerActivity"
-            android:configChanges="orientation"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:label="@string/menu_manage_home" />
         
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.NewHomeActivity"
-            android:configChanges="orientation"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:label="@string/activity_title_new_home" />
         
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.qrcode.HistoryActivity"
             android:excludeFromRecents="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
             android:label="@string/title_scan_history" />
         
          <!-- add by chenkai, 20131201, 增加自动更新 begin -->
@@ -226,6 +244,14 @@
             </intent-filter>
         </service>
         
+        <!-- add by chenkai, 20140810, Youmeng广播历史 begin -->
+        <activity
+            android:name="com.bestjoy.app.haierwarrantycard.ui.YMessageListActivity"
+            android:excludeFromRecents="true"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:label="@string/menu_ymessage" />
+        <!-- add by chenkai, 20140810, Youmeng广播历史 end -->
         <!-- 消息推送代码开始 -->
          <receiver
              android:name="com.umeng.message.NotificationProxyBroadcastReceiver"
