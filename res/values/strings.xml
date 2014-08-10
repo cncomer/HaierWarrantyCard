@@ -412,5 +412,5 @@
           <string name="menu_fullscreen">全屏</string>
           <string name="menu_fullscreen2">全屏</string>
           
-          <string name="menu_ymessage">我的广播</string>
+          <string name="menu_ymessage">广播</string>
 </resources>
