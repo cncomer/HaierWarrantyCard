@@ -66,8 +66,6 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	
 	private BaoxiuCardObject mBaoxiuCardObject;
 	
-	private HomeObject mHomeObject;
-	
 	private Handler mHandler;
 	
 	private Bundle mBundles;
@@ -81,6 +79,10 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		super.onCreate(savedInstanceState);
 		if (isFinishing()) {
 			return;
+		}
+		if (savedInstanceState != null) {
+			mBundles = savedInstanceState.getBundle(TAG);
+			DebugUtils.logD(TAG, "onCreate() savedInstanceState != null, restore mBundle=" + mBundles);
 		}
 		mHandler = new Handler() {
 
@@ -210,8 +212,6 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		 mYanbaoComponyInput.setText(mBaoxiuCardObject.mYanBaoDanWei);
 		 mYanbaoTelInput.setText(mBaoxiuCardObject.mYBPhone);
 		 
-		 mHomeObject = HomeObject.getHomeObject();
-		 
 		 //add by chenkai, 2014.06.06, 保修期状态 begin
 		 if (mBaoxiuCardObject.getBaoxiuValidity() <= 0) {
 			 //过保
@@ -250,7 +250,6 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			 }*/
 			//add by chenkai, 锁定认证字段 20140701 end
 			//delete by chenkai, 20140726, 允许编辑不允许删除 begin
-			 BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
 			 NewCardActivity.startIntent(mContext, mBundles);
 			 finish();
 			 break;
@@ -355,16 +354,20 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		case R.id.button_onekey_maintenance:
 			//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
 	    	if (HaierServiceObject.isHaierPinpai(mBaoxiuCardObject.mPinPai) || HaierServiceObject.isKasadiPinpai(mBaoxiuCardObject.mPinPai)) {
-	    		BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
-    			HomeObject.setHomeObject(mHomeObject);
+    			Bundle bundle = null;
     			if (id == R.id.button_onekey_install) {
-    				ModleSettings.doChoose(mContext, ModleSettings.createMyInstallDefaultBundle(mContext));
+    				bundle = ModleSettings.createMyInstallDefaultBundle(mContext);
     			} else if (id == R.id.button_onekey_repair) {
-    				ModleSettings.doChoose(mContext, ModleSettings.createMyRepairDefaultBundle(mContext));
+    				bundle = ModleSettings.createMyRepairDefaultBundle(mContext);
     			} else if (id == R.id.button_onekey_maintenance) {
-    				ModleSettings.doChoose(mContext, ModleSettings.createMyMaintenanceDefaultBundle(mContext));
+    				bundle = ModleSettings.createMyMaintenanceDefaultBundle(mContext);
     				//add by chenkai, 2014.05.31，增加一键保养 end
     			}
+    			bundle.putAll(mBundles);
+//    			bundle.putLong("aid", mBaoxiuCardObject.mAID);
+//    			bundle.putLong("bid", mBaoxiuCardObject.mBID);
+//    			bundle.putLong("uid", mBaoxiuCardObject.mUID);
+    			ModleSettings.doChoose(mContext, bundle);
     			finish();
 	    	} else {
 	    		new AlertDialog.Builder(mContext)
@@ -424,9 +427,13 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
-		mBaoxiuCardObject = BaoxiuCardObject.getBaoxiuCardObject();
 		mBundles = intent.getExtras();
-		return mBaoxiuCardObject != null && mBaoxiuCardObject.mBID > 0 && mBundles != null;
+		if (mBundles == null) {
+			DebugUtils.logW(TAG, "checkIntent mBundles == null");
+			return false;
+		}
+		mBaoxiuCardObject = BaoxiuCardObject.getBaoxiuCardObject(mBundles);
+		return mBaoxiuCardObject != null && mBaoxiuCardObject.mBID > 0;
 	}
 	
 	private DeleteCardAsyncTask mDeleteCardAsyncTask;
@@ -599,6 +606,13 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			intent.putExtras(bundle);
 		}
 		context.startActivity(intent);
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBundle(TAG, mBundles);
+		DebugUtils.logW(TAG, "onSaveInstanceState(), we try to save mBundles=" + mBundles);
 	}
 
 }

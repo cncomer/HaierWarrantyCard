@@ -58,9 +58,8 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	private TextView mYuyueDate, mYuyueTime;
 	private Calendar mCalendar;
 	
-	private long mAid = -1;
-	private long mUid = -1;
-	private long mBid = -1;
+	private BaoxiuCardObject mBaoxiuCardObject;
+	private Bundle mBundle;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -68,6 +67,14 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		setHasOptionsMenu(true);
 		getActivity().setTitle(R.string.activity_title_install);
 		mCalendar = Calendar.getInstance();
+		if (savedInstanceState == null) {
+			mBundle = getArguments();
+			DebugUtils.logD(TAG, "onCreate() savedInstanceState == null, getArguments() mBundle=" + mBundle);
+		} else {
+			mBundle = savedInstanceState.getBundle(TAG);
+			DebugUtils.logD(TAG, "onCreate() savedInstanceState != null, restore mBundle=" + mBundle);
+		}
+		mBaoxiuCardObject = BaoxiuCardObject.getBaoxiuCardObject(mBundle);
 	}
 	
 	@Override
@@ -105,6 +112,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			
 		view.findViewById(R.id.button_scan_qrcode).setOnClickListener(this);
 		view.findViewById(R.id.menu_choose).setOnClickListener(this);
+		 populateBaoxiuInfoView();
 		return view;
 	}
 
@@ -112,10 +120,18 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	public void onViewCreated(View view, Bundle savedInstanceState) {
 		super.onViewCreated(view, savedInstanceState);
 	}
-	
-	private void populateBaoxiuInfoView(BaoxiuCardObject baoxiuCardObject) {
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		DebugUtils.logD(TAG, "onSaveInstanceState() save mBundle=" + mBundle);
+		outState.putBundle(TAG, mBundle);
+	}
+	public boolean isEditable() {
+		return mBaoxiuCardObject.mBID > 0;
+	}
+	private void populateBaoxiuInfoView() {
 		//init layouts
-		if (baoxiuCardObject == null) {
+		if (!isEditable()) {
 			mTypeInput.getText().clear();
 			mPinpaiInput.getText().clear();
 			mModelInput.getText().clear();
@@ -123,13 +139,16 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			mBaoxiuTelInput.getText().clear();
 			mBeizhuTag.getText().clear();
 		} else {
-			mTypeInput.setText(baoxiuCardObject.mLeiXin);
-			mPinpaiInput.setText(baoxiuCardObject.mPinPai);
-			mModelInput.setText(baoxiuCardObject.mXingHao);
-			mBianhaoInput.setText(baoxiuCardObject.mSHBianHao);
-			mBaoxiuTelInput.setText(baoxiuCardObject.mBXPhone);
-			mBeizhuTag.setText(baoxiuCardObject.mCardName);
+			mTypeInput.setText(mBaoxiuCardObject.mLeiXin);
+			mPinpaiInput.setText(mBaoxiuCardObject.mPinPai);
+			mModelInput.setText(mBaoxiuCardObject.mXingHao);
+			mBianhaoInput.setText(mBaoxiuCardObject.mSHBianHao);
+			mBaoxiuTelInput.setText(mBaoxiuCardObject.mBXPhone);
+			mBeizhuTag.setText(mBaoxiuCardObject.mCardName);
 		}
+		
+		populateHomeInfoView(HomeObject.getHomeObject(mBundle));
+		populateContactInfoView(HaierAccountManager.getInstance().getAccountObject().clone());
 	}
 	
 	public void setBaoxiuObjectAfterSlideMenu(InfoInterface slideManuObject) {
@@ -179,18 +198,13 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
     }
 	
 	public BaoxiuCardObject getBaoxiuCardObject() {
-		BaoxiuCardObject baoxiuCardObject = new BaoxiuCardObject();
-		baoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
-		baoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
-		baoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
-		baoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
-		baoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
-		baoxiuCardObject.mCardName = mBeizhuTag.getText().toString().trim();
-		
-		baoxiuCardObject.mAID = mAid;
-		baoxiuCardObject.mUID = mUid;
-		baoxiuCardObject.mBID = mBid;
-		return baoxiuCardObject;
+		mBaoxiuCardObject.mLeiXin = mTypeInput.getText().toString().trim();
+		mBaoxiuCardObject.mPinPai = mPinpaiInput.getText().toString().trim();
+		mBaoxiuCardObject.mXingHao = mModelInput.getText().toString().trim();
+		mBaoxiuCardObject.mSHBianHao = mBianhaoInput.getText().toString().trim();
+		mBaoxiuCardObject.mBXPhone = mBaoxiuTelInput.getText().toString().trim();
+		mBaoxiuCardObject.mCardName = mBeizhuTag.getText().toString().trim();
+		return mBaoxiuCardObject;
 	}
 	
 	public HomeObject getHomeObject() {
@@ -611,29 +625,12 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	}
 	@Override
 	public void updateInfoInterface(InfoInterface infoInterface) {
-		if (infoInterface instanceof BaoxiuCardObject) {
-			if (infoInterface != null) {
-				mBid = ((BaoxiuCardObject)infoInterface).mBID;
-				mAid = ((BaoxiuCardObject)infoInterface).mAID;
-				mUid = ((BaoxiuCardObject)infoInterface).mUID;
-			}
-			populateBaoxiuInfoView((BaoxiuCardObject)infoInterface);
-		} else if (infoInterface instanceof HomeObject) {
-			if (infoInterface != null) {
-				long aid = ((HomeObject)infoInterface).mHomeAid;
-				if (aid > 0) {
-					mAid = aid;
-				}
-			}
-			populateHomeInfoView((HomeObject)infoInterface);
-		} else if (infoInterface instanceof AccountObject) {
-			if (infoInterface != null) {
-				long uid = ((AccountObject)infoInterface).mAccountUid;
-				if (uid > 0) {
-					mUid = uid;
-				}
-			}
-			populateContactInfoView((AccountObject) infoInterface);
-		}
+	}
+	@Override
+	public void updateArguments(Bundle args) {
+		mBundle = args;
+		mBaoxiuCardObject.mAID = mBundle.getLong("aid", -1);
+		mBaoxiuCardObject.mUID = mBundle.getLong("uid", -1);
+		
 	}
 }

@@ -122,8 +122,11 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 		default:
 			//当选择了一个Home时候，我们要设置HomeObject对象
 			if (mMyPagerAdapter.getCount() > 0) {
-				HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
-				boolean handle = ModleSettings.onActionBarMenuSelected(item, mContext, mBundle);
+				Bundle newBundle = new Bundle();
+			    newBundle.putAll(mBundle);
+			    newBundle.putLong("aid", mMyPagerAdapter.getHome(mHomeSelected).mHomeAid);
+			    newBundle.putLong("uid", HaierAccountManager.getInstance().getCurrentAccountId());
+				boolean handle = ModleSettings.onActionBarMenuSelected(item, mContext, newBundle);
 				if (!handle) {
 					return super.onOptionsItemSelected(item);
 				}
@@ -247,17 +250,18 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	    	//一些特殊的操作，可以放在这里，目前暂不需要实现
 	    }
 	    int id = ModleSettings.getModelIdFromBundle(mBundle);
+	    Bundle newBundle = new Bundle();
+	    newBundle.putAll(mBundle);
+	    newBundle.putLong("aid", card.mAID);
+	    newBundle.putLong("bid", card.mBID);
+	    newBundle.putLong("uid", card.mUID);
 	    if (id == R.id.model_my_card) {
 	    	//进入详细页面
-	    	BaoxiuCardObject.setBaoxiuCardObject(card.clone());
-	    	HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
-	    	CardViewActivity.startActivit(mContext, mBundle);
+	    	CardViewActivity.startActivit(mContext, newBundle);
 	    } else {
 	    	//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
-	    	if (HaierServiceObject.isHaierPinpai(card.mPinPai)) {
-	    		BaoxiuCardObject.setBaoxiuCardObject(card.clone());
-		    	HomeObject.setHomeObject(mMyPagerAdapter.getHome(mHomeSelected).clone());
-			    ModleSettings.doChoose(mContext, mBundle);
+	    	if (HaierServiceObject.isHaierPinpai(card.mPinPai) || HaierServiceObject.isKasadiPinpai(card.mPinPai)) {
+			    ModleSettings.doChoose(mContext, newBundle);
 	    	} else {
 	    		new AlertDialog.Builder(mContext)
 		    	.setMessage(R.string.must_haier_confirm_yuyue)

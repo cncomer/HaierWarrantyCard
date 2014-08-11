@@ -109,7 +109,8 @@ public class ModleSettings {
 			int id = getModelId(pos);
 			if (HaierAccountManager.getInstance().hasLoginned()) {
 				//如果登陆了，我们先设置默认的家对象
-				HomeObject.setHomeObject(HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(0));
+				bundle.putLong("aid", HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(0).mHomeAid);
+				bundle.putLong("uid", HaierAccountManager.getInstance().getCurrentAccountId());
 			}
 			switch(id) {
 			case R.id.model_my_card:
