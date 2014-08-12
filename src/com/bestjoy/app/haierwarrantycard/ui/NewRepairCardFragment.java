@@ -684,6 +684,8 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		mBundle = args;
 		mBaoxiuCardObject.mAID = mBundle.getLong("aid", -1);
 		mBaoxiuCardObject.mUID = mBundle.getLong("uid", -1);
+		populateHomeInfoView(HomeObject.getHomeObject(mBundle));
+		populateContactInfoView(HaierAccountManager.getInstance().getAccountObject());
 		
 	}
 

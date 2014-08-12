@@ -631,6 +631,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		mBundle = args;
 		mBaoxiuCardObject.mAID = mBundle.getLong("aid", -1);
 		mBaoxiuCardObject.mUID = mBundle.getLong("uid", -1);
-		
+		populateHomeInfoView(HomeObject.getHomeObject(mBundle));
+		populateContactInfoView(HaierAccountManager.getInstance().getAccountObject());
 	}
 }
