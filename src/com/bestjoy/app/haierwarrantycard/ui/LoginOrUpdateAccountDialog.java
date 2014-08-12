@@ -5,12 +5,9 @@ import java.io.InputStream;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -24,6 +21,7 @@ import com.bestjoy.app.haierwarrantycard.account.AccountParser;
 import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.update.UpdateService;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.bestjoy.app.haierwarrantycard.utils.YouMengMessageHelper;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
@@ -113,6 +111,8 @@ public class LoginOrUpdateAccountDialog extends Activity{
 				//如果登陆成功
 				if (mAccountObject.isLogined()) {
 					setResult(Activity.RESULT_OK);
+					//每次登陆，我们都需要注册设备Token
+					YouMengMessageHelper.getInstance().saveDeviceTokenStatus(false);
 					//登录成功，我们需要检查是否能够上传设备Token到服务器绑定uid和token
 					UpdateService.startCheckDeviceTokenToService(LoginOrUpdateAccountDialog.this);
 				} else {
