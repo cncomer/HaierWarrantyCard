@@ -23,4 +23,9 @@ public abstract class ModleBaseFragment extends BaseFragment{
 	 * @param slideManuObject
 	 */
     public abstract void setBaoxiuObjectAfterSlideMenu(InfoInterface slideManuObject);
+    /**
+	 * 可以用来从其他地方更新当前Fragment的数据
+	 * @param infoInterface
+	 */
+	public abstract void updateArguments(Bundle args);
 }

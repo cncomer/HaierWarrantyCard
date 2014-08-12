@@ -12,6 +12,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.bestjoy.app.haierwarrantycard.MyApplication;
@@ -322,6 +323,22 @@ public class HomeObject implements InfoInterface{
 			c.close();
 		}
 		return homeObject;
+	}
+	
+	public static HomeObject getHomeObject(Bundle bundle) {
+		long aid = bundle.getLong("aid", -1);
+		long uid = bundle.getLong("uid", -1);
+		DebugUtils.logD(TAG, "getHomeObject() bundle = " + bundle);
+		if (uid > 0 && aid > 0) {
+			DebugUtils.logD(TAG, "getHomeObject() get getHomeObject from Database");
+			return getHomeObject(MyApplication.getInstance().getContentResolver(), uid, aid);
+		} else {
+			HomeObject newHomeObject =  new HomeObject();
+			newHomeObject.mHomeAid = aid;
+			newHomeObject.mHomeUid = uid;
+			DebugUtils.logD(TAG, "getHomeObject() new HomeObject=" + newHomeObject);
+			return newHomeObject;
+		}
 	}
 	/**
 	 * 从数据库中找所有该HomeObject的保修卡，并附值给mBaoxiuCards成员

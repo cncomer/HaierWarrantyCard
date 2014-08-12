@@ -17,6 +17,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
@@ -250,6 +251,7 @@
             android:excludeFromRecents="true"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
+            android:parentActivityName="com.bestjoy.app.haierwarrantycard.ui.MainActivity"
             android:label="@string/menu_ymessage" />
         <!-- add by chenkai, 20140810, Youmeng广播历史 end -->
         <!-- 消息推送代码开始 -->

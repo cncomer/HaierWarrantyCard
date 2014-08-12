@@ -24,6 +24,7 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Bundle;
 import android.text.TextUtils;
 
 import com.bestjoy.app.haierwarrantycard.MyApplication;
@@ -418,6 +419,25 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		}
 		return object;
 	}
+    
+    public static BaoxiuCardObject getBaoxiuCardObject(Bundle bundle) {
+    	long aid = bundle.getLong("aid", -1);
+		long bid = bundle.getLong("bid", -1);
+		long uid = bundle.getLong("uid", -1);
+		DebugUtils.logD(TAG, "getBaoxiuCardObject() bundle = " + bundle);
+		if (uid != -1 && bid != -1 && aid != -1) {
+			DebugUtils.logD(TAG, "getBaoxiuCardObject() get BaoxiuCardObject from Database");
+			return BaoxiuCardObject.getBaoxiuCardObject(MyApplication.getInstance().getContentResolver(), uid, aid, bid);
+		} else {
+			
+			BaoxiuCardObject newBaoxiuCardObject = new BaoxiuCardObject();
+			newBaoxiuCardObject.mAID = aid;
+			newBaoxiuCardObject.mUID = uid;
+			newBaoxiuCardObject.mBID = bid;
+			DebugUtils.logD(TAG, "getBaoxiuCardObject() new BaoxiuCardObject=" + newBaoxiuCardObject);
+			return newBaoxiuCardObject;
+		}
+    }
     
     public static BaoxiuCardObject getFromBaoxiuCardsCursor(Cursor c) {
     	BaoxiuCardObject baoxiuCardObject = new BaoxiuCardObject();
