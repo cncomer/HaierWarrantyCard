@@ -99,7 +99,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			DebugUtils.logD(TAG, "onCreate() savedInstanceState == null, getArguments() mBundle=" + mBundle);
 		} else {
 			mBundle = savedInstanceState.getBundle(TAG);
-			DebugUtils.logD(TAG, "onCreate() savedInstanceState != null, restore mBundle=" + mBundle);
+			mNeedLoadFapiao = savedInstanceState.getBoolean("mNeedLoadFapiao", false);
+			DebugUtils.logD(TAG, "onCreate() savedInstanceState != null, restore mBundle=" + mBundle + ", mNeedLoadFapiao=" + mNeedLoadFapiao);
 		}
 		mHandler = new Handler() {
 
@@ -119,8 +120,9 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		DebugUtils.logD(TAG, "onSaveInstanceState() save mBundle=" + mBundle);
+		DebugUtils.logD(TAG, "onSaveInstanceState() save mBundle=" + mBundle + ", mNeedLoadFapiao=" + mNeedLoadFapiao);
 		outState.putBundle(TAG, mBundle);
+		outState.putBoolean("mNeedLoadFapiao", mNeedLoadFapiao);
 	}
 	
 
@@ -810,6 +812,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		DebugUtils.logD(TAG, "onActivityResult() requestCode=" + requestCode + ", resultCode=" + resultCode);
 		if (resultCode == Activity.RESULT_OK) {
 			if (REQUEST_BILL == requestCode) {
                 if (mBillTempFile.exists()) {
