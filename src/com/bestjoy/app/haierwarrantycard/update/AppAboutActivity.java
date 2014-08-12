@@ -84,7 +84,7 @@ public class AppAboutActivity extends BaseActionbarActivity implements View.OnCl
 			mDeviceToken.setText(R.string.msg_current_device_token);
 			mDeviceToken.setOnClickListener(this);
 		}
-		
+		mDeviceToken.setVisibility(View.GONE);
 		if (mServiceAppInfo != null && mServiceAppInfo.mVersionCode > mCurrentVersion) {
 			//发现新版本
 			mButtonUpdate.setEnabled(true);
