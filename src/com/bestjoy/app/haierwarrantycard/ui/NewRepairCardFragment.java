@@ -190,7 +190,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			mTagInput.setText(mBaoxiuCardObject.mCardName);
 		}
 		populateHomeInfoView(HomeObject.getHomeObject(mBundle));
-		populateContactInfoView(HaierAccountManager.getInstance().getAccountObject().clone());
+		populateContactInfoView(HaierAccountManager.getInstance().getAccountObject());
 	}
 	
 	public void setBaoxiuObjectAfterSlideMenu(InfoInterface slideManuObject) {

@@ -148,7 +148,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		}
 		
 		populateHomeInfoView(HomeObject.getHomeObject(mBundle));
-		populateContactInfoView(HaierAccountManager.getInstance().getAccountObject().clone());
+		populateContactInfoView(HaierAccountManager.getInstance().getAccountObject());
 	}
 	
 	public void setBaoxiuObjectAfterSlideMenu(InfoInterface slideManuObject) {
