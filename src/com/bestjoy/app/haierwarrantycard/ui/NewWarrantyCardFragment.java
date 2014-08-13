@@ -303,28 +303,34 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	public void setBaoxiuObjectAfterSlideMenu(InfoInterface slideManuObject) {
 		if (slideManuObject instanceof BaoxiuCardObject) {
 			BaoxiuCardObject object = (BaoxiuCardObject) slideManuObject;
-			if (!TextUtils.isEmpty(object.mLeiXin)) {
-				mTypeInput.setText(object.mLeiXin);
-			}
-			if (!TextUtils.isEmpty(object.mPinPai)) {
-				mPinpaiInput.setText(object.mPinPai);
-			}
-			
-			if (!TextUtils.isEmpty(object.mXingHao)) {
-				mModelInput.setText(object.mXingHao);
-			}
-			
-			if (!TextUtils.isEmpty(object.mSHBianHao)) {
-				mBianhaoInput.setText(object.mSHBianHao);
-			}
-			
-			if (!TextUtils.isEmpty(object.mBXPhone)) {
-				mBaoxiuTelInput.setText(object.mBXPhone);
-			}
-			
-			if (!TextUtils.isEmpty(object.mWY)) {
-				mWyInput.setText(object.mWY);
-			}
+			mTypeInput.setText(object.mLeiXin);
+			mPinpaiInput.setText(object.mPinPai);
+			mModelInput.setText(object.mXingHao);
+			mBianhaoInput.setText(object.mSHBianHao);
+			mBaoxiuTelInput.setText(object.mBXPhone);
+			mWyInput.setText(object.mWY);
+//			if (!TextUtils.isEmpty(object.mLeiXin)) {
+//				mTypeInput.setText(object.mLeiXin);
+//			}
+//			if (!TextUtils.isEmpty(object.mPinPai)) {
+//				mPinpaiInput.setText(object.mPinPai);
+//			}
+//			
+//			if (!TextUtils.isEmpty(object.mXingHao)) {
+//				mModelInput.setText(object.mXingHao);
+//			}
+//			
+//			if (!TextUtils.isEmpty(object.mSHBianHao)) {
+//				mBianhaoInput.setText(object.mSHBianHao);
+//			}
+//			
+//			if (!TextUtils.isEmpty(object.mBXPhone)) {
+//				mBaoxiuTelInput.setText(object.mBXPhone);
+//			}
+//			
+//			if (!TextUtils.isEmpty(object.mWY)) {
+//				mWyInput.setText(object.mWY);
+//			}
 		}
 	}
 	
@@ -827,25 +833,31 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	@Override
     public void setScanObjectAfterScan(InfoInterface barCodeObject) {
 		 BaoxiuCardObject object = (BaoxiuCardObject) barCodeObject;
+		 mTypeInput.setText(object.mLeiXin);
+		 mPinpaiInput.setText(object.mPinPai);
+		 mBianhaoInput.setText(object.mSHBianHao);
+		 mModelInput.setText(object.mXingHao);
+		 mBaoxiuTelInput.setText(object.mBXPhone);
+		 mWyInput.setText(object.mWY);
 		//这里一般我们只设置品牌、型号、编号和名称
-		if (!TextUtils.isEmpty(object.mLeiXin)) {
-			mTypeInput.setText(object.mLeiXin);
-		}
-		if (!TextUtils.isEmpty(object.mPinPai)) {
-			mPinpaiInput.setText(object.mPinPai);
-		}
-		if (!TextUtils.isEmpty(object.mSHBianHao)) {
-			mBianhaoInput.setText(object.mSHBianHao);
-		}
-		if (!TextUtils.isEmpty(object.mXingHao)) {
-			mModelInput.setText(object.mXingHao);
-		}
-		if (!TextUtils.isEmpty(object.mBXPhone)) {
-			mBaoxiuTelInput.setText(object.mBXPhone);
-		}
-		if (!TextUtils.isEmpty(object.mWY)) {
-			mWyInput.setText(object.mWY);
-		}
+//		if (!TextUtils.isEmpty(object.mLeiXin)) {
+//			mTypeInput.setText(object.mLeiXin);
+//		}
+//		if (!TextUtils.isEmpty(object.mPinPai)) {
+//			mPinpaiInput.setText(object.mPinPai);
+//		}
+//		if (!TextUtils.isEmpty(object.mSHBianHao)) {
+//			mBianhaoInput.setText(object.mSHBianHao);
+//		}
+//		if (!TextUtils.isEmpty(object.mXingHao)) {
+//			mModelInput.setText(object.mXingHao);
+//		}
+//		if (!TextUtils.isEmpty(object.mBXPhone)) {
+//			mBaoxiuTelInput.setText(object.mBXPhone);
+//		}
+//		if (!TextUtils.isEmpty(object.mWY)) {
+//			mWyInput.setText(object.mWY);
+//		}
 	}
 	
 	@Override

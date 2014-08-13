@@ -196,24 +196,29 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	public void setBaoxiuObjectAfterSlideMenu(InfoInterface slideManuObject) {
 		if (slideManuObject instanceof BaoxiuCardObject) {
 			BaoxiuCardObject object = (BaoxiuCardObject) slideManuObject;
-			if (!TextUtils.isEmpty(object.mLeiXin)) {
-				mTypeInput.setText(object.mLeiXin);
-			}
-			if (!TextUtils.isEmpty(object.mPinPai)) {
-				mPinpaiInput.setText(object.mPinPai);
-			}
-			
-			if (!TextUtils.isEmpty(object.mXingHao)) {
-				mModelInput.setText(object.mXingHao);
-			}
-			
-			if (!TextUtils.isEmpty(object.mSHBianHao)) {
-				mBianhaoInput.setText(object.mSHBianHao);
-			}
-			
-			if (!TextUtils.isEmpty(object.mBXPhone)) {
-				mBaoxiuTelInput.setText(object.mBXPhone);
-			}
+			mPinpaiInput.setText(object.mPinPai);
+			mTypeInput.setText(object.mLeiXin);
+			mModelInput.setText(object.mXingHao);
+			mBianhaoInput.setText(object.mSHBianHao);
+			mBaoxiuTelInput.setText(object.mBXPhone);
+//			if (!TextUtils.isEmpty(object.mLeiXin)) {
+//				mTypeInput.setText(object.mLeiXin);
+//			}
+//			if (!TextUtils.isEmpty(object.mPinPai)) {
+//				mPinpaiInput.setText(object.mPinPai);
+//			}
+//			
+//			if (!TextUtils.isEmpty(object.mXingHao)) {
+//				mModelInput.setText(object.mXingHao);
+//			}
+//			
+//			if (!TextUtils.isEmpty(object.mSHBianHao)) {
+//				mBianhaoInput.setText(object.mSHBianHao);
+//			}
+//			
+//			if (!TextUtils.isEmpty(object.mBXPhone)) {
+//				mBaoxiuTelInput.setText(object.mBXPhone);
+//			}
 		}
 	}
 	
@@ -475,7 +480,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		String pinpai = mPinpaiInput.getText().toString().trim();
 		final String bxPhone = mBaoxiuTelInput.getText().toString().trim();
 		//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
-    	if (!HaierServiceObject.isHaierPinpai(pinpai) && !HaierServiceObject.isKasadiPinpai(pinpai)) {
+    	if (!HaierServiceObject.isHaierPinpaiGenaral(pinpai)) {
     		new AlertDialog.Builder(getActivity())
 	    	.setMessage(R.string.must_haier_confirm_yuyue)
 	    	.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
@@ -656,22 +661,27 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	@Override
     public void setScanObjectAfterScan(InfoInterface barCodeObject) {
 		 BaoxiuCardObject object = (BaoxiuCardObject) barCodeObject;
+		 mTypeInput.setText(object.mLeiXin);
+		 mPinpaiInput.setText(object.mPinPai);
+		 mBianhaoInput.setText(object.mSHBianHao);
+		 mModelInput.setText(object.mXingHao);
+		 mBaoxiuTelInput.setText(object.mBXPhone);
 		//这里一般我们只设置品牌、型号、编号和名称
-		if (!TextUtils.isEmpty(object.mLeiXin)) {
-			mTypeInput.setText(object.mLeiXin);
-		}
-		if (!TextUtils.isEmpty(object.mPinPai)) {
-			mPinpaiInput.setText(object.mPinPai);
-		}
-		if (!TextUtils.isEmpty(object.mSHBianHao)) {
-			mBianhaoInput.setText(object.mSHBianHao);
-		}
-		if (!TextUtils.isEmpty(object.mXingHao)) {
-			mModelInput.setText(object.mXingHao);
-		}
-		if (!TextUtils.isEmpty(object.mBXPhone)) {
-			mBaoxiuTelInput.setText(object.mBXPhone);
-		}
+//		if (!TextUtils.isEmpty(object.mLeiXin)) {
+//			mTypeInput.setText(object.mLeiXin);
+//		}
+//		if (!TextUtils.isEmpty(object.mPinPai)) {
+//			mPinpaiInput.setText(object.mPinPai);
+//		}
+//		if (!TextUtils.isEmpty(object.mSHBianHao)) {
+//			mBianhaoInput.setText(object.mSHBianHao);
+//		}
+//		if (!TextUtils.isEmpty(object.mXingHao)) {
+//			mModelInput.setText(object.mXingHao);
+//		}
+//		if (!TextUtils.isEmpty(object.mBXPhone)) {
+//			mBaoxiuTelInput.setText(object.mBXPhone);
+//		}
 	}
 	
 	@Override

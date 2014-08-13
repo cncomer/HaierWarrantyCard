@@ -260,7 +260,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	    	CardViewActivity.startActivit(mContext, newBundle);
 	    } else {
 	    	//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
-	    	if (HaierServiceObject.isHaierPinpai(card.mPinPai) || HaierServiceObject.isKasadiPinpai(card.mPinPai)) {
+	    	if (HaierServiceObject.isHaierPinpaiGenaral(card.mPinPai)) {
 			    ModleSettings.doChoose(mContext, newBundle);
 	    	} else {
 	    		new AlertDialog.Builder(mContext)

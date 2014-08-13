@@ -30,10 +30,14 @@ public class HaierServiceObject {
 	private static String mKasadiPinpaiName;
 	public static final String BX_PHONE_KASADI = "4006399699";
 	
+	private static String mTongShuaiPinpaiName;
+	public static final String BX_PHONE_TONGSHUAI = "4006999999";
+	
 	public static final String DES_PASSWORD = "Haier@1.";
 	public static void setContext(Context context) {
 		mHaierPinpaiName = context.getString(R.string.pinpai_haier);
 		mKasadiPinpaiName = context.getString(R.string.pinpai_kasadi);
+		mTongShuaiPinpaiName = context.getString(R.string.pinpai_tongshuai);
 	}
 	public static boolean isHaierPinpai(String pinpaiName) {
 		return mHaierPinpaiName.equals(pinpaiName);
@@ -45,6 +49,40 @@ public class HaierServiceObject {
 	 */
 	public static boolean isKasadiPinpai(String pinpaiName) {
 		return mKasadiPinpaiName.equals(pinpaiName);
+	}
+	/**
+	 * 是否是统帅品牌
+	 * @param pinpaiName
+	 * @return
+	 */
+	public static boolean isTongShuaiPinpai(String pinpaiName) {
+		return mTongShuaiPinpaiName.equals(pinpaiName);
+	}
+	/**
+	 * 是否是海尔品牌
+	 * @param pinpaiName
+	 * @return
+	 */
+	public static boolean isHaierPinpaiGenaral(String pinpaiName) {
+		return isHaierPinpai(pinpaiName)
+				|| isKasadiPinpai(pinpaiName)
+				|| isTongShuaiPinpai(pinpaiName);
+	}
+	/**
+	 * 返回品牌的售后服务电话
+	 * @param pinpaiName
+	 * @param defaultValue
+	 * @return
+	 */
+	public static String getBXPhoneHaierPinpaiGenaral(String pinpaiName, String defaultValue) {
+		if (isHaierPinpai(pinpaiName)) {
+			return BX_PHONE_HAIER;
+		} else if (isKasadiPinpai(pinpaiName)) {
+			return BX_PHONE_KASADI;
+		} else if (isTongShuaiPinpai(pinpaiName)) {
+			return BX_PHONE_TONGSHUAI;
+		} 
+		return defaultValue;
 	}
 
 	/***

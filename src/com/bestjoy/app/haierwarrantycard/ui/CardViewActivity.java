@@ -166,7 +166,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		 mOnekeyMaintainenceBtn.setOnClickListener(this);
 		 //add by chenkai, 2014.05.31，增加一键保养 end
 		 //卡萨帝品牌和海尔品牌一样处理,是海尔的品牌
-		 if (HaierServiceObject.isHaierPinpai(mBaoxiuCardObject.mPinPai) || HaierServiceObject.isKasadiPinpai(mBaoxiuCardObject.mPinPai)) {
+		 if (HaierServiceObject.isHaierPinpaiGenaral(mBaoxiuCardObject.mPinPai)) {
 			 findViewById(R.id.onekey_for_haier).setVisibility(View.VISIBLE);
 			 findViewById(R.id.onekey_for_other).setVisibility(View.GONE);
 		 } else {
@@ -353,17 +353,18 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		//add by chenkai, 2014.05.31，增加一键保养 begin
 		case R.id.button_onekey_maintenance:
 			//目前只有海尔支持预约安装和预约维修，如果不是，我们需要提示用户
-	    	if (HaierServiceObject.isHaierPinpai(mBaoxiuCardObject.mPinPai) || HaierServiceObject.isKasadiPinpai(mBaoxiuCardObject.mPinPai)) {
-    			Bundle bundle = null;
+	    	if (HaierServiceObject.isHaierPinpaiGenaral(mBaoxiuCardObject.mPinPai)) {
+    			Bundle bundle = new Bundle();
+    			bundle.putAll(mBundles);
     			if (id == R.id.button_onekey_install) {
-    				bundle = ModleSettings.createMyInstallDefaultBundle(mContext);
+    				bundle.putAll(ModleSettings.createMyInstallDefaultBundle(mContext));
     			} else if (id == R.id.button_onekey_repair) {
-    				bundle = ModleSettings.createMyRepairDefaultBundle(mContext);
+    				bundle.putAll(ModleSettings.createMyRepairDefaultBundle(mContext));
     			} else if (id == R.id.button_onekey_maintenance) {
-    				bundle = ModleSettings.createMyMaintenanceDefaultBundle(mContext);
+    				bundle.putAll(ModleSettings.createMyMaintenanceDefaultBundle(mContext));
     				//add by chenkai, 2014.05.31，增加一键保养 end
     			}
-    			bundle.putAll(mBundles);
+    			
 //    			bundle.putLong("aid", mBaoxiuCardObject.mAID);
 //    			bundle.putLong("bid", mBaoxiuCardObject.mBID);
 //    			bundle.putLong("uid", mBaoxiuCardObject.mUID);

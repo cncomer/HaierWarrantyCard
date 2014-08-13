@@ -64,6 +64,9 @@ public class DeviceProvider extends ContentProvider{
 	private static final int HAIER_UPDATE_TIME = 0x0610;
 	private static final int HAIER_POST_CODE = 0x0611;
 	
+	/**关闭设备数据库*/
+	private static final int CLOSE_DEVICE = 0x0612;
+	
 	private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 	 static {
 	        // URI matching table
@@ -90,6 +93,8 @@ public class DeviceProvider extends ContentProvider{
 	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "haierregion", HAIER_REGION);
 	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "haierregion/#", HAIER_REGION_CODE);
 	        
+	        matcher.addURI(BjnoteContent.DEVICE_AUTHORITY, "closedevice", CLOSE_DEVICE);
+	        
 	        //TODO 增加
 	 }
 	
@@ -102,6 +107,14 @@ public class DeviceProvider extends ContentProvider{
         mContactDatabase = SQLiteDatabase.openOrCreateDatabase(context.getDatabasePath(DeviceDBHelper.DB_DEVICE_NAME), null);
         mContactDatabase.setLockingEnabled(true);
         return mContactDatabase;
+	}
+	
+	synchronized void closeDatabase() {
+		 if (mContactDatabase != null && mContactDatabase.isOpen()) {
+			 DebugUtils.logD(TAG, "close device Database");
+			 mContactDatabase.close();
+			 mContactDatabase = null;
+	     }
 	}
 	
 	@Override
@@ -242,6 +255,10 @@ public class DeviceProvider extends ContentProvider{
 			case HAIER_REGION:
 			case HAIER_REGION_CODE:
         	     result = db.query(table, projection, selection, selectionArgs, null, null, sortOrder);
+        	     break;
+			case CLOSE_DEVICE:
+				closeDatabase();
+				break;
          }
 		return result;
 	}
