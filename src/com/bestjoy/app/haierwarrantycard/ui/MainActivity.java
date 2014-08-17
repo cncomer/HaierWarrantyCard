@@ -12,11 +12,9 @@ import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.SystemClock;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,17 +26,13 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.update.UpdateService;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
-import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.YouMengMessageHelper;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
-import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.FilesUtils;
-import com.umeng.message.PushAgent;
-import com.umeng.message.UmengRegistrar;
 
 public class MainActivity extends BaseActionbarActivity {
 	private LinearLayout mDotsLayout;
@@ -136,8 +130,8 @@ public class MainActivity extends BaseActionbarActivity {
      }
 	 
 	 public boolean onPrepareOptionsMenu(Menu menu) {
-		 menu.findItem(R.string.menu_exit).setVisible(HaierAccountManager.getInstance().hasLoginned());
-		 menu.findItem(R.string.menu_refresh).setVisible(HaierAccountManager.getInstance().hasLoginned());
+		 menu.findItem(R.string.menu_exit).setVisible(MyAccountManager.getInstance().hasLoginned());
+		 menu.findItem(R.string.menu_refresh).setVisible(MyAccountManager.getInstance().hasLoginned());
 	     return super.onPrepareOptionsMenu(menu);
 	 }
 	 
@@ -158,7 +152,7 @@ public class MainActivity extends BaseActionbarActivity {
 				.show();
 			 return true;
 		 case R.string.menu_refresh:
-			 if (HaierAccountManager.getInstance().hasLoginned()) {
+			 if (MyAccountManager.getInstance().hasLoginned()) {
 				 //做一次登陆操作
 				 //目前只删除本地的所有缓存文件
 				 File dir = MyApplication.getInstance().getCachedXinghaoInternalRoot();
@@ -185,8 +179,8 @@ public class MainActivity extends BaseActionbarActivity {
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			HaierAccountManager.getInstance().deleteDefaultAccount();
-			HaierAccountManager.getInstance().saveLastUsrTel("");
+			MyAccountManager.getInstance().deleteDefaultAccount();
+			MyAccountManager.getInstance().saveLastUsrTel("");
 			return null;
 		}
 

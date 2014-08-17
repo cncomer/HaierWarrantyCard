@@ -13,8 +13,8 @@ import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.view.ProCityDisEditView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
@@ -107,7 +107,7 @@ public class LoginConfirmAddressActivity extends BaseActionbarActivity implement
 			if(list.size() > 0) {
 				LoginActivity.mAccountObject.mAccountHomes.removeAll(list);
 			}
-			return HaierAccountManager.getInstance().saveAccountObject(mContext.getContentResolver(), LoginActivity.mAccountObject);
+			return MyAccountManager.getInstance().saveAccountObject(mContext.getContentResolver(), LoginActivity.mAccountObject);
 		}
 
 		@Override

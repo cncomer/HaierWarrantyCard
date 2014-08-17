@@ -13,15 +13,14 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
-import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.BrowserActivity;
-import com.bestjoy.app.haierwarrantycard.ui.InstallActivity;
 import com.bestjoy.app.haierwarrantycard.ui.MyChooseDevicesActivity;
 import com.bestjoy.app.haierwarrantycard.ui.NewCardActivity;
-import com.bestjoy.app.haierwarrantycard.ui.RepairActivity;
+import com.bestjoy.app.haierwarrantycard.ui.NewHomeActivity;
 import com.shwy.bestjoy.utils.Intents;
 
 public class ModleSettings {
@@ -107,35 +106,53 @@ public class ModleSettings {
 		public void onItemClick(AdapterView<?> listView, View view, int pos, long arg3) {
 			Bundle bundle = new Bundle();
 			int id = getModelId(pos);
-			if (HaierAccountManager.getInstance().hasLoginned()) {
+			switch(id) {
+			case R.id.model_my_card:
+				bundle = createMyCardDefaultBundle(_context);
+				break;
+			case R.id.model_install:
+				bundle = createMyCardDefaultBundle(_context);
+				break;
+			case R.id.model_repair:
+				bundle = createMyCardDefaultBundle(_context);
+				break;
+			}
+			if (MyAccountManager.getInstance().hasLoginned()) {
 				//如果登陆了，我们先设置默认的家对象
-				bundle.putLong("aid", HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(0).mHomeAid);
-				bundle.putLong("uid", HaierAccountManager.getInstance().getCurrentAccountId());
+				bundle.putLong("aid", MyAccountManager.getInstance().getHomeAIdAtPosition(0));
+				bundle.putLong("uid", MyAccountManager.getInstance().getCurrentAccountId());
+			}
+			//判断是否有家，没有的话，就要去新建一个家
+			if (!MyAccountManager.getInstance().hasHomes()) {
+				HomeObject.setHomeObject(new HomeObject());
+				MyApplication.getInstance().showNeedHomeMessage();
+				NewHomeActivity.startActivity(_context);
+				return;
 			}
 			switch(id) {
 			case R.id.model_my_card:
-				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {
-					MyChooseDevicesActivity.startIntent(_context, createMyCardDefaultBundle(_context));
+				if (MyAccountManager.getInstance().hasBaoxiuCards()) {
+					MyChooseDevicesActivity.startIntent(_context, bundle);
 				} else {
 //					NewCardActivity.startIntent(_context, createMyCardDefaultBundle(_context));
-					NewCardActivity.startIntent(_context, createMyCardDefaultBundle(_context));
+					NewCardActivity.startIntent(_context, bundle);
 				}
 				break;
 			case R.id.model_install:
-				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {
-					MyChooseDevicesActivity.startIntent(_context, createMyInstallDefaultBundle(_context));
+				if (MyAccountManager.getInstance().hasBaoxiuCards()) {
+					MyChooseDevicesActivity.startIntent(_context, bundle);
 				} else {
 //					InstallActivity.startIntent(_context, createMyInstallDefaultBundle(_context));
-					NewCardActivity.startIntent(_context, createMyInstallDefaultBundle(_context));
+					NewCardActivity.startIntent(_context, bundle);
 				}
 				break;
 			case R.id.model_repair:
 				//bundle.putString(Intents.EXTRA_NAME, _context.getString(R.string.activity_title_choose_device_repair));
 				//break;
-				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {
-					MyChooseDevicesActivity.startIntent(_context, createMyRepairDefaultBundle(_context));
+				if (MyAccountManager.getInstance().hasBaoxiuCards()) {
+					MyChooseDevicesActivity.startIntent(_context, bundle);
 				} else {
-					NewCardActivity.startIntent(_context, createMyRepairDefaultBundle(_context));
+					NewCardActivity.startIntent(_context, bundle);
 //					RepairActivity.startIntent(_context, createMyRepairDefaultBundle(_context));
 				}
 				return;

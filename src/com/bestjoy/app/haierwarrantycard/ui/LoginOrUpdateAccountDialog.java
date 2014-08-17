@@ -18,7 +18,7 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.AccountParser;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.update.UpdateService;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.YouMengMessageHelper;
@@ -75,7 +75,7 @@ public class LoginOrUpdateAccountDialog extends Activity{
 				//modify by chenkai, 20140701, 将登录和更新调用的地址抽离出来，以便修改 end
 				mAccountObject = AccountParser.parseJson(_is, mStatusView);
 				if (mAccountObject != null && mAccountObject.isLogined()) {
-					boolean saveAccountOk = HaierAccountManager.getInstance().saveAccountObject(LoginOrUpdateAccountDialog.this.getContentResolver(), mAccountObject);
+					boolean saveAccountOk = MyAccountManager.getInstance().saveAccountObject(LoginOrUpdateAccountDialog.this.getContentResolver(), mAccountObject);
 					if (!saveAccountOk) {
 						//登录成功了，但本地数据保存失败，通常不会走到这里
 						_error = LoginOrUpdateAccountDialog.this.getString(R.string.msg_login_save_success);

@@ -42,7 +42,7 @@ import com.bestjoy.app.haierwarrantycard.HaierServiceObject.HaierResultObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
@@ -67,7 +67,7 @@ public class SettingsPreferenceActivity extends SherlockPreferenceActivity imple
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!HaierAccountManager.getInstance().hasLoginned()) {
+        if (!MyAccountManager.getInstance().hasLoginned()) {
         	DebugUtils.logD(TAG, "finish Actvitiy due to hasLoginned() return false, you must login in firstlly.");
         	finish();
         	return;
@@ -81,7 +81,7 @@ public class SettingsPreferenceActivity extends SherlockPreferenceActivity imple
 		mAccountName = (EditTextPreference) getPreferenceScreen().findPreference(KEY_ACCOUNT_NAME);
 		mAccountPassword = (Preference) getPreferenceScreen().findPreference(KEY_ACCOUNT_PASSWORD);
 		
-		updateAccountName(HaierAccountManager.getInstance().getAccountObject().mAccountName);
+		updateAccountName(MyAccountManager.getInstance().getAccountObject().mAccountName);
 		mAccountName.setOnPreferenceChangeListener(this);
     }
     
@@ -89,7 +89,7 @@ public class SettingsPreferenceActivity extends SherlockPreferenceActivity imple
 	public void onResume() {
 		super.onResume();
 		//重新获取一次账户密码，有可能之前呗改变了
-		mOldPassword = HaierAccountManager.getInstance().getAccountObject().mAccountPwd;
+		mOldPassword = MyAccountManager.getInstance().getAccountObject().mAccountPwd;
 		
 	}
     
@@ -195,9 +195,9 @@ public class SettingsPreferenceActivity extends SherlockPreferenceActivity imple
 			HaierResultObject haierResultObject = new HaierResultObject();
 			StringBuilder sb = new StringBuilder(HaierServiceObject.SERVICE_URL);
 			sb.append("UpdateUserName.ashx?");
-			String cell = HaierAccountManager.getInstance().getAccountObject().mAccountTel;
-			String pwd = HaierAccountManager.getInstance().getAccountObject().mAccountPwd;
-			long uid = HaierAccountManager.getInstance().getAccountObject().mAccountUid;
+			String cell = MyAccountManager.getInstance().getAccountObject().mAccountTel;
+			String pwd = MyAccountManager.getInstance().getAccountObject().mAccountPwd;
+			long uid = MyAccountManager.getInstance().getAccountObject().mAccountUid;
 			sb.append("UserName=").append(URLEncoder.encode(_name))
 			.append("&key=").append(SecurityUtils.MD5.md5(cell+pwd))
 			.append("&UID=").append(uid);
@@ -208,7 +208,7 @@ public class SettingsPreferenceActivity extends SherlockPreferenceActivity imple
 			    	 haierResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
 			    	 if (haierResultObject.isOpSuccessfully()) {
 			    		 //如果更新成功，我们需要同步更新本地数据
-			    		 AccountObject accountObject = HaierAccountManager.getInstance().getAccountObject();
+			    		 AccountObject accountObject = MyAccountManager.getInstance().getAccountObject();
 			    		 accountObject.mAccountName = _name;
 			    		 ContentValues values = new ContentValues();
 			    		 values.put(HaierDBHelper.ACCOUNT_NAME, _name);

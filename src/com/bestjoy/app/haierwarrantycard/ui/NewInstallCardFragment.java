@@ -2,7 +2,6 @@ package com.bestjoy.app.haierwarrantycard.ui;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -33,8 +32,8 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.view.HaierProCityDisEditPopView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
@@ -148,7 +147,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		}
 		
 		populateHomeInfoView(HomeObject.getHomeObject(mBundle));
-		populateContactInfoView(HaierAccountManager.getInstance().getAccountObject());
+		populateContactInfoView(MyAccountManager.getInstance().getAccountObject());
 	}
 	
 	public void setBaoxiuObjectAfterSlideMenu(InfoInterface slideManuObject) {
@@ -159,6 +158,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 			mModelInput.setText(object.mXingHao);
 			mBianhaoInput.setText(object.mSHBianHao);
 			mBaoxiuTelInput.setText(object.mBXPhone);
+			mBaoxiuCardObject.mKY = object.mKY;
 //			if (!TextUtils.isEmpty(object.mLeiXin)) {
 //				mTypeInput.setText(object.mLeiXin);
 //			}
@@ -240,7 +240,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 	}
 	
 	private void createNewInatallCard() {
-		if(HaierAccountManager.getInstance().hasLoginned()) {
+		if(MyAccountManager.getInstance().hasLoginned()) {
 			if(checkInput()) {
 				new AlertDialog.Builder(getActivity())
 		    	.setMessage(R.string.sure_install_tips)
@@ -353,7 +353,7 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 				//预约成功
 				getActivity().finish();
 				MyApplication.getInstance().showMessage(R.string.msg_yuyue_sucess);
-				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {
+				if (MyAccountManager.getInstance().hasBaoxiuCards()) {
 					MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
 				}
 			} else {
@@ -642,6 +642,6 @@ public class NewInstallCardFragment extends ModleBaseFragment implements View.On
 		mBaoxiuCardObject.mAID = mBundle.getLong("aid", -1);
 		mBaoxiuCardObject.mUID = mBundle.getLong("uid", -1);
 		populateHomeInfoView(HomeObject.getHomeObject(mBundle));
-		populateContactInfoView(HaierAccountManager.getInstance().getAccountObject());
+		populateContactInfoView(MyAccountManager.getInstance().getAccountObject());
 	}
 }

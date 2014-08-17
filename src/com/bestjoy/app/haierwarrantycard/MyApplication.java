@@ -6,7 +6,6 @@ import org.json.JSONObject;
 
 import android.app.AlertDialog;
 import android.app.Application;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
@@ -22,11 +21,10 @@ import android.util.Log;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.utils.BeepAndVibrate;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
-import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.YouMengMessageHelper;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DateUtils;
@@ -34,9 +32,6 @@ import com.shwy.bestjoy.utils.DeviceStorageUtils;
 import com.shwy.bestjoy.utils.DevicesUtils;
 import com.shwy.bestjoy.utils.SecurityUtils.SecurityKeyValuesObject;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.message.PushAgent;
-import com.umeng.message.UmengMessageHandler;
-import com.umeng.message.entity.UMessage;
 
 public class MyApplication extends Application{
 	
@@ -89,7 +84,7 @@ public class MyApplication extends Application{
 		
 		BitmapUtils.getInstance().setContext(this);
 		
-		HaierAccountManager.getInstance().setContext(this);
+		MyAccountManager.getInstance().setContext(this);
 		
 		mPreferManager = PreferenceManager.getDefaultSharedPreferences(this);
 		HaierServiceObject.setContext(this);
@@ -323,7 +318,7 @@ public class MyApplication extends Application{
     }
     /**返回产品使用说明书*/
     public File getProductUsagePdf(String ky) {
-    	String accountUid = String.valueOf(HaierAccountManager.getInstance().getAccountObject().mAccountUid);
+    	String accountUid = String.valueOf(MyAccountManager.getInstance().getAccountObject().mAccountUid);
 		File goodsUsagePdfFile =  new File(getExternalStorageModuleRootForAccount(accountUid, "product") , ky + ".pdf");
 		return goodsUsagePdfFile;
 	}
@@ -337,6 +332,11 @@ public class MyApplication extends Application{
     	if (mImMgr != null) {
     		mImMgr.hideSoftInputFromWindow(token, 0);
     	}
+    }
+    
+    /**显示需要先新建家提示信息*/
+	public void showNeedHomeMessage() {
+    	showMessage(R.string.msg_need_home_operation);
     }
     /**
      * 返回缓存的品牌型号文件，如果有外置SD卡，该文件会存在外置存储卡xxx/account/xxxx/xinghao目录下，否则在手机内部存储中xxx/files/

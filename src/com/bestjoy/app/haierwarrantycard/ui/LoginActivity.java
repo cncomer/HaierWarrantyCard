@@ -20,11 +20,11 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject.HaierResultObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
-import com.bestjoy.app.haierwarrantycard.HaierServiceObject.HaierResultObject;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.DialogUtils;
@@ -82,7 +82,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 		
 		mTelInput = (EditText) findViewById(R.id.tel);
 		//显示上一次输入的用户号码
-		mTelInput.setText(HaierAccountManager.getInstance().getLastUsrTel());
+		mTelInput.setText(MyAccountManager.getInstance().getLastUsrTel());
 		
 		mPasswordInput = (EditText) findViewById(R.id.pwd);
 	}
@@ -116,7 +116,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 				//modify by chenkai, 2014.06.04，去掉号码之间的空白符号 end
 				String pwd = mPasswordInput.getText().toString().trim();
 				if (!TextUtils.isEmpty(tel) && !TextUtils.isEmpty(pwd)) {
-					HaierAccountManager.getInstance().saveLastUsrTel(tel);
+					MyAccountManager.getInstance().saveLastUsrTel(tel);
 					startActivityForResult(LoginOrUpdateAccountDialog.createLoginOrUpdate(this, true, tel, pwd), REQUEST_LOGIN);
 				} else {
 					MyApplication.getInstance().showMessage(R.string.msg_input_usrtel_password);

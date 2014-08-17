@@ -2,7 +2,6 @@ package com.bestjoy.app.haierwarrantycard.ui;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -13,14 +12,10 @@ import org.json.JSONObject;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.app.DatePickerDialog.OnDateSetListener;
-import android.app.TimePickerDialog.OnTimeSetListener;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,10 +33,8 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
-import com.bestjoy.app.haierwarrantycard.ui.NewInstallCardFragment.MyDatePickerDialog;
-import com.bestjoy.app.haierwarrantycard.ui.NewInstallCardFragment.MyTimePickerDialog;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
 import com.bestjoy.app.haierwarrantycard.view.HaierProCityDisEditPopView;
@@ -190,7 +183,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			mTagInput.setText(mBaoxiuCardObject.mCardName);
 		}
 		populateHomeInfoView(HomeObject.getHomeObject(mBundle));
-		populateContactInfoView(HaierAccountManager.getInstance().getAccountObject());
+		populateContactInfoView(MyAccountManager.getInstance().getAccountObject());
 	}
 	
 	public void setBaoxiuObjectAfterSlideMenu(InfoInterface slideManuObject) {
@@ -201,6 +194,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 			mModelInput.setText(object.mXingHao);
 			mBianhaoInput.setText(object.mSHBianHao);
 			mBaoxiuTelInput.setText(object.mBXPhone);
+			mBaoxiuCardObject.mKY = object.mKY;
 //			if (!TextUtils.isEmpty(object.mLeiXin)) {
 //				mTypeInput.setText(object.mLeiXin);
 //			}
@@ -288,7 +282,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 	}
 
 	private void createRepairCard() {
-		if(HaierAccountManager.getInstance().hasLoginned()) {
+		if(MyAccountManager.getInstance().hasLoginned()) {
 			if(checkInput()) {
 				new AlertDialog.Builder(getActivity())
 		    	.setMessage(R.string.sure_repair_tips)
@@ -404,7 +398,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 				//预约成功
 				getActivity().finish();
 				MyApplication.getInstance().showMessage(R.string.msg_yuyue_sucess);
-				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {
+				if (MyAccountManager.getInstance().hasBaoxiuCards()) {
 					MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
 				}
 				
@@ -695,7 +689,7 @@ public class NewRepairCardFragment extends ModleBaseFragment implements View.OnC
 		mBaoxiuCardObject.mAID = mBundle.getLong("aid", -1);
 		mBaoxiuCardObject.mUID = mBundle.getLong("uid", -1);
 		populateHomeInfoView(HomeObject.getHomeObject(mBundle));
-		populateContactInfoView(HaierAccountManager.getInstance().getAccountObject());
+		populateContactInfoView(MyAccountManager.getInstance().getAccountObject());
 		
 	}
 

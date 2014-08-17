@@ -32,8 +32,8 @@ import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject.HaierResultObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.NetworkUtils;
@@ -166,7 +166,7 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 		protected Boolean doInBackground(Integer... param) {
 			boolean deleted = false;
 			ContentResolver cr = mContext.getContentResolver();
-			long uid = HaierAccountManager.getInstance().getAccountObject().mAccountUid;
+			long uid = MyAccountManager.getInstance().getAccountObject().mAccountUid;
 			for(long aid : deleteHomeIDList.keySet()) {
 				deleted = deleteFromService(aid);
 				if (deleted) {
@@ -176,7 +176,8 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 			}
 			deleteHomeIDList.clear();
 			//刷新本地家
-			HaierAccountManager.getInstance().initAccountHomes();
+			MyAccountManager.getInstance().initAccountHomes();
+			MyAccountManager.getInstance().updateHomeObject(-1);
 			return false;
 		}
 
@@ -193,7 +194,7 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 			urls[0] = HaierServiceObject.HOME_DELETE_URL + "AID=";
 			paths[0] = String.valueOf(aid);
 			urls[1] = "&key=";
-			paths[1] = SecurityUtils.MD5.md5(HaierAccountManager.getInstance().getAccountObject().mAccountTel + HaierAccountManager.getInstance().getAccountObject().mAccountPwd);
+			paths[1] = SecurityUtils.MD5.md5(MyAccountManager.getInstance().getAccountObject().mAccountTel + MyAccountManager.getInstance().getAccountObject().mAccountPwd);
 			DebugUtils.logD(TAG, "urls = " + Arrays.toString(urls));
 			DebugUtils.logD(TAG, "paths = " + Arrays.toString(paths));
 			try {
@@ -253,7 +254,7 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 		}
 		@Override
 		public int getCount() {
-			return HaierAccountManager.getInstance().getAccountObject().mAccountHomeCount;
+			return MyAccountManager.getInstance().getAccountObject().mAccountHomeCount;
 		}
 
 		@Override
@@ -285,7 +286,7 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 			} else {
 				holder._check.setVisibility(View.GONE);
 			}
-			HomeObject homeObject = HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(position);
+			HomeObject homeObject = MyAccountManager.getInstance().getAccountObject().mAccountHomes.get(position);
 			holder._aid = homeObject.mHomeAid;
 			Boolean checked = deleteHomeIDList.get(holder._aid);
 			if(checked != null && checked) {
@@ -316,7 +317,7 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 				deleteHomeIDList.put(viewHolder._aid, viewHolder._check.isChecked());
 				invalidateOptionsMenu();
 			} else {
-				HomeObject.setHomeObject(HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(pos));
+				HomeObject.setHomeObject(MyAccountManager.getInstance().getAccountObject().mAccountHomes.get(pos));
 				NewHomeActivity.startActivity(mContext);
 			}
 		}

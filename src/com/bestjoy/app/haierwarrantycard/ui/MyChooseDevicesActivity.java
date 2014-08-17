@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.ContentObserver;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,8 +20,8 @@ import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
@@ -125,7 +124,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 				Bundle newBundle = new Bundle();
 			    newBundle.putAll(mBundle);
 			    newBundle.putLong("aid", mMyPagerAdapter.getHome(mHomeSelected).mHomeAid);
-			    newBundle.putLong("uid", HaierAccountManager.getInstance().getCurrentAccountId());
+			    newBundle.putLong("uid", MyAccountManager.getInstance().getCurrentAccountId());
 				boolean handle = ModleSettings.onActionBarMenuSelected(item, mContext, newBundle);
 				if (!handle) {
 					return super.onOptionsItemSelected(item);
@@ -148,7 +147,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 
 		@Override
 		protected Void doInBackground(Void... params) {
-			HaierAccountManager.getInstance().initAccountHomes();
+			MyAccountManager.getInstance().initAccountHomes();
 			return null;
 		}
 
@@ -184,7 +183,7 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 		}
 		
 		private HomeObject getHome(int position) {
-			return HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(position);
+			return MyAccountManager.getInstance().getAccountObject().mAccountHomes.get(position);
 		}
 
 
@@ -214,10 +213,10 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 
 		@Override
 		public int getCount() {
-			if (HaierAccountManager.getInstance().getAccountObject() == null) {
+			if (MyAccountManager.getInstance().getAccountObject() == null) {
 				return 0;
 			}
-			return HaierAccountManager.getInstance().getAccountObject().mAccountHomes.size();
+			return MyAccountManager.getInstance().getAccountObject().mAccountHomes.size();
 		}
 
 	}

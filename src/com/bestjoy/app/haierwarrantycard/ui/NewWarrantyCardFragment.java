@@ -15,7 +15,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -41,8 +40,7 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
-import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.DialogUtils;
@@ -52,11 +50,8 @@ import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.ImageHelper;
 import com.shwy.bestjoy.utils.InfoInterface;
-import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
 import com.shwy.bestjoy.utils.SecurityUtils;
-
-import android.util.Log;
 
 public class NewWarrantyCardFragment extends ModleBaseFragment implements View.OnClickListener{
 	private static final String TAG = "NewWarrantyCardFragment";
@@ -309,6 +304,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			mBianhaoInput.setText(object.mSHBianHao);
 			mBaoxiuTelInput.setText(object.mBXPhone);
 			mWyInput.setText(object.mWY);
+			mBaoxiuCardObject.mKY = object.mKY;
 //			if (!TextUtils.isEmpty(object.mLeiXin)) {
 //				mTypeInput.setText(object.mLeiXin);
 //			}
@@ -404,7 +400,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	}
 	
 	private void saveNewWarrantyCardAndSync() {
-		if(HaierAccountManager.getInstance().hasLoginned()) {
+		if(MyAccountManager.getInstance().hasLoginned()) {
 			//如果没有注册，我们前往登陆界面
 			if(checkInput()) {
 				mSaveBtn.setEnabled(false);
@@ -458,7 +454,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			//paramValue.append("|").append(baoxiuCardObject.getBase64StringFromBillAvator());
 			//paramValue.append("|").append(baoxiuCardObject.mWY);
 			//DebugUtils.logD(TAG, "param " + paramValue.toString());
-			AccountObject accountObject = HaierAccountManager.getInstance().getAccountObject();
+			AccountObject accountObject = MyAccountManager.getInstance().getAccountObject();
 			try {
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("AID", baoxiuCardObject.mAID)
@@ -502,7 +498,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 									//通常不会发生
 									haierResultObject.mStatusMessage = getActivity().getString(R.string.msg_local_save_card_failed);
 								} else {
-									HaierAccountManager.getInstance().updateHomeObject(baoxiuCardObject.mAID);
+									MyAccountManager.getInstance().updateHomeObject(baoxiuCardObject.mAID);
 								}
 								return haierResultObject;
 							}
@@ -639,7 +635,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			//paramValue.append("|").append(baoxiuCardObject.getBase64StringFromBillAvator());
 			//paramValue.append("|").append(baoxiuCardObject.mWY);
 			//DebugUtils.logD(TAG, "param " + paramValue.toString());
-			AccountObject accountObject = HaierAccountManager.getInstance().getAccountObject();
+			AccountObject accountObject = MyAccountManager.getInstance().getAccountObject();
 			try {
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("AID", baoxiuCardObject.mAID)
@@ -682,7 +678,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 								haierResultObject.mStatusMessage = getActivity().getString(R.string.msg_local_save_card_failed);
 							} else {
 								//更新家以便设备列表能够看到
-								HaierAccountManager.getInstance().updateHomeObject(baoxiuCardObject.mAID);
+								MyAccountManager.getInstance().updateHomeObject(baoxiuCardObject.mAID);
 							}
 							return haierResultObject;
 						}

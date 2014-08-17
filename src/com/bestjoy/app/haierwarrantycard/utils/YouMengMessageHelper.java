@@ -22,7 +22,7 @@ import android.text.TextUtils;
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject.HaierResultObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
@@ -183,8 +183,8 @@ public class YouMengMessageHelper {
 	public void postDeviceTokenToServiceLocked() {
 		DebugUtils.logD(TAG, "postDeviceTokenToServiceLocked()");
 		try {
-			if (HaierAccountManager.getInstance().hasLoginned() && !TextUtils.isEmpty(getDeviceTotke()) && !getDeviceTotkeStatus()) {
-				InputStream is = NetworkUtils.openContectionLocked(HaierServiceObject.getUpdateDeviceTokenUrl(String.valueOf(HaierAccountManager.getInstance().getAccountObject().mAccountUid), getDeviceTotke(), "android"), 
+			if (MyAccountManager.getInstance().hasLoginned() && !TextUtils.isEmpty(getDeviceTotke()) && !getDeviceTotkeStatus()) {
+				InputStream is = NetworkUtils.openContectionLocked(HaierServiceObject.getUpdateDeviceTokenUrl(String.valueOf(MyAccountManager.getInstance().getAccountObject().mAccountUid), getDeviceTotke(), "android"), 
 						MyApplication.getInstance().getSecurityKeyValuesObject());
 				if (is != null) {
 					HaierResultObject result = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));

@@ -2,7 +2,6 @@ package com.bestjoy.app.haierwarrantycard.ui;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Arrays;
 
 import org.apache.http.client.ClientProtocolException;
 import org.json.JSONException;
@@ -20,12 +19,12 @@ import android.widget.EditText;
 
 import com.actionbarsherlock.view.Menu;
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
+import com.bestjoy.app.haierwarrantycard.HaierServiceObject.HaierResultObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
-import com.bestjoy.app.haierwarrantycard.HaierServiceObject.HaierResultObject;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.view.HaierProCityDisEditPopView;
@@ -159,7 +158,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 			if (result.isOpSuccessfully()) {
 				//注册后，我们要做一次登陆
 				MyApplication.getInstance().showMessage(result.mStatusMessage);
-				HaierAccountManager.getInstance().saveLastUsrTel(mAccountObject.mAccountTel);
+				MyAccountManager.getInstance().saveLastUsrTel(mAccountObject.mAccountTel);
 				startActivityForResult(LoginOrUpdateAccountDialog.createLoginOrUpdate(mContext, true, mAccountObject.mAccountTel, mAccountObject.mAccountPwd), REQUEST_LOGIN);
 			} else {
 				MyApplication.getInstance().showMessage(result.mStatusMessage);

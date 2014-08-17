@@ -1,7 +1,6 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
 import android.app.AlertDialog;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -17,8 +16,7 @@ import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
-import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
 import com.shwy.bestjoy.utils.Intents;
@@ -169,9 +167,9 @@ public class NewCardActivity extends BaseSlidingFragmentActivity implements
 		//add by chenkai, 如果已经前往登录过了，我们需要重新将账户信息和默认家信息填充.
 		if (mHasRegistered) {
 			mHasRegistered = false;
-			mBundles.putLong("aid", HaierAccountManager.getInstance().getAccountObject().mAccountHomes.get(0).mHomeAid);
+			mBundles.putLong("aid", MyAccountManager.getInstance().getAccountObject().mAccountHomes.get(0).mHomeAid);
 			//更新联系人信息，默认是用的账户信息
-			mBundles.putLong("uid", HaierAccountManager.getInstance().getCurrentAccountId());
+			mBundles.putLong("uid", MyAccountManager.getInstance().getCurrentAccountId());
 			DebugUtils.logD(TAG, "onResume updateArguments()" + mBundles);
 			mContent.updateArguments(mBundles);
 		}

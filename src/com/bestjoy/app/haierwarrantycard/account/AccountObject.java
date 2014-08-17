@@ -34,6 +34,7 @@ public class AccountObject implements InfoInterface{
 		HaierDBHelper.ACCOUNT_TEL,
 		HaierDBHelper.ACCOUNT_PWD,
 		HaierDBHelper.ACCOUNT_HOME_COUNT,
+		HaierDBHelper.HOME_CARD_COUNT,
 	};
 	
 	private static final String[] PROJECTION_UID = new String[]{
@@ -48,6 +49,7 @@ public class AccountObject implements InfoInterface{
 	private static final int KEY_TEL = 3;
 	private static final int KEY_PWD = 4;
 	private static final int KEY_HOME_COUNT = 5;
+	private static final int KEY_BAOXIUCARD_COUNT = 6;
 	
 	private static final String WHERE_DEFAULT = HaierDBHelper.ACCOUNT_DEFAULT + "=1";
 	private static final String WHERE_UID = HaierDBHelper.ACCOUNT_UID + "=?";
@@ -58,7 +60,8 @@ public class AccountObject implements InfoInterface{
 	public String mAccountTel;
 	public String mAccountPwd;
 	public int mAccountHomeCount;
-	
+	/**保修卡个数*/
+	public int mAccountBaoxiuCardCount;
 	
 	
 	/**登陆或注册的时候会用到，表示当前的状态，statuscode:状态 1:成功   0：失败*/
@@ -81,6 +84,7 @@ public class AccountObject implements InfoInterface{
 		newAccountObject.mAccountTel = mAccountTel;
 		newAccountObject.mAccountPwd = mAccountPwd;
 		newAccountObject.mAccountHomeCount = mAccountHomeCount;
+		newAccountObject.mAccountBaoxiuCardCount = mAccountBaoxiuCardCount;
 		return newAccountObject;
 	}
 	
@@ -109,6 +113,8 @@ public class AccountObject implements InfoInterface{
 				haierAccount.mAccountTel = c.getString(KEY_TEL);
 				haierAccount.mAccountPwd = c.getString(KEY_PWD);
 				haierAccount.mAccountHomeCount = c.getInt(KEY_HOME_COUNT);
+				
+				haierAccount.mAccountBaoxiuCardCount = c.getInt(KEY_BAOXIUCARD_COUNT);
 			}
 		    c.close();
 		}

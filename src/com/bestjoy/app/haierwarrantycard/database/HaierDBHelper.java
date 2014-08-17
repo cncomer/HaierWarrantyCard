@@ -12,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 5;
+  private static final int DB_VERSION = 7;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -41,7 +41,7 @@ private static final String TAG = "HaierDBHelper";
   public static final String HOME_DETAIL = "home_detail";
   public static final String HOME_DEFAULT = "isDefault";
   /**我的家的保修卡个数*/
-  public static final String HOME_CARD_COUNT = "card_count";
+  public static final String HOME_CARD_COUNT = "baoxiucard_count";
   /**我的家TAB位置,用户可以调整顺序*/
   public static final String POSITION = "position";
   
@@ -211,11 +211,19 @@ private static final String TAG = "HaierDBHelper";
   
   private void createTriggerForBaoxiuCardsTable(SQLiteDatabase sqLiteDatabase) {
 	  String sql = "CREATE TRIGGER insert_cards_update_home" + " AFTER INSERT " + " ON " + TABLE_NAME_CARDS + 
-			  " BEGIN UPDATE " + TABLE_NAME_HOMES + " SET card_count = card_count+1 WHERE aid = new.aid; END;";
+			  " BEGIN UPDATE " + TABLE_NAME_HOMES + " SET baoxiucard_count = baoxiucard_count+1 WHERE aid = new.aid; END;";
 	  sqLiteDatabase.execSQL(sql);
 	  
 	  sql = "CREATE TRIGGER delete_card_update_home" + " AFTER DELETE " + " ON " + TABLE_NAME_CARDS + 
-			  " BEGIN UPDATE " + TABLE_NAME_HOMES + " SET card_count = card_count-1 WHERE aid = old.aid; END;";
+			  " BEGIN UPDATE " + TABLE_NAME_HOMES + " SET baoxiucard_count = baoxiucard_count-1 WHERE aid = old.aid; END;";
+	  sqLiteDatabase.execSQL(sql);
+	  
+	  sql = "CREATE TRIGGER insert_cards_update_account" + " AFTER INSERT " + " ON " + TABLE_NAME_CARDS + 
+			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET baoxiucard_count = baoxiucard_count+1 WHERE uid = new.uid; END;";
+	  sqLiteDatabase.execSQL(sql);
+	  
+	  sql = "CREATE TRIGGER delete_card_update_account" + " AFTER DELETE " + " ON " + TABLE_NAME_CARDS + 
+			  " BEGIN UPDATE " + TABLE_NAME_ACCOUNTS + " SET baoxiucard_count = baoxiucard_count-1 WHERE uid = old.uid; END;";
 	  sqLiteDatabase.execSQL(sql);
 	
   }
@@ -225,11 +233,12 @@ private static final String TAG = "HaierDBHelper";
 	  sqLiteDatabase.execSQL(
 	            "CREATE TABLE " + TABLE_NAME_ACCOUNTS + " (" +
 	            ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-	            ACCOUNT_UID + " TEXT, " +
+	            ACCOUNT_UID + " INTEGER NOT NULL DEFAULT 0, " +
 	            ACCOUNT_TEL + " TEXT, " +
 	            ACCOUNT_PWD + " TEXT, " +
 	            ACCOUNT_DEFAULT + " INTEGER NOT NULL DEFAULT 1, " +
 	            ACCOUNT_HOME_COUNT + " INTEGER NOT NULL DEFAULT 0, " +
+	            HOME_CARD_COUNT + " INTEGER NOT NULL DEFAULT 0, " +
 	            ACCOUNT_NAME + " TEXT, " +
 	            ACCOUNT_PHONES  + " TEXT, " +
 	            ACCOUNT_HAS_PHOTO + " INTEGER NOT NULL DEFAULT 0, " +
@@ -242,7 +251,7 @@ private static final String TAG = "HaierDBHelper";
 	  sqLiteDatabase.execSQL(
 	            "CREATE TABLE " + TABLE_NAME_HOMES + " (" +
 	            ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-	            ACCOUNT_UID + " INTEGER, " +
+	            ACCOUNT_UID + " INTEGER NOT NULL DEFAULT 0, " +
 	            HOME_AID + " INTEGER, " +
 	            HOME_NAME + " TEXT, " +
 	            HOME_CARD_COUNT + " INTEGER NOT NULL DEFAULT 0, " +
@@ -261,7 +270,7 @@ private static final String TAG = "HaierDBHelper";
 	  sqLiteDatabase.execSQL(
 	            "CREATE TABLE " + TABLE_NAME_CARDS + " (" +
 	            ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-	            CARD_UID + " INTEGER, " +  //账户id
+	            CARD_UID + " INTEGER NOT NULL DEFAULT 0, " +  //账户id
 	            CARD_AID + " INTEGER, " +     //家id
 	            CARD_BID + " INTEGER, " +     //保修卡服务器id
 	            CARD_TYPE + " TEXT, " +
@@ -286,7 +295,7 @@ private static final String TAG = "HaierDBHelper";
 	            REWARD_STATUS + " INTEGER NOT NULL DEFAULT 0, " + //add by chenkai, 锁定认证字段 20140701
 	            DATE + " TEXT" +
 	            ");");
-//	  createTriggerForBaoxiuCardsTable(sqLiteDatabase);
+	  createTriggerForBaoxiuCardsTable(sqLiteDatabase);
   }
   
   private void createScanHistory(SQLiteDatabase sqLiteDatabase) {
@@ -340,7 +349,7 @@ private static final String TAG = "HaierDBHelper";
   @Override
   public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 	  DebugUtils.logD(TAG, "onUpgrade oldVersion " + oldVersion + " newVersion " + newVersion);
-	  if (oldVersion < 4 ) {
+	  if (oldVersion < 7 ) {
 			sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_ACCOUNTS);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_HOMES);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CARDS);
@@ -355,13 +364,13 @@ private static final String TAG = "HaierDBHelper";
 		    
 		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "insert_cards_update_home");
 		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "delete_card_update_home");
+		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "insert_cards_update_account");
+		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "delete_cards_update_account");
+		    
+		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "insert_cards_update_home");
+		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "delete_card_update_home");
 		    onCreate(sqLiteDatabase);
 		    return;
 		} 
-	  
-	  if (oldVersion == 4) {
-		  createYoumengMessageTable(sqLiteDatabase);
-		  oldVersion= 5;
-	  }
   }
 }

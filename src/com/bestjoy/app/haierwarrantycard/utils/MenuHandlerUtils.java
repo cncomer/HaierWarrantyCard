@@ -6,7 +6,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
 import com.bestjoy.app.haierwarrantycard.R;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.LoginActivity;
 import com.bestjoy.app.haierwarrantycard.ui.RegisterActivity;
 import com.bestjoy.app.haierwarrantycard.ui.SettingsPreferenceActivity;
@@ -62,7 +62,7 @@ public class MenuHandlerUtils {
     	MenuItem menuItem = menu.findItem(R.string.menu_setting);
     	//如果没有已经登陆了，我们显示家管理菜单
     	MenuItem menuHomeManagerItem = menu.findItem(R.string.menu_manage_home);
-    	if (HaierAccountManager.getInstance().hasLoginned()) {
+    	if (MyAccountManager.getInstance().hasLoginned()) {
     		if (menuItem != null) {
     			menuItem.setVisible(true);
     		}

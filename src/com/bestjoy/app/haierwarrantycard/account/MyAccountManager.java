@@ -6,16 +6,16 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-public class HaierAccountManager {
+public class MyAccountManager {
 	private static final String TAG = "HaierAccountManager";
 	private AccountObject mHaierAccount;
 	private Context mContext;
 	SharedPreferences mSharedPreferences;
-	private static HaierAccountManager mInstance = new HaierAccountManager();
+	private static MyAccountManager mInstance = new MyAccountManager();
 	
-	private HaierAccountManager() {}
+	private MyAccountManager() {}
 	
-	public static HaierAccountManager getInstance() {
+	public static MyAccountManager getInstance() {
 		return mInstance;
 	}
 	
@@ -66,6 +66,14 @@ public class HaierAccountManager {
 	public AccountObject getAccountObject() {
 		return mHaierAccount;
 	}
+	public long getHomeAIdAtPosition(int position) {
+		long homeAid = -1;
+		if (mHaierAccount != null && mHaierAccount.mAccountHomes.size() > 0) {
+			homeAid = mHaierAccount.mAccountHomes.get(position).mHomeAid;
+		}
+		DebugUtils.logD(TAG, "getHomeAIdAtPosition() position=" + position + ", mHaierAccount=" + mHaierAccount + ", mAccountHomes=" + mHaierAccount.mAccountHomes.size() + ", homeAid=" + homeAid);
+		return homeAid;
+	}
 	public long getCurrentAccountId() {
 		return mHaierAccount != null ? mHaierAccount.mAccountUid : -1; 
 	}
@@ -75,21 +83,20 @@ public class HaierAccountManager {
 	/**是否有保修卡*/
 	public boolean hasBaoxiuCards() {
 		if (mHaierAccount != null) {
-			for(HomeObject home : mHaierAccount.mAccountHomes) {
-				if (home.mHomeCardCount > 0) {
-					return true;
-				}
-			}
+			return mHaierAccount.mAccountBaoxiuCardCount > 0;
 		}
 		return false;
 	}
 	/**新建保修卡后都需要调用该方法来更新家*/
 	public void updateHomeObject(long aid) {
 		if (mHaierAccount != null) {
+			mHaierAccount.mAccountBaoxiuCardCount = 0;
 			for(HomeObject home : mHaierAccount.mAccountHomes) {
 				if (home.mHomeAid  == aid) {
 					home.initBaoxiuCards(mContext.getContentResolver());
 				}
+				//重新初始化保修卡数据
+				mHaierAccount.mAccountBaoxiuCardCount += home.mHomeCardCount;
 			}
 		}
 	}
@@ -114,7 +121,7 @@ public class HaierAccountManager {
     	if (mHaierAccount != accountObject) {
     		boolean success = accountObject.saveInDatebase(cr, null);
     		if (success) {
-    			mHaierAccount = accountObject;
+    			updateAccount();
     			return true;
     		}
     	}

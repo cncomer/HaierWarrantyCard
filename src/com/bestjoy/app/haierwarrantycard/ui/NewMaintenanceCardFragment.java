@@ -34,8 +34,8 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
-import com.bestjoy.app.haierwarrantycard.account.HaierAccountManager;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
 import com.bestjoy.app.haierwarrantycard.view.HaierProCityDisEditPopView;
@@ -185,7 +185,7 @@ public class NewMaintenanceCardFragment extends ModleBaseFragment implements Vie
 			mTagInput.setText(mBaoxiuCardObject.mCardName);
 		}
 		populateHomeInfoView(HomeObject.getHomeObject(mBundle));
-		populateContactInfoView(HaierAccountManager.getInstance().getAccountObject().clone());
+		populateContactInfoView(MyAccountManager.getInstance().getAccountObject().clone());
 	}
 	
 	public void setBaoxiuObjectAfterSlideMenu(InfoInterface slideManuObject) {
@@ -279,7 +279,7 @@ public class NewMaintenanceCardFragment extends ModleBaseFragment implements Vie
 	}
 
 	private void createCard() {
-		if(HaierAccountManager.getInstance().hasLoginned()) {
+		if(MyAccountManager.getInstance().hasLoginned()) {
 			//如果没有注册，我们前往登陆界面
 			if(checkInput()) {
 				createCardAsync();
@@ -402,7 +402,7 @@ public class NewMaintenanceCardFragment extends ModleBaseFragment implements Vie
 				//预约成功
 				getActivity().finish();
 				MyApplication.getInstance().showMessage(R.string.msg_yuyue_sucess);
-				if (HaierAccountManager.getInstance().hasBaoxiuCards()) {
+				if (MyAccountManager.getInstance().hasBaoxiuCards()) {
 					MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
 				}
 				
