@@ -49,7 +49,7 @@
 
                 <ImageView
                     android:id="@+id/avator"
-                    android:layout_width="@dimen/barcode_image_view_size"
+                    android:layout_width="@dimen/product_repair_avator_width"
                     android:layout_height="@dimen/product_repair_avator_width"
                     android:layout_alignParentLeft="true"
                     android:scaleType="fitCenter" />

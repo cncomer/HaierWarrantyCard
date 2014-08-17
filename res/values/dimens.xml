@@ -24,7 +24,7 @@
      <dimen name="title_my_product_deadline_width">100dip</dimen>
      <dimen name="title_my_product_repair_width">48dip</dimen>
      
-     <dimen name="product_repair_avator_width">100dip</dimen>
+     <dimen name="product_repair_avator_width">150dip</dimen>
      <dimen name="product_repair_avator_height">100dip</dimen>
      
      <dimen name="product_preview_avator_width">70dip</dimen>

@@ -99,8 +99,9 @@
                 android:orientation="horizontal" >
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/default_color_button_height"
+                    android:layout_height="@dimen/default_color_button_height"
+                    android:scaleType="centerInside"
                     android:src="@drawable/ic_voice" />
 
                 <Button
@@ -111,19 +112,28 @@
                     android:text="@string/button_speek" />
             </LinearLayout>
 
-
-            <Button
-                android:id="@+id/button_save"
-                android:layout_width="156dip"
-                android:layout_height="42dip"
-                android:layout_gravity="center_horizontal"
-                android:background="@drawable/default_black_btn"
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
                 android:gravity="center"
-                android:text="@string/button_yuyue_repair"
-                android:textColor="#ffffffff"
-                android:layout_marginTop="5dip"
-                android:textSize="18sp" />
-            
+                android:orientation="horizontal" >
+
+                <ImageView
+                    android:layout_width="@dimen/default_color_button_height"
+                    android:layout_height="@dimen/default_color_button_height"
+                    android:scaleType="fitCenter"
+                    android:visibility="invisible"
+                    android:src="@drawable/ic_voice" />
+
+                <Button
+                    android:id="@+id/button_save"
+                    style="@style/DefaultShapeButton"
+                    android:layout_width="180dip"
+                    android:layout_marginLeft="10dip"
+                    android:text="@string/button_yuyue_repair" />
+            </LinearLayout>
+
             <View
                 android:layout_width="fill_parent"
                 android:layout_height="60dip" />

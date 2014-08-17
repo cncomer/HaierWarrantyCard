@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -160,7 +161,7 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 				holder._pinpai = (TextView) view.findViewById(R.id.pinpai);
 				holder._xinghao = (TextView) view.findViewById(R.id.xinghao);
 				holder._title2 = (TextView) view.findViewById(R.id.title2);
-				holder._title3 = (TextView) view.findViewById(R.id.title3);
+				holder._zhengji = (TextView) view.findViewById(R.id.zhengji);
 				holder._avator = (ImageView) view.findViewById(R.id.avator);
 				holder._component = view.findViewById(R.id.component);
 				view.setTag(holder);
@@ -180,12 +181,12 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 			int validity = card.getBaoxiuValidity();
 			if (validity > 0) {
 				if (validity > 9999) {
-					holder._title3.setText(getString(R.string.baoxiucard_validity_toomuch));
+					holder._zhengji.setText(getString(R.string.baoxiucard_validity_toomuch));
 				} else {
-					holder._title3.setText(getString(R.string.baoxiucard_validity, validity));
+					holder._zhengji.setText(getString(R.string.baoxiucard_validity, validity));
 				}
 			} else {
-				holder._title3.setText(getString(R.string.baoxiucard_outdate));
+				holder._zhengji.setText(getString(R.string.baoxiucard_outdate));
 			}
 			
 			//主要部件保修
@@ -206,7 +207,8 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 		//分别是保修卡名字，品牌， 型号， 部件保修剩余时间， 整机保修剩余时间
 		private TextView _tag, _pinpai, _xinghao, _title2, _title3;
 		//分别是部件保修和整机保修布局(整个)
-		private View _component, _zhengji;
+		private View _component;
+		private TextView _zhengji;
 		private ImageView _avator;
 		private BaoxiuCardObject _card;
 		

@@ -57,24 +57,20 @@
            />
     </FrameLayout>
     
-    <FrameLayout android:layout_width="50dip"
+    <FrameLayout android:layout_width="wrap_content"
         android:layout_margin="4dip"
     	android:layout_height="wrap_content">
-       <ImageView android:id="@+id/zhengji"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:src="@drawable/baoxiu_zhengji"
-	        android:scaleType="fitCenter"/>
-       <TextView android:id="@+id/title3"
-           android:layout_width="fill_parent"
+
+       <TextView
+           android:id="@+id/zhengji"
+           android:layout_width="wrap_content"
            android:layout_height="wrap_content"
+           android:scaleType="fitCenter"
+           android:background="@drawable/baoxiu_zhengji"
+           android:text="3650天"
            android:textColor="@color/wt"
-           android:singleLine="true"
-           android:textSize="12sp"
-            android:layout_marginTop="2dip"
-            android:text="3650天"
-            android:gravity="center_horizontal"
-           android:layout_gravity="center_horizontal"/>
+           android:textSize="12sp" />
+
     </FrameLayout>
     
 </LinearLayout>
