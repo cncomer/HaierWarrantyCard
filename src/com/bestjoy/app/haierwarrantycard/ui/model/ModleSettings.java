@@ -121,13 +121,13 @@ public class ModleSettings {
 				//如果登陆了，我们先设置默认的家对象
 				bundle.putLong("aid", MyAccountManager.getInstance().getHomeAIdAtPosition(0));
 				bundle.putLong("uid", MyAccountManager.getInstance().getCurrentAccountId());
-			}
-			//判断是否有家，没有的话，就要去新建一个家
-			if (!MyAccountManager.getInstance().hasHomes()) {
-				HomeObject.setHomeObject(new HomeObject());
-				MyApplication.getInstance().showNeedHomeMessage();
-				NewHomeActivity.startActivity(_context);
-				return;
+				//判断是否有家，没有的话，就要去新建一个家
+				if (!MyAccountManager.getInstance().hasHomes()) {
+					HomeObject.setHomeObject(new HomeObject());
+					MyApplication.getInstance().showNeedHomeMessage();
+					NewHomeActivity.startActivity(_context);
+					return;
+				}
 			}
 			switch(id) {
 			case R.id.model_my_card:
