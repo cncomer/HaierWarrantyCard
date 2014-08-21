@@ -107,14 +107,17 @@ public class ModleSettings {
 			Bundle bundle = new Bundle();
 			int id = getModelId(pos);
 			switch(id) {
+			case R.id.model_feedback:
+				BrowserActivity.startActivity(_context, "http://m.rrs.com/rrsm/track/verify.html", null);
+				return;
 			case R.id.model_my_card:
 				bundle = createMyCardDefaultBundle(_context);
 				break;
 			case R.id.model_install:
-				bundle = createMyCardDefaultBundle(_context);
+				bundle = createMyInstallDefaultBundle(_context);
 				break;
 			case R.id.model_repair:
-				bundle = createMyCardDefaultBundle(_context);
+				bundle = createMyRepairDefaultBundle(_context);
 				break;
 			}
 			if (MyAccountManager.getInstance().hasLoginned()) {
@@ -129,7 +132,13 @@ public class ModleSettings {
 					return;
 				}
 			}
-			switch(id) {
+			if (MyAccountManager.getInstance().hasBaoxiuCards()) {
+					MyChooseDevicesActivity.startIntent(_context, bundle);
+				} else {
+//					NewCardActivity.startIntent(_context, createMyCardDefaultBundle(_context));
+					NewCardActivity.startIntent(_context, bundle);
+				}
+			/*switch(id) {
 			case R.id.model_my_card:
 				if (MyAccountManager.getInstance().hasBaoxiuCards()) {
 					MyChooseDevicesActivity.startIntent(_context, bundle);
@@ -159,7 +168,7 @@ public class ModleSettings {
 			case R.id.model_feedback:
 				BrowserActivity.startActivity(_context, "http://m.rrs.com/rrsm/track/verify.html", null);
 				return;
-			}
+			}*/
 			
 			
 		}
