@@ -42,4 +42,7 @@
     <dimen name="preview_image_view_size">60dip</dimen>
      <!-- qrcode scan end -->
 
+
+    <dimen name="baoxiucard_avator_image_view_margin">10dip</dimen>
+    
 </resources>

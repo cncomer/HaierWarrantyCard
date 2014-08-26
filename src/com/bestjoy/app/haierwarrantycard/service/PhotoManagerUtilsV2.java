@@ -50,6 +50,7 @@ public class PhotoManagerUtilsV2 {
 	private static Bitmap mDefaultLoadBitmap;
 	
 	private static Bitmap mDefaultKyBitmap;
+	private static Bitmap mDefaultBaoxiucardAvator;
 	private Context mContext;
 	private Resources mResources;
 	private static final int MAX_CAPACITY = 100;
@@ -144,6 +145,7 @@ public class PhotoManagerUtilsV2 {
 			MAX_RESULT_IMAGE_SIZE = mContext.getResources().getDimension(R.dimen.barcode_image_view_size);
 			mCurrentImageSize = MAX_RESULT_IMAGE_SIZE;
 			mDefaultKyBitmap = BitmapFactory.decodeResource(mResources, R.drawable.ky_default);
+			mDefaultBaoxiucardAvator = BitmapFactory.decodeResource(mResources, R.drawable.baoxiuka_avator_default);
 		}
 		
 //		initCache();
@@ -350,6 +352,8 @@ public class PhotoManagerUtilsV2 {
 		switch(type) {
 		case HOME_DEVICE_AVATOR:
 			return mDefaultKyBitmap;
+		case Baoxiucard_Salesman_Avator:
+			return mDefaultBaoxiucardAvator;
 		case PREVIEW:
 			default:
 				return mDefaultBitmap; 
@@ -574,6 +578,8 @@ public class PhotoManagerUtilsV2 {
 			return MyApplication.getInstance().getProductPreviewAvatorFile(photoId);
 		case FaPiao:
 			return MyApplication.getInstance().getProductFaPiaoFile(photoId);
+		case Baoxiucard_Salesman_Avator:
+			return MyApplication.getInstance().getBaoxiucardSalesmanPreviewAvatorFile(photoId);
 		case PREVIEW:
 		}
 		return null;
@@ -587,6 +593,8 @@ public class PhotoManagerUtilsV2 {
 			return HaierServiceObject.getProdcutAvatorUrl(photoId);
 		case FaPiao:
 			return HaierServiceObject.getBaoxiucardFapiao(photoId);
+		case Baoxiucard_Salesman_Avator:
+			return HaierServiceObject.getBaoxiucardSalesmanAvatorPreview(photoId);
 		}
 		return null;
 	}
@@ -712,7 +720,8 @@ public class PhotoManagerUtilsV2 {
 	public enum TaskType {
 		PREVIEW("PreviewVcfType"),
 		FaPiao("FaPiao"),
-		HOME_DEVICE_AVATOR("HomeDeviceAvatorType");  //设备avator
+		HOME_DEVICE_AVATOR("HomeDeviceAvatorType"),  //设备avator
+		Baoxiucard_Salesman_Avator("Baoxiucard_Salesman_Avator");
 		private String mTypeName;
 		TaskType(String typeName) {
 			mTypeName=typeName;

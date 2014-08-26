@@ -32,4 +32,5 @@ public enum ParsedResultType {
   GEO,
   TEL,
   HAIER,  //海尔条码
+  MYLIFE,
 }

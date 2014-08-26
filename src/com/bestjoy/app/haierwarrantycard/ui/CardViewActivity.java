@@ -9,8 +9,11 @@ import java.text.ParseException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.vudroid.pdfdroid.PdfViewerActivity;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -42,14 +45,17 @@ import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.DialogUtils;
 import com.bestjoy.app.haierwarrantycard.utils.FilesLengthUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
+import com.bestjoy.app.haierwarrantycard.view.BaoxiuCardViewSalemanInfoView;
+import com.google.zxing.client.result.AddressBookParsedResult;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
 import com.shwy.bestjoy.utils.NotifyRegistrant;
+import com.shwy.bestjoy.utils.SecurityUtils;
 
 public class CardViewActivity extends BaseActionbarActivity implements View.OnClickListener{
-	private static final String TOKEN = CardViewActivity.class.getName();
+	public static final String TOKEN = CardViewActivity.class.getName();
 	private static final String TAG = "CardViewActivity";
 	private EditText mAskInput;
 	//private Handler mHandler;
@@ -72,6 +78,10 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	private TextView mBaoxiuStatusView;
 	
 	private ImageView mFapiaoDownloadView;
+	
+	private BaoxiuCardViewSalemanInfoView mMMOne, mMMTwo;
+	
+	public static AddressBookParsedResult mAddressResult;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +89,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		if (isFinishing()) {
 			return;
 		}
+		mAddressResult = null;
 		if (savedInstanceState != null) {
 			mBundles = savedInstanceState.getBundle(TAG);
 			DebugUtils.logD(TAG, "onCreate() savedInstanceState != null, restore mBundle=" + mBundles);
@@ -178,7 +189,22 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		 mBaoxiuStatusView = (TextView) findViewById(R.id.warranty);
 		//add by chenkai, 2014.06.06, 保修期状态 end
 		 populateView();
-		
+		 mMMOne = (BaoxiuCardViewSalemanInfoView) findViewById(R.id.mmone);
+		//销售员
+		 mMMOne.setTitle(R.string.salesman_title);
+		 
+		 //服务员
+		 mMMTwo = (BaoxiuCardViewSalemanInfoView) findViewById(R.id.mmtwo);
+		 mMMTwo.setTitle(R.string.serverman_title);
+		 if (!TextUtils.isEmpty(mBaoxiuCardObject.mMMOne)) {
+			 AddressBookParsedResult resultOne = new AddressBookParsedResult(new String[]{mBaoxiuCardObject.mMMOneName}, null, new String[]{mBaoxiuCardObject.mMMOneTel}, null, null, null, null, null, null, null, null, mBaoxiuCardObject.mMMOne, null, null);
+			 mMMOne.setAddressBookParsedResult(resultOne, TOKEN);
+		 }
+		 
+		 if (!TextUtils.isEmpty(mBaoxiuCardObject.mMMTwo)) {
+			 AddressBookParsedResult resultTwo = new AddressBookParsedResult(new String[]{mBaoxiuCardObject.mMMTwoName}, null, new String[]{mBaoxiuCardObject.mMMTwoTel}, null, null, null, null, null, null, null, null, mBaoxiuCardObject.mMMTwo, null, null);
+			 mMMTwo.setAddressBookParsedResult(resultTwo, TOKEN);
+		 }
 	}
 	
 	private void populateView() {
@@ -613,6 +639,113 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		super.onSaveInstanceState(outState);
 		outState.putBundle(TAG, mBundles);
 		DebugUtils.logW(TAG, "onSaveInstanceState(), we try to save mBundles=" + mBundles);
+	}
+	
+	@Override
+   	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+   		super.onActivityResult(requestCode, resultCode, data);
+   		if (resultCode == Activity.RESULT_OK) {
+   			//update bid and aid
+   			UpdateSalesInfoAsyncTask task = new UpdateSalesInfoAsyncTask();
+   			if (requestCode == (mMMOne.getId() & 0x0000ffff)) {
+   				mMMOne.setAddressBookParsedResult(mAddressResult, TOKEN);
+   				task.setType(1);
+   				task.setMMOne(mAddressResult.getBid());
+   				if (mAddressResult.hasPhoneNumbers()) {
+   					task.setMMOneTel(mAddressResult.getPhoneNumbers()[0]);
+   				}
+   				if (mAddressResult.getFirstName() != null) {
+   					task.setMMOneName(mAddressResult.getFirstName());
+   				}
+   			} else if (requestCode == (mMMTwo.getId() & 0x0000ffff)) {
+   				mMMTwo.setAddressBookParsedResult(mAddressResult, TOKEN);
+   				task.setType(2);
+   				task.setMMTwo(mAddressResult.getBid());
+   				if (mAddressResult.hasPhoneNumbers()) {
+   					task.setMMTwoTel(mAddressResult.getPhoneNumbers()[0]);
+   				}
+   				if (mAddressResult.getFirstName() != null) {
+   					task.setMMTwoName(mAddressResult.getFirstName());
+   				}
+   			}
+   			mAddressResult = null;
+   			task.execute();
+   		}
+   	}
+	
+	private class UpdateSalesInfoAsyncTask extends AsyncTask<Void, Void, Void> {
+
+		private String _mmOne="", _mmTwo="", _mmOneTel="", _mmOneName="", _mmTwoTel="", _mmTwoName="";
+		private int _type = 0;
+		public void setMMOne(String mm) {
+			_mmOne = mm;
+		}
+		public void setMMTwo(String mm) {
+			_mmTwo = mm;
+		}
+		public void setType(int type) {
+			_type = type;
+		}
+		public void setMMOneTel(String tel) {
+			_mmOneTel = tel;
+		}
+        public void setMMOneName(String name) {
+        	_mmOneName = name;
+		}
+		public void setMMTwoTel(String tel) {
+			_mmTwoTel = tel;
+		}
+        public void setMMTwoName(String name) {
+        	_mmTwoName = name;
+		}
+		@Override
+		protected Void doInBackground(Void... arg0) {
+			InputStream is = null;
+			StringBuilder sb = new StringBuilder();
+			sb.append(mBaoxiuCardObject.mBID).append("_").append(_mmOne).append("_").append(_mmTwo);
+			try {
+				JSONObject jsonObject = new JSONObject();
+				jsonObject.put("BID", mBaoxiuCardObject.mBID);
+				jsonObject.put("MMOne", _mmOne);
+				jsonObject.put("MMTwo", _mmTwo);
+				jsonObject.put("type", _type);
+				jsonObject.put("token", SecurityUtils.MD5.md5(sb.toString()));
+				DebugUtils.logD(TAG, "UpdateSalesInfoAsyncTask jsonObject = " + jsonObject.toString());
+				is = NetworkUtils.openContectionLocked(HaierServiceObject.updateBaoxiucardSalesmanInfo("para", jsonObject.toString()), MyApplication.getInstance().getSecurityKeyValuesObject());
+				HaierResultObject serviceResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
+				if (serviceResultObject.isOpSuccessfully()) {
+					mBaoxiuCardObject.mMMOne = _mmOne;
+					mBaoxiuCardObject.mMMOneTel = _mmOneTel;
+					mBaoxiuCardObject.mMMOneName = _mmOneName;
+					mBaoxiuCardObject.mMMTwo = _mmTwo;
+					mBaoxiuCardObject.mMMTwoTel = _mmTwoTel;
+					mBaoxiuCardObject.mMMTwoName = _mmTwoName;
+					boolean saved = mBaoxiuCardObject.saveInDatebase(getContentResolver(), null);
+					DebugUtils.logD(TAG, "UpdateSalesInfoAsyncTask save BaoxiuCard " +saved);
+				}
+			} catch (ClientProtocolException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
+			} finally {
+				NetworkUtils.closeInputStream(is);
+			}
+			return null;
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+		}
+		
+		
 	}
 
 }

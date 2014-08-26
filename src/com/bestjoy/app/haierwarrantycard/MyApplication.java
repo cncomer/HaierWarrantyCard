@@ -150,6 +150,14 @@ public class MyApplication extends Application{
 		}
 		return productRoot;
 	}
+	/**
+	 * 返回保修卡界面销售员预览头像的本地文件
+	 * @param photoid mm号码
+	 * @return
+	 */
+	public File getBaoxiucardSalesmanPreviewAvatorFile(String photoid) {
+		return new File(getProductSubDir("avator"), photoid+ ".s");
+	}
 	
 	@Override
 	public void onTerminate() {

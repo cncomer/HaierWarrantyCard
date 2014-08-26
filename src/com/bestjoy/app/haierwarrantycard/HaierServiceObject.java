@@ -286,4 +286,19 @@ public class HaierServiceObject {
 		  return sb.toString();
 		  
 	  }
+	  
+	  
+	  public static String getBaoxiucardSalesmanAvatorPreview(String mm) {
+		  UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder("http://www.mingdown.com/mmimage/");
+		  sb.append(mm).append(".jpg");
+		  return sb.toString();
+	  }
+	  
+	  public static String updateBaoxiucardSalesmanInfo(String para, String jsonString) {
+		  UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder(SERVICE_URL);
+		  sb.append("AddBIDMM.ashx?")
+		  .append(para).append("=").appendUrlEncodedString(jsonString);
+		  return sb.toString();
+	  }
+	  
 }

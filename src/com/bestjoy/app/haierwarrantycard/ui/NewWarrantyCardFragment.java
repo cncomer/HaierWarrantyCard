@@ -507,7 +507,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
-					haierResultObject.mStatusMessage = getActivity().getString(R.string.msg_local_save_card_failed);
+					haierResultObject.mStatusMessage = getActivity().getString(R.string.msg_local_save_card_failed_due_to_parse_exception);
 				}
 			} catch (ClientProtocolException e) {
 				e.printStackTrace();

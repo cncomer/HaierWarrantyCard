@@ -108,6 +108,9 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public int mRewardStatus = 0;
 	 //add by chenkai, 锁定认证字段 20140701 end
 	
+	public String mMMOne, mMMOneTel,mMMOneName;
+	public String mMMTwo, mMMTwoTel,mMMTwoName;
+	
 	public static final String[] PROJECTION = new String[]{
 		HaierDBHelper.ID,
 		HaierDBHelper.CARD_TYPE, 
@@ -131,6 +134,12 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		HaierDBHelper.CARD_KY,               //19
 		HaierDBHelper.REWARD_STATUS,         //20 add by chenkai, 锁定认证字段 20140701 begin
 		HaierDBHelper.CARD_FPname,           //21 add by chenkai, FaPiao's name 20140701 begin
+		HaierDBHelper.CARD_MM_ONE,            //22
+		HaierDBHelper.CARD_MM_ONE_TEL,            //23
+		HaierDBHelper.CARD_MM_ONE_NAME,            //24
+		HaierDBHelper.CARD_MM_TWO,            //25
+		HaierDBHelper.CARD_MM_TWO_TEL,            //26
+		HaierDBHelper.CARD_MM_TWO_NAME,            //27
 	};
 	
 	public static final int KEY_CARD_ID = 0;
@@ -156,6 +165,13 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	
 	public static final int KEY_CARD_REWARDSTATUS = 20; //add by chenkai, 锁定认证字段 20140701
 	public static final int KEY_CARD_FPname = 21; //add by chenkai, FaPiao's name.
+	
+	public static final int KEY_CARD_MM_ONE = 22;
+	public static final int KEY_CARD_MM_ONE_TEL = 23;
+	public static final int KEY_CARD_MM_ONE_NAME = 24;
+	public static final int KEY_CARD_MM_TWO = 25;
+	public static final int KEY_CARD_MM_TWO_TEL = 26;
+	public static final int KEY_CARD_MM_TWO_NAME = 27;
 	public static final String WHERE_UID = HaierDBHelper.CARD_UID + "=?";
 	public static final String WHERE_AID = HaierDBHelper.CARD_AID + "=?";
 	public static final String WHERE_BID = HaierDBHelper.CARD_BID + "=?";
@@ -267,6 +283,17 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 			cardObject.mRewardStatus = 1;
 		}
 		 //add by chenkai, 锁定认证字段 20140701 end
+		
+		JSONObject vcf = jsonObject.optJSONObject("vcf");
+		if (vcf != null) {
+			cardObject.mMMOne = vcf.optString("MMOne", "");
+			cardObject.mMMOneTel = vcf.optString("UserCell", "");
+			cardObject.mMMOneName = vcf.optString("UserName", "");
+			
+			cardObject.mMMTwo = vcf.optString("MMTwo", "");
+			cardObject.mMMTwoTel = vcf.optString("hcell", "");
+			cardObject.mMMTwoName = vcf.optString("hname", "");
+		}
 		
 		return cardObject;
 	}
@@ -467,6 +494,13 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
     	//add by chenkai, 锁定认证字段 20140701 begin
     	baoxiuCardObject.mRewardStatus =c.getInt(KEY_CARD_REWARDSTATUS);
 		 //add by chenkai, 锁定认证字段 20140701 end
+    	
+    	baoxiuCardObject.mMMOne =c.getString(KEY_CARD_MM_ONE);
+    	baoxiuCardObject.mMMOneTel =c.getString(KEY_CARD_MM_ONE_TEL);
+    	baoxiuCardObject.mMMOneName =c.getString(KEY_CARD_MM_ONE_NAME);
+    	baoxiuCardObject.mMMTwo =c.getString(KEY_CARD_MM_TWO);
+    	baoxiuCardObject.mMMTwoTel =c.getString(KEY_CARD_MM_TWO_TEL);
+    	baoxiuCardObject.mMMTwoName =c.getString(KEY_CARD_MM_TWO_NAME);
 		return baoxiuCardObject;
 	}
 
@@ -497,6 +531,14 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		values.put(HaierDBHelper.CARD_WY, mWY);
 		values.put(HaierDBHelper.CARD_YBPhone, mYBPhone);
 		values.put(HaierDBHelper.CARD_KY, mKY);
+		
+		
+		values.put(HaierDBHelper.CARD_MM_ONE, mMMOne);
+		values.put(HaierDBHelper.CARD_MM_ONE_TEL, mMMOneTel);
+		values.put(HaierDBHelper.CARD_MM_ONE_NAME, mMMOneName);
+		values.put(HaierDBHelper.CARD_MM_TWO, mMMTwo);
+		values.put(HaierDBHelper.CARD_MM_TWO_TEL, mMMTwoTel);
+		values.put(HaierDBHelper.CARD_MM_TWO_NAME, mMMTwoName);
 		
 		values.put(HaierDBHelper.DATE, new Date().getTime());
 		

@@ -2,39 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
     android:background="#ffffffff"
+    android:orientation="vertical"
     android:paddingLeft="20dip"
-    android:paddingRight="20dip"
-    android:orientation="vertical" >
+    android:paddingRight="20dip" >
 
     <ScrollView
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_marginTop="10dip"
+        android:layout_height="0dip"
+        android:layout_weight="1.0"
         android:scrollbars="none" >
 
         <LinearLayout
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dip"
             android:orientation="vertical" >
 
-            <LinearLayout android:layout_width="fill_parent"
+            <LinearLayout
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal" >
+
                 <TextView
-	                android:id="@+id/name"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:textColor="#ffff7872"
-	                android:textSize="18sp" />
+                    android:id="@+id/name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffff7872"
+                    android:textSize="18sp" />
+
                 <TextView
-	                android:id="@+id/warranty"
-	                android:layout_marginLeft="30dip"
-	                android:layout_width="wrap_content"
-	                android:layout_height="wrap_content"
-	                android:textColor="#ff1d5494" />
+                    android:id="@+id/warranty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dip"
+                    android:textColor="#ff1d5494" />
             </LinearLayout>
 
             <View
@@ -67,9 +70,9 @@
                     android:id="@+id/button_qa"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/button_policy"
                     android:layout_marginLeft="40dip"
                     android:layout_marginTop="4dip"
-                    android:layout_below="@+id/button_policy"
                     android:layout_toRightOf="@+id/avator"
                     android:clickable="true"
                     android:src="@drawable/button_qa" />
@@ -84,25 +87,26 @@
                     android:layout_toRightOf="@+id/avator"
                     android:clickable="true"
                     android:src="@drawable/button_guide" />
-                
-                 <ImageView
+
+                <ImageView
                     android:id="@+id/button_bill"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/button_guide"
                     android:layout_marginLeft="40dip"
                     android:layout_marginTop="4dip"
-                    android:clickable="true"
-                    android:layout_below="@+id/button_guide"
                     android:layout_toRightOf="@+id/avator"
+                    android:clickable="true"
                     android:src="@drawable/button_bill" />
             </RelativeLayout>
 
-
-            <TextView android:layout_width="match_parent"
+            <TextView
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dip"
-                android:textSize="10sp"
-                android:text="@string/baoxiu_policy_notice"/>
+                android:text="@string/baoxiu_policy_notice"
+                android:textSize="10sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -111,266 +115,301 @@
                 android:orientation="vertical"
                 android:padding="10dip" >
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal" >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                        <ImageView
-                            style="@style/ProductStarIcon"
-                            android:src="@drawable/ic_red_star" />
+                    <ImageView
+                        style="@style/ProductStarIcon"
+                        android:src="@drawable/ic_red_star" />
 
-                        <TextView
-                            style="@style/ProductInfo"
-                            android:text="@string/product_brand" />
+                    <TextView
+                        style="@style/ProductInfo"
+                        android:text="@string/product_brand" />
 
-                        <TextView
-                            android:id="@+id/product_brand_input"
-                            style="@style/ViewProductInfo" />
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/product_brand_input"
+                        style="@style/ViewProductInfo" />
+                </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal" >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                        <ImageView
-                            style="@style/ProductStarIcon"
-                            android:src="@drawable/ic_red_star" />
+                    <ImageView
+                        style="@style/ProductStarIcon"
+                        android:src="@drawable/ic_red_star" />
 
-                        <TextView
-                            style="@style/ProductInfo"
-                            android:text="@string/product_model" />
+                    <TextView
+                        style="@style/ProductInfo"
+                        android:text="@string/product_model" />
 
-                        <TextView
-                            android:id="@+id/product_model_input"
-                            style="@style/ViewProductInfo" />
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/product_model_input"
+                        style="@style/ViewProductInfo" />
+                </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal" >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                        <ImageView
-                            style="@style/ProductStarIcon"
-                            android:src="@drawable/ic_red_star" />
+                    <ImageView
+                        style="@style/ProductStarIcon"
+                        android:src="@drawable/ic_red_star" />
 
-                        <TextView
-                            style="@style/ProductInfo"
-                            android:text="@string/product_sn" />
+                    <TextView
+                        style="@style/ProductInfo"
+                        android:text="@string/product_sn" />
 
-                        <TextView
-                            android:id="@+id/product_sn_input"
-                            style="@style/ViewProductInfo" />
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/product_sn_input"
+                        style="@style/ViewProductInfo" />
+                </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal" >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                        <ImageView
-                            style="@style/ProductStarIcon"
-                            android:src="@drawable/ic_red_star" />
+                    <ImageView
+                        style="@style/ProductStarIcon"
+                        android:src="@drawable/ic_red_star" />
 
-                        <TextView
-                            style="@style/ProductInfo"
-                            android:text="@string/product_tel" />
+                    <TextView
+                        style="@style/ProductInfo"
+                        android:text="@string/product_tel" />
 
-                        <TextView
-                            android:id="@+id/product_tel_input"
-                            android:autoLink="all"
-                            android:clickable="true"
-                            style="@style/ViewProductInfo" />
-                    </LinearLayout>
+                    <TextView
+                        android:id="@+id/product_tel_input"
+                        style="@style/ViewProductInfo"
+                        android:autoLink="all"
+                        android:clickable="true" />
+                </LinearLayout>
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal" >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                        <ImageView
-                            style="@style/ProductStarIcon"
-                            android:src="@drawable/ic_red_star" />
+                    <ImageView
+                        style="@style/ProductStarIcon"
+                        android:src="@drawable/ic_red_star" />
 
-                        <TextView
-                            style="@style/ProductInfo"
-                            android:text="@string/product_buy_date" />
+                    <TextView
+                        style="@style/ProductInfo"
+                        android:text="@string/product_buy_date" />
 
-                        <TextView
-                            android:id="@+id/product_buy_date"
-                            style="@style/ViewProductInfo" />
-                    </LinearLayout>
-                    
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal" >
+                    <TextView
+                        android:id="@+id/product_buy_date"
+                        style="@style/ViewProductInfo" />
+                </LinearLayout>
 
-                        <ImageView
-                            style="@style/ProductStarIcon"
-                            android:src="@drawable/ic_red_star" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                        <TextView
-                            style="@style/ProductInfo"
-                            android:text="@string/product_buy_cost" />
+                    <ImageView
+                        style="@style/ProductStarIcon"
+                        android:src="@drawable/ic_red_star" />
 
-                        <TextView
-                            android:id="@+id/product_buy_cost"
-                            style="@style/ViewProductInfo" />
-                    </LinearLayout>
-                    
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal" >
+                    <TextView
+                        style="@style/ProductInfo"
+                        android:text="@string/product_buy_cost" />
 
-                        <ImageView
-                            style="@style/ProductStarIcon"
-                            android:src="@drawable/ic_red_star" />
+                    <TextView
+                        android:id="@+id/product_buy_cost"
+                        style="@style/ViewProductInfo" />
+                </LinearLayout>
 
-                        <TextView
-                            style="@style/ProductInfo"
-                            android:text="@string/product_buy_entry" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                        <TextView
-                            android:id="@+id/product_buy_entry"
-                            style="@style/ViewProductInfo" />
-                    </LinearLayout>
-                    
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal" >
+                    <ImageView
+                        style="@style/ProductStarIcon"
+                        android:src="@drawable/ic_red_star" />
 
-                        <ImageView
-                            style="@style/ProductStarIcon"
-                            android:src="@drawable/ic_red_star" />
+                    <TextView
+                        style="@style/ProductInfo"
+                        android:text="@string/product_buy_entry" />
 
-                        <TextView
-                            style="@style/ProductInfo"
-                            android:text="@string/product_buy_delay_time" />
+                    <TextView
+                        android:id="@+id/product_buy_entry"
+                        style="@style/ViewProductInfo" />
+                </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/product_buy_delay_time"
-                            style="@style/ViewProductInfo" />
-                    </LinearLayout>
-                    
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal" >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                        <ImageView
-                            style="@style/ProductStarIcon"
-                            android:src="@drawable/ic_red_star" />
+                    <ImageView
+                        style="@style/ProductStarIcon"
+                        android:src="@drawable/ic_red_star" />
 
-                        <TextView
-                            style="@style/ProductInfo"
-                            android:text="@string/product_buy_delay_componey" />
+                    <TextView
+                        style="@style/ProductInfo"
+                        android:text="@string/product_buy_delay_time" />
 
-                        <TextView
-                            android:id="@+id/product_buy_delay_componey"
-                            style="@style/ViewProductInfo" />
-                    </LinearLayout>
-                    
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal" >
+                    <TextView
+                        android:id="@+id/product_buy_delay_time"
+                        style="@style/ViewProductInfo" />
+                </LinearLayout>
 
-                        <ImageView
-                            style="@style/ProductStarIcon"
-                            android:src="@drawable/ic_red_star" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
 
-                        <TextView
-                            style="@style/ProductInfo"
-                            android:text="@string/product_buy_delay_componey_tel" />
+                    <ImageView
+                        style="@style/ProductStarIcon"
+                        android:src="@drawable/ic_red_star" />
 
-                        <TextView
-                            android:id="@+id/product_buy_delay_componey_tel"
-                             android:autoLink="all"
-                            android:clickable="true"
-                            style="@style/ViewProductInfo" />
-                    </LinearLayout>
-                    
+                    <TextView
+                        style="@style/ProductInfo"
+                        android:text="@string/product_buy_delay_componey" />
+
+                    <TextView
+                        android:id="@+id/product_buy_delay_componey"
+                        style="@style/ViewProductInfo" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal" >
+
+                    <ImageView
+                        style="@style/ProductStarIcon"
+                        android:src="@drawable/ic_red_star" />
+
+                    <TextView
+                        style="@style/ProductInfo"
+                        android:text="@string/product_buy_delay_componey_tel" />
+
+                    <TextView
+                        android:id="@+id/product_buy_delay_componey_tel"
+                        style="@style/ViewProductInfo"
+                        android:autoLink="all"
+                        android:clickable="true" />
+                </LinearLayout>
             </LinearLayout>
-            <FrameLayout  android:layout_width="match_parent"
-			    android:layout_height="wrap_content"
-                android:layout_marginTop="30dip"
-                android:layout_marginBottom="30dip">
-                <LinearLayout android:id="@+id/onekey_for_haier"
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    android:gravity="center_vertical"
-				    android:orientation="horizontal" >
-	                    
-		            <View
-		                android:layout_width="0dip"
-		                android:layout_height="wrap_content"
-		                android:layout_weight="1.0" />
-		            <Button
-		                android:id="@+id/button_onekey_install"
-		                style = "@style/DefaultShapeButton"
-		                android:text="@string/button_onekey_install"
-		                android:textSize="18sp" />
-		            <View
-		                android:layout_width="0dip"
-		                android:layout_height="wrap_content"
-		                android:layout_weight="1.0" />
-		            <Button
-		                android:id="@+id/button_onekey_repair"
-		                style = "@style/DefaultShapeButton"
-		                android:text="@string/button_onekey_repair"
-		                android:textSize="18sp" />
-		            <View
-		                android:layout_width="0dip"
-		                android:layout_height="wrap_content"
-		                android:layout_weight="1.0" />
-		            <Button
-		                android:id="@+id/button_onekey_maintenance"
-		                style = "@style/DefaultShapeButton"
-		                android:text="@string/button_onekey_maintenance"
-		                android:visibility="gone"
-		                android:textSize="18sp" />
-		            
-		            <View
-		                android:layout_width="0dip"
-		                android:layout_height="wrap_content"
-		                android:visibility="gone"
-		                android:layout_weight="1.0" />
-	            </LinearLayout>
-	             <LinearLayout android:id="@+id/onekey_for_other"
-				    android:layout_width="match_parent"
-				    android:layout_height="wrap_content"
-				    android:gravity="center_vertical"
-				    android:orientation="horizontal" >
-		             <View
-		                android:layout_width="0dip"
-		                android:layout_height="wrap_content"
-		                android:layout_weight="1.0" />
-		            <Button
-		                android:id="@+id/button_onekey_tel"
-		                style = "@style/DefaultShapeButton"
-		                android:text="@string/button_onekey_tel"
-		                android:textSize="18sp" />
-		            <View
-		                android:layout_width="0dip"
-		                android:layout_height="wrap_content"
-		                android:layout_weight="1.0" />
-		         </LinearLayout>
-            </FrameLayout>
+            <!-- saleman info -->
+            <LinearLayout 
+                android:id="@+id/sales_layout"
+                android:gravity="center"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dip"
+                android:layout_marginBottom="10dip"
+                android:orientation="horizontal">
+                <include android:id="@+id/mmone" layout="@layout/sale_man_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="50dip"/>
+                <include android:id="@+id/mmtwo" layout="@layout/sale_man_info"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dip"/>
+            </LinearLayout>
+            <View android:layout_width="fill_parent"
+                android:layout_height="@dimen/default_color_button_height"/>
         </LinearLayout>
     </ScrollView>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:background="#00000000"
+        android:layout_height="@dimen/default_color_button_height"
+        android:layout_marginBottom="30dip" >
+
+        <LinearLayout
+            android:id="@+id/onekey_for_haier"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal" >
+
+            <View
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0" />
+
+            <Button
+                android:id="@+id/button_onekey_install"
+                style="@style/DefaultShapeButton"
+                android:text="@string/button_onekey_install"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0" />
+
+            <Button
+                android:id="@+id/button_onekey_repair"
+                style="@style/DefaultShapeButton"
+                android:text="@string/button_onekey_repair"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0" />
+
+            <Button
+                android:id="@+id/button_onekey_maintenance"
+                style="@style/DefaultShapeButton"
+                android:text="@string/button_onekey_maintenance"
+                android:textSize="18sp"
+                android:visibility="gone" />
+
+            <View
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0"
+                android:visibility="gone" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/onekey_for_other"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:visibility="gone"
+            android:orientation="horizontal" >
+
+            <View
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0" />
+
+            <Button
+                android:id="@+id/button_onekey_tel"
+                style="@style/DefaultShapeButton"
+                android:text="@string/button_onekey_tel"
+                android:textSize="18sp" />
+
+            <View
+                android:layout_width="0dip"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.0" />
+        </LinearLayout>
+    </FrameLayout>
+
 </LinearLayout>

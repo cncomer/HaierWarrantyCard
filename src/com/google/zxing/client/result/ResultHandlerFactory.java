@@ -34,6 +34,8 @@ public final class ResultHandlerFactory {
     ParsedResultType type = result.getType();
     if (type.equals(ParsedResultType.HAIER)) {
         return new HaierResultHandler(activity, result);
+    } else if (type.equals(ParsedResultType.ADDRESSBOOK)) {
+        return new AddressBookResultHandler(activity, result);
     } else if (type.equals(ParsedResultType.TEXT)) {
        return new TextResultHandler(activity, result);
     } 

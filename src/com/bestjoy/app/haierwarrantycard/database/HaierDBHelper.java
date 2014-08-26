@@ -12,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 7;
+  private static final int DB_VERSION = 8;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -91,6 +91,15 @@ private static final String TAG = "HaierDBHelper";
   public static final String DEVICE_WARRANTY_PERIOD = "warranty_period";
   /**配件保修*/
   public static final String CARD_COMPONENT_VALIDITY = "component_validity";
+  
+  public static final String CARD_MM_ONE = "mmone";
+  public static final String CARD_MM_ONE_TEL = "mmone_tel";
+  public static final String CARD_MM_ONE_NAME = "mmone_name";
+  
+  public static final String CARD_MM_TWO = "mmtwo";
+  public static final String CARD_MM_TWO_TEL = "mmtwo_tel";
+  public static final String CARD_MM_TWO_NAME = "mmtwo_name";
+  
   //add by chenkai, 锁定认证字段 20140701 begin
   /**保修记录是否锁定,如果是1表示这个保修卡是厂家认可的，发票内容不能更改，也不能删除*/
   public static final String REWARD_STATUS = "rewardStatus";
@@ -287,6 +296,12 @@ private static final String TAG = "HaierDBHelper";
 	            CARD_WY + " TEXT, " +
 	            CARD_YBPhone + " TEXT, " +
 	            CARD_KY + " TEXT, " +
+	            CARD_MM_ONE + " TEXT, " +
+	            CARD_MM_ONE_TEL + " TEXT, " +
+	            CARD_MM_ONE_NAME + " TEXT, " +
+	            CARD_MM_TWO + " TEXT, " +
+	            CARD_MM_TWO_TEL + " TEXT, " +
+	            CARD_MM_TWO_NAME + " TEXT, " +
 	            CARD_YANBAO_TIME + " TEXT, " +
 	            CARD_YANBAO_TIME_COMPANY + " TEXT, " +
 	            CARD_YANBAO_TIME_COPMANY_TEL + " TEXT, " +
@@ -372,5 +387,17 @@ private static final String TAG = "HaierDBHelper";
 		    onCreate(sqLiteDatabase);
 		    return;
 		} 
+	  
+	  if (oldVersion == 7) {
+		  //增加了保修卡和mm的关联
+		  addTextColumn(sqLiteDatabase, TABLE_NAME_CARDS, CARD_MM_ONE);
+		  addTextColumn(sqLiteDatabase, TABLE_NAME_CARDS, CARD_MM_ONE_TEL);
+		  addTextColumn(sqLiteDatabase, TABLE_NAME_CARDS, CARD_MM_ONE_NAME);
+		  
+		  addTextColumn(sqLiteDatabase, TABLE_NAME_CARDS, CARD_MM_TWO);
+		  addTextColumn(sqLiteDatabase, TABLE_NAME_CARDS, CARD_MM_TWO_TEL);
+		  addTextColumn(sqLiteDatabase, TABLE_NAME_CARDS, CARD_MM_TWO_NAME);
+		  oldVersion = 8;
+	  }
   }
 }

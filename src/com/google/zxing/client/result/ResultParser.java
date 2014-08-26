@@ -41,6 +41,7 @@ public abstract class ResultParser {
 
   private static final ResultParser[] PARSERS = {
 //      new MyDeviceResultParser(),
+	  new AddressBookDoCoMoResultParser(),
 	  new HaierParser(),
   };
 
