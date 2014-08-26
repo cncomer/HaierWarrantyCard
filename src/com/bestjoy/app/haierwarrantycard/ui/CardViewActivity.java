@@ -45,6 +45,8 @@ import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.DialogUtils;
 import com.bestjoy.app.haierwarrantycard.utils.FilesLengthUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
+import com.bestjoy.app.haierwarrantycard.utils.VcfAsyncDownloadUtils;
+import com.bestjoy.app.haierwarrantycard.utils.VcfAsyncDownloadUtils.VcfAsyncDownloadHandler;
 import com.bestjoy.app.haierwarrantycard.view.BaoxiuCardViewSalemanInfoView;
 import com.google.zxing.client.result.AddressBookParsedResult;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
@@ -82,6 +84,12 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	private BaoxiuCardViewSalemanInfoView mMMOne, mMMTwo;
 	
 	public static AddressBookParsedResult mAddressResult;
+	private VcfAsyncDownloadHandler mVcfAsyncDownloadHandler;
+	/**MM联系人布局的ID,对应getId()&0x0000ffff*/
+	private long mMMLayoutViewId = -1;
+	/**当前的MM*/
+	private String mMM = "";
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +102,57 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			mBundles = savedInstanceState.getBundle(TAG);
 			DebugUtils.logD(TAG, "onCreate() savedInstanceState != null, restore mBundle=" + mBundles);
 		}
+		
+		mVcfAsyncDownloadHandler = new VcfAsyncDownloadHandler() {
+
+			@Override
+			public void onDownloadStart() {
+				//实现该方法忽略默认的下载中提示信息
+			}
+
+			@Override
+			public void onDownloadFinished(
+					AddressBookParsedResult addressBookParsedResult,
+					String outMsg) {
+				super.onDownloadFinished(addressBookParsedResult, outMsg);
+				dismissDialog(DIALOG_PROGRESS);
+				if (addressBookParsedResult != null) {
+					//update bid and aid
+		   			UpdateSalesInfoAsyncTask task = new UpdateSalesInfoAsyncTask();
+		   			if (mMMLayoutViewId == (mMMOne.getId() & 0x0000ffff)) {
+		   				mMMOne.setAddressBookParsedResult(addressBookParsedResult, TOKEN);
+		   				task.setType(1);
+		   				task.setMMOne(addressBookParsedResult.getBid());
+		   				if (addressBookParsedResult.hasPhoneNumbers()) {
+		   					task.setMMOneTel(addressBookParsedResult.getPhoneNumbers()[0]);
+		   				}
+		   				if (addressBookParsedResult.getFirstName() != null) {
+		   					task.setMMOneName(addressBookParsedResult.getFirstName());
+		   				}
+		   			} else if (mMMLayoutViewId == (mMMTwo.getId() & 0x0000ffff)) {
+		   				mMMTwo.setAddressBookParsedResult(addressBookParsedResult, TOKEN);
+		   				task.setType(2);
+		   				task.setMMTwo(addressBookParsedResult.getBid());
+		   				if (addressBookParsedResult.hasPhoneNumbers()) {
+		   					task.setMMTwoTel(addressBookParsedResult.getPhoneNumbers()[0]);
+		   				}
+		   				if (addressBookParsedResult.getFirstName() != null) {
+		   					task.setMMTwoName(addressBookParsedResult.getFirstName());
+		   				}
+		   			} 
+		   			task.execute();
+				}
+				
+				mMMLayoutViewId = -1;
+				mMM = "";
+			}
+
+			@Override
+			public boolean onDownloadFinishedInterrupted() {
+				return true;
+			}
+			
+		};
 		mHandler = new Handler() {
 
 			@Override
@@ -449,6 +508,12 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	 public void onResume() {
 		 super.onResume();
 		 NotifyRegistrant.getInstance().register(mHandler);
+		 if (mMMLayoutViewId  > 0 && !TextUtils.isEmpty(mMM)) {
+			 showDialog(DIALOG_PROGRESS);
+			 //扫描进来，我们需要下载MM.vcf文件
+			 VcfAsyncDownloadUtils.getInstance().executeTaskSimply(mMM, false, mVcfAsyncDownloadHandler,  PhotoManagerUtilsV2.TaskType.PREVIEW);
+		 }
+		 
 	 }
 
 	@Override
@@ -645,31 +710,39 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
    	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
    		super.onActivityResult(requestCode, resultCode, data);
    		if (resultCode == Activity.RESULT_OK) {
-   			//update bid and aid
-   			UpdateSalesInfoAsyncTask task = new UpdateSalesInfoAsyncTask();
-   			if (requestCode == (mMMOne.getId() & 0x0000ffff)) {
-   				mMMOne.setAddressBookParsedResult(mAddressResult, TOKEN);
-   				task.setType(1);
-   				task.setMMOne(mAddressResult.getBid());
-   				if (mAddressResult.hasPhoneNumbers()) {
-   					task.setMMOneTel(mAddressResult.getPhoneNumbers()[0]);
-   				}
-   				if (mAddressResult.getFirstName() != null) {
-   					task.setMMOneName(mAddressResult.getFirstName());
-   				}
-   			} else if (requestCode == (mMMTwo.getId() & 0x0000ffff)) {
-   				mMMTwo.setAddressBookParsedResult(mAddressResult, TOKEN);
-   				task.setType(2);
-   				task.setMMTwo(mAddressResult.getBid());
-   				if (mAddressResult.hasPhoneNumbers()) {
-   					task.setMMTwoTel(mAddressResult.getPhoneNumbers()[0]);
-   				}
-   				if (mAddressResult.getFirstName() != null) {
-   					task.setMMTwoName(mAddressResult.getFirstName());
-   				}
-   			}
+   			
+   			if (mAddressResult != null && !TextUtils.isEmpty(mAddressResult.getBid())) {
+   				mMMLayoutViewId = requestCode;
+   				mMM = mAddressResult.getBid();
+   	   		 } else {
+   	   			DebugUtils.logE(TAG, "onActivityResult return mAddressResult=" + mAddressResult);
+   	   		 }
    			mAddressResult = null;
-   			task.execute();
+//   			//update bid and aid
+//   			UpdateSalesInfoAsyncTask task = new UpdateSalesInfoAsyncTask();
+//   			if (requestCode == (mMMOne.getId() & 0x0000ffff)) {
+//   				mMMOne.setAddressBookParsedResult(mAddressResult, TOKEN);
+//   				task.setType(1);
+//   				task.setMMOne(mAddressResult.getBid());
+//   				if (mAddressResult.hasPhoneNumbers()) {
+//   					task.setMMOneTel(mAddressResult.getPhoneNumbers()[0]);
+//   				}
+//   				if (mAddressResult.getFirstName() != null) {
+//   					task.setMMOneName(mAddressResult.getFirstName());
+//   				}
+//   			} else if (requestCode == (mMMTwo.getId() & 0x0000ffff)) {
+//   				mMMTwo.setAddressBookParsedResult(mAddressResult, TOKEN);
+//   				task.setType(2);
+//   				task.setMMTwo(mAddressResult.getBid());
+//   				if (mAddressResult.hasPhoneNumbers()) {
+//   					task.setMMTwoTel(mAddressResult.getPhoneNumbers()[0]);
+//   				}
+//   				if (mAddressResult.getFirstName() != null) {
+//   					task.setMMTwoName(mAddressResult.getFirstName());
+//   				}
+//   			} 
+//   			mAddressResult = null;
+//   			task.execute();
    		}
    	}
 	
@@ -700,6 +773,8 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		}
 		@Override
 		protected Void doInBackground(Void... arg0) {
+			
+			//这里我们先尝试去下载名片信息
 			InputStream is = null;
 			StringBuilder sb = new StringBuilder();
 			sb.append(mBaoxiuCardObject.mBID).append("_").append(_mmOne).append("_").append(_mmTwo);

@@ -161,7 +161,7 @@ public class HaierServiceObject {
 		 */
 		public static String getRegisterUrl(String para, String jsonString) {
 			UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder(HaierServiceObject.SERVICE_URL);
-			sb.append("20140718/Register.ashx?")
+			sb.append("20140826/Register.ashx?")
 			.append(para).append("=").appendUrlEncodedString(jsonString);
 			return sb.toString();
 		}

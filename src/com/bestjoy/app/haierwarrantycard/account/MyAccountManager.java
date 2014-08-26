@@ -136,4 +136,8 @@ public class MyAccountManager {
     	initAccountObject();
     }
     
+    /**返回默认的手机号码*/
+    public String getDefaultPhoneNumber() {
+		return mHaierAccount != null ? mHaierAccount.mAccountTel : null;
+	}
 }

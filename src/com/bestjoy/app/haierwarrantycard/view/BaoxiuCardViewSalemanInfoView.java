@@ -16,10 +16,12 @@ import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.ui.CaptureActivity;
 import com.bestjoy.app.haierwarrantycard.ui.CardViewActivity;
 import com.google.zxing.client.result.AddressBookParsedResult;
+import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.Intents;
 
 public class BaoxiuCardViewSalemanInfoView extends RelativeLayout implements View.OnClickListener{
 
+	private static final String TAG = "BaoxiuCardViewSalemanInfoView";
 	private View mActionsLayout;
 	private ImageView mAvator;
 	private TextView mName, mTitle;
@@ -62,6 +64,7 @@ public class BaoxiuCardViewSalemanInfoView extends RelativeLayout implements Vie
 		mHandler = new Handler();
 		
 		findViewById(R.id.button_call).setOnClickListener(this);
+		findViewById(R.id.button_info).setOnClickListener(this);
 	}
 	
 	public void setAddressBookParsedResult(AddressBookParsedResult result, String token) {
@@ -99,6 +102,13 @@ public class BaoxiuCardViewSalemanInfoView extends RelativeLayout implements Vie
 		case R.id.button_call:
 			if (mAddressBookParsedResult.hasPhoneNumbers()) {
 				Intents.callPhone(mActivity, mAddressBookParsedResult.getPhoneNumbers()[0]);
+			}
+			break;
+		case R.id.button_info:
+			if (hasMM()) {
+				Intents.openURL(mActivity, "http://www.mingdown.com/" + mAddressBookParsedResult.getBid());
+			} else {
+				DebugUtils.logD(TAG, "ignore open Contact Info page due to non-MM");
 			}
 			break;
 		}

@@ -43,6 +43,7 @@ public abstract class ResultParser {
 //      new MyDeviceResultParser(),
 	  new AddressBookDoCoMoResultParser(),
 	  new HaierParser(),
+	  new VCardResultParser(),
   };
 
   private static final Pattern DIGITS = Pattern.compile("\\d*");

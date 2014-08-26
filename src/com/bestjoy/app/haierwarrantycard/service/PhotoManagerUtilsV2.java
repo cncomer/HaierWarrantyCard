@@ -579,8 +579,9 @@ public class PhotoManagerUtilsV2 {
 		case FaPiao:
 			return MyApplication.getInstance().getProductFaPiaoFile(photoId);
 		case Baoxiucard_Salesman_Avator:
-			return MyApplication.getInstance().getBaoxiucardSalesmanPreviewAvatorFile(photoId);
+			return MyApplication.getInstance().getCachedPreviewAvatorFile(photoId);
 		case PREVIEW:
+			return MyApplication.getInstance().getCachedPreviewAvatorFile(photoId);
 		}
 		return null;
 	}

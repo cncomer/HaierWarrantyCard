@@ -29,6 +29,7 @@ import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.view.HaierProCityDisEditPopView;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
+import com.shwy.bestjoy.utils.DevicesUtils;
 import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
 import com.shwy.bestjoy.utils.SecurityUtils;
@@ -121,6 +122,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 				.put("Qu", mHomeObject.mHomeDis)
 				.put("detail", mHomeObject.mHomePlaceDetail)
 				.put("pwd", mAccountObject.mAccountPwd)
+				.put("iemi", DevicesUtils.getInstance().getImei())
 				.put("Tag", usrHomeNameEditText.getText().toString().trim());
 				DebugUtils.logD(TAG, "jsonQueryObject=" + jsonQueryObject.toString(4));
 				String desQueryObject = SecurityUtils.DES.enCrypto(jsonQueryObject.toString().getBytes(), HaierServiceObject.DES_PASSWORD);

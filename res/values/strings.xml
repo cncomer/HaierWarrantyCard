@@ -341,7 +341,6 @@
          <string name="preference_key_account_title">账户设置</string>
          <string name="preference_key_account_name_title">修改用户名</string>
          <string name="preference_key_account_password_title">修改账户密码</string>
-         <string name="button_guide">使用说明书</string>
          <string name="hint_input_old_password">请输入你的当前密码</string>
          <string name="hint_input_new_password">请输入你的新密码</string>
          <string name="hint_reinput_new_password">请再次输入你的新密码</string>
@@ -419,4 +418,16 @@
           <string name="salesman_title">销售员</string>
           <string name="serverman_title">服务员</string>
           <string name="result_address_book">找到联系人信息</string>
+          <string name="msg_no_mm">"名号不存在，请检查"</string>
+          <string name="msg_read_no_data_when_download_vcf">请检查名片信息是否完整或存在，读取到-1</string>
+          <string name="msg_downloading_text">下载中...</string>
+  <string name="msg_download_ok">名片文件已下载保存</string>
+  <string name="result_create_contact">创建联系人成功</string>
+   		<string name="result_create_contact_failed">创建联系人失败</string>
+   		<string name="msg_download_card_success">名片下载成功</string>
+    <string name="msg_download_card_canceled">名片下载取消</string>
+    <string name="msg_save_card_success">名片保存成功</string>
+    
+    <string name="msg_vcf_read_error">"返回的VCF文件预览时读取错误，请检查"</string>
+     <string name="msg_vcf_format_error">"抱歉，暂时无法获取名号对应的vcf文件，稍后重试或是换个名号试试~"</string>
 </resources>

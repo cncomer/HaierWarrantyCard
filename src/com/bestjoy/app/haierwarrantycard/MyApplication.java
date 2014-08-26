@@ -25,7 +25,9 @@ import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.utils.BeepAndVibrate;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
+import com.bestjoy.app.haierwarrantycard.utils.VcfAsyncDownloadUtils;
 import com.bestjoy.app.haierwarrantycard.utils.YouMengMessageHelper;
+import com.shwy.bestjoy.contacts.AddrBookUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DateUtils;
 import com.shwy.bestjoy.utils.DeviceStorageUtils;
@@ -51,33 +53,6 @@ public class MyApplication extends Application{
 		Log.d(TAG, "onCreate()");
 		mHandler = new Handler();
 		mInstance = this;
-		// init all preference default values.
-//		PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-		//��ʼ���豸�����࣬���ڵõ��豸��Ϣ
-		DevicesUtils.getInstance().setContext(this);
-		DeviceStorageUtils.getInstance().setContext(this);
-//		//��ʼ���˺Ź�����
-//		BjnoteAccountsManager.getInstance().setContext(this);
-//		IncomingCallCallbackImp.getInstance().setContext(this);
-//		OutgoingCallCallbackImp.getInstance().setContext(this);
-//		IncomingSmsCallbackImp.getInstance().setContext(this);
-//		initMonitorService();
-//		ModuleSettings.getInstance().setContext(this);
-		//��ʼ����Ƭ�������,������PhotoManagerService����ά��
-//		PhotoManagerUtils.getInstance().setContext(this);
-//		startService(PhotoManagerService.getServiceIntent(this));
-		
-		DateUtils.getInstance().setContext(this);
-//		VcfAsyncDownloadUtils.getInstance().setContext(this);
-//		BeepAndVibrate.getInstance().setContext(this);
-//		AddrBookUtils.getInstance().setContext(this);
-//		GoodsManager.getInstance().setContext(this);
-//		
-//		//add by chenkai, 2013-07-21
-//		MyLifeManager.getInstance().setContext(this);
-//		ContactBackupManager.getInstance().setContext(this);
-//		
-//		Contact.init(this);
 		//add by chenkai, 20131201, 网络监听
 		ComConnectivityManager.getInstance().setContext(this);
 		BeepAndVibrate.getInstance().setContext(this);
@@ -98,6 +73,12 @@ public class MyApplication extends Application{
 		Log.d(TAG, getDeviceInfo(this));
 		
 		YouMengMessageHelper.getInstance().setContext(this);
+		//用来下载名片使用
+		VcfAsyncDownloadUtils.getInstance().setContext(this);
+		//用来保存联系人使用
+		AddrBookUtils.getInstance().setContext(this);
+		//注册会用到IMEI号
+		DevicesUtils.getInstance().setContext(this);
 		
 	}
 	
@@ -150,13 +131,14 @@ public class MyApplication extends Application{
 		}
 		return productRoot;
 	}
-	/**
-	 * 返回保修卡界面销售员预览头像的本地文件
-	 * @param photoid mm号码
-	 * @return
-	 */
-	public File getBaoxiucardSalesmanPreviewAvatorFile(String photoid) {
-		return new File(getProductSubDir("avator"), photoid+ ".s");
+	
+	/**返回缓存目录caches/下面的临时头像文件*/
+	public File getCachedPreviewAvatorFile(String photoid) {
+		return new File(getCacheDir(), photoid+ ".p");
+	}
+	/**返回缓存目录caches/下面的临时vcf文件*/
+	public File getCachedPreviewContactFile(String name) {
+		return new File(getCacheDir(), name+ ".vcf");
 	}
 	
 	@Override
