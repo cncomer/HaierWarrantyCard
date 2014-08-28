@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -102,6 +103,7 @@ public class YMessageListActivity extends BaseActionbarActivity{
 			ViewHolder viewHolder = new ViewHolder();
 			viewHolder._title = (TextView) view.findViewById(R.id.history_title);
 			viewHolder._text = (TextView) view.findViewById(R.id.history_detail);
+			viewHolder._text.setAutoLinkMask(Linkify.ALL);
 			viewHolder._date = (TextView) view.findViewById(R.id.history_date);
 			viewHolder._date.setVisibility(View.VISIBLE);
 			view.setTag(viewHolder);
