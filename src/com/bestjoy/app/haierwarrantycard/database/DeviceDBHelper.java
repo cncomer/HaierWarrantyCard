@@ -6,7 +6,7 @@ import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 public class DeviceDBHelper {
 
 	private static final String TAG = "DeviceDBHelper";
-	public static final int VERSION = 13;
+	public static final int VERSION = 14;
 	public static final String KEY_VERSION = "version";
 	//设备数据库
 	  public static final String DB_DEVICE_NAME = "device.db";
