@@ -15,8 +15,8 @@ import com.shwy.bestjoy.utils.UrlEncodeStringBuilder;
 public class HaierServiceObject {
 
 	public static final String SERVICE_URL = "http://115.29.231.29/Haier/";
-	
 	public static final String PRODUCT_AVATOR_URL= "http://115.29.231.29/proimg/";
+	public static final String PRODUCT_GENERAL_AVATOR_URL= "http://115.29.231.29/pimg/";
 	/**发票路径的前缀*/
 	public static final String FAPIAO_URL = "http://115.29.231.29/Fapiao/";
 	
@@ -86,14 +86,28 @@ public class HaierServiceObject {
 	}
 
 	/***
-	   * 产品图片网址  http://115.29.231.29/proimg/507/5070A000A.jpg  说明5070A000A：为Key，507：key 为前三位
+	   * 产品图片网址  http://115.29.231.29/pimg/5070A000A.jpg
+	   * @return
+	   */
+	public static String getProdcutGeneralAvatorUrl(String ky) {
+		  StringBuilder sb = new StringBuilder(PRODUCT_GENERAL_AVATOR_URL);
+		  sb.append(ky).append(".jpg");
+		  return sb.toString();
+	}
+	/***
+	   * 产品图片网址  http://115.29.231.29/proimg/507/5070A000A.jpg
 	   * @return
 	   */
 	public static String getProdcutAvatorUrl(String ky) {
-		String ky3 = ky.substring(0,3);
-		  StringBuilder sb = new StringBuilder(PRODUCT_AVATOR_URL);
-		  sb.append(ky3).append("/").append(ky).append(".jpg");
-		  return sb.toString();
+		if (ky.length() > 3) {
+			String ky3 = ky.substring(0, 3);
+			  StringBuilder sb = new StringBuilder(PRODUCT_AVATOR_URL);
+			  sb.append(ky3).append("/").append(ky).append(".jpg");
+			  return sb.toString(); 
+		} else {
+			return getProdcutGeneralAvatorUrl(ky);
+		}
+		
 	}
 	
 	//modify by chenkai, 修改发票后台同步修改新建更新和登录后台, 20140622 begin

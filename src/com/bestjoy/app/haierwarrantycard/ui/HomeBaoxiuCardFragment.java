@@ -171,8 +171,8 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 			holder._pinpai.setText(card.mPinPai);
 			holder._xinghao.setText(card.mXingHao);
 			holder._card = card;
-			if (!TextUtils.isEmpty(card.mKY)) {
-				PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, holder._avator , card.mKY, null, TaskType.HOME_DEVICE_AVATOR);
+			if (!TextUtils.isEmpty(card.mPKY) && !card.mPKY.equals(BaoxiuCardObject.DEFAULT_BAOXIUCARD_IMAGE_KEY)) {
+				PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, holder._avator , card.mPKY, null, TaskType.HOME_DEVICE_AVATOR);
 			} else {
 				//设置默认的ky图片
 				holder._avator.setImageResource(R.drawable.ky_default);

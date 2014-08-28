@@ -110,6 +110,8 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	
 	public String mMMOne, mMMOneTel,mMMOneName;
 	public String mMMTwo, mMMTwoTel,mMMTwoName;
+	/**用来构建保修卡设备预览图，如mPKY.jpg*/
+	public String mPKY;
 	
 	public static final String[] PROJECTION = new String[]{
 		HaierDBHelper.ID,
@@ -140,6 +142,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		HaierDBHelper.CARD_MM_TWO,            //25
 		HaierDBHelper.CARD_MM_TWO_TEL,            //26
 		HaierDBHelper.CARD_MM_TWO_NAME,            //27
+		HaierDBHelper.CARD_PKY,           //28
 	};
 	
 	public static final int KEY_CARD_ID = 0;
@@ -172,6 +175,8 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public static final int KEY_CARD_MM_TWO = 25;
 	public static final int KEY_CARD_MM_TWO_TEL = 26;
 	public static final int KEY_CARD_MM_TWO_NAME = 27;
+	
+	public static final int KEY_CARD_PKY = 28;
 	public static final String WHERE_UID = HaierDBHelper.CARD_UID + "=?";
 	public static final String WHERE_AID = HaierDBHelper.CARD_AID + "=?";
 	public static final String WHERE_BID = HaierDBHelper.CARD_BID + "=?";
@@ -180,6 +185,8 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	
 	/**这个值用作不同Activity之间的传递，如选择设备的时候*/
 	private static BaoxiuCardObject mBaoxiuCardObject = null;
+	/**如果服务器返回的保修卡数据中pky字段是000,则表示该保修卡没有设备预览图，直接显示本地的ky_default.jpg*/
+	public static final String DEFAULT_BAOXIUCARD_IMAGE_KEY = "000";
 	
 	public static BaoxiuCardObject parseBaoxiuCards(JSONObject jsonObject, AccountObject accountObject) throws JSONException {
 		BaoxiuCardObject cardObject = new BaoxiuCardObject();
@@ -294,7 +301,10 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 			cardObject.mMMTwoTel = vcf.optString("hcell", "");
 			cardObject.mMMTwoName = vcf.optString("hname", "");
 		}
-		
+		cardObject.mPKY = jsonObject.optString("pky", BaoxiuCardObject.DEFAULT_BAOXIUCARD_IMAGE_KEY);
+		if ("null".equalsIgnoreCase(cardObject.mPKY)) {
+			cardObject.mPKY = BaoxiuCardObject.DEFAULT_BAOXIUCARD_IMAGE_KEY;
+		}
 		return cardObject;
 	}
 	
@@ -375,6 +385,14 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		//add by chenkai, 锁定认证字段 20140701 begin
 		newBaoxiuCardObject.mRewardStatus = mRewardStatus;
 		 //add by chenkai, 锁定认证字段 20140701 end
+		
+		newBaoxiuCardObject.mMMOne = mMMOne;
+		newBaoxiuCardObject.mMMOneName = mMMOneName;
+		newBaoxiuCardObject.mMMOneTel = mMMOneTel;
+		newBaoxiuCardObject.mMMTwo = mMMTwo;
+		newBaoxiuCardObject.mMMTwoName = mMMTwoName;
+		newBaoxiuCardObject.mMMTwoTel = mMMTwoTel;
+		newBaoxiuCardObject.mPKY = mPKY;
 		return newBaoxiuCardObject;
 	}
 	
@@ -501,6 +519,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
     	baoxiuCardObject.mMMTwo =c.getString(KEY_CARD_MM_TWO);
     	baoxiuCardObject.mMMTwoTel =c.getString(KEY_CARD_MM_TWO_TEL);
     	baoxiuCardObject.mMMTwoName =c.getString(KEY_CARD_MM_TWO_NAME);
+    	baoxiuCardObject.mPKY = c.getString(KEY_CARD_PKY);
 		return baoxiuCardObject;
 	}
 
@@ -545,6 +564,8 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		//add by chenkai, 锁定认证字段 20140701 begin
 		values.put(HaierDBHelper.REWARD_STATUS, mRewardStatus);
 		//add by chenkai, 锁定认证字段 20140701 end
+		
+		values.put(HaierDBHelper.CARD_PKY, mPKY);
 		
 		if (id > 0) {
 			int update = cr.update(BjnoteContent.BaoxiuCard.CONTENT_URI, values,  WHERE_UID_AND_AID_AND_BID, selectionArgs);

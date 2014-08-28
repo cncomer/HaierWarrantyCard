@@ -12,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 8;
+  private static final int DB_VERSION = 9;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -99,6 +99,9 @@ private static final String TAG = "HaierDBHelper";
   public static final String CARD_MM_TWO = "mmtwo";
   public static final String CARD_MM_TWO_TEL = "mmtwo_tel";
   public static final String CARD_MM_TWO_NAME = "mmtwo_name";
+  
+  /**用来构建保修卡设备预览图*/
+  public static final String CARD_PKY = "pky";
   
   //add by chenkai, 锁定认证字段 20140701 begin
   /**保修记录是否锁定,如果是1表示这个保修卡是厂家认可的，发票内容不能更改，也不能删除*/
@@ -296,6 +299,7 @@ private static final String TAG = "HaierDBHelper";
 	            CARD_WY + " TEXT, " +
 	            CARD_YBPhone + " TEXT, " +
 	            CARD_KY + " TEXT, " +
+	            CARD_PKY + " TEXT, " +
 	            CARD_MM_ONE + " TEXT, " +
 	            CARD_MM_ONE_TEL + " TEXT, " +
 	            CARD_MM_ONE_NAME + " TEXT, " +
@@ -364,7 +368,7 @@ private static final String TAG = "HaierDBHelper";
   @Override
   public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 	  DebugUtils.logD(TAG, "onUpgrade oldVersion " + oldVersion + " newVersion " + newVersion);
-	  if (oldVersion < 7 ) {
+	  if (oldVersion < 9 ) {
 			sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_ACCOUNTS);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_HOMES);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CARDS);

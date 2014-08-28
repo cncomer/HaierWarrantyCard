@@ -267,9 +267,9 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	}
 	
 	private void populateView() {
-		 if (!TextUtils.isEmpty(mBaoxiuCardObject.mKY)) {
+		 if (!TextUtils.isEmpty(mBaoxiuCardObject.mPKY) && !mBaoxiuCardObject.mPKY.equals(BaoxiuCardObject.DEFAULT_BAOXIUCARD_IMAGE_KEY)) {
 			 mGuideView.setVisibility(View.VISIBLE);
-			 PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, mAvatorView, mBaoxiuCardObject.mKY, null, PhotoManagerUtilsV2.TaskType.HOME_DEVICE_AVATOR);
+			 PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, mAvatorView, mBaoxiuCardObject.mPKY, null, PhotoManagerUtilsV2.TaskType.HOME_DEVICE_AVATOR);
 		 } else {
 			 //设置默认的ky图片
 			 mAvatorView.setImageResource(R.drawable.ky_default);
