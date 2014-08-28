@@ -140,6 +140,9 @@
     <style name="TextAppearance.PagerTabs" parent="@android:style/TextAppearance.DeviceDefault.Small">
         <item name="android:textAllCaps">true</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">#ffe5e5e5</item>
+         
     </style>
 	<style name="AnimationPreview">
 		<item name="android:windowEnterAnimation">@anim/fade_in</item>
