@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bestjoy.app.haierwarrantycard"
-    android:versionCode="23"
-    android:versionName="V1.92" >
+    android:versionCode="25"
+    android:versionName="V1.94" >
 
      <supports-screens
         android:anyDensity="true"

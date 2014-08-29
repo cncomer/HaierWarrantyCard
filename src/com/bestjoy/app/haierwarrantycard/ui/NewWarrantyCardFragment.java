@@ -382,11 +382,15 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 //				MyApplication.getInstance().showMessage(R.string.msg_cant_show_bill);
 //			}
 			 if (ComConnectivityManager.getInstance().isConnected()) {
-				 if (isEditable()) {
-						updateWarrantyCardAsync();
-					} else {
-						saveNewWarrantyCardAndSync();
-					}
+				//如果没有注册，我们前往登陆界面
+				 if (!checkInput()) {
+					 return;
+				 }
+				if (isEditable()) {
+					updateWarrantyCardAsync();
+				} else {
+					saveNewWarrantyCardAndSync();
+				}
 			 } else {
 				 showDialog(DIALOG_DATA_NOT_CONNECTED);
 			 }
@@ -456,6 +460,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			//DebugUtils.logD(TAG, "param " + paramValue.toString());
 			AccountObject accountObject = MyAccountManager.getInstance().getAccountObject();
 			try {
+				String imgstr = baoxiuCardObject.getBase64StringFromBillAvator();
+				DebugUtils.logD(TAG, "imgstr=" + imgstr);
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("AID", baoxiuCardObject.mAID)
 				.put("BuyDate", baoxiuCardObject.mBuyDate)
@@ -463,7 +469,6 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 				.put("BuyTuJing", baoxiuCardObject.mBuyTuJing)
 				.put("BXPhone", baoxiuCardObject.mBXPhone)
 				.put("SHBianHao", baoxiuCardObject.mSHBianHao)
-				.put("imgstr", baoxiuCardObject.getBase64StringFromBillAvator())
 				.put("token", SecurityUtils.MD5.md5(accountObject.mAccountTel + accountObject.mAccountPwd)) //md5(cell+pwd)
 				.put("Tag", baoxiuCardObject.mCardName)
 				.put("UID", baoxiuCardObject.mUID)
@@ -473,7 +478,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 				.put("YanBaoTime", baoxiuCardObject.mYanBaoTime)
 				.put("YBPhone", baoxiuCardObject.mYBPhone)
 				.put("LeiXin", baoxiuCardObject.mLeiXin)
-				.put("PinPai", baoxiuCardObject.mPinPai);
+				.put("PinPai", baoxiuCardObject.mPinPai)
+				.put("imgstr", imgstr);
 				
 				DebugUtils.logD(TAG, "bjson=" + jsonObject.toString());
 				is = NetworkUtils.openPostContectionLocked(HaierServiceObject.getCreateBaoxiucardUri(), "bjson", jsonObject.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
@@ -637,6 +643,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 			//DebugUtils.logD(TAG, "param " + paramValue.toString());
 			AccountObject accountObject = MyAccountManager.getInstance().getAccountObject();
 			try {
+				String imgstr = baoxiuCardObject.getBase64StringFromBillAvator();
+				DebugUtils.logD(TAG, "imgstr=" + imgstr);
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("AID", baoxiuCardObject.mAID)
 				.put("BuyDate", baoxiuCardObject.mBuyDate)
@@ -644,7 +652,6 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 				.put("BuyTuJing", baoxiuCardObject.mBuyTuJing)
 				.put("BXPhone", baoxiuCardObject.mBXPhone)
 				.put("SHBianHao", baoxiuCardObject.mSHBianHao)
-				.put("imgstr", baoxiuCardObject.getBase64StringFromBillAvator())
 				.put("token", SecurityUtils.MD5.md5(accountObject.mAccountTel + accountObject.mAccountPwd)) //md5(cell+pwd)
 				.put("Tag", baoxiuCardObject.mCardName)
 				.put("UID", baoxiuCardObject.mUID)
@@ -655,7 +662,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 				.put("YBPhone", baoxiuCardObject.mYBPhone)
 				.put("LeiXin", baoxiuCardObject.mLeiXin)
 				.put("PinPai", baoxiuCardObject.mPinPai)
-				.put("BID", baoxiuCardObject.mBID);
+				.put("BID", baoxiuCardObject.mBID)
+				.put("imgstr", imgstr);
 				DebugUtils.logD(TAG, "bjson=" + jsonObject.toString(4));
 				is = NetworkUtils.openPostContectionLocked(HaierServiceObject.getUpdateBaoxiucardUri(), "bjson", jsonObject.toString(), MyApplication.getInstance().getSecurityKeyValuesObject());
 				

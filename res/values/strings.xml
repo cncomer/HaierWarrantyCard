@@ -430,4 +430,6 @@
     
     <string name="msg_vcf_read_error">"返回的VCF文件预览时读取错误，请检查"</string>
      <string name="msg_vcf_format_error">"抱歉，暂时无法获取名号对应的vcf文件，稍后重试或是换个名号试试~"</string>
+     
+     <string name="password_accept_chars">"0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"</string>
 </resources>

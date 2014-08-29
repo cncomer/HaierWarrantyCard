@@ -8,7 +8,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -75,6 +77,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 		if (isFinishing()) {
 			return;
 		}
+		removeDialog(DIALOG_PROGRESS);
 		setContentView(R.layout.activity_register);
 		this.initViews();
 	}
@@ -123,6 +126,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 				.put("detail", mHomeObject.mHomePlaceDetail)
 				.put("pwd", mAccountObject.mAccountPwd)
 				.put("iemi", DevicesUtils.getInstance().getImei())
+				.put("imsi", DevicesUtils.getInstance().getIMSI())
 				.put("Tag", usrHomeNameEditText.getText().toString().trim());
 				DebugUtils.logD(TAG, "jsonQueryObject=" + jsonQueryObject.toString(4));
 				String desQueryObject = SecurityUtils.DES.enCrypto(jsonQueryObject.toString().getBytes(), HaierServiceObject.DES_PASSWORD);
@@ -162,16 +166,32 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 				MyApplication.getInstance().showMessage(result.mStatusMessage);
 				MyAccountManager.getInstance().saveLastUsrTel(mAccountObject.mAccountTel);
 				startActivityForResult(LoginOrUpdateAccountDialog.createLoginOrUpdate(mContext, true, mAccountObject.mAccountTel, mAccountObject.mAccountPwd), REQUEST_LOGIN);
+			} else if (result.mStatusCode == 2) {
+				//2当前手机的电话号码已经注册了，我们需要弹框用户提示找回密码
+				new AlertDialog.Builder(mContext)
+				.setMessage(result.mStatusMessage)
+				.setPositiveButton(R.string.button_find_password, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface arg0, int arg1) {
+						Bundle bundle = new Bundle();
+						bundle.putString(Intents.EXTRA_TEL, mAccountObject.mAccountTel);
+						LoginActivity.startIntent(mContext, bundle);
+						finish();
+					}
+				})
+				.setNegativeButton(R.string.button_cancel, null)
+				.show();
 			} else {
 				MyApplication.getInstance().showMessage(result.mStatusMessage);
 			}
-			dismissDialog(DIALOG_PROGRESS);
+			removeDialog(DIALOG_PROGRESS);
 		}
 
 		@Override
 		protected void onCancelled() {
 			super.onCancelled();
-			dismissDialog(DIALOG_PROGRESS);
+			removeDialog(DIALOG_PROGRESS);
 			mConfrimReg.setEnabled(true);
 		}
 	}

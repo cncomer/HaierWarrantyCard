@@ -81,6 +81,8 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	
 	private ImageView mFapiaoDownloadView;
 	
+	/**是否显示销售人员信息*/
+	private static final boolean SHOW_SALES_INFO = false;
 	private BaoxiuCardViewSalemanInfoView mMMOne, mMMTwo;
 	
 	public static AddressBookParsedResult mAddressResult;
@@ -103,56 +105,6 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			DebugUtils.logD(TAG, "onCreate() savedInstanceState != null, restore mBundle=" + mBundles);
 		}
 		
-		mVcfAsyncDownloadHandler = new VcfAsyncDownloadHandler() {
-
-			@Override
-			public void onDownloadStart() {
-				//实现该方法忽略默认的下载中提示信息
-			}
-
-			@Override
-			public void onDownloadFinished(
-					AddressBookParsedResult addressBookParsedResult,
-					String outMsg) {
-				super.onDownloadFinished(addressBookParsedResult, outMsg);
-				dismissDialog(DIALOG_PROGRESS);
-				if (addressBookParsedResult != null) {
-					//update bid and aid
-		   			UpdateSalesInfoAsyncTask task = new UpdateSalesInfoAsyncTask();
-		   			if (mMMLayoutViewId == (mMMOne.getId() & 0x0000ffff)) {
-		   				mMMOne.setAddressBookParsedResult(addressBookParsedResult, TOKEN);
-		   				task.setType(1);
-		   				task.setMMOne(addressBookParsedResult.getBid());
-		   				if (addressBookParsedResult.hasPhoneNumbers()) {
-		   					task.setMMOneTel(addressBookParsedResult.getPhoneNumbers()[0]);
-		   				}
-		   				if (addressBookParsedResult.getFirstName() != null) {
-		   					task.setMMOneName(addressBookParsedResult.getFirstName());
-		   				}
-		   			} else if (mMMLayoutViewId == (mMMTwo.getId() & 0x0000ffff)) {
-		   				mMMTwo.setAddressBookParsedResult(addressBookParsedResult, TOKEN);
-		   				task.setType(2);
-		   				task.setMMTwo(addressBookParsedResult.getBid());
-		   				if (addressBookParsedResult.hasPhoneNumbers()) {
-		   					task.setMMTwoTel(addressBookParsedResult.getPhoneNumbers()[0]);
-		   				}
-		   				if (addressBookParsedResult.getFirstName() != null) {
-		   					task.setMMTwoName(addressBookParsedResult.getFirstName());
-		   				}
-		   			} 
-		   			task.execute();
-				}
-				
-				mMMLayoutViewId = -1;
-				mMM = "";
-			}
-
-			@Override
-			public boolean onDownloadFinishedInterrupted() {
-				return true;
-			}
-			
-		};
 		mHandler = new Handler() {
 
 			@Override
@@ -248,21 +200,79 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		 mBaoxiuStatusView = (TextView) findViewById(R.id.warranty);
 		//add by chenkai, 2014.06.06, 保修期状态 end
 		 populateView();
-		 mMMOne = (BaoxiuCardViewSalemanInfoView) findViewById(R.id.mmone);
-		//销售员
-		 mMMOne.setTitle(R.string.salesman_title);
 		 
-		 //服务员
-		 mMMTwo = (BaoxiuCardViewSalemanInfoView) findViewById(R.id.mmtwo);
-		 mMMTwo.setTitle(R.string.serverman_title);
-		 if (!TextUtils.isEmpty(mBaoxiuCardObject.mMMOne)) {
-			 AddressBookParsedResult resultOne = new AddressBookParsedResult(new String[]{mBaoxiuCardObject.mMMOneName}, null, new String[]{mBaoxiuCardObject.mMMOneTel}, null, null, null, null, null, null, null, null, mBaoxiuCardObject.mMMOne, null, null);
-			 mMMOne.setAddressBookParsedResult(resultOne, TOKEN);
+		 //根据SHOW_SALES_INFO的值来决定是否要显示销售员信息布局
+		 View view = findViewById(R.id.sales_layout);
+		 if (view != null) {
+			 view.setVisibility(SHOW_SALES_INFO?View.VISIBLE:View.GONE);
 		 }
-		 
-		 if (!TextUtils.isEmpty(mBaoxiuCardObject.mMMTwo)) {
-			 AddressBookParsedResult resultTwo = new AddressBookParsedResult(new String[]{mBaoxiuCardObject.mMMTwoName}, null, new String[]{mBaoxiuCardObject.mMMTwoTel}, null, null, null, null, null, null, null, null, mBaoxiuCardObject.mMMTwo, null, null);
-			 mMMTwo.setAddressBookParsedResult(resultTwo, TOKEN);
+		 if (SHOW_SALES_INFO) {
+			 mVcfAsyncDownloadHandler = new VcfAsyncDownloadHandler() {
+
+					@Override
+					public void onDownloadStart() {
+						//实现该方法忽略默认的下载中提示信息
+					}
+
+					@Override
+					public void onDownloadFinished(
+							AddressBookParsedResult addressBookParsedResult,
+							String outMsg) {
+						super.onDownloadFinished(addressBookParsedResult, outMsg);
+						dismissDialog(DIALOG_PROGRESS);
+						if (addressBookParsedResult != null) {
+							//update bid and aid
+				   			UpdateSalesInfoAsyncTask task = new UpdateSalesInfoAsyncTask();
+				   			if (mMMLayoutViewId == (mMMOne.getId() & 0x0000ffff)) {
+				   				mMMOne.setAddressBookParsedResult(addressBookParsedResult, TOKEN);
+				   				task.setType(1);
+				   				task.setMMOne(addressBookParsedResult.getBid());
+				   				if (addressBookParsedResult.hasPhoneNumbers()) {
+				   					task.setMMOneTel(addressBookParsedResult.getPhoneNumbers()[0]);
+				   				}
+				   				if (addressBookParsedResult.getFirstName() != null) {
+				   					task.setMMOneName(addressBookParsedResult.getFirstName());
+				   				}
+				   			} else if (mMMLayoutViewId == (mMMTwo.getId() & 0x0000ffff)) {
+				   				mMMTwo.setAddressBookParsedResult(addressBookParsedResult, TOKEN);
+				   				task.setType(2);
+				   				task.setMMTwo(addressBookParsedResult.getBid());
+				   				if (addressBookParsedResult.hasPhoneNumbers()) {
+				   					task.setMMTwoTel(addressBookParsedResult.getPhoneNumbers()[0]);
+				   				}
+				   				if (addressBookParsedResult.getFirstName() != null) {
+				   					task.setMMTwoName(addressBookParsedResult.getFirstName());
+				   				}
+				   			} 
+				   			task.execute();
+						}
+						
+						mMMLayoutViewId = -1;
+						mMM = "";
+					}
+
+					@Override
+					public boolean onDownloadFinishedInterrupted() {
+						return true;
+					}
+					
+				};
+			 mMMOne = (BaoxiuCardViewSalemanInfoView) findViewById(R.id.mmone);
+			//销售员
+			 mMMOne.setTitle(R.string.salesman_title);
+			 
+			 //服务员
+			 mMMTwo = (BaoxiuCardViewSalemanInfoView) findViewById(R.id.mmtwo);
+			 mMMTwo.setTitle(R.string.serverman_title);
+			 if (!TextUtils.isEmpty(mBaoxiuCardObject.mMMOne)) {
+				 AddressBookParsedResult resultOne = new AddressBookParsedResult(new String[]{mBaoxiuCardObject.mMMOneName}, null, new String[]{mBaoxiuCardObject.mMMOneTel}, null, null, null, null, null, null, null, null, mBaoxiuCardObject.mMMOne, null, null);
+				 mMMOne.setAddressBookParsedResult(resultOne, TOKEN);
+			 }
+			 
+			 if (!TextUtils.isEmpty(mBaoxiuCardObject.mMMTwo)) {
+				 AddressBookParsedResult resultTwo = new AddressBookParsedResult(new String[]{mBaoxiuCardObject.mMMTwoName}, null, new String[]{mBaoxiuCardObject.mMMTwoTel}, null, null, null, null, null, null, null, null, mBaoxiuCardObject.mMMTwo, null, null);
+				 mMMTwo.setAddressBookParsedResult(resultTwo, TOKEN);
+			 }
 		 }
 	}
 	

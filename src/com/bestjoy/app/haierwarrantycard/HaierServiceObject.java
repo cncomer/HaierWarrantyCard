@@ -285,7 +285,7 @@ public class HaierServiceObject {
 	   * @return
 	   */
 	  public static boolean isSupportReceiveYanZhengMa() {
-		  return true;
+		  return false;
 	  }
 	  
 	  /**

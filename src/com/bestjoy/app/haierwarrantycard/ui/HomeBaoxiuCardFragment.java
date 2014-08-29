@@ -95,6 +95,9 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
+		if (mOnItemClickListener == null) {
+			mOnItemClickListener = (MyChooseDevicesActivity)getActivity();
+		}
 		loadCardsAsync();
 	}
 	
