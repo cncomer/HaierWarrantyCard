@@ -35,8 +35,6 @@ import android.widget.ImageView;
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
-import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
-import com.shwy.bestjoy.utils.Contents;
 import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
@@ -57,6 +55,9 @@ public class PhotoManagerUtilsV2 {
 	private static final int MAX_CAPACITY = 100;
 	private static float MAX_RESULT_IMAGE_SIZE = 140f;
 	private float mCurrentImageSize = MAX_RESULT_IMAGE_SIZE;
+	
+	public static final String EXTRA_DOWNLOAD_STATUS="status";
+	public static final String EXTRA_DOWNLOAD_STATUS_MESSAGE="message";
 	
 	private LinkedHashMap<String, LinkedList<AvatorAsyncTask>> mAsyncTaskTokenMap = new LinkedHashMap<String, LinkedList<AvatorAsyncTask>>(20) {
 		@Override
@@ -312,12 +313,7 @@ public class PhotoManagerUtilsV2 {
 		} catch (IOException e) {
 			e.printStackTrace();
 		} finally {
-			try {
-				if (is != null) is.close();
-				if (fos != null) fos.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+			NetworkUtils.closeOutStream(fos);
 			
 		}
 	}
@@ -440,23 +436,32 @@ public class PhotoManagerUtilsV2 {
     }
     /**异步载入图片，可能会需要从服务器上下载*/
 	public void loadPhotoAsync(String token, ImageView imageView, String photoId, byte[] photo, TaskType type) {
+		loadPhotoAsync(token, imageView, photoId, photo, type, false);
+	}
+    /**异步载入图片，可能会需要从服务器上下载*/
+	public void loadPhotoAsync(String token, ImageView imageView, String photoId, byte[] photo, TaskType type, boolean notify) {
 		if (cancelPotentialDownload(photoId, imageView)) {
             Bitmap avatar = getBitmapFromCache(photoId, type);
             if (avatar != null && imageView != null) {
                 imageView.setImageBitmap(avatar);
                 //通知监听器，图片已经加载完成了
                 Bundle data = new Bundle();
-                data.putString(Intents.EXTRA_PHOTOID, photoId);
-                data.putString(Intents.EXTRA_TYPE, type.toString());
-                NotifyRegistrant.getInstance().notify(data);
+	            data.putBoolean(EXTRA_DOWNLOAD_STATUS, true);
+	            data.putString(EXTRA_DOWNLOAD_STATUS_MESSAGE, "get Bitmap fromcache");
+	            data.putString(Intents.EXTRA_PHOTOID, photoId);
+	            data.putString(Intents.EXTRA_TYPE, type.toString());
+	            NotifyRegistrant.getInstance().notify(data);
             } else {
-            	internalLoadPhotoAsync(token, imageView, photoId, type, photo);
+            	internalLoadPhotoAsync(token, imageView, photoId, type, photo, notify);
             }
 	    }
 	}
-	
 	/**异步载入本地图片文件*/
 	public void loadLocalPhotoAsync(String token, ImageView imageView, String photoId, byte[] photo, TaskType type) {
+		loadLocalPhotoAsync(token, imageView, photoId, photo, type, false);
+	}
+	/**异步载入本地图片文件*/
+	public void loadLocalPhotoAsync(String token, ImageView imageView, String photoId, byte[] photo, TaskType type, boolean notify) {
 		if (cancelPotentialDownload(photoId, imageView)) {
 			
             Bitmap avatar = getBitmapFromCache(photoId, type);
@@ -464,21 +469,24 @@ public class PhotoManagerUtilsV2 {
                 imageView.setImageBitmap(avatar);
                 //通知监听器，图片已经加载完成了
                 Bundle data = new Bundle();
-                data.putString(Intents.EXTRA_PHOTOID, photoId);
-                data.putString(Intents.EXTRA_TYPE, type.toString());
-                NotifyRegistrant.getInstance().notify(data);
+	            data.putBoolean(EXTRA_DOWNLOAD_STATUS, true);
+	            data.putString(EXTRA_DOWNLOAD_STATUS_MESSAGE, "get Bitmap fromcache");
+	            data.putString(Intents.EXTRA_PHOTOID, photoId);
+	            data.putString(Intents.EXTRA_TYPE, type.toString());
+	            NotifyRegistrant.getInstance().notify(data);
             } else {
-            	internalLoadLocalPhotoAsync(token, imageView, photoId, type, photo);
+            	internalLoadLocalPhotoAsync(token, imageView, photoId, type, photo, notify);
             	
             }
 	    }
 	}
+	
 	/**异步载入本地图片文件*/
-	private void internalLoadPhotoAsync(String token, ImageView imageView, String photoId, TaskType type, byte[] photo) {
+	private void internalLoadPhotoAsync(String token, ImageView imageView, String photoId, TaskType type, byte[] photo, boolean notify) {
 		DebugUtils.logPhotoUtils(TAG, "step 1 set default bitmap");
 //		imageView.setImageBitmap(getDefaultBitmap(type));
 		
-		LoadPhotoAsyncTask loadPhotoTask = new LoadPhotoAsyncTask(imageView, token, photoId, type, photo);
+		LoadPhotoAsyncTask loadPhotoTask = new LoadPhotoAsyncTask(imageView, token, photoId, type, photo, notify);
 //		AvatarDrawable avatorDrawable = new AvatarDrawable(loadPhotoTask);
 		AvatarBitmapDrawable avatorDrawable = new AvatarBitmapDrawable(loadPhotoTask, type);
         if (imageView != null) {
@@ -487,11 +495,11 @@ public class PhotoManagerUtilsV2 {
 		loadPhotoTask.execute();
 	}
 	/**异步载入本地图片文件*/
-	private void internalLoadLocalPhotoAsync(String token, ImageView imageView, String photoId, TaskType type, byte[] photo) {
+	private void internalLoadLocalPhotoAsync(String token, ImageView imageView, String photoId, TaskType type, byte[] photo, boolean notify) {
 		DebugUtils.logPhotoUtils(TAG, "step 1 set default bitmap");
 //		imageView.setImageBitmap(getDefaultBitmap(type));
 		
-		LoadLocalPhotoAsyncTask loadPhotoTask = new LoadLocalPhotoAsyncTask(imageView, token, photoId, type, photo);
+		LoadLocalPhotoAsyncTask loadPhotoTask = new LoadLocalPhotoAsyncTask(imageView, token, photoId, type, photo, notify);
 //		AvatarDrawable avatorDrawable = new AvatarDrawable(loadPhotoTask);
 		AvatarBitmapDrawable avatorDrawable = new AvatarBitmapDrawable(loadPhotoTask, type);
         if (imageView != null) {
@@ -512,13 +520,15 @@ public class PhotoManagerUtilsV2 {
 		protected String aToken;
 		protected String mPhotoId;
 		protected WeakReference<ImageView> imageViewReference;
+		private boolean mNotify = false;
 		protected TaskType mTaskType;
 		
-		public AvatorAsyncTask(ImageView imageView, String token, String photoId, TaskType type) {
+		public AvatorAsyncTask(ImageView imageView, String token, String photoId, TaskType type, boolean notify) {
 			imageViewReference = new WeakReference<ImageView>(imageView);
 			mPhotoId = photoId;
 			aToken = token;
 			mTaskType = type;
+			mNotify = notify;
 			addTask(aToken, this);
 		}
 		
@@ -540,6 +550,19 @@ public class PhotoManagerUtilsV2 {
 					!TextUtils.isEmpty(mPhotoId) && mPhotoId.equals(photoId) ||
 					aToken == null && token==null;
 		}
+		
+		protected void notifyStatus(boolean status, String message) {
+			 //下载完通知photoid下载
+			if (mNotify) {
+				Bundle data = new Bundle();
+	            data.putBoolean(EXTRA_DOWNLOAD_STATUS, status);
+	            data.putString(EXTRA_DOWNLOAD_STATUS_MESSAGE, message);
+	            data.putString(Intents.EXTRA_PHOTOID, mPhotoId);
+	            data.putString(Intents.EXTRA_TYPE, mTaskType.toString());
+	            NotifyRegistrant.getInstance().notify(data);
+			}
+		}
+		
 		@Override
 		protected Bitmap doInBackground(Void... arg0) {
 			try {
@@ -554,7 +577,7 @@ public class PhotoManagerUtilsV2 {
 			} catch (InterruptedException e) {
 				DebugUtils.logD(TAG, "current task is Interrupted for photoID=" + mPhotoId);
 				e.printStackTrace();
-				cancel(true);
+				notifyStatus(false, e.getMessage());
 				return null;
 			}
 			if (isCancelled()) {
@@ -567,6 +590,7 @@ public class PhotoManagerUtilsV2 {
 		protected void onCancelled() {
 			super.onCancelled();
 			removeTask(aToken, this);
+			notifyStatus(false, "onCancelled()");
 			synchronized(mDownloadingMap) {
 				if (mDownloadingMap.contains(mPhotoId)) {
 					boolean removed = mDownloadingMap.remove(mPhotoId);
@@ -579,28 +603,16 @@ public class PhotoManagerUtilsV2 {
 		@Override
 		protected void onPostExecute(Bitmap bitmap) {
 			super.onPostExecute(bitmap);
-			if (isCancelled() || bitmap == null) {
-				synchronized(mDownloadingMap) {
-					if (mDownloadingMap.contains(mPhotoId)) {
-						boolean removed = mDownloadingMap.remove(mPhotoId);
-						DebugUtils.logD(TAG, "Task finish by canceled [in onPostExecute()] for photoID=" + mPhotoId + ", remove PhotoId from mDownloadingMap, removed=" + removed);
-					}
-					mDownloadingMap.notifyAll();
-				}
-                return;
-            }
-            if (imageViewReference != null) {
-                ImageView imageView = imageViewReference.get();
-                AvatorAsyncTask avatarAsyncTask = getAvatorAsyncTask(imageView);
-                if (this == avatarAsyncTask && imageView != null) {
-                	DebugUtils.logPhotoUtils(TAG, "setImageBitmap for photoId " + mPhotoId);
-                    imageView.setImageBitmap(bitmap);
-                    //下载完通知photoid下载
-                    Bundle data = new Bundle();
-                    data.putString(Intents.EXTRA_PHOTOID, mPhotoId);
-                    data.putString(Intents.EXTRA_TYPE, mTaskType.toString());
-                    NotifyRegistrant.getInstance().notify(data);
-                }
+			if (bitmap != null) {
+				 if (imageViewReference != null) {
+		                ImageView imageView = imageViewReference.get();
+		                AvatorAsyncTask avatarAsyncTask = getAvatorAsyncTask(imageView);
+		                if (this == avatarAsyncTask && imageView != null) {
+		                	DebugUtils.logPhotoUtils(TAG, "setImageBitmap for photoId " + mPhotoId);
+		                    imageView.setImageBitmap(bitmap);
+		                }
+		            }
+				 notifyStatus(true, "");
             }
             addBitmapToCache(mPhotoId, mTaskType, bitmap);
 			removeTask(aToken, this);
@@ -646,8 +658,8 @@ public class PhotoManagerUtilsV2 {
 	class LoadPhotoAsyncTask extends AvatorAsyncTask {
 		private byte[] lPhoto;
 		
-		public LoadPhotoAsyncTask(ImageView imageView, String token, String photoId, TaskType type, byte[] photo) {
-			super(imageView, token, photoId, type);
+		public LoadPhotoAsyncTask(ImageView imageView, String token, String photoId, TaskType type, byte[] photo, boolean notify) {
+			super(imageView, token, photoId, type, notify);
 			lPhoto = photo;
 		}
 		
@@ -666,6 +678,7 @@ public class PhotoManagerUtilsV2 {
 			File cachedBitmapFile = getFileToSave();
 			if (cachedBitmapFile == null) {
 				Log.e(TAG, "error, LoadPhotoAsyncTask call getFileToSave() which returns null for " + mTaskType.toString());
+				notifyStatus(false, "Can't access cachedBitmapFile for photoid="+mPhotoId);
 				return null;
 			}
 			DebugUtils.logPhotoUtils(TAG, "step 2 try to get avator from cached file " + cachedBitmapFile.getAbsolutePath());
@@ -684,10 +697,12 @@ public class PhotoManagerUtilsV2 {
 				return null;
 			}
 			if (bitmap == null) {
+				String url = getServiceUrl();
 				try {
 					DebugUtils.logPhotoUtils(TAG, "step 4 download bitmap");
-					is = NetworkUtils.openContectionLocked(getServiceUrl(), MyApplication.getInstance().getSecurityKeyValuesObject());
+					is = NetworkUtils.openContectionLocked(url, MyApplication.getInstance().getSecurityKeyValuesObject());
 					if (is == null) {
+						notifyStatus(false, "Can't open " + url);
 					    return null;
 					}
 					DebugUtils.logPhotoUtils(TAG, "step 5 create the mm.p file using bitmap");
@@ -696,14 +711,13 @@ public class PhotoManagerUtilsV2 {
 					bitmap = decodeFromCachedBitmapFile(cachedBitmapFile, mTaskType);
 				} catch (ClientProtocolException e) {
 					e.printStackTrace();
+					notifyStatus(false, url + "  " + e.getMessage());
 				} catch (IOException e) {
 					e.printStackTrace();
+					notifyStatus(false, url  + "  " + e.getMessage());
 				} finally {
-					try {
-						if (is != null) is.close();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+					DebugUtils.logPhotoUtils(TAG, "finally() for path="+url + ", is=" + is + ", bitmap="+bitmap);
+					NetworkUtils.closeInputStream(is);
 				}
 			}
 			if (this.isCancelled()) {
@@ -722,8 +736,8 @@ public class PhotoManagerUtilsV2 {
 	class LoadLocalPhotoAsyncTask extends AvatorAsyncTask {
 		private byte[] lPhoto;
 		
-		public LoadLocalPhotoAsyncTask(ImageView imageView, String token, String photoId, TaskType type, byte[] photo) {
-			super(imageView, token, photoId, type);
+		public LoadLocalPhotoAsyncTask(ImageView imageView, String token, String photoId, TaskType type, byte[] photo, boolean notify) {
+			super(imageView, token, photoId, type, notify);
 			lPhoto = photo;
 		}
 		

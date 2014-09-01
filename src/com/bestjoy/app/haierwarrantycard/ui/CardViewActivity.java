@@ -82,7 +82,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	private ImageView mFapiaoDownloadView;
 	
 	/**是否显示销售人员信息*/
-	private static final boolean SHOW_SALES_INFO = false;
+	private static final boolean SHOW_SALES_INFO = true;
 	private BaoxiuCardViewSalemanInfoView mMMOne, mMMTwo;
 	
 	public static AddressBookParsedResult mAddressResult;
@@ -91,7 +91,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	private long mMMLayoutViewId = -1;
 	/**当前的MM*/
 	private String mMM = "";
-	
+	private static final int WHAT_SHOW_FAPIAO_WAIT = 12;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -112,19 +112,31 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	            switch(msg.what) {
 	            case NotifyRegistrant.EVENT_NOTIFY_MESSAGE_RECEIVED:
 	            	Bundle bundle = (Bundle) msg.obj;
+	            	boolean status = bundle.getBoolean(PhotoManagerUtilsV2.EXTRA_DOWNLOAD_STATUS);
+	            	String photoid = bundle.getString(Intents.EXTRA_PHOTOID);
+	            	File fapiao = MyApplication.getInstance().getProductFaPiaoFile(mBaoxiuCardObject.getFapiaoPhotoId());
 	            	//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 begin 
-	            	if (bundle.get(Intents.EXTRA_PHOTOID).equals(mBaoxiuCardObject.getFapiaoPhotoId())) {
-	            		//下载完成
-	            		DebugUtils.logD(TAG, "FapiaoTask finished for " + mBaoxiuCardObject.getFapiaoPhotoId());
-	            		//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 end 
-	            		File fapiao = MyApplication.getInstance().getProductFaPiaoFile(mBaoxiuCardObject.getFapiaoPhotoId());
-	        			if (fapiao.exists()) {
-	        				DebugUtils.logD(TAG, "FapiaoTask downloaded " + fapiao.getAbsolutePath());
-	        				BaoxiuCardObject.showBill(mContext, mBaoxiuCardObject);
-	        			}
-	        			dismissDialog(DIALOG_PROGRESS);
+	            	if (photoid.equals(mBaoxiuCardObject.getFapiaoPhotoId())) {
+	            		dismissDialog(DIALOG_PROGRESS);
+	            		if (status) {
+	            			//下载完成
+		            		DebugUtils.logD(TAG, "FapiaoTask finished for " + mBaoxiuCardObject.getFapiaoPhotoId());
+		            		//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 end 
+		            		
+		        			if (fapiao.exists()) {
+		        				mBillView.setEnabled(false);
+		        				mHandler.sendEmptyMessageDelayed(WHAT_SHOW_FAPIAO_WAIT, 6000);
+		        				DebugUtils.logD(TAG, "FapiaoTask downloaded " + fapiao.getAbsolutePath());
+		        				BaoxiuCardObject.showBill(mContext, mBaoxiuCardObject);
+		        			}
+	            		} else {
+	            			MyApplication.getInstance().showMessage(bundle.getString(PhotoManagerUtilsV2.EXTRA_DOWNLOAD_STATUS_MESSAGE));
+	            		}
 	            	}
 	            	return;
+	            case WHAT_SHOW_FAPIAO_WAIT:
+	            	mBillView.setEnabled(true);
+	            	break;
 	            }
 	            super.handleMessage(msg);
             }
@@ -425,6 +437,8 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		case R.id.button_bill:
 			File fapiao = MyApplication.getInstance().getProductFaPiaoFile(mBaoxiuCardObject.getFapiaoPhotoId());
 			if (fapiao.exists()) {
+				mBillView.setEnabled(false);
+				mHandler.sendEmptyMessageDelayed(WHAT_SHOW_FAPIAO_WAIT, 6000);
 				BaoxiuCardObject.showBill(mContext, mBaoxiuCardObject);
 			} else {
 				//需要下载
@@ -435,7 +449,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 				//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 begin 
 				//为了传值給发票下载
 				BaoxiuCardObject.setBaoxiuCardObject(mBaoxiuCardObject);
-				PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, mFapiaoDownloadView, mBaoxiuCardObject.getFapiaoPhotoId(), null, PhotoManagerUtilsV2.TaskType.FaPiao);
+				PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, mFapiaoDownloadView, mBaoxiuCardObject.getFapiaoPhotoId(), null, PhotoManagerUtilsV2.TaskType.FaPiao, true);
 				//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 end 
 			}
 			break;

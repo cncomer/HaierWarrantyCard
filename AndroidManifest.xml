@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.bestjoy.app.haierwarrantycard"
-    android:versionCode="25"
-    android:versionName="V1.94" >
+    android:versionCode="30"
+    android:versionName="V1.941" >
 
      <supports-screens
         android:anyDensity="true"
@@ -20,11 +20,9 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
-    <uses-permission android:name="android.permission.CALL_PHONE" />
     
      <!-- add by chenkai 2012-10-20 for privacy module begin -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
@@ -38,7 +36,10 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
-    
+    <!-- 联系人相关 begin -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <!-- 联系人相关 end -->
     <!-- add by chenkai, 允许接收读取短信 begin-->
     <uses-permission android:name="android.permission.RECEIVE_SMS" />
     <uses-permission android:name="android.permission.READ_SMS" />
@@ -47,6 +48,10 @@
     
     <uses-permission android:name="android.permission.READ_LOGS" />
 	<uses-permission android:name="android.permission.WRITE_SETTINGS" />
+	
+	<!-- 保存联系人相关 begin-->
+    <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <!-- 保存联系人相关 end-->
 
     <application android:name=".MyApplication"
         android:allowBackup="true"
