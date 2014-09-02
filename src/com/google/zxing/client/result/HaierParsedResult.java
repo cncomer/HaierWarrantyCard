@@ -43,7 +43,7 @@ public final class HaierParsedResult extends ParsedResult {
   private final String text;
   private final String param;
   private BarcodeFormat mBarcodeFormat;
-  private ResultBaoxiuCardType mResultBaoxiuCardType = ResultBaoxiuCardType.General;
+  private ResultBaoxiuCardType mResultBaoxiuCardType = ResultBaoxiuCardType.Haier;
   public static enum ResultBaoxiuCardType {
 	  Haier,
 	  General, //通用
