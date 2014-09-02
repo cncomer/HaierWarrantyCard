@@ -20,7 +20,7 @@ public class HaierParser extends ResultParser{
 	}
 	@Override
 	public ParsedResult parse(Result theResult) {
-		String rawText = theResult.getText();
+		String rawText = theResult.getText().trim().replaceAll(" ", ""); 
 		if (TextUtils.isEmpty(rawText)) {
 			return null;
 		}
