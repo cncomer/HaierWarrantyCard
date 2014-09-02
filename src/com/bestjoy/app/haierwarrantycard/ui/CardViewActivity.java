@@ -82,7 +82,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	private ImageView mFapiaoDownloadView;
 	
 	/**是否显示销售人员信息*/
-	private static final boolean SHOW_SALES_INFO = true;
+	private static final boolean SHOW_SALES_INFO = false;
 	private BaoxiuCardViewSalemanInfoView mMMOne, mMMTwo;
 	
 	public static AddressBookParsedResult mAddressResult;
@@ -142,6 +142,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
             }
 			
 		};
+		NotifyRegistrant.getInstance().register(mHandler);
 		BaoxiuCardObject.showBill(mContext, null);
 		
 		PhotoManagerUtilsV2.getInstance().requestToken(TOKEN);
@@ -519,19 +520,18 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	 public void onDestroy() {
 		 super.onDestroy();
 		 PhotoManagerUtilsV2.getInstance().releaseToken(TOKEN);
+		 NotifyRegistrant.getInstance().unRegister(mHandler);
 		 
 	 }
 	 
 	 @Override
 	 public void onPause() {
 		 super.onPause();
-		 NotifyRegistrant.getInstance().unRegister(mHandler);
 	 }
 	 
 	 @Override
 	 public void onResume() {
 		 super.onResume();
-		 NotifyRegistrant.getInstance().register(mHandler);
 		 if (mMMLayoutViewId  > 0 && !TextUtils.isEmpty(mMM)) {
 			 showDialog(DIALOG_PROGRESS);
 			 //扫描进来，我们需要下载MM.vcf文件

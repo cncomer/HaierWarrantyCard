@@ -320,8 +320,7 @@
                 android:orientation="horizontal">
                 <include android:id="@+id/mmone" layout="@layout/sale_man_info"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="50dip"/>
+                    android:layout_height="wrap_content"/>
                 <include android:id="@+id/mmtwo" layout="@layout/sale_man_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"

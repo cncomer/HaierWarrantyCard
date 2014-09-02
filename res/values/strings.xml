@@ -174,6 +174,7 @@
    <string name="button_share_by_email">通过email分享</string>
     <string name="result_text">找到纯文本</string>
     <string name="result_haier_barcode">找到海尔识别码</string>
+    <string name="result_baoxiucard_barcode">找到保修卡</string>
     <string name="msg_default_mms_subject">Hi</string>
   <string name="msg_encode_in_progress">正在生成条码\u2026</string>
   <string name="msg_google_shopper_missing">谷歌购物未安装</string>
@@ -433,4 +434,5 @@
      
      <string name="password_accept_chars">"0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"</string>
      <string name="msg_wait_for_fapiao_show">"正在进入图库显示发票，请稍后..."</string>
+     <string name="msg_no_existed_photo_in_service">抱歉，服务器上是没有找到对应的图片</string>
 </resources>

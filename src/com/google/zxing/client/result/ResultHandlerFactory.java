@@ -32,7 +32,7 @@ public final class ResultHandlerFactory {
   public static ResultHandler makeResultHandler(Activity activity, Result rawResult) {
     ParsedResult result = parseResult(rawResult);
     ParsedResultType type = result.getType();
-    if (type.equals(ParsedResultType.HAIER)) {
+    if (type.equals(ParsedResultType.BXK)) {
         return new HaierResultHandler(activity, result);
     } else if (type.equals(ParsedResultType.ADDRESSBOOK)) {
         return new AddressBookResultHandler(activity, result);

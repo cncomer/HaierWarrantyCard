@@ -203,6 +203,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 		super.onDestroy();
 		DebugUtils.logD(TAG, "onDestroy() mNeedLoadFapiao=" + mNeedLoadFapiao + ", mBillTempFile=" + mBillTempFile);
 		mBillImageView.setImageBitmap(null);
+		mBundle.putBundle("BaoxiuCardObject", null);
 	}
 	
 	@Override
@@ -240,12 +241,12 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	private void populateBaoxiuInfoView() {
 		//init layouts
 		if (!isEditable()) {
-			mTypeInput.getText().clear();
-			mPinpaiInput.getText().clear();
-			mModelInput.getText().clear();
-			mBianhaoInput.getText().clear();
-			mBaoxiuTelInput.getText().clear();
-			mWyInput.getText().clear();
+			mTypeInput.setText(mBaoxiuCardObject.mLeiXin);
+			mPinpaiInput.setText(mBaoxiuCardObject.mPinPai);
+			mModelInput.setText(mBaoxiuCardObject.mXingHao);
+			mBianhaoInput.setText(mBaoxiuCardObject.mSHBianHao);
+			mBaoxiuTelInput.setText(mBaoxiuCardObject.mBXPhone);
+			mWyInput.setText(mBaoxiuCardObject.mWY);
 			mPriceInput.getText().clear();
 			//mTujingInput.getText().clear();
 			mTujingPopView.getText().clear();
@@ -405,11 +406,8 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	
 	private void saveNewWarrantyCardAndSync() {
 		if(MyAccountManager.getInstance().hasLoginned()) {
-			//如果没有注册，我们前往登陆界面
-			if(checkInput()) {
-				mSaveBtn.setEnabled(false);
-				requestNewWarrantyCardAndSync();
-			}
+			mSaveBtn.setEnabled(false);
+			requestNewWarrantyCardAndSync();
 		} else {
 			//如果没有注册，我们前往登陆/注册界面，这里传递ModelBundle对象过去，以便做合适的跳转
 			MyApplication.getInstance().showMessage(R.string.login_tip);
@@ -554,6 +552,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 //							MyApplication.getInstance().showMessage(result.mStatusMessage);
 							getActivity().finish();
 							mBaoxiuCardObject.clear();
+							mBundle.putBundle("BaoxiuCardObject", null);
 							MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
 						}
 					});
@@ -561,6 +560,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 					 MyApplication.getInstance().showMessage(result.mStatusMessage);
 					getActivity().finish();
 					mBaoxiuCardObject.clear();
+					mBundle.putBundle("BaoxiuCardObject", null);
 					MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
 				 }
 				//add by chenkai, 锁定认证字段 20140701 end
@@ -603,6 +603,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 	 */
 	private UpdateWarrantyCardAsyncTask mUpdateWarrantyCardAsyncTask;
 	private void updateWarrantyCardAsync() {
+		mSaveBtn.setEnabled(false);
 		AsyncTaskUtils.cancelTask(mUpdateWarrantyCardAsyncTask);
 		showDialog(DIALOG_PROGRESS);
 		mUpdateWarrantyCardAsyncTask = new UpdateWarrantyCardAsyncTask();
@@ -735,6 +736,7 @@ public class NewWarrantyCardFragment extends ModleBaseFragment implements View.O
 					 MyApplication.getInstance().showMessage(result.mStatusMessage);
 					getActivity().finish();
 					mBaoxiuCardObject.clear();
+					mBundle.putBundle("BaoxiuCardObject", null);
 					MyChooseDevicesActivity.startIntent(getActivity(), getArguments());
 				 }
 				//add by chenkai, 锁定认证字段 20140701 end

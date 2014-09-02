@@ -16,11 +16,11 @@ import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
+import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.ui.NewCardActivity;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.client.result.HaierParsedResult.HaierBaoxiuCardParser;
-import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.NetworkUtils;
 
@@ -73,8 +73,13 @@ public final class HaierResultHandler extends ResultHandler {
       case 1:
     	  if (ComConnectivityManager.getInstance().isConnected()) {
     		  HaierParsedResult result = ((HaierParsedResult) getResult());
-    		  String url = result.getBarcodeFormat() == BarcodeFormat.CODE_128 ? QUERY_SERVICE_FOR_CODE_128 : QUERY_SERVICE;
-    		  queryDeviceInfoFromService(url, result.getParam());
+    		  if (result.getResultBaoxiuCardType() == HaierParsedResult.ResultBaoxiuCardType.Haier) {
+    			  String url = result.getBarcodeFormat() == BarcodeFormat.CODE_128 ? QUERY_SERVICE_FOR_CODE_128 : QUERY_SERVICE;
+        		  queryDeviceInfoFromService(url, result.getParam());
+    		  } else {
+    			  queryDeviceInfoFromService(HaierServiceObject.queryBaoxiuCardUrlFromBarCode(), result.getParam());
+    		  }
+    		  
     	  } else {
     		  //no network
     		  MyApplication.getInstance().showMessage(R.string.msg_scan_finish_return_result_no_network);
@@ -131,8 +136,10 @@ public final class HaierResultHandler extends ResultHandler {
 			
 		} catch (ClientProtocolException e) {
 			e.printStackTrace();
+			_error = e.getMessage();
 		} catch (IOException e) {
 			e.printStackTrace();
+			_error = MyApplication.getInstance().getGernalNetworkError() + ", " + e.getMessage();
 		}
 		return false;
 	}
@@ -152,7 +159,11 @@ public final class HaierResultHandler extends ResultHandler {
 	        	  activity.finish();
 	    	  } else {//新建我的保修卡
 	    		  Bundle bundle = ModleSettings.createMyCardDefaultBundle(activity);
-	    		  BaoxiuCardObject.setBaoxiuCardObject(_baoxiuCardObject);
+	    		  _baoxiuCardObject.mUID = MyAccountManager.getInstance().getCurrentAccountId();
+	    		  bundle.putLong("uid", _baoxiuCardObject.mUID);
+	    		  _baoxiuCardObject.mAID = MyAccountManager.getInstance().getHomeAIdAtPosition(0);
+	    		  bundle.putLong("aid", _baoxiuCardObject.mAID);
+	    		  bundle.putBundle("BaoxiuCardObject",_baoxiuCardObject.getBaoxiuCardObjectBundle());
 	    		  //扫描结果
 	    		  NewCardActivity.startIntent(activity, bundle);
 	    	  }
@@ -175,6 +186,6 @@ public final class HaierResultHandler extends ResultHandler {
 
   @Override
   public int getDisplayTitle() {
-    return R.string.result_haier_barcode;
+    return R.string.result_baoxiucard_barcode;
   }
 }

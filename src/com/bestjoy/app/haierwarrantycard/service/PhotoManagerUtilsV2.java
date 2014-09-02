@@ -13,6 +13,8 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
 
 import android.content.Context;
@@ -657,6 +659,7 @@ public class PhotoManagerUtilsV2 {
 	
 	class LoadPhotoAsyncTask extends AvatorAsyncTask {
 		private byte[] lPhoto;
+		private String mServiceUrl = null;
 		
 		public LoadPhotoAsyncTask(ImageView imageView, String token, String photoId, TaskType type, byte[] photo, boolean notify) {
 			super(imageView, token, photoId, type, notify);
@@ -668,11 +671,15 @@ public class PhotoManagerUtilsV2 {
 		}
 		
 		private String getServiceUrl() {
-			return PhotoManagerUtilsV2.getServiceUrl(mTaskType, mPhotoId);
+			if (mServiceUrl == null) {
+				mServiceUrl = PhotoManagerUtilsV2.getServiceUrl(mTaskType, mPhotoId);
+			}
+			return mServiceUrl;
 		}
 
 		@Override
 		protected Bitmap doInBackground(Void... params) {
+			super.doInBackground(params);
 			InputStream is = null;
 			Bitmap bitmap = null;
 			File cachedBitmapFile = getFileToSave();
@@ -700,21 +707,25 @@ public class PhotoManagerUtilsV2 {
 				String url = getServiceUrl();
 				try {
 					DebugUtils.logPhotoUtils(TAG, "step 4 download bitmap");
-					is = NetworkUtils.openContectionLocked(url, MyApplication.getInstance().getSecurityKeyValuesObject());
-					if (is == null) {
-						notifyStatus(false, "Can't open " + url);
+					HttpResponse respose = NetworkUtils.openContectionLockedV2(url, MyApplication.getInstance().getSecurityKeyValuesObject());
+					if (respose.getStatusLine().getStatusCode() == HttpStatus.SC_NOT_FOUND) {
+						DebugUtils.logPhotoUtils(TAG, "download bitmap failed, can't find image on server-side for photoid " + mPhotoId);
+						notifyStatus(false, MyApplication.getInstance().getString(R.string.msg_no_existed_photo_in_service));
 					    return null;
 					}
-					DebugUtils.logPhotoUtils(TAG, "step 5 create the mm.p file using bitmap");
-					createCachedBitmapFile(is, cachedBitmapFile);
-					DebugUtils.logPhotoUtils(TAG, "step 6 try to get avator from cached mm.p file");
-					bitmap = decodeFromCachedBitmapFile(cachedBitmapFile, mTaskType);
+					is = respose.getEntity().getContent();
+					if (is != null) {
+						DebugUtils.logPhotoUtils(TAG, "step 5 create the mm.p file using bitmap");
+						createCachedBitmapFile(is, cachedBitmapFile);
+						DebugUtils.logPhotoUtils(TAG, "step 6 try to get avator from cached mm.p file");
+						bitmap = decodeFromCachedBitmapFile(cachedBitmapFile, mTaskType);
+					}
 				} catch (ClientProtocolException e) {
 					e.printStackTrace();
-					notifyStatus(false, url + "  " + e.getMessage());
+					notifyStatus(false, e.getMessage());
 				} catch (IOException e) {
 					e.printStackTrace();
-					notifyStatus(false, url  + "  " + e.getMessage());
+					notifyStatus(false, MyApplication.getInstance().getGernalNetworkError());
 				} finally {
 					DebugUtils.logPhotoUtils(TAG, "finally() for path="+url + ", is=" + is + ", bitmap="+bitmap);
 					NetworkUtils.closeInputStream(is);
