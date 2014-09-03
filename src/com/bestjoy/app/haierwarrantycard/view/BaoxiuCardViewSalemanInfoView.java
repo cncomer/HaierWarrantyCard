@@ -3,9 +3,9 @@ package com.bestjoy.app.haierwarrantycard.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -19,7 +19,7 @@ import com.google.zxing.client.result.AddressBookParsedResult;
 import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.Intents;
 
-public class BaoxiuCardViewSalemanInfoView extends RelativeLayout implements View.OnClickListener{
+public class BaoxiuCardViewSalemanInfoView extends RelativeLayout implements View.OnClickListener, OnLongClickListener{
 
 	private static final String TAG = "BaoxiuCardViewSalemanInfoView";
 	private View mActionsLayout;
@@ -58,6 +58,7 @@ public class BaoxiuCardViewSalemanInfoView extends RelativeLayout implements Vie
 		
 		mAvator = (ImageView) findViewById(R.id.avator);
 		mAvator.setOnClickListener(this);
+		mAvator.setOnLongClickListener(this);
 		mName = (TextView) findViewById(R.id.name);
 		mName.setText("");
 		mTitle = (TextView) findViewById(R.id.title); 
@@ -114,6 +115,18 @@ public class BaoxiuCardViewSalemanInfoView extends RelativeLayout implements Vie
 		}
 		
 		
+	}
+
+	@Override
+	public boolean onLongClick(View v) {
+		switch(v.getId()) {
+		case R.id.avator:
+			Intent scanIntent = new Intent(mActivity, CaptureActivity.class);
+			scanIntent.putExtra(Intents.EXTRA_SCAN_TASK, true);
+			mActivity.startActivityForResult(scanIntent, (getId() & 0x0000ffff));
+			return true;
+		}
+		return false;
 	}
 
 }

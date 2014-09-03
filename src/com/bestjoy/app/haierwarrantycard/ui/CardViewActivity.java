@@ -82,7 +82,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	private ImageView mFapiaoDownloadView;
 	
 	/**是否显示销售人员信息*/
-	private static final boolean SHOW_SALES_INFO = false;
+	private static final boolean SHOW_SALES_INFO = true;
 	private BaoxiuCardViewSalemanInfoView mMMOne, mMMTwo;
 	
 	public static AddressBookParsedResult mAddressResult;
@@ -813,12 +813,16 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 				is = NetworkUtils.openContectionLocked(HaierServiceObject.updateBaoxiucardSalesmanInfo("para", jsonObject.toString()), MyApplication.getInstance().getSecurityKeyValuesObject());
 				HaierResultObject serviceResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
 				if (serviceResultObject.isOpSuccessfully()) {
-					mBaoxiuCardObject.mMMOne = _mmOne;
-					mBaoxiuCardObject.mMMOneTel = _mmOneTel;
-					mBaoxiuCardObject.mMMOneName = _mmOneName;
-					mBaoxiuCardObject.mMMTwo = _mmTwo;
-					mBaoxiuCardObject.mMMTwoTel = _mmTwoTel;
-					mBaoxiuCardObject.mMMTwoName = _mmTwoName;
+					if (_type == 1) {
+						mBaoxiuCardObject.mMMOne = _mmOne;
+						mBaoxiuCardObject.mMMOneTel = _mmOneTel;
+						mBaoxiuCardObject.mMMOneName = _mmOneName;
+					} else if (_type == 2) {
+						mBaoxiuCardObject.mMMTwo = _mmTwo;
+						mBaoxiuCardObject.mMMTwoTel = _mmTwoTel;
+						mBaoxiuCardObject.mMMTwoName = _mmTwoName;
+					}
+					
 					boolean saved = mBaoxiuCardObject.saveInDatebase(getContentResolver(), null);
 					DebugUtils.logD(TAG, "UpdateSalesInfoAsyncTask save BaoxiuCard " +saved);
 				}
