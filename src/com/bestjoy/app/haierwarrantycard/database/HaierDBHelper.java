@@ -12,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 9;
+  private static final int DB_VERSION = 10;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -139,6 +139,23 @@ private static final String TAG = "HaierDBHelper";
   public static final String YOUMENG_MESSAGE_CUSTOM = "custom";
   public static final String YOUMENG_MESSAGE_RAW = "raw_json";
   
+  
+//IM模块 begin
+  public static final String TABLE_IM_HISTORY = "im_message_history";
+  /**服务器上对应的消息ID*/
+  public static final String IM_SERVICE_ID = "service_id";
+  /**消息正文*/
+  public static final String IM_TEXT = "text";
+  /**消息对象，根据IM_TARGET_TYPE的值来区分对象*/
+  public static final String IM_TARGET = "target";
+  public static final String IM_TARGET_TYPE = "target_type";
+  public static final String IM_UID = "uid";
+  public static final String IM_UNAME = "name";
+  public static final String IM_SERVICE_TIME = "service_time";
+  /**消息发送状态，对于收到的消息总是1，否则位0*/
+  public static final String IM_MESSAGE_STATUS = "message_status";
+  //IM模块 end
+  
   public HaierDBHelper(Context context) {
     super(context, DB_NAME, null, DB_VERSION);
   }
@@ -196,6 +213,8 @@ private static final String TAG = "HaierDBHelper";
   		createXinghaoTable(sqLiteDatabase);
   		
   		createYoumengMessageTable(sqLiteDatabase);
+  		
+  		createImMessageTable(sqLiteDatabase);
   		
   }
   
@@ -356,6 +375,21 @@ private static final String TAG = "HaierDBHelper";
 	            DATE + " TEXT);");
   }
   
+  private void createImMessageTable(SQLiteDatabase sqLiteDatabase) {
+	  sqLiteDatabase.execSQL(
+	            "CREATE TABLE " + TABLE_IM_HISTORY + " (" +
+	            ID + " INTEGER PRIMARY KEY, " +
+	            IM_MESSAGE_STATUS + " INTEGER NOT NULL DEFAULT 0, " +  //信息发送状态
+	            IM_SERVICE_ID + " TEXT, " +
+	            IM_TEXT + " TEXT, " +
+	            IM_TARGET + " TEXT, " +
+	            IM_TARGET_TYPE + " INTEGER, " +
+	            IM_UID + " TEXT, " +
+	            IM_UNAME + " TEXT, " +
+	            IM_SERVICE_TIME + " TEXT, " +
+	            DATE + " TEXT);");
+  }
+  
   private void addTextColumn(SQLiteDatabase sqLiteDatabase, String table, String column) {
 	    String alterForTitleSql = "ALTER TABLE " + table +" ADD " + column + " TEXT";
 		sqLiteDatabase.execSQL(alterForTitleSql);
@@ -375,6 +409,7 @@ private static final String TAG = "HaierDBHelper";
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_SCAN_NAME);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_DEVICE_XINGHAO);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_YOUMENG_PUSHMESSAGE_HISTORY);
+		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_IM_HISTORY);
 		    
 		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "insert_account");
 		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "update_default_account");
@@ -392,16 +427,9 @@ private static final String TAG = "HaierDBHelper";
 		    return;
 		} 
 	  
-	  if (oldVersion == 7) {
-		  //增加了保修卡和mm的关联
-		  addTextColumn(sqLiteDatabase, TABLE_NAME_CARDS, CARD_MM_ONE);
-		  addTextColumn(sqLiteDatabase, TABLE_NAME_CARDS, CARD_MM_ONE_TEL);
-		  addTextColumn(sqLiteDatabase, TABLE_NAME_CARDS, CARD_MM_ONE_NAME);
-		  
-		  addTextColumn(sqLiteDatabase, TABLE_NAME_CARDS, CARD_MM_TWO);
-		  addTextColumn(sqLiteDatabase, TABLE_NAME_CARDS, CARD_MM_TWO_TEL);
-		  addTextColumn(sqLiteDatabase, TABLE_NAME_CARDS, CARD_MM_TWO_NAME);
-		  oldVersion = 8;
+	  if (oldVersion == 9) {
+		  createImMessageTable(sqLiteDatabase);
+		  oldVersion = 10;
 	  }
   }
 }

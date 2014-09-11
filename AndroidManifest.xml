@@ -52,6 +52,8 @@
 	<!-- 保存联系人相关 begin-->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <!-- 保存联系人相关 end-->
+    
+    <uses-permission android:name="android.permission.CHANGE_WIFI_MULTICAST_STATE" />
 
     <application android:name=".MyApplication"
         android:allowBackup="true"
@@ -170,6 +172,12 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:label="@string/title_baoxiucard_info" />
+        
+        <activity
+            android:name="com.bestjoy.app.haierwarrantycard.im.IMConversationActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:label="@string/title_im_conversation" />
         
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.HomeManagerActivity"

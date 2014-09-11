@@ -119,4 +119,8 @@ public class BjnoteContent {
     		cr.query(CONTENT_URI, null, null, null, null);
     	}
     }
+    
+    public static class IM extends BjnoteContent{
+    	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.CONTENT_URI, "im");
+    }
 }

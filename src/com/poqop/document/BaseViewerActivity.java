@@ -148,7 +148,7 @@ public abstract class BaseViewerActivity extends BaseActionbarActivity implement
     protected abstract DecodeService createDecodeService();
 
     @Override
-    protected void onStop()
+    public void onStop()
     {
         super.onStop();
     }

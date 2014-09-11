@@ -39,6 +39,8 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
+import com.bestjoy.app.haierwarrantycard.im.IMConversationActivity;
+import com.bestjoy.app.haierwarrantycard.im.IMHelper;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
@@ -287,6 +289,9 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 				 mMMTwo.setAddressBookParsedResult(resultTwo, TOKEN);
 			 }
 		 }
+		 
+		 
+		 findViewById(R.id.button_im).setOnClickListener(this);
 	}
 	
 	private void populateView() {
@@ -453,6 +458,9 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 				PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, mFapiaoDownloadView, mBaoxiuCardObject.getFapiaoPhotoId(), null, PhotoManagerUtilsV2.TaskType.FaPiao, true);
 				//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 end 
 			}
+			break;
+		case R.id.button_im:
+			IMConversationActivity.startActivity(mContext, IMHelper.TARGET_TYPE_QUN, mBaoxiuCardObject.mXingHao);
 			break;
 		case R.id.button_onekey_tel:
 			Intents.callPhone(mContext, mBaoxiuCardObject.mBXPhone);

@@ -77,6 +77,9 @@ public class MyAccountManager {
 	public long getCurrentAccountId() {
 		return mHaierAccount != null ? mHaierAccount.mAccountUid : -1; 
 	}
+	public String getCurrentAccountUid() {
+		return mHaierAccount != null ? String.valueOf(mHaierAccount.mAccountUid) : null; 
+	}
 	public boolean hasLoginned() {
 		return mHaierAccount != null && mHaierAccount.mAccountId > 0;
 	}

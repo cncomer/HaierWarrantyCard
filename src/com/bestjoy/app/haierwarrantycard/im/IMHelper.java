@@ -1,0 +1,222 @@
+package com.bestjoy.app.haierwarrantycard.im;
+
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
+import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
+import com.shwy.bestjoy.utils.DebugUtils;
+
+import android.content.ContentResolver;
+import android.content.ContentValues;
+import android.content.Context;
+import android.database.Cursor;
+import android.text.TextUtils;
+
+public class IMHelper {
+
+	private static final String TAG = "IMHelper";
+	/**
+	 * 消息类型， 0是登录，1是退出， 2是消息（可以理解为自己向服务器发送的消息）, 3是转发的消息， data数据中也会有一个type, 1是群消息，此时target字段对应群id, 比如sn, 2是点对点消息，target是对方uid
+	 *
+	 */
+	public static final String EXTRA_TYPE = "type";
+	/**
+	 * 消息体
+	 */
+	public static final String EXTRA_DATA = "data";
+	public static final String EXTRA_UID = "uid";
+	public static final String EXTRA_PWD = "pwd";
+	public static final String EXTRA_TEXT = "text";
+	public static final String EXTRA_TOKEN = "n";
+	public static final String EXTRA_TARGET = "target";
+	public static final String EXTRA_SERVICE_TIME = "createtime";
+	public static final String EXTRA_SERVICE_ID = "serviceid";
+	public static final String EXTRA_UNAME = "usrname";
+	
+	public static final int TYPE_LOGIN = 0;  //登录
+	public static final int TYPE_EXIT = 1;  
+	public static final int TYPE_MESSAGE = 2;  //用户发送的信息
+	public static final int TYPE_MESSAGE_FORWARD = 3; //用户收到的其他用户发送的消息
+	/**群消息*/
+	public static final int TARGET_TYPE_QUN = 1;
+	/**点对点消息*/
+	public static final int TARGET_TYPE_P2P = 2;
+	
+	public static final String[] PROJECTION = new String[]{
+		HaierDBHelper.ID,              //0
+		HaierDBHelper.IM_SERVICE_ID,   //1
+		HaierDBHelper.IM_TARGET_TYPE,  //2
+		HaierDBHelper.IM_TARGET,       //3
+		HaierDBHelper.IM_TEXT,         //4
+		HaierDBHelper.IM_UID,           //5
+		HaierDBHelper.IM_UNAME,         //6
+		HaierDBHelper.IM_SERVICE_TIME,  //7
+		HaierDBHelper.DATE,             //8
+		HaierDBHelper.IM_MESSAGE_STATUS,//9
+	};
+	
+	public static final int INDEX_ID = 0;
+	public static final int INDEX_SERVICE_ID = 1;
+	public static final int INDEX_TRAGET_TYPE = 2;
+	public static final int INDEX_TARGET = 3;
+	public static final int INDEX_TEXT = 4;
+	public static final int INDEX_UID = 5;
+	public static final int INDEX_UNAME = 6;
+	public static final int INDEX_SERVICE_TIME = 7;
+	public static final int INDEX_LOCAL_TIME = 8;
+	public static final int INDEX_STATUS = 9;
+	/**按照消息的服务器id升序排序*/
+	public static final String SORT_BY_MESSAGE_ID = HaierDBHelper.IM_SERVICE_ID + " asc";
+	
+//	public static final String UID_AND_TARGET_SELECTION = HaierDBHelper.IM_UID + "=? and " + HaierDBHelper.IM_TARGET_TYPE + "=? and " + HaierDBHelper.IM_TARGET + "=?";
+	public static final String UID_OR_TARGET_SELECTION = HaierDBHelper.IM_TARGET_TYPE + "=? and ((" + HaierDBHelper.IM_UID + "=? and " + HaierDBHelper.IM_TARGET + "=?) or (" + HaierDBHelper.IM_TARGET + "=? and " + HaierDBHelper.IM_UID + "=?))";
+	
+	public static  DateFormat SERVICE_DATE_TIME_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
+	public static  DateFormat LOCAL_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	/**
+	 * 会话开始前，我们需要先登录IM服务器
+	 * @param uid
+	 * @param pwd
+	 * @return
+	 */
+	public static JSONObject createOrJoinConversation(String uid, String pwd, String name) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put(EXTRA_TYPE, String.valueOf(TYPE_LOGIN));
+			jsonObject.put(EXTRA_UID, uid).put(EXTRA_PWD, pwd).put(EXTRA_UNAME, name);
+			jsonObject.put(EXTRA_DATA, "");
+			return jsonObject;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return jsonObject;
+	}
+	/***
+	 * 退出登录状态
+	 * @param uid
+	 * @param pwd
+	 * @return
+	 */
+	public static JSONObject exitConversation(String uid, String pwd, String name) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put(EXTRA_TYPE, String.valueOf(TYPE_EXIT));
+			jsonObject.put(EXTRA_UID, uid).put(EXTRA_PWD, pwd).put(EXTRA_UNAME, name);
+			jsonObject.put(EXTRA_DATA, "");
+			return jsonObject;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		return jsonObject;
+	}
+	/**
+	 * 创建消息体
+	 * @param uid
+	 * @param pwd
+	 * @param targetType
+	 * @param target
+	 * @param text
+	 * @return
+	 */
+	public static JSONObject createMessageConversation(ConversationItemObject conversation) {
+		JSONObject jsonObject = new JSONObject();
+		try {
+			jsonObject.put(EXTRA_TYPE, String.valueOf(TYPE_MESSAGE));
+			jsonObject.put(EXTRA_UID, conversation.mUid).put(EXTRA_PWD, conversation.mPwd).put(IMHelper.EXTRA_UNAME, conversation.mUName);
+			JSONObject data = new JSONObject();
+			data.put(EXTRA_TYPE, String.valueOf(conversation.mTargetType)).put(EXTRA_TARGET, conversation.mTarget).put(EXTRA_TEXT, conversation.mMessage).put(EXTRA_TOKEN, String.valueOf(conversation.mId));
+			jsonObject.put(EXTRA_DATA, data);
+			DebugUtils.logD(TAG, "createMessageConversation json=" + jsonObject.toString());
+			return jsonObject;
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		DebugUtils.logD(TAG, "createMessageConversation json=" + jsonObject.toString());
+		return jsonObject;
+	}
+	
+	public static Cursor getAllLocalMessage(ContentResolver cr, String uid, int targetType, String target) {
+		return cr.query(BjnoteContent.IM.CONTENT_URI, PROJECTION, UID_OR_TARGET_SELECTION, new String[]{String.valueOf(targetType), uid, target, target, uid}, SORT_BY_MESSAGE_ID);
+	}
+	
+	/**
+	 * 更新信息数据，最直观的用法就是根据服务器返回的id来更新本地信息的发送状态
+	 * @param cr
+	 * @param values
+	 * @param where
+	 * @param selectionArgs
+	 * @return
+	 */
+	public static int update(ContentResolver cr, ContentValues values, String where, String[] selectionArgs) {
+		return cr.update(BjnoteContent.IM.CONTENT_URI, values, where, selectionArgs);
+	}
+	
+	public static ConversationItemObject getConversationItemObject(JSONObject result) {
+		ConversationItemObject conversationItemObject = new ConversationItemObject();
+		if (result != null) {
+			conversationItemObject.mMessage = result.optString(IMHelper.EXTRA_TEXT, "");
+			conversationItemObject.mServiceId = result.optString(IMHelper.EXTRA_SERVICE_ID, "");
+			conversationItemObject.mId = Integer.valueOf(result.optString(IMHelper.EXTRA_TOKEN, "-1"));
+			conversationItemObject.mTargetType = Integer.valueOf(result.optString(IMHelper.EXTRA_TYPE, "0"));
+			conversationItemObject.mTarget = result.optString(IMHelper.EXTRA_TARGET, "");
+			String timeStr = result.optString(IMHelper.EXTRA_SERVICE_TIME, "");
+			try {
+				Date date = SERVICE_DATE_TIME_FORMAT.parse(timeStr);
+				conversationItemObject.mServiceDate = date.getTime();
+				DebugUtils.logD(TAG, "getConversationItemObject convert timeStr " + timeStr + " to Date " + conversationItemObject.mServiceDate);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			return conversationItemObject;
+		}
+		//这里一般是不会走到的，所以我们打印出堆栈信息
+		new Exception(TAG + "getConversationItemObject return null").printStackTrace();
+		return null;
+		
+	}
+	
+	
+	public static class ImServiceResultObject {
+		public int mStatusCode = 0;
+		public String mStatusMessage;
+		public JSONObject mJsonData;
+		public String mType;
+		public String mStrData;
+		public String mUid, mPwd, mUName;
+		
+		public static ImServiceResultObject parse(String content) {
+			ImServiceResultObject resultObject = new ImServiceResultObject();
+			if (TextUtils.isEmpty(content)) {
+				return resultObject;
+			}
+			try {
+				JSONObject jsonObject = new JSONObject(content);
+				resultObject.mStatusCode = Integer.parseInt(jsonObject.getString("StatusCode"));
+				resultObject.mStatusMessage = jsonObject.getString("StatusMessage");
+				//消息类型
+				resultObject.mType = jsonObject.getString("type");
+				resultObject.mUid = jsonObject.getString(IMHelper.EXTRA_UID);
+				resultObject.mPwd = jsonObject.getString(IMHelper.EXTRA_PWD);
+				resultObject.mUName = jsonObject.getString(IMHelper.EXTRA_UNAME);
+				try {
+					resultObject.mJsonData = jsonObject.getJSONObject("Data");
+				} catch (JSONException e) {
+					resultObject.mStrData = jsonObject.getString("Data");
+				}
+			} catch (JSONException e) {
+				e.printStackTrace();
+				resultObject.mStatusMessage = e.getMessage();
+			}
+			return resultObject;
+		}
+		public boolean isOpSuccessfully() {
+			return mStatusCode == 1;
+		}
+	}
+}

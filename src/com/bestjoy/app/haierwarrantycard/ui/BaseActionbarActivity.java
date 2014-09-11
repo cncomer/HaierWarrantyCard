@@ -11,6 +11,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 
@@ -35,6 +37,7 @@ public abstract class BaseActionbarActivity extends SherlockFragmentActivity {
 	public static final int CurrentPictureCameraRequest = 11001;
 	private int mCurrentPictureRequest;
 	protected Context mContext;
+	private WakeLock mWakeLock;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -53,18 +56,31 @@ public abstract class BaseActionbarActivity extends SherlockFragmentActivity {
 		}
 		mContext = this;
 		PushAgent.getInstance(mContext).onAppStart();
+		
+		PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+		mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
 	}
 	//add by chenkai, 20140726 增加youmeng统计时长 begin
 	@Override
 	public void onResume() {
 		super.onResume();
 		MobclickAgent.onResume(this);
+		if (!mWakeLock.isHeld()) {
+			mWakeLock.acquire();
+		}
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
 		MobclickAgent.onPause(this);
+	}
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (mWakeLock.isHeld()) {
+			mWakeLock.release();
+		}
 	}
 	//add by chenkai, 20140726 增加youmeng统计时长 end
     protected abstract boolean checkIntent(Intent intent);

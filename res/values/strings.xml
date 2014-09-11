@@ -435,4 +435,8 @@
      <string name="password_accept_chars">"0123456789abcdefghigklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"</string>
      <string name="msg_wait_for_fapiao_show">"正在进入图库显示发票，请稍后..."</string>
      <string name="msg_no_existed_photo_in_service">抱歉，服务器上是没有找到对应的图片</string>
+     
+     <string name="button_commit">发送</string>
+     <string name="title_im_conversation">会话</string>
+     <string name="new_msg_comming">下面有新的消息</string>
 </resources>
