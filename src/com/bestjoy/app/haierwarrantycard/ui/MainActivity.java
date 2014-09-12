@@ -27,6 +27,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
+import com.bestjoy.app.haierwarrantycard.service.IMService;
 import com.bestjoy.app.haierwarrantycard.ui.model.ModleSettings;
 import com.bestjoy.app.haierwarrantycard.update.UpdateService;
 import com.bestjoy.app.haierwarrantycard.utils.BitmapUtils;
@@ -179,6 +180,7 @@ public class MainActivity extends BaseActionbarActivity {
 
 		@Override
 		protected Void doInBackground(Void... params) {
+			IMService.disconnectIMService(mContext, MyAccountManager.getInstance().getAccountObject());
 			MyAccountManager.getInstance().deleteDefaultAccount();
 			MyAccountManager.getInstance().saveLastUsrTel("");
 			return null;

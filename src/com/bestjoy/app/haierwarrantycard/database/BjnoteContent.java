@@ -121,6 +121,8 @@ public class BjnoteContent {
     }
     
     public static class IM extends BjnoteContent{
-    	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.CONTENT_URI, "im");
+    	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.CONTENT_URI, "im/qun");
+    	public static final Uri CONTENT_URI_QUN = Uri.withAppendedPath(BjnoteContent.CONTENT_URI, "im/qun");
+    	public static final Uri CONTENT_URI_FRIEND = Uri.withAppendedPath(BjnoteContent.CONTENT_URI, "im/friend");
     }
 }

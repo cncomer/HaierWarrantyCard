@@ -439,4 +439,5 @@
      <string name="button_commit">发送</string>
      <string name="title_im_conversation">会话</string>
      <string name="new_msg_comming">下面有新的消息</string>
+     <string name="msg_sending">发送中....</string>
 </resources>

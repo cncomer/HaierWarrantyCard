@@ -19,6 +19,7 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.AccountParser;
 import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
+import com.bestjoy.app.haierwarrantycard.service.IMService;
 import com.bestjoy.app.haierwarrantycard.update.UpdateService;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.YouMengMessageHelper;
@@ -110,6 +111,7 @@ public class LoginOrUpdateAccountDialog extends Activity{
 			} else if (mAccountObject != null) {
 				//如果登陆成功
 				if (mAccountObject.isLogined()) {
+					IMService.connectIMService(LoginOrUpdateAccountDialog.this);
 					setResult(Activity.RESULT_OK);
 					//每次登陆，我们都需要注册设备Token
 					YouMengMessageHelper.getInstance().saveDeviceTokenStatus(false);

@@ -31,7 +31,8 @@ public class BjnoteProvider extends ContentProvider{
 			HaierDBHelper.TABLE_SCAN_NAME,
 			HaierDBHelper.TABLE_NAME_DEVICE_XINGHAO,
 			HaierDBHelper.TABLE_YOUMENG_PUSHMESSAGE_HISTORY,
-			HaierDBHelper.TABLE_IM_HISTORY,
+			HaierDBHelper.TABLE_IM_QUN_HISTORY,
+			HaierDBHelper.TABLE_IM_FRIEND_HISTORY,
 //			ContactsDBHelper.TABLE_NAME_MYLIFE_CONSUME,
 	};
 	private static final int BASE = 8;
@@ -56,8 +57,10 @@ public class BjnoteProvider extends ContentProvider{
 	private static final int YMESSAGE = 0x0500;
 	private static final int YMESSAGE_ID = 0x0501;
 	
-	private static final int IM = 0x0600;
-	private static final int IM_ID = 0x0601;
+	private static final int IM_QUN = 0x0600;
+	private static final int IM_QUN_ID = 0x0601;
+	private static final int IM_FRIEND = 0x0700;
+	private static final int IM_FRIEND_ID = 0x0701;
 	
 	private static final UriMatcher sURIMatcher = new UriMatcher(UriMatcher.NO_MATCH);
 	 static {
@@ -83,8 +86,10 @@ public class BjnoteProvider extends ContentProvider{
 	        matcher.addURI(BjnoteContent.AUTHORITY, "ymessage", YMESSAGE);
 	        matcher.addURI(BjnoteContent.AUTHORITY, "ymessage/#", YMESSAGE_ID);
 	        
-	        matcher.addURI(BjnoteContent.AUTHORITY, "im", IM);
-	        matcher.addURI(BjnoteContent.AUTHORITY, "im/#", IM_ID);
+	        matcher.addURI(BjnoteContent.AUTHORITY, "im/qun", IM_QUN);
+	        matcher.addURI(BjnoteContent.AUTHORITY, "im/qun/#", IM_QUN_ID);
+	        matcher.addURI(BjnoteContent.AUTHORITY, "im/friend", IM_FRIEND);
+	        matcher.addURI(BjnoteContent.AUTHORITY, "im/friend/#", IM_FRIEND_ID);
 	        
 	        
 	        //TODO 增加
@@ -150,9 +155,13 @@ public class BjnoteProvider extends ContentProvider{
 		case YMESSAGE_ID:
 			notify = BjnoteContent.YMESSAGE.CONTENT_URI;
 			break;
-		case IM:
-		case IM_ID:
-			notify = BjnoteContent.IM.CONTENT_URI;
+		case IM_FRIEND:
+		case IM_FRIEND_ID:
+			notify = BjnoteContent.IM.CONTENT_URI_FRIEND;
+			break;
+		case IM_QUN:
+		case IM_QUN_ID:
+			notify = BjnoteContent.IM.CONTENT_URI_QUN;
 			break;
     	}
     	ContentResolver resolver = context.getContentResolver();
@@ -182,8 +191,10 @@ public class BjnoteProvider extends ContentProvider{
 			case XINGHAO_ID:
 			case YMESSAGE:
 			case YMESSAGE_ID:
-			case IM:
-			case IM_ID:
+			case IM_FRIEND:
+			case IM_FRIEND_ID:
+			case IM_QUN:
+			case IM_QUN_ID:
         	count = db.delete(table, buildSelection(match, uri, selection), selectionArgs);
         }
         if (count >0) notifyChange(match);
@@ -252,20 +263,23 @@ public class BjnoteProvider extends ContentProvider{
          DebugUtils.logProvider(TAG, "query table " + table);
          Cursor result = null;
          switch(match) {
-	         case ACCOUNT:
-	     	 case ACCOUNT_ID:
-	 		 case HOME:
-	 		 case HOME_ID:
-	 		 case DEVICE:
-	 		 case DEVICE_ID:
-	 		case SCAN_HISTORY:
-			case SCAN_HISTORY_ID:
-			case XINGHAO:
-			case XINGHAO_ID:
-			case YMESSAGE:
-			case YMESSAGE_ID:
-			case IM:
-			case IM_ID:
+//	         case ACCOUNT:
+//	     	 case ACCOUNT_ID:
+//	 		 case HOME:
+//	 		 case HOME_ID:
+//	 		 case DEVICE:
+//	 		 case DEVICE_ID:
+//	 		case SCAN_HISTORY:
+//			case SCAN_HISTORY_ID:
+//			case XINGHAO:
+//			case XINGHAO_ID:
+//			case YMESSAGE:
+//			case YMESSAGE_ID:
+//			case IM_FRIEND:
+//			case IM_FRIEND_ID:
+//			case IM_QUN:
+//			case IM_QUN_ID:
+			 default:
         	     result = db.query(table, projection, selection, selectionArgs, null, null, sortOrder);
          }
          if(result != null)result.setNotificationUri(getContext().getContentResolver(), uri);
@@ -283,20 +297,23 @@ public class BjnoteProvider extends ContentProvider{
         DebugUtils.logProvider(TAG, "update data for table " + table);
         int count = 0;
         switch(match) {
-	        case ACCOUNT:
-	    	case ACCOUNT_ID:
-			case HOME:
-			case HOME_ID:
-			case DEVICE:
-			case DEVICE_ID:
-			case SCAN_HISTORY:
-			case SCAN_HISTORY_ID:
-			case XINGHAO:
-			case XINGHAO_ID:
-			case YMESSAGE:
-			case YMESSAGE_ID:
-			case IM:
-			case IM_ID:
+//	        case ACCOUNT:
+//	    	case ACCOUNT_ID:
+//			case HOME:
+//			case HOME_ID:
+//			case DEVICE:
+//			case DEVICE_ID:
+//			case SCAN_HISTORY:
+//			case SCAN_HISTORY_ID:
+//			case XINGHAO:
+//			case XINGHAO_ID:
+//			case YMESSAGE:
+//			case YMESSAGE_ID:
+//			case IM_FRIEND:
+//			case IM_FRIEND_ID:
+//			case IM_QUN:
+//			case IM_QUN_ID:
+            default:
         	    count = db.update(table, values, buildSelection(match, uri, selection), selectionArgs);
         }
         if (count >0) notifyChange(match);
@@ -312,7 +329,8 @@ public class BjnoteProvider extends ContentProvider{
 			case SCAN_HISTORY_ID:
 			case XINGHAO_ID:
 			case YMESSAGE_ID:
-			case IM_ID:
+			case IM_FRIEND_ID:
+			case IM_QUN_ID:
 			try {
 				id = ContentUris.parseId(uri);
 			} catch(java.lang.NumberFormatException e) {

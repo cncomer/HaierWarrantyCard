@@ -174,10 +174,12 @@
             android:label="@string/title_baoxiucard_info" />
         
         <activity
-            android:name="com.bestjoy.app.haierwarrantycard.im.IMConversationActivity"
+            android:name="com.bestjoy.app.haierwarrantycard.im.ConversationListActivity"
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateHidden"
             android:label="@string/title_im_conversation" />
+        <service android:name="com.bestjoy.app.haierwarrantycard.service.IMService" />
         
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.HomeManagerActivity"

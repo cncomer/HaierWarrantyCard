@@ -143,6 +143,7 @@ public class AccountObject implements InfoInterface{
 //		values.put(HaierDBHelper.ACCOUNT_HOME_COUNT, mAccountHomes.size());
 		values.put(HaierDBHelper.DATE, new Date().getTime());
 		if (id > 0) {
+			values.put(HaierDBHelper.ACCOUNT_DEFAULT, 1);
 			int update = cr.update(BjnoteContent.Accounts.CONTENT_URI, values, WHERE_UID, new String[]{String.valueOf(mAccountUid)});
 			if (update > 0) {
 				DebugUtils.logD(TAG, "saveInDatebase update exsited uid#" + mAccountUid);

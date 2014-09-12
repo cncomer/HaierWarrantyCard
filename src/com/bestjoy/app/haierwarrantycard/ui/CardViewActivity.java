@@ -39,6 +39,7 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.BaoxiuCardObject;
 import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
+import com.bestjoy.app.haierwarrantycard.im.ConversationListActivity;
 import com.bestjoy.app.haierwarrantycard.im.IMConversationActivity;
 import com.bestjoy.app.haierwarrantycard.im.IMHelper;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
@@ -460,7 +461,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			}
 			break;
 		case R.id.button_im:
-			IMConversationActivity.startActivity(mContext, IMHelper.TARGET_TYPE_QUN, mBaoxiuCardObject.mXingHao);
+			ConversationListActivity.startActivity(mContext, IMHelper.TARGET_TYPE_P2P, "607421");//607421 42300
 			break;
 		case R.id.button_onekey_tel:
 			Intents.callPhone(mContext, mBaoxiuCardObject.mBXPhone);

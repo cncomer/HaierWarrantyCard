@@ -72,10 +72,17 @@ public class IMHelper {
 	public static final int INDEX_LOCAL_TIME = 8;
 	public static final int INDEX_STATUS = 9;
 	/**按照消息的服务器id升序排序*/
-	public static final String SORT_BY_MESSAGE_ID = HaierDBHelper.IM_SERVICE_ID + " asc";
+	public static final String SORT_BY_MESSAGE_ID = HaierDBHelper.ID + " asc";
 	
 //	public static final String UID_AND_TARGET_SELECTION = HaierDBHelper.IM_UID + "=? and " + HaierDBHelper.IM_TARGET_TYPE + "=? and " + HaierDBHelper.IM_TARGET + "=?";
-	public static final String UID_OR_TARGET_SELECTION = HaierDBHelper.IM_TARGET_TYPE + "=? and ((" + HaierDBHelper.IM_UID + "=? and " + HaierDBHelper.IM_TARGET + "=?) or (" + HaierDBHelper.IM_TARGET + "=? and " + HaierDBHelper.IM_UID + "=?))";
+	public static final String QUN_SELECTION = HaierDBHelper.IM_TARGET_TYPE + "=? and " + HaierDBHelper.IM_TARGET + "=?";
+	
+	public static final String FRIEND_SELECTION = HaierDBHelper.IM_UID + "=? and " + HaierDBHelper.IM_TARGET + "=?";
+	
+	public static final String SERVICEID_QUN_SELECTION = HaierDBHelper.IM_SERVICE_ID + "=? and " + QUN_SELECTION;
+	public static final String SERVICEID_FRIEND_SELECTION = HaierDBHelper.IM_SERVICE_ID + "=? and " + FRIEND_SELECTION;
+	
+	public static final String FRIEND_P2P_SELECTION = "(" + FRIEND_SELECTION + ") or (" + FRIEND_SELECTION + ")";
 	
 	public static  DateFormat SERVICE_DATE_TIME_FORMAT = new SimpleDateFormat("yyyyMMddHHmmss");
 	public static  DateFormat LOCAL_DATE_TIME_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -91,6 +98,7 @@ public class IMHelper {
 			jsonObject.put(EXTRA_TYPE, String.valueOf(TYPE_LOGIN));
 			jsonObject.put(EXTRA_UID, uid).put(EXTRA_PWD, pwd).put(EXTRA_UNAME, name);
 			jsonObject.put(EXTRA_DATA, "");
+			DebugUtils.logD(TAG, "createOrJoinConversation json=" + jsonObject.toString());
 			return jsonObject;
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -109,6 +117,7 @@ public class IMHelper {
 			jsonObject.put(EXTRA_TYPE, String.valueOf(TYPE_EXIT));
 			jsonObject.put(EXTRA_UID, uid).put(EXTRA_PWD, pwd).put(EXTRA_UNAME, name);
 			jsonObject.put(EXTRA_DATA, "");
+			DebugUtils.logD(TAG, "exitConversation json=" + jsonObject.toString());
 			return jsonObject;
 		} catch (JSONException e) {
 			e.printStackTrace();
@@ -141,8 +150,17 @@ public class IMHelper {
 		return jsonObject;
 	}
 	
+	public static Cursor getAllLocalQunMessage(ContentResolver cr, String uid, int targetType, String target) {
+		return cr.query(BjnoteContent.IM.CONTENT_URI_QUN, PROJECTION, QUN_SELECTION, new String[]{String.valueOf(targetType), target}, SORT_BY_MESSAGE_ID);
+	}
+	
 	public static Cursor getAllLocalMessage(ContentResolver cr, String uid, int targetType, String target) {
-		return cr.query(BjnoteContent.IM.CONTENT_URI, PROJECTION, UID_OR_TARGET_SELECTION, new String[]{String.valueOf(targetType), uid, target, target, uid}, SORT_BY_MESSAGE_ID);
+		if (targetType == IMHelper.TARGET_TYPE_QUN) {
+			return getAllLocalQunMessage(cr, uid, targetType, target);
+		} else if (targetType == IMHelper.TARGET_TYPE_P2P) {
+			return cr.query(BjnoteContent.IM.CONTENT_URI_FRIEND, PROJECTION, FRIEND_P2P_SELECTION, new String[]{String.valueOf(uid), target, target, String.valueOf(uid)}, SORT_BY_MESSAGE_ID);
+		}
+		return null;
 	}
 	
 	/**
@@ -205,9 +223,9 @@ public class IMHelper {
 				resultObject.mPwd = jsonObject.getString(IMHelper.EXTRA_PWD);
 				resultObject.mUName = jsonObject.getString(IMHelper.EXTRA_UNAME);
 				try {
-					resultObject.mJsonData = jsonObject.getJSONObject("Data");
+					resultObject.mJsonData = jsonObject.getJSONObject("data");
 				} catch (JSONException e) {
-					resultObject.mStrData = jsonObject.getString("Data");
+					resultObject.mStrData = jsonObject.getString("data");
 				}
 			} catch (JSONException e) {
 				e.printStackTrace();

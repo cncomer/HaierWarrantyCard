@@ -335,14 +335,16 @@ public class IMConversationActivity extends BaseActionbarActivity implements Vie
 						conversationItemObject.mUid = serviceResult.mUid;
 						conversationItemObject.mUName = serviceResult.mUName;
 						conversationItemObject.mPwd = serviceResult.mPwd;
+						
 						if (IMHelper.TYPE_MESSAGE == type) {
-							if (conversationItemObject.hasId()) {
+							if (conversationItemObject.mUid.equals(MyAccountManager.getInstance().getCurrentAccountUid())) {
 								//服务器返回了我们之前发送的信息，表明该条消息发送成功，我们更新本地信息的发送状态
 								conversationItemObject.mMessageStatus = 1;
-								conversationItemObject.saveInDatebase(mContentResolver, null);
+								conversationItemObject.updateInDatebase(mContentResolver, null);
 							}
 						} else if (IMHelper.TYPE_MESSAGE_FORWARD == type) {
 							//收到其他用户发来的消息，我们只要保存就好了
+							conversationItemObject.mId = -1;
 							conversationItemObject.saveInDatebase(mContentResolver, null);
 						}
 					}
