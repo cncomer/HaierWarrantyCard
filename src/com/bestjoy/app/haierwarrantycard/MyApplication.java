@@ -29,8 +29,6 @@ import com.bestjoy.app.haierwarrantycard.utils.VcfAsyncDownloadUtils;
 import com.bestjoy.app.haierwarrantycard.utils.YouMengMessageHelper;
 import com.shwy.bestjoy.contacts.AddrBookUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
-import com.shwy.bestjoy.utils.DateUtils;
-import com.shwy.bestjoy.utils.DeviceStorageUtils;
 import com.shwy.bestjoy.utils.DevicesUtils;
 import com.shwy.bestjoy.utils.SecurityUtils.SecurityKeyValuesObject;
 import com.umeng.analytics.MobclickAgent;
@@ -327,6 +325,10 @@ public class MyApplication extends Application{
     /**显示需要先新建家提示信息*/
 	public void showNeedHomeMessage() {
     	showMessage(R.string.msg_need_home_operation);
+    }
+	/**显示需要先登录提示信息*/
+	public void showNeedLoginMessage() {
+    	showMessage(R.string.msg_need_login_operation);
     }
     /**
      * 返回缓存的品牌型号文件，如果有外置SD卡，该文件会存在外置存储卡xxx/account/xxxx/xinghao目录下，否则在手机内部存储中xxx/files/

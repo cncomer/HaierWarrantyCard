@@ -314,6 +314,7 @@
          <string name="pinpai_tongshuai">统帅</string>
          <string name="msg_pinpai_haier_suppot_only">暂未开放</string>
          <string name="msg_need_home_operation">请先新建一个家</string>
+         <string name="msg_need_login_operation">请先登录</string>
          <string name="msg_no_bxphone">对不起，该保修卡没有设置售后服务电话</string>
          <string name="must_haier_confirm_yuyue">目前只有海尔产品才接受电子预约服务，是否直接拨打厂家电话？</string>
          <string name="none_select_tips">没有选择任何条目</string>
@@ -438,6 +439,17 @@
      
      <string name="button_commit">发送</string>
      <string name="title_im_conversation">会话</string>
+     <string name="title_business">海尔商圈</string>
      <string name="new_msg_comming">下面有新的消息</string>
      <string name="msg_sending">发送中....</string>
+     <string name="msg_offline_confirm">你现在处于离线中，是否重新连接通讯服务器</string>
+     <string name="msg_im_status_logining">正在连接..</string>
+     <string name="msg_im_status_offline">离线</string>
+     
+     <string name="msg_nonew_for_receive">数据已是最新</string>
+      <string name="msg_nomore_for_receive">服务器上没有更多数据了</string>
+      <string name="msg_network_error_for_receive">抱歉，暂时无法获取数据, 请检查网络或是稍后重试</string>
+      <string name="msg_refreshing_for_receive">正在更新数据</string>
+      <string name="msg_empty_list">(空)</string>
+      <string name="load_more_text">载入更多...</string>
 </resources>

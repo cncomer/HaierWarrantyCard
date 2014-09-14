@@ -17,6 +17,7 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.HomeObject;
 import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
+import com.bestjoy.app.haierwarrantycard.im.RelationshipActivity;
 import com.bestjoy.app.haierwarrantycard.ui.BrowserActivity;
 import com.bestjoy.app.haierwarrantycard.ui.MyChooseDevicesActivity;
 import com.bestjoy.app.haierwarrantycard.ui.NewCardActivity;
@@ -30,6 +31,7 @@ public class ModleSettings {
 		R.string.model_install,
 		R.string.model_repair,
 		R.string.model_feedback,
+		R.string.model_my_business,
 	};
 	
 	private static final int[] MODLE_ICON = new int[]{
@@ -37,6 +39,7 @@ public class ModleSettings {
 		R.drawable.model_install,
 		R.drawable.model_repair,
 		R.drawable.model_feedback,
+		R.drawable.model_my_business,
 	};
 	
 	private static final int[] MODLE_ID = new int[]{
@@ -44,6 +47,7 @@ public class ModleSettings {
 		R.id.model_install,
 		R.id.model_repair,
 		R.id.model_feedback,
+		R.id.model_my_business,
 	};
 	
 	public static void addModelsAdapter(Context context, ListView listView) {
@@ -119,6 +123,13 @@ public class ModleSettings {
 			case R.id.model_repair:
 				bundle = createMyRepairDefaultBundle(_context);
 				break;
+			case R.id.model_my_business:
+				if (MyAccountManager.getInstance().hasLoginned()) {
+					RelationshipActivity.startActivity(_context);
+				} else{
+					MyApplication.getInstance().showNeedLoginMessage();
+				}
+				return;
 			}
 			if (MyAccountManager.getInstance().hasLoginned()) {
 				//如果登陆了，我们先设置默认的家对象

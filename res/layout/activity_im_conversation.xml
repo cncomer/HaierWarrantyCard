@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+    <include layout="@layout/relationship_item"
+        android:background="@color/wt"/>
     <ListView android:id="@+id/listview"
         android:layout_width="fill_parent"
         android:layout_height="0dip"
@@ -10,6 +12,7 @@
         android:layout_marginLeft="10dip"
         android:layout_marginRight="10dip"
         android:scrollbars="none"
+        android:background="#ffeaeaea"
         android:cacheColorHint="#00000000" />
         
     <!-- 输入编辑框 -->

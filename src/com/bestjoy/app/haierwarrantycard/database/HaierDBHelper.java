@@ -12,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 10;
+  private static final int DB_VERSION = 11;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -157,6 +157,22 @@ private static final String TAG = "HaierDBHelper";
   public static final String IM_MESSAGE_STATUS = "message_status";
   //IM模块 end
   
+ //好友关系 begin
+  public static final String TABLE_ACCOUNT_RELATIONSHIP = "account_relationship";
+  public static final String RELATIONSHIP_TYPE = IM_TARGET_TYPE;
+  public static final String RELATIONSHIP_TARGET = IM_TARGET;
+  public static final String RELATIONSHIP_NAME = IM_UNAME;
+  public static final String RELATIONSHIP_UID = IM_UID;
+  /**对应于服务器上的id*/
+  public static final String RELATIONSHIP_SERVICE_ID = IM_SERVICE_ID;
+  /**消息对象，根据IM_TARGET_TYPE的值来区分对象*/
+  public static final String DATA1 = "data1";
+  public static final String DATA2 = "data2";
+  public static final String DATA3 = "data3";
+  public static final String DATA4 = "data4";
+  public static final String DATA5 = "data5";
+  //好友关系 end
+  
   public HaierDBHelper(Context context) {
     super(context, DB_NAME, null, DB_VERSION);
   }
@@ -216,6 +232,7 @@ private static final String TAG = "HaierDBHelper";
   		createYoumengMessageTable(sqLiteDatabase);
   		
   		createImMessageTable(sqLiteDatabase);
+  		createAccountRelationshipTable(sqLiteDatabase);
   		
   }
   
@@ -404,6 +421,25 @@ private static final String TAG = "HaierDBHelper";
 	            DATE + " TEXT);");
   }
   
+  private void createAccountRelationshipTable(SQLiteDatabase sqLiteDatabase) {
+	  sqLiteDatabase.execSQL(
+	            "CREATE TABLE " + TABLE_ACCOUNT_RELATIONSHIP + " (" +
+	            ID + " INTEGER PRIMARY KEY, " +
+	            RELATIONSHIP_TYPE + " INTEGER, " + 
+	            RELATIONSHIP_TARGET + " TEXT, " +
+	            RELATIONSHIP_NAME + " TEXT, " +
+	            RELATIONSHIP_UID + " TEXT, " +
+	            RELATIONSHIP_SERVICE_ID + " TEXT, " +
+	            DATA1 + " TEXT, " +
+	            DATA2 + " TEXT, " +
+	            DATA3 + " TEXT, " +
+	            DATA4 + " TEXT, " +
+	            DATA5 + " TEXT, " +
+	            DATE + " TEXT);");
+  }
+  
+  
+  
   private void addTextColumn(SQLiteDatabase sqLiteDatabase, String table, String column) {
 	    String alterForTitleSql = "ALTER TABLE " + table +" ADD " + column + " TEXT";
 		sqLiteDatabase.execSQL(alterForTitleSql);
@@ -416,7 +452,7 @@ private static final String TAG = "HaierDBHelper";
   @Override
   public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 	  DebugUtils.logD(TAG, "onUpgrade oldVersion " + oldVersion + " newVersion " + newVersion);
-	  if (oldVersion < 9 ) {
+	  if (oldVersion < 11 ) {
 			sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_ACCOUNTS);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_HOMES);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CARDS);
@@ -425,6 +461,7 @@ private static final String TAG = "HaierDBHelper";
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_YOUMENG_PUSHMESSAGE_HISTORY);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_IM_FRIEND_HISTORY);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_IM_QUN_HISTORY);
+		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_ACCOUNT_RELATIONSHIP);
 		    
 		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "insert_account");
 		    sqLiteDatabase.execSQL("DROP TRIGGER IF EXISTS " + "update_default_account");
@@ -441,10 +478,5 @@ private static final String TAG = "HaierDBHelper";
 		    onCreate(sqLiteDatabase);
 		    return;
 		} 
-	  
-	  if (oldVersion == 9) {
-		  createImMessageTable(sqLiteDatabase);
-		  oldVersion = 10;
-	  }
   }
 }

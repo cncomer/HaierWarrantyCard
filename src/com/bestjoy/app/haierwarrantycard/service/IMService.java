@@ -6,12 +6,13 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 
+import android.app.AlertDialog;
 import android.app.Service;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.wifi.WifiManager;
 import android.os.Binder;
@@ -20,8 +21,10 @@ import android.os.HandlerThread;
 import android.os.IBinder;
 import android.os.Message;
 import android.text.TextUtils;
+import android.view.WindowManager;
 
 import com.bestjoy.app.haierwarrantycard.MyApplication;
+import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.im.ConversationItemObject;
@@ -36,7 +39,7 @@ public class IMService extends Service{
 	private static final String ACTION_CONNECT_IM_SERVICE = "Action.connect";
 	private static final String ACTION_DISCONNECT_IM_SERVICE = "Action.disconnect";
 	//为了简单起见，所有的异常都直接往外抛  
-    private static final String HOST = "192.168.1.149";//"115.29.231.29";  //要连接的服务端IP地址  
+    private static final String HOST = "115.29.231.29";//"192.168.1.149";//"115.29.231.29";  //要连接的服务端IP地址  
     private static final int PORT = 1029;   //要连接的服务端对应的监听端口 
     private static final int BUFFER_LENGTH = 4 * 1024; //4k
     private CoversationReceiveServerThread mCoversationReceiveServerThread;
@@ -49,8 +52,12 @@ public class IMService extends Service{
 	public static final int WHAT_SEND_MESSAGE = 1001;
 	/**发送退出消息*/
 	public static final int WHAT_SEND_MESSAGE_EXIT = 1002;
+	/**收到用户已离线的消息*/
+	public static final int WHAT_SEND_MESSAGE_OFFLINE = 1003;
+	/**收到用户验证失败的消息*/
+	public static final int WHAT_SEND_MESSAGE_INVALID_USER = 1004;
 	/**30s*/
-	private static final int HEART_BEAT_DELAY_TIME = 30 * 1000;
+	private static final int HEART_BEAT_DELAY_TIME = 120 * 1000;
 	/**在会话结束前，我们需要等待，比如退出当前界面*/
 	private boolean mIsConnected = false;
 	/**会话中信息不会显示成Notification*/
@@ -58,35 +65,24 @@ public class IMService extends Service{
 	
 	private ContentResolver mContentResolver;
 	WifiManager.MulticastLock mMulticastLock;
+	private Handler mUiHandler;
 	
 	@Override
 	public void onCreate() {
 		super.onCreate();
 		DebugUtils.logD(TAG, "onCreate()");
 		mContentResolver = this.getContentResolver();
-//		mUiHandler = new Handler() {
-//			@Override
-//			public void handleMessage(Message msg) {
-//				super.handleMessage(msg);
-//				switch(msg.what){
-//				case WHAT_SEND_MESSAGE_LOGIN:
-//					mButtonCommit.setEnabled(mIsLogined);
-//					break;
-//				case WHAT_SEND_MESSAGE_EXIT:
-//					dismissDialog(DIALOG_PROGRESS);
-//					finish();
-//					break;
-//				case WHAT_REQUEST_REFRESH_LIST:
-//					mConversationAdapter.callSuperOnContentChanged();
-//					if (mIsAtListBottom) {
-//						mListView.setSelection(mConversationAdapter.getCount());
-//					} else {
-//						MyApplication.getInstance().showMessage(R.string.new_msg_comming);
-//					}
-//					break;
-//				}
-//			}
-//		};
+		mUiHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				super.handleMessage(msg);
+				switch(msg.what){
+				case WHAT_SEND_MESSAGE_OFFLINE:
+					showOfflineDialog((String)msg.obj);
+					break;
+				}
+			}
+		};
 		mWorkThread = new HandlerThread("IMServiceThread", android.os.Process.THREAD_PRIORITY_BACKGROUND);
 		mWorkThread.start();
 		mWorkHandler = new Handler(mWorkThread.getLooper()) {
@@ -96,6 +92,7 @@ public class IMService extends Service{
 				super.handleMessage(msg);
 				switch(msg.what) {
 				case WHAT_SEND_MESSAGE_LOGIN:
+					NotifyRegistrant.getInstance().notify(WHAT_SEND_MESSAGE_LOGIN);
 					//发送登录消息
 					try {
 						AccountObject accountObject = MyAccountManager.getInstance().getAccountObject();
@@ -310,6 +307,7 @@ public class IMService extends Service{
 						} else if (IMHelper.TYPE_MESSAGE_FORWARD == type) {
 							//收到其他用户发来的消息，我们只要保存就好了
 							conversationItemObject.mId = -1;
+							conversationItemObject.mMessageStatus = 1; //对于收到的信息发送状态总是已发送的
 							conversationItemObject.saveInDatebase(mContentResolver, null);
 						}
 						if (!mIsInConversationSession) {
@@ -318,13 +316,29 @@ public class IMService extends Service{
 					}
 					break;
 				}
+			} else if (serviceResult.mStatusCode == 2) {
+				int type = Integer.valueOf(serviceResult.mType);
+				switch(type){
+				case IMHelper.TYPE_LOGIN: //登录失败
+					mIsConnected = false;
+					mWorkHandler.removeMessages(WHAT_SEND_MESSAGE_LOGIN);
+					mUiHandler.sendEmptyMessage(WHAT_SEND_MESSAGE_OFFLINE);
+					NotifyRegistrant.getInstance().notify(WHAT_SEND_MESSAGE_OFFLINE);
+					return;
+				case IMHelper.TYPE_EXIT: //退出登录失败,目前暂时
+					mIsConnected = false;
+					NotifyRegistrant.getInstance().notify(WHAT_SEND_MESSAGE_EXIT);
+					break;
+				}
+				MyApplication.getInstance().showMessageAsync(serviceResult.mStatusMessage);
 			} else {
 				int type = Integer.valueOf(serviceResult.mType);
 				switch(type){
 				case IMHelper.TYPE_LOGIN: //登录失败
 					mIsConnected = false;
-					NotifyRegistrant.getInstance().notify(WHAT_SEND_MESSAGE_EXIT);
-					break;
+					mWorkHandler.removeMessages(WHAT_SEND_MESSAGE_LOGIN);
+					NotifyRegistrant.getInstance().notify(WHAT_SEND_MESSAGE_INVALID_USER);
+					return;
 				case IMHelper.TYPE_EXIT: //退出登录失败,目前暂时
 					mIsConnected = false;
 					NotifyRegistrant.getInstance().notify(WHAT_SEND_MESSAGE_EXIT);
@@ -333,6 +347,32 @@ public class IMService extends Service{
 				MyApplication.getInstance().showMessageAsync(serviceResult.mStatusMessage);
 			}
 		}
+	}
+	
+	public void showOfflineDialog(String title) {
+		AlertDialog dialog = new AlertDialog.Builder(this)
+		.setTitle(title)
+		.setMessage(R.string.msg_offline_confirm)
+		.create();
+		
+		dialog.getWindow().setType(WindowManager.LayoutParams.TYPE_SYSTEM_ALERT);
+		dialog.setButton(DialogInterface.BUTTON_POSITIVE, getString(R.string.menu_login),  new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				mWorkHandler.sendEmptyMessage(WHAT_SEND_MESSAGE_LOGIN);//立即登录一次
+				
+			}
+		});
+		dialog.setButton(DialogInterface.BUTTON_NEGATIVE, getString(R.string.button_cancel),  new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				
+			}
+		});
+		dialog.show();
+		
 	}
 	private class CoversationReceiveServerThread extends Thread {
 

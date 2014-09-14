@@ -25,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
@@ -39,8 +40,6 @@ public class ConversationListActivity extends BaseActionbarActivity implements V
 
 	private static final String TAG = "IMConversationActivity";
 	private static final int WHAT_REQUEST_REFRESH_LIST = 11000;
-	private int mCoversationTargetType = IMHelper.TARGET_TYPE_QUN;
-	private String mCoversationTarget = "";
 	private ListView mListView;
 	private EditText mInputEdit;
 	private Button mButtonCommit;
@@ -52,6 +51,7 @@ public class ConversationListActivity extends BaseActionbarActivity implements V
 	private ServiceConnection mServiceConnection;
 	
 	private ConversationAdapter mConversationAdapter;
+	private RelationshipObject mRelationshipObject;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -63,7 +63,7 @@ public class ConversationListActivity extends BaseActionbarActivity implements V
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder service) {
 				mImService = ((IMService.MyBinder)service).getService();
-				mButtonCommit.setEnabled(mImService.isConnected());
+				resetCommitButtonStatus();
 				NotifyRegistrant.getInstance().register(mUiHandler);
 			}
 
@@ -106,18 +106,22 @@ public class ConversationListActivity extends BaseActionbarActivity implements V
 		mInputEdit = (EditText) findViewById(R.id.input);
 		mButtonCommit = (Button) findViewById(R.id.button_commit);
 		mButtonCommit.setOnClickListener(this);
-		//当连接上IM服务器的时候设置为true
-		mButtonCommit.setEnabled(false);
 		mUiHandler = new Handler() {
 			@Override
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
 				switch(msg.what){
 				case IMService.WHAT_SEND_MESSAGE_LOGIN:
-					mButtonCommit.setEnabled(mImService.isConnected());
+					resetCommitButtonStatus();
+					break;
+				case IMService.WHAT_SEND_MESSAGE_OFFLINE:
+					mButtonCommit.setEnabled(false);
+					mButtonCommit.setText(R.string.msg_im_status_offline);
 					break;
 				case IMService.WHAT_SEND_MESSAGE_EXIT:
-					mButtonCommit.setEnabled(mImService.isConnected());
+				case IMService.WHAT_SEND_MESSAGE_INVALID_USER:
+					mButtonCommit.setEnabled(false);
+					mButtonCommit.setText(R.string.button_commit);
 					break;
 				case WHAT_REQUEST_REFRESH_LIST:
 					mConversationAdapter.callSuperOnContentChanged();
@@ -133,8 +137,35 @@ public class ConversationListActivity extends BaseActionbarActivity implements V
 		
 		loadLocalMessageAsync();
 		IMService.connectIMService(this);
+		
+		initTopInfo();
 	}
 	
+	 @Override
+     public boolean onCreateOptionsMenu(Menu menu) {
+		 return false;
+	 }
+	
+	private void initTopInfo() {
+		ViewHolder viewHolder = new ViewHolder();
+		((TextView) findViewById(R.id.name)).setText(mRelationshipObject.mTargetName);
+//		((TextView) findViewById(R.id.data1)).setText(mRelationshipObject.mLeiXin);
+//		((TextView) findViewById(R.id.data2)).setText(mRelationshipObject.mXingHao);
+//		((TextView) findViewById(R.id.data3)).setText(mRelationshipObject.mCell);
+//		((TextView) findViewById(R.id.data4)).setText(mRelationshipObject.mBuyDate);
+		
+	}
+	
+	private void resetCommitButtonStatus() {
+		if (mImService.isConnected()) {
+			mButtonCommit.setEnabled(true);
+			mButtonCommit.setText(R.string.button_commit);
+		} else {
+			mButtonCommit.setEnabled(false);
+			mButtonCommit.setText(R.string.msg_im_status_logining);
+		}
+		
+	}
 	
 	@Override
 	public void onDestroy() {
@@ -152,6 +183,10 @@ public class ConversationListActivity extends BaseActionbarActivity implements V
 				MyApplication.getInstance().showMessage(MyApplication.getInstance().getGernalNetworkError());
 				return;
 			}
+			if (!mImService.isConnected()) {
+				MyApplication.getInstance().showMessage(R.string.msg_im_status_logining);
+				return;
+			}
 			String text = mInputEdit.getText().toString().trim();
 			if (!TextUtils.isEmpty(text)) {
 				mInputEdit.getText().clear();
@@ -160,8 +195,8 @@ public class ConversationListActivity extends BaseActionbarActivity implements V
 				message.mUid = MyAccountManager.getInstance().getCurrentAccountUid();
 				message.mPwd = MyAccountManager.getInstance().getAccountObject().mAccountPwd;
 				message.mUName = MyAccountManager.getInstance().getAccountObject().mAccountName;
-				message.mTargetType = mCoversationTargetType;
-				message.mTarget = mCoversationTarget;
+				message.mTargetType = mRelationshipObject.mTargetType;
+				message.mTarget = mRelationshipObject.mTarget;
 				message.mMessage = text;
 				message.mMessageStatus = 0;
 				mImService.sendMessageAsync(message);
@@ -172,25 +207,21 @@ public class ConversationListActivity extends BaseActionbarActivity implements V
 	
 	@Override
 	protected boolean checkIntent(Intent intent) {
-		mCoversationTarget = intent.getStringExtra(IMHelper.EXTRA_TARGET);
-		mCoversationTargetType = intent.getIntExtra(IMHelper.EXTRA_TYPE, -1);
-		if (TextUtils.isEmpty(mCoversationTarget)) {
-			DebugUtils.logE(TAG, "checkIntent failed, you must supply IMHelper.EXTRA_TARGET");
-			return false;
-		}
-		if (mCoversationTargetType == -1) {
-			DebugUtils.logE(TAG, "checkIntent failed, you must supply IMHelper.EXTRA_TYPE");
+		mRelationshipObject = intent.getParcelableExtra("relationship");
+		if (mRelationshipObject == null) {
+			DebugUtils.logE(TAG, "checkIntent failed, you must supply RelationshipObject");
 			return false;
 		}
 		return true;
 	}
 	
-	public static void startActivity(Context context, int targetType, String target) {
+	public static void startActivity(Context context, RelationshipObject relationshipObject) {
 		Intent intent = new Intent(context, ConversationListActivity.class);
-		intent.putExtra(IMHelper.EXTRA_TARGET, target);
-		intent.putExtra(IMHelper.EXTRA_TYPE, targetType);
+		intent.putExtra("relationship", relationshipObject);
 		context.startActivity(intent);
 	}
+	
+	
 	
 	private class ConversationAdapter extends CursorAdapter{
 		private static final int TYPE_TOP = 0;
@@ -282,7 +313,7 @@ public class ConversationListActivity extends BaseActionbarActivity implements V
 
 		@Override
 		protected Cursor doInBackground(Void... params) {
-			return IMHelper.getAllLocalMessage(mContext.getContentResolver(), MyAccountManager.getInstance().getCurrentAccountUid(), mCoversationTargetType, mCoversationTarget);
+			return IMHelper.getAllLocalMessage(mContext.getContentResolver(), MyAccountManager.getInstance().getCurrentAccountUid(), mRelationshipObject.mTargetType, mRelationshipObject.mTarget);
 		}
 
 		@Override

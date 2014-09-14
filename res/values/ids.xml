@@ -4,7 +4,7 @@
     <item type="id" name="model_install" />
     <item type="id" name="model_repair" />
     <item type="id" name="model_feedback" />
-    
+    <item type="id" name="model_my_business" />
     
    <item type="id" name="auto_focus"/>
   <item type="id" name="decode"/>

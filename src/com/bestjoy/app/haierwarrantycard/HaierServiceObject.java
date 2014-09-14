@@ -324,4 +324,20 @@ public class HaierServiceObject {
 		  return sb.toString();
 	  }
 	  
+	  public static String buildPageQuery(String url, int pageIndex, int pageSize) {
+		  StringBuilder sb = new StringBuilder(url).append('&');
+		  sb.append("pageindex=").append(pageIndex).append('&');
+		  sb.append("pagesize=").append(pageSize);
+    	  return sb.toString();
+	  }
+	  /**
+	   * 获取suid的关系
+	   *  http://115.29.231.29/Haier/Start/GetServiceUserByUID.ashx?uid==682038&pwd=844605
+	   */
+	  public static String getRelationshipUrl(String uid, String pwd) {
+		  UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder(SERVICE_URL);
+		  sb.append("Start/GetServiceUserByUID.ashx?uid=").append(uid).append("&pwd=").append(pwd);
+		  return sb.toString();
+	  }
+	  
 }

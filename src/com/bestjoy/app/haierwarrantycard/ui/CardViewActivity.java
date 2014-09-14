@@ -291,8 +291,6 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			 }
 		 }
 		 
-		 
-		 findViewById(R.id.button_im).setOnClickListener(this);
 	}
 	
 	private void populateView() {
@@ -459,9 +457,6 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 				PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TOKEN, mFapiaoDownloadView, mBaoxiuCardObject.getFapiaoPhotoId(), null, PhotoManagerUtilsV2.TaskType.FaPiao, true);
 				//modify by chenkai, 20140701, 将发票地址存进数据库（不再拼接），增加海尔奖励延保时间 end 
 			}
-			break;
-		case R.id.button_im:
-			ConversationListActivity.startActivity(mContext, IMHelper.TARGET_TYPE_P2P, "607421");//607421 42300
 			break;
 		case R.id.button_onekey_tel:
 			Intents.callPhone(mContext, mBaoxiuCardObject.mBXPhone);
