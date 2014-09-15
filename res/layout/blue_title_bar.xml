@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cncom__title_layout"
+    android:layout_width="match_parent"
+    android:layout_height="48dip"
+    android:padding="4dip"
+    android:background="#ff165ec0"
+    android:orientation="horizontal" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:gravity="center_horizontal"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/cncom__title"
+            android:layout_width="260dip"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="测试ibiaoti"
+            android:textColor="@color/wt"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/cncom__subtitle"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:singleLine="true"
+            android:layout_width="260dip"
+            android:visibility="gone" />
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/cncom__up"
+        android:layout_width="36dip"
+        android:layout_height="fill_parent"
+        android:scaleType="center"
+        android:layout_centerVertical="true"
+        android:src="@drawable/home_up" />
+    <com.actionbarsherlock.internal.widget.IcsLinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true">
+	     <ImageView
+	        android:id="@+id/menu_other"
+	        android:layout_width="36dip"
+	        android:visibility="gone"
+	        android:layout_height="fill_parent"
+	        android:scaleType="center"
+	        android:src="@drawable/menu_more" />
+	      
+	       <ImageView
+	        android:id="@+id/menu_more"
+	        android:layout_width="36dip"
+	        android:layout_height="fill_parent"
+	        android:scaleType="center"
+	        android:src="@drawable/menu_more" />
+     </com.actionbarsherlock.internal.widget.IcsLinearLayout>
+
+</RelativeLayout>

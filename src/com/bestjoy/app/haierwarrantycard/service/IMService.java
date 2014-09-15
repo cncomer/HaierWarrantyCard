@@ -57,7 +57,7 @@ public class IMService extends Service{
 	/**收到用户验证失败的消息*/
 	public static final int WHAT_SEND_MESSAGE_INVALID_USER = 1004;
 	/**30s*/
-	private static final int HEART_BEAT_DELAY_TIME = 120 * 1000;
+	private static final int HEART_BEAT_DELAY_TIME = 30 * 1000;
 	/**在会话结束前，我们需要等待，比如退出当前界面*/
 	private boolean mIsConnected = false;
 	/**会话中信息不会显示成Notification*/
@@ -92,10 +92,14 @@ public class IMService extends Service{
 				super.handleMessage(msg);
 				switch(msg.what) {
 				case WHAT_SEND_MESSAGE_LOGIN:
+					AccountObject accountObject = MyAccountManager.getInstance().getAccountObject();
+					if (accountObject == null) {
+						DebugUtils.logD(TAG, "receiveMessageLocked ignore due to  accountObject == null");
+						return;
+					}
 					NotifyRegistrant.getInstance().notify(WHAT_SEND_MESSAGE_LOGIN);
 					//发送登录消息
 					try {
-						AccountObject accountObject = MyAccountManager.getInstance().getAccountObject();
 						sendMessageLocked(IMHelper.createOrJoinConversation(String.valueOf(accountObject.mAccountUid), accountObject.mAccountPwd, accountObject.mAccountName).toString().getBytes("UTF-8"));
 						//心跳检测
 				 		mWorkHandler.sendEmptyMessageDelayed(WHAT_SEND_MESSAGE_LOGIN, HEART_BEAT_DELAY_TIME);
@@ -277,6 +281,11 @@ public class IMService extends Service{
 	
 	private void receiveMessageLocked(String message) {
 		DebugUtils.logD(TAG, "receiveMessageLocked receive: " + message);
+		AccountObject accountObject = MyAccountManager.getInstance().getAccountObject();
+		if (accountObject == null) {
+			DebugUtils.logD(TAG, "receiveMessageLocked ignore due to  accountObject == null");
+			return;
+		}
 		if (!TextUtils.isEmpty(message)) {
 			IMHelper.ImServiceResultObject serviceResult = IMHelper.ImServiceResultObject.parse(message);
 			if (serviceResult.isOpSuccessfully()) {
@@ -388,7 +397,7 @@ public class IMService extends Service{
 		    	  if(mSocket == null){
 	  	  		    mSocket = new DatagramSocket(null);
 	  	  		    mSocket.setReuseAddress(true);
-	  	  		    mSocket.bind(new InetSocketAddress(8904));
+	  	  		    mSocket.bind(new InetSocketAddress(8905)); //8904
 		  	     }
 		    	 DebugUtils.logD(TAG, "准备接受UDP");
 				byte[] buffer = new byte[BUFFER_LENGTH];

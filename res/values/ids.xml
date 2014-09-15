@@ -4,8 +4,15 @@
     <item type="id" name="model_install" />
     <item type="id" name="model_repair" />
     <item type="id" name="model_feedback" />
+    <item type="id" name="model_my_messages" />
     <item type="id" name="model_my_business" />
+    <item type="id" name="model_my_community" />
+    <item type="id" name="model_my_store" />
+     <item type="id" name="model_scan" />
     
+    
+    
+    <item type="id" name="button_back"/>
    <item type="id" name="auto_focus"/>
   <item type="id" name="decode"/>
   <item type="id" name="decode_failed"/>
