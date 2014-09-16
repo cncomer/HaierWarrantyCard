@@ -1,62 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="70dip"
-    android:orientation="horizontal"
-    android:padding="8dip"
-    android:gravity="center_vertical"
-    android:weightSum="1" >
-    <TextView android:id="@+id/name"
+    android:layout_height="wrap_content"
+    android:paddingLeft="8dip"
+    android:paddingRight="8dip"
+    android:paddingBottom="8dip">
+    <TextView android:id="@+id/title"
         android:layout_height="wrap_content"
-        android:layout_width="0dip"
-        android:layout_weight="0.3"
-        android:text="name"
-        android:gravity="center"
+        android:layout_width="wrap_content"
+        android:text="服务工程师"
         android:textSize="20sp"
-        android:textColor="#ff165ec0" />
-    
-    <LinearLayout
-        android:layout_width="0dip"
-        android:layout_weight="0.33"
-        android:layout_marginLeft="4dip"
-        android:orientation="vertical"
-        android:layout_height="wrap_content" >
-        <TextView android:id="@+id/data1"
-	        android:layout_height="wrap_content"
-	        android:layout_width="fill_parent"
-	        android:text="name"
-	        android:drawablePadding="6dip"
-	        android:textSize="13sp"/>
-        
-        <TextView android:id="@+id/data2"
-	        android:layout_height="wrap_content"
-	        android:layout_width="fill_parent"
-	        android:layout_marginTop="6dip"
-	        android:text="name"
-	        android:drawablePadding="6dip"
-	        android:textSize="13sp" />
-    </LinearLayout>
-    
-    <LinearLayout
-        android:layout_width="0dip"
-        android:layout_weight="0.33"
+        android:layout_alignParentRight="true"
+        android:padding="6dip"
+        android:background="@color/light_blue"
+        android:textColor="@color/wt" />
+    <com.bestjoy.app.haierwarrantycard.view.AvatorImageView 
+        android:id="@+id/avator"
+        android:layout_height="67dip"
+        android:layout_width="67dip"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="8dip"
+        android:src="@drawable/ic_launcher"/>
+    <TextView android:id="@+id/name"
+        android:layout_alignTop="@+id/avator"
+        android:layout_toRightOf="@+id/avator"
         android:layout_marginLeft="6dip"
-        android:orientation="vertical"
-        android:layout_height="wrap_content" >
-        <TextView android:id="@+id/data3"
-	        android:layout_height="wrap_content"
-	        android:layout_width="fill_parent"
-	        android:text="name"
-	        android:drawablePadding="6dip"
-	        android:textSize="13sp" />
-        
-        <TextView android:id="@+id/data4"
-	        android:layout_height="wrap_content"
-	        android:layout_width="fill_parent"
-	        android:text="name"
-	        android:layout_marginTop="6dip"
-	        android:drawablePadding="6dip"
-	        android:textSize="13sp" />
-    </LinearLayout>
-
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="张三"
+        android:textSize="20sp"
+        android:textColor="@color/blk" />
+    <!-- 工作年限 -->
+     <TextView android:id="@+id/workexperience"
+        android:layout_alignBottom ="@+id/name"
+        android:layout_toRightOf="@+id/name"
+        android:layout_marginLeft="10dip"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="5年"
+        android:textColor="@color/blk" />
+     <!-- 店名 -->
+      <TextView android:id="@+id/storenametitle"
+        android:layout_toRightOf="@+id/avator"
+        android:layout_below="@+id/name"
+        android:layout_marginLeft="6dip"
+        android:layout_marginTop="6dip"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/title_store_name"
+        android:textColor="@color/blk" />
+      
+      <TextView android:id="@+id/storename"
+        android:layout_toRightOf="@+id/storenametitle"
+        android:layout_below="@+id/name"
+        android:layout_marginLeft="6dip"
+        android:layout_marginTop="6dip"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/title_store_name"
+        android:textColor="@color/blk" />
+      <!-- @string/title_store_name -->
+      <!-- 类别 -->
+      <TextView android:id="@+id/typenametitle"
+        android:layout_toRightOf="@+id/avator"
+        android:layout_below="@+id/storename"
+        android:layout_marginLeft="6dip"
+        android:layout_marginTop="6dip"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/title_type_name"
+        android:textColor="@color/blk" />
+      
+       <TextView android:id="@+id/typename"
+        android:layout_toRightOf="@+id/typenametitle"
+        android:layout_below="@+id/storename"
+        android:layout_marginLeft="6dip"
+        android:layout_marginTop="6dip"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/title_type_name"
+        android:textColor="@color/blk" />
+       
+       <!-- 地址 -->
+      <TextView android:id="@+id/workplacetitle"
+        android:layout_toRightOf="@+id/avator"
+        android:layout_below="@+id/typename"
+        android:layout_marginLeft="6dip"
+        android:layout_marginTop="6dip"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/title_workplace_name"
+        android:textColor="@color/blk" />
+      
+       <TextView android:id="@+id/workplace"
+        android:layout_toRightOf="@+id/workplacetitle"
+        android:layout_below="@+id/typename"
+        android:layout_marginLeft="6dip"
+        android:layout_marginTop="6dip"
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:text="@string/title_workplace_name"
+        android:textColor="@color/blk" />
+</RelativeLayout>

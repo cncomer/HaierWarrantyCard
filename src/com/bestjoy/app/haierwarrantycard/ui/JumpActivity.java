@@ -124,7 +124,7 @@ public class JumpActivity extends Activity {
 
 			@Override
 			public void run() {
-				MainActivity.startActivityForTop(mContext);
+				BlueStyleMainActivity.startActivityForTop(mContext);
 				finish();
 			}
 			

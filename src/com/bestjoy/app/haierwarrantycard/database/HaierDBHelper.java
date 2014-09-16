@@ -171,6 +171,9 @@ private static final String TAG = "HaierDBHelper";
   public static final String DATA3 = "data3";
   public static final String DATA4 = "data4";
   public static final String DATA5 = "data5";
+  public static final String DATA6 = "data6";
+  public static final String DATA7 = "data7";
+  public static final String DATA8 = "data8";
   //好友关系 end
   
   public HaierDBHelper(Context context) {
@@ -435,6 +438,9 @@ private static final String TAG = "HaierDBHelper";
 	            DATA3 + " TEXT, " +
 	            DATA4 + " TEXT, " +
 	            DATA5 + " TEXT, " +
+	            DATA6 + " TEXT, " +
+	            DATA7 + " TEXT, " +
+	            DATA8 + " TEXT, " +
 	            DATE + " TEXT);");
   }
   

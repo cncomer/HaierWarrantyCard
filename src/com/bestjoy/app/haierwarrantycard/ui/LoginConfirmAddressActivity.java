@@ -120,7 +120,7 @@ public class LoginConfirmAddressActivity extends BaseActionbarActivity implement
 			super.onPostExecute(result);
 			dismissDialog(DIALOG_PROGRESS);
 			MyApplication.getInstance().showMessage(R.string.msg_login_confirm_success, Toast.LENGTH_LONG);
-			MainActivity.startActivityForTop(mContext);
+			BlueStyleMainActivity.startActivityForTop(mContext);
 			finish();
 		}
 		

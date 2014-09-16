@@ -348,7 +348,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
-                        android:text="@string/model_repair"
+                        android:text="@string/model_feedback"
                         android:textColor="@color/wt"
                         android:textSize="16sp"
                         android:textStyle="bold" />

@@ -35,7 +35,7 @@ import com.shwy.bestjoy.utils.InfoInterface;
 import com.shwy.bestjoy.utils.NetworkUtils;
 import com.shwy.bestjoy.utils.PageInfo;
 
-public abstract class PullToRefreshListPageActivity extends BaseActionbarActivity implements AdapterView.OnItemClickListener{
+public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActivity implements AdapterView.OnItemClickListener{
 
 	private static final String TAG ="ExchangeBusinessCardPullToRefreshActivity";
 	protected ListView mListView;

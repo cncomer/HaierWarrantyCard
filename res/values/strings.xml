@@ -438,7 +438,7 @@
      <string name="msg_no_existed_photo_in_service">抱歉，服务器上是没有找到对应的图片</string>
      
      <string name="button_commit">发送</string>
-     <string name="title_im_conversation">会话</string>
+     <string name="title_im_conversation">星咨询</string>
      <string name="title_business">海尔商圈</string>
      <string name="new_msg_comming">下面有新的消息</string>
      <string name="msg_sending">发送中....</string>
@@ -452,4 +452,8 @@
       <string name="msg_refreshing_for_receive">正在更新数据</string>
       <string name="msg_empty_list">(空)</string>
       <string name="load_more_text">载入更多...</string>
+      
+      <string name="title_store_name">"店名:"</string>
+      <string name="title_type_name">"类别:"</string>
+      <string name="title_workplace_name">"地址:"</string>
 </resources>

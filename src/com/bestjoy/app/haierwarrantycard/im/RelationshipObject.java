@@ -15,6 +15,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject.HaierResultObject;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
@@ -27,20 +28,29 @@ import com.shwy.bestjoy.utils.PageInfo;
 public class RelationshipObject implements InfoInterface, Parcelable{
 	private static final String TAG = "RelationshipObject";
 
-	public String mUID, mTargetTitle, mTargetOrg, mTargetCell, mTarget, mTargetBrief, mTargetName, mTargetWorkplace, mRelationshipServiceId, mRelationshipId, mLocalDate;
+	public String mUID, mTargetTitle, mTargetOrg, mTargetCell, mTargetAvator, mTarget, mTargetBrief, mTargetName, mTargetWorkplace, mRelationshipServiceId, mRelationshipId, mLocalDate;
+	public String mXinghao, mLeiXin;
 	public int mTargetType = IMHelper.TARGET_TYPE_P2P;
 
+	/**
+	 * 是否有头像
+	 * @return
+	 */
+	public boolean hasAvator() {
+		return !TextUtils.isEmpty(mTargetAvator);
+	}
 	/**
 	 *{"StatusCode":"1",
 	 *"   StatusMessage":"登录成功",
 	 *"   Data":{"total":2,"rows":[
-	 *       {"brief":"", "sname":"","scell":"", "suid":"682040","userName":"123","LeiXin":"双桶洗衣机","XingHao":"XPB80-1186BS","cell":"18611986102","BuyDate":"20140902","id":"3","uid":"607421","title":"销售人员","org":"国美青岛分部.台东商城","workaddress":"山东省-青岛市-市北区-威海路街道-道口路"},
-	 *        {"brief":"", "sname":"","scell":"", "suid":"682038","userName":"123","LeiXin":"手机","XingHao":"A6","cell":"18611986102","BuyDate":"20140911","id":"1","uid":"607421","title":"销售人员","org":"(青岛市内字样)济南人民大润发商业有限公司","workaddress":"山东省-青岛市-市南区-广电大厦附近"}
+	 *       {"simg":"xxxxx", "brief":"", "sname":"","scell":"", "suid":"682040","userName":"123","LeiXin":"双桶洗衣机","XingHao":"XPB80-1186BS","cell":"18611986102","BuyDate":"20140902","id":"3","uid":"607421","title":"销售人员","org":"国美青岛分部.台东商城","workaddress":"山东省-青岛市-市北区-威海路街道-道口路"},
+	 *        {"simg":"xxxxx", "brief":"", "sname":"","scell":"", "suid":"682038","userName":"123","LeiXin":"手机","XingHao":"A6","cell":"18611986102","BuyDate":"20140911","id":"1","uid":"607421","title":"销售人员","org":"(青岛市内字样)济南人民大润发商业有限公司","workaddress":"山东省-青岛市-市南区-广电大厦附近"}
 	 *     ]}
 	 *     
 	 *     
 	 *     
 	 *     brief是简介，包含了服务年限
+	 *     simg是销售人员的头像地址，绝对路径
 	 * }
 	 */
 	public static List<RelationshipObject> parseList(InputStream is, PageInfo pageInfo) {
@@ -73,7 +83,11 @@ public class RelationshipObject implements InfoInterface, Parcelable{
 		relastionship.mTargetOrg = row.getString("org");
 		relastionship.mTargetBrief = row.getString("brief");
 		relastionship.mTargetCell = row.getString("scell");
+		relastionship.mTargetAvator = row.optString("simg", "");
 		relastionship.mTargetWorkplace = row.getString("workaddress");
+		
+		relastionship.mLeiXin = row.optString("LeiXin", "");
+		relastionship.mXinghao = row.getString("XingHao");
 		
 		relastionship.mRelationshipServiceId = row.getString("id");
 		
@@ -91,10 +105,14 @@ public class RelationshipObject implements InfoInterface, Parcelable{
 		object.mTargetCell = cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_CELL);
 		object.mTargetBrief = cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_BRIEF);
 		object.mTargetWorkplace = cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_WORKPLACE);
-		
+		object.mTargetAvator = cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_AVATOR);
 		object.mRelationshipServiceId = cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_SERVICE_ID);
 		object.mRelationshipId = cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_ID);
 		object.mLocalDate = cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_LOCAL_DATE);
+		
+		
+		object.mLeiXin = cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_LEIXING);
+		object.mXinghao = cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_XINGHAO);
 		
 		return object;
 	}
@@ -113,6 +131,11 @@ public class RelationshipObject implements InfoInterface, Parcelable{
 		values.put(HaierDBHelper.DATA3, mTargetWorkplace);
 		values.put(HaierDBHelper.DATA4, mTargetBrief);
 		values.put(HaierDBHelper.DATA5, mTargetCell);
+		values.put(HaierDBHelper.DATA6, mTargetAvator);
+		
+		values.put(HaierDBHelper.DATA7, mLeiXin);
+		values.put(HaierDBHelper.DATA8, mXinghao);
+		
 		values.put(HaierDBHelper.DATE, new Date().getTime());
 		String[] selectionArgs = new String[]{mRelationshipServiceId, mUID, mTarget};
 		//首先判断是不是存在数据
@@ -152,6 +175,9 @@ public class RelationshipObject implements InfoInterface, Parcelable{
 		mRelationshipId = in.readString();
 		mLocalDate = in.readString();
 		mTargetType = in.readInt();
+		mTargetAvator = in.readString();
+		mLeiXin = in.readString();
+		mXinghao= in.readString();
 	}
 	
 	public RelationshipObject(){};
@@ -176,6 +202,9 @@ public class RelationshipObject implements InfoInterface, Parcelable{
 		dest.writeString(mRelationshipId);
 		dest.writeString(mLocalDate);
 		dest.writeInt(mTargetType);
+		dest.writeString(mTargetAvator);
+		dest.writeString(mLeiXin);
+		dest.writeString(mXinghao);
 	}
 	
 	

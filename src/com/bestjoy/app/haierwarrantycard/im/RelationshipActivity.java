@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,7 @@ import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
+import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
 import com.bestjoy.app.haierwarrantycard.ui.PullToRefreshListPageActivity;
 import com.bestjoy.app.haierwarrantycard.utils.Query;
 import com.shwy.bestjoy.utils.AdapterWrapper;
@@ -30,7 +32,7 @@ import com.shwy.bestjoy.utils.InfoInterface;
 import com.shwy.bestjoy.utils.PageInfo;
 
 public class RelationshipActivity extends PullToRefreshListPageActivity{
-	
+	private static final String TAG = "RelationshipActivity";
 	private Handler mHandler;
 	private static final int WHAT_REFRESH_LIST = 1000;
 	private RelationshipAdapter mRelationshipAdapter;
@@ -41,6 +43,7 @@ public class RelationshipActivity extends PullToRefreshListPageActivity{
 		if (isFinishing()) {
 			return;
 		}
+		setShowHomeUp(true);
 		mHandler = new Handler() {
 
 			@Override
@@ -54,12 +57,16 @@ public class RelationshipActivity extends PullToRefreshListPageActivity{
 			}
 			
 		};
+		PhotoManagerUtilsV2.getInstance().requestToken(TAG);
 	}
 	
-	 @Override
-     public boolean onCreateOptionsMenu(Menu menu) {
-		 return false;
-	 }
+	
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		PhotoManagerUtilsV2.getInstance().releaseToken(TAG);
+	}
+	
 	@Override
 	protected AdapterWrapper<? extends BaseAdapter> getAdapterWrapper() {
 		mRelationshipAdapter = new RelationshipAdapter(mContext, null, true);
@@ -140,12 +147,13 @@ public class RelationshipActivity extends PullToRefreshListPageActivity{
 		public View newView(Context context, Cursor cursor, ViewGroup parent) {
 			View view = LayoutInflater.from(context).inflate(R.layout.relationship_item, parent, false);
 			ViewHolder viewHolder = new ViewHolder();
-			viewHolder._name = (TextView) view.findViewById(R.id.name);
 			
-			viewHolder._leixing = (TextView) view.findViewById(R.id.data1);
-			viewHolder._xinghao = (TextView) view.findViewById(R.id.data2);
-			viewHolder._tel = (TextView) view.findViewById(R.id.data3);
-			viewHolder._buydate = (TextView) view.findViewById(R.id.data4);
+			viewHolder._storeName = (TextView) view.findViewById(R.id.storename);
+			viewHolder._name = (TextView) view.findViewById(R.id.name);
+			viewHolder._title = (TextView) view.findViewById(R.id.title);
+			viewHolder._workExperience = (TextView) view.findViewById(R.id.workexperience);
+			viewHolder._workplace = (TextView) view.findViewById(R.id.workplace);
+			viewHolder._leixing = (TextView) view.findViewById(R.id.typename);
 			view.setTag(viewHolder);
 			return view;
 		}
@@ -155,16 +163,23 @@ public class RelationshipActivity extends PullToRefreshListPageActivity{
 			ViewHolder viewHolder = (ViewHolder) view.getTag();
 			viewHolder._relationshipObject = RelationshipObject.getFromCursor(cursor);
 			viewHolder._name.setText(cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_UNAME));
-//			viewHolder._leixing.setText(cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_LEIXING));
-//			viewHolder._xinghao.setText(cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_XINGHAO));
-			viewHolder._tel.setText(cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_CELL));
-//			viewHolder._buydate.setText(cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_BUYDATE));
+			viewHolder._storeName.setText(cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_ORG));
+			viewHolder._workplace.setText(cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_WORKPLACE));
+			String workExperience = cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_BRIEF);
+			if (!TextUtils.isEmpty(workExperience)) {
+				viewHolder._workExperience.setVisibility(View.VISIBLE);
+				viewHolder._workExperience.setText(workExperience);
+			} else {
+				viewHolder._workExperience.setVisibility(View.INVISIBLE);
+			}
+			
+			viewHolder._leixing.setText(cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_LEIXING));
 		}
 		
 	}
 	
 	private class ViewHolder {
-		private TextView _name, _tel, _leixing, _xinghao, _buydate;
+		private TextView _name, _leixing, _xinghao, _title, _workplace, _workExperience, _storeName;
 		private RelationshipObject _relationshipObject;
 	}
 	@Override

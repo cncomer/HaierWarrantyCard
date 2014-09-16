@@ -150,7 +150,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 					finish();
 					break;
 					default : //其他情况我们回到主界面，海尔要求
-						MainActivity.startActivityForTop(mContext);
+						BlueStyleMainActivity.startActivityForTop(mContext);
 						finish();
 						break;
 				}

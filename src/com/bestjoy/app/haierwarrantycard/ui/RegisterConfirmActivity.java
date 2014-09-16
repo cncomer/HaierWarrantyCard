@@ -271,7 +271,7 @@ public class RegisterConfirmActivity extends BaseActionbarActivity implements Vi
 					finish();
 					break;
 					default ://否则回到主界面
-						MainActivity.startActivityForTop(mContext);
+						BlueStyleMainActivity.startActivityForTop(mContext);
 				}
 			}
 		} else {

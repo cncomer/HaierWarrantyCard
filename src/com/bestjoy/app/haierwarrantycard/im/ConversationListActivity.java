@@ -31,14 +31,15 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.service.IMService;
 import com.bestjoy.app.haierwarrantycard.ui.BaseActionbarActivity;
+import com.bestjoy.app.haierwarrantycard.ui.BaseNoActionBarActivity;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.NotifyRegistrant;
 
-public class ConversationListActivity extends BaseActionbarActivity implements View.OnClickListener{
+public class ConversationListActivity extends BaseNoActionBarActivity implements View.OnClickListener{
 
-	private static final String TAG = "IMConversationActivity";
+	private static final String TAG = "ConversationListActivity";
 	private static final int WHAT_REQUEST_REFRESH_LIST = 11000;
 	private ListView mListView;
 	private EditText mInputEdit;
@@ -238,7 +239,7 @@ public class ConversationListActivity extends BaseActionbarActivity implements V
 		protected void onContentChanged() {
 			//一秒内延迟刷新，提高性能
 			mUiHandler.removeMessages(WHAT_REQUEST_REFRESH_LIST);
-			mUiHandler.sendEmptyMessageDelayed(WHAT_REQUEST_REFRESH_LIST, 1000);
+			mUiHandler.sendEmptyMessageDelayed(WHAT_REQUEST_REFRESH_LIST, 250);
 		}
 		
 		private void callSuperOnContentChanged() {

@@ -77,7 +77,12 @@
             android:configChanges="orientation|keyboardHidden"
             android:screenOrientation="portrait"
             android:label="@string/app_name" />
-        
+        <activity
+            android:name="com.bestjoy.app.haierwarrantycard.ui.BlueStyleMainActivity"
+            android:theme="@style/AppTheme.NoTitleBar"
+            android:configChanges="orientation|keyboardHidden"
+            android:screenOrientation="portrait"
+            android:label="@string/app_name" />
         <activity
             android:name="com.bestjoy.app.haierwarrantycard.ui.NewCardActivity"
             android:configChanges="orientation|keyboardHidden"
