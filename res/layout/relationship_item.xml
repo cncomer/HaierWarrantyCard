@@ -20,7 +20,7 @@
         android:layout_width="67dip"
         android:layout_alignParentTop="true"
         android:layout_marginTop="8dip"
-        android:src="@drawable/ic_launcher"/>
+        android:src="@drawable/baoxiuka_avator_default"/>
     <TextView android:id="@+id/name"
         android:layout_alignTop="@+id/avator"
         android:layout_toRightOf="@+id/avator"

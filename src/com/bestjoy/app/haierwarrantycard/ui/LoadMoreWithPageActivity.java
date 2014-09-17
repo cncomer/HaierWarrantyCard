@@ -2,6 +2,7 @@ package com.bestjoy.app.haierwarrantycard.ui;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.http.client.ClientProtocolException;
@@ -11,7 +12,6 @@ import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.text.format.DateUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AbsListView;
@@ -26,18 +26,15 @@ import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.utils.Query;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.shwy.bestjoy.utils.AdapterWrapper;
 import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
 import com.shwy.bestjoy.utils.NetworkUtils;
 import com.shwy.bestjoy.utils.PageInfo;
 
-public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActivity implements AdapterView.OnItemClickListener{
+public abstract class LoadMoreWithPageActivity extends BaseNoActionBarActivity implements AdapterView.OnItemClickListener{
 
-	private static final String TAG ="PullToRefreshListPageActivity";
+	private static final String TAG ="LoadMoreWithPageActivity";
 	protected ListView mListView;
 	protected TextView mEmptyView;
 	private Query mQuery;
@@ -45,17 +42,13 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 	private AdapterWrapper<? extends BaseAdapter> mAdapterWrapper;
 	private ContentResolver mContentResolver;
 	
-	private PullToRefreshListView mPullRefreshListView;
 	
 	private boolean mFirstinit= false;
 	private boolean mDestroyed = false;
-	private static final int DEFAULT_PAGEINDEX = 0;
-	private static final int PER_PAGE_SIZE = 10;
-	private int mCurrentPageIndex = DEFAULT_PAGEINDEX;
 	
-	private View mLoadMoreFootView;
+	private View mLoadMoreStatusView;
 	
-	private long mLastRefreshTime, mLastClickTitleTime;
+	private long mLastRefreshTime;
 	/**如果导航回该界面，从上次刷新以来已经10分钟了，那么自动开始刷新*/
 	private static final int MAX_REFRESH_TIME = 1000 * 60 * 10;
 	
@@ -67,7 +60,14 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 	
 	private boolean isNeedRequestAgain = true;
 	/**如果当前在列表底部了，当有新消息到来的时候我们需要自动滚定到最新的消息处，否则提示下面有新的消息*/
-	private boolean mIsAtListBottom = false;
+	protected boolean mIsAtListBottom = false;
+	protected boolean mIsAtListTop = false;
+	
+	public static final int LOAD_MORE_TOP = 1;
+	public static final int LOAD_MORE_BOTTOM = 2;
+	private int mLoadMorePosition = LOAD_MORE_BOTTOM;
+	
+	private List<OnScrollListener> mOnScrollListenerList = new ArrayList<OnScrollListener>();
 	
 	//子类必须实现的方法
 	/**提供一个CursorAdapter类的包装对象*/
@@ -82,8 +82,27 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 	protected abstract void onRefreshStart();
 	protected abstract void onRefreshEnd();
 	protected abstract int getContentLayout();
+	/***
+	 * 设置加载更多的位置，默认是底部，可以通过传值LOAD_MORE_TOP或者LOAD_MORE_BOTTOM来修改
+	 * @param loadMorePosition
+	 */
+	public void setLoadMorePosition(int loadMorePosition) {
+		mLoadMorePosition = loadMorePosition;
+	}
 	protected ListView getListView() {
 		return mListView;
+	}
+	
+	public void addOnScrollListenerList(OnScrollListener list) {
+		if (!mOnScrollListenerList.contains(list)) {
+			mOnScrollListenerList.add(list);
+		}
+	}
+	
+	public void removeOnScrollListenerList(OnScrollListener list) {
+		if (mOnScrollListenerList.contains(list)) {
+			mOnScrollListenerList.remove(list);
+		}
 	}
 	
 	@Override
@@ -98,9 +117,6 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 		
 		mContentResolver = getContentResolver();
 		
-		mPullRefreshListView = (PullToRefreshListView) findViewById(R.id.pull_refresh_list);
-		mPullRefreshListView.setMode(PullToRefreshBase.Mode.PULL_FROM_START);
-		
 		mEmptyView = (TextView) findViewById(android.R.id.empty);
 		
 		
@@ -113,68 +129,14 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 			mPageInfo = new PageInfo();
 		}
 		
-		// Set a listener to be invoked when the list should be refreshed.
-		mPullRefreshListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
-			@Override
-			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-				String label = DateUtils.formatDateTime(getApplicationContext(), System.currentTimeMillis(),
-						DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
-
-				// Update the LastUpdatedLabel
-				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
-				//重设为0，这样我们可以从头开始更新数据
-//				mCurrentPageIndex = DEFAULT_PAGEINDEX;
-				mPageInfo.reset();
-				isNeedRequestAgain = true;
-//				addFooterView();
-//				updateFooterView(false, null);
-				int count = mAdapterWrapper.getCount();
-				mPageInfo.computePageSize(count);
-				// Do work to refresh the list here.
-				new QueryServiceTask().execute();
-			}
-		});
-		
-		mPullRefreshListView.setScrollingWhileRefreshingEnabled(true);
-		
-		// Add an end-of-list listener
-//		mPullRefreshListView.setOnLastItemVisibleListener(new OnLastItemVisibleListener() {
-//
-//			@Override
-//			public void onLastItemVisible() {
-//				DebugUtils.logE(TAG, "End of List!");
-////				int pos = mListView.getLastVisiblePosition();
-////				View view = mListView.getChildAt(pos);
-////				int size = view.getMeasuredHeight() * (mListView.getCount() + 2);
-////				if (size >= mListView.getHeight()) {
-////					// Do work to refresh the list here.
-////					mLoadMoreFootView.setVisibility(View.VISIBLE);
-////					updateFooterView(true, null);
-////					new QueryServiceTask().execute();
-////				}
-//				if (!mIsUpdate && mIsAtListBottom) {
-////					mLoadMoreFootView.setVisibility(View.VISIBLE);
-////					addFooterView();
-//					DebugUtils.logExchangeBC(TAG, "we go to load more.");
-//					if (isNeedRequestAgain) {
-//						updateFooterView(true, null);
-//						new QueryServiceTask().execute();
-//					} else {
-//						DebugUtils.logExchangeBC(TAG, "isNeedRequestAgain is false, we not need to load more");
-//					}
-//				}
-//				
-//			}
-//		});
-		
-		mListView = mPullRefreshListView.getRefreshableView();
+		mListView = (ListView) findViewById(R.id.listview);
 		mAdapterWrapper = getAdapterWrapper();
 		mListView.setOnItemClickListener(this);
-		addFooterView();
-		updateFooterView(false, null);
+		addLoadMoreStatusView();
+		updateLoadMoreStatusView(false, null);
 		mListView.setAdapter(mAdapterWrapper.getAdapter());
 		mListView.setEmptyView(mEmptyView);
-		removeFooterView();
+		removeLoadMoreStatusView();
 		mContext = this;
 		mFirstinit = true;
 		
@@ -182,19 +144,22 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 
 			@Override
 			public void onScrollStateChanged(AbsListView view, int scrollState) {
-				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && mIsAtListBottom && !mIsUpdate) {
-					DebugUtils.logExchangeBC(TAG, "we go to load more.");
-					if (isNeedRequestAgain) {
-						updateFooterView(true, null);
-						new QueryServiceTask().execute();
-					} else {
-						DebugUtils.logExchangeBC(TAG, "isNeedRequestAgain is false, we not need to load more");
-					}
+				for(OnScrollListener list :mOnScrollListenerList) {
+					list.onScrollStateChanged(view, scrollState);
+				}
+				DebugUtils.logD(TAG, "onScrollStateChanged() needLoadMore()=" + needLoadMore() + ",  mIsUpdate=" + mIsUpdate + ", isNeedRequestAgain="+isNeedRequestAgain);
+				if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && needLoadMore() && !mIsUpdate && isNeedRequestAgain) {
+					DebugUtils.logD(TAG, "we go to load more.");
+					updateLoadMoreStatusView(true, null);
+					new QueryServiceTask().execute();
 				}
 			}
 
 			@Override
 			public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+				for(OnScrollListener list :mOnScrollListenerList) {
+					list.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
+				}
 				if (totalItemCount > 0) {
 					if (firstVisibleItem == 0 && firstVisibleItem + visibleItemCount == totalItemCount) {
 						mIsAtListBottom = true;
@@ -207,6 +172,7 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 				} else {
 					mIsAtListBottom = false;
 				}
+				mIsAtListTop = firstVisibleItem == 0;
 				
 			}
 			
@@ -216,10 +182,8 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 	@Override
 	public void onResume() {
 		super.onResume();
-		long resumTime = System.currentTimeMillis();
-		if (mFirstinit || resumTime - mLastRefreshTime > MAX_REFRESH_TIME) {
+		if (mFirstinit) {
 			//第一次进入的时候手动刷新一次
-			mPullRefreshListView.setRefreshing();
 			mPageInfo.reset();
 			int count = mAdapterWrapper.getCount();
 			mPageInfo.computePageSize(count);
@@ -241,26 +205,43 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 		if (mAdapterWrapper != null) mAdapterWrapper.releaseAdapter();
 	}
 	
-	private void addFooterView() {
-		if (mLoadMoreFootView != null) return; 
-		if (mLoadMoreFootView == null) {
-			mLoadMoreFootView = LayoutInflater.from(mContext).inflate(R.layout.load_more_footer, mListView, false);
-			mFooterViewProgressBar = (ProgressBar) mLoadMoreFootView.findViewById(R.id.load_more_progressBar);
-			mFooterViewStatusText = (TextView) mLoadMoreFootView.findViewById(R.id.load_more_text);
+	private void addLoadMoreStatusView() {
+		if (mLoadMoreStatusView != null) return; 
+		mLoadMoreStatusView = LayoutInflater.from(mContext).inflate(R.layout.load_more_footer, mListView, false);
+		mFooterViewProgressBar = (ProgressBar) mLoadMoreStatusView.findViewById(R.id.load_more_progressBar);
+		mFooterViewStatusText = (TextView) mLoadMoreStatusView.findViewById(R.id.load_more_text);
+		if (mLoadMorePosition == LOAD_MORE_BOTTOM) {
+			mListView.addFooterView(mLoadMoreStatusView, true, false);
+		} else if (mLoadMorePosition == LOAD_MORE_TOP) {
+			mListView.addHeaderView(mLoadMoreStatusView, true, false);
 		}
-		mListView.addFooterView(mLoadMoreFootView, true, false);
+		
 	}
 	
-	private void removeFooterView() {
-		if (mLoadMoreFootView != null) {
-			mListView.removeFooterView(mLoadMoreFootView);
-			mLoadMoreFootView = null;
+	private boolean needLoadMore() {
+		if (mLoadMorePosition == LOAD_MORE_TOP) {
+			return mIsAtListTop;
+		} else if (mLoadMorePosition == LOAD_MORE_BOTTOM) {
+			return mIsAtListBottom;
+		}
+		return false;
+	}
+	
+	private void removeLoadMoreStatusView() {
+		if (mLoadMoreStatusView != null) {
+			if (mLoadMorePosition == LOAD_MORE_BOTTOM) {
+				mListView.removeFooterView(mLoadMoreStatusView);
+			} else if (mLoadMorePosition == LOAD_MORE_TOP) {
+				mListView.removeHeaderView(mLoadMoreStatusView);
+			}
+			
+			mLoadMoreStatusView = null;
 		}
 	}
 	
-	private void updateFooterView(boolean loading, String status) {
-		if (mLoadMoreFootView == null) {
-			addFooterView();
+	private void updateLoadMoreStatusView(boolean loading, String status) {
+		if (mLoadMoreStatusView == null) {
+			addLoadMoreStatusView();
 		}
 		if (loading) {
 			mFooterViewProgressBar.setVisibility(View.VISIBLE);
@@ -371,7 +352,6 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 		protected void onPostExecute(Integer result) {
 			super.onPostExecute(result);
 			if (mDestroyed) return;
-//			showRefreshing(false);
 			if (result == -1){
 				MyApplication.getInstance().showMessage(R.string.msg_network_error_for_receive);
 			} else if (result == -2) {
@@ -380,13 +360,10 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 				MyApplication.getInstance().showMessage(R.string.msg_nomore_for_receive);
 			}
 			if (!isNeedRequestAgain) {
-				removeFooterView();
+				removeLoadMoreStatusView();
 				
 			}
 			mLastRefreshTime = System.currentTimeMillis();
-			// Call onRefreshComplete when the list has been refreshed.
-		    mPullRefreshListView.onRefreshComplete();
-//		    mLoadMoreFootView.setVisibility(View.GONE);
 		    mIsUpdate = false;
 		    onRefreshEnd();
 		}

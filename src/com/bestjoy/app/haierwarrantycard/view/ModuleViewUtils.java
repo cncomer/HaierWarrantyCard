@@ -75,7 +75,7 @@ public class ModuleViewUtils {
 				mContext.startActivity(scanIntent);
 				return;
 			case R.id.model_my_community:
-				break;
+				return;
 			case R.id.model_my_business: //Haier Eshop
 				if (MyAccountManager.getInstance().hasLoginned()) {
 					RelationshipActivity.startActivity(mContext);
@@ -87,7 +87,7 @@ public class ModuleViewUtils {
 				YMessageListActivity.startActivity(mContext);
 				return;
 			case R.id.model_my_store: //Haier Navigation
-				break;
+				return;
 			case R.id.model_feedback:
 				BrowserActivity.startActivity(mContext, "http://m.rrs.com/rrsm/track/verify.html", null);
 				return;

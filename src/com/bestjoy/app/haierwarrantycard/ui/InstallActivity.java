@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
-import com.iflytek.cloud.speech.SpeechRecognizer;
+import com.iflytek.cloud.SpeechRecognizer;
 import com.iflytek.cloud.ui.RecognizerDialog;
 
 public class InstallActivity extends BaseActionbarActivity {

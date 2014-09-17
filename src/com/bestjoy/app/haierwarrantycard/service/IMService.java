@@ -320,7 +320,7 @@ public class IMService extends Service{
 							conversationItemObject.saveInDatebase(mContentResolver, null);
 						}
 						if (!mIsInConversationSession) {
-							MyApplication.getInstance().showMessageAsync("Rec message " + conversationItemObject.mMessage);
+							//MyApplication.getInstance().showMessageAsync("Rec message " + conversationItemObject.mMessage);
 						}
 					}
 					break;

@@ -64,8 +64,9 @@ public abstract class BaseNoActionBarActivity extends SherlockFragmentActivity i
 			return;
 		}
 		mContext = this;
+		initTitleBar();
+		invalidateOptionsMenu();
 		setShowHomeUp(false);
-		initActionMenu(null);
 		
 	}
 	//add by chenkai, 兼容ActionBar和自定义的居中TitleBar on
@@ -334,6 +335,17 @@ public abstract class BaseNoActionBarActivity extends SherlockFragmentActivity i
     	 }
      };
 
+     public void invalidateOptionsMenu() {
+    	 super.invalidateOptionsMenu();
+    	 if (mMenu == null) {
+    		 mMenu = new MenuBuilder(mContext);
+    		 mMenu.setCallback(this);
+    		 onCreateOptionsMenu(mMenu);
+    	 }
+    	 onPrepareOptionsMenu(mMenu);
+    	 invalidateActionMenu();
+     }
+
     protected MenuBuilder mMenu;
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -356,26 +368,12 @@ public abstract class BaseNoActionBarActivity extends SherlockFragmentActivity i
 		// TODO Auto-generated method stub
 		
 	}
-	/**
-	 * 如果不想显示ActionMenu，传进null.
-	 * @param menu
-	 */
-	public void initActionMenu(Menu menu) {
-		if (menu != null) {
-			mMenu = (MenuBuilder) menu;
-			mMenu.setCallback(this);
-			invalidateActionMenu();
-		} else {
-			mActionMenuLayout.removeAllViews();
-		}
-		
-	}
 	
 	public Menu getActionMenu() {
 		return mMenu;
 	}
 	
-	public void invalidateActionMenu() {
+	private void invalidateActionMenu() {
 		mActionMenuLayout.removeAllViews();
 		int len = mMenu.size();
 		MenuItem item = null;
@@ -405,6 +403,14 @@ public abstract class BaseNoActionBarActivity extends SherlockFragmentActivity i
 	}
 	public boolean onSubMenuSelected(View view, SubMenuBuilder subMenu) {
         if (!subMenu.hasVisibleItems()) return false;
+//        final int count = subMenu.size();
+//        for (int i = 0; i < count; i++) {
+//            MenuItem childItem = subMenu.getItem(i);
+//            if (!childItem.isVisible()) {
+//            	subMenu.removeItemAt(i);
+//                break;
+//            }
+//        }
 
         mOpenSubMenuId = subMenu.getItem().getItemId();
         mActionButtonPopup = new ActionButtonSubmenu(mContext, subMenu);
@@ -462,19 +468,7 @@ public abstract class BaseNoActionBarActivity extends SherlockFragmentActivity i
 	                // Give a reasonable anchor to nested submenus.
 	                setAnchorView(mOverflowButton == null ? (View) mActionMenuLayout : mOverflowButton);
 	            }
-
-
 	            setCallback(mPopupPresenterCallback);
-	            boolean preserveIconSpacing = false;
-	            final int count = subMenu.size();
-	            for (int i = 0; i < count; i++) {
-	                MenuItem childItem = subMenu.getItem(i);
-	                if (childItem.isVisible() && childItem.getIcon() != null) {
-	                    preserveIconSpacing = true;
-	                    break;
-	                }
-	            }
-	            setForceShowIcon(preserveIconSpacing);
 	        }
 
 	        @Override

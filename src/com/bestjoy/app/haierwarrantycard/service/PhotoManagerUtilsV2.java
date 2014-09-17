@@ -639,8 +639,19 @@ public class PhotoManagerUtilsV2 {
 			return MyApplication.getInstance().getCachedPreviewAvatorFile(photoId);
 		case PREVIEW:
 			return MyApplication.getInstance().getCachedPreviewAvatorFile(photoId);
+		case IM_AVATOR_PREVIEW:
+			int end = photoId.lastIndexOf("/");
+			if (end > 0) {
+				photoId = photoId.substring(end+1);
+				end = photoId.lastIndexOf(".");
+				if (end > 0) {
+					photoId = photoId.substring(0, end);
+				}
+			}
+			return MyApplication.getInstance().getCachedPreviewAvatorFile(photoId);
+			default:
+				return null;
 		}
-		return null;
 	}
 	
 	public static String getServiceUrl(TaskType type, String photoId) {
@@ -653,6 +664,8 @@ public class PhotoManagerUtilsV2 {
 			return HaierServiceObject.getBaoxiucardFapiao(photoId);
 		case Baoxiucard_Salesman_Avator:
 			return HaierServiceObject.getBaoxiucardSalesmanAvatorPreview(photoId);
+		case IM_AVATOR_PREVIEW:
+			return photoId;
 		}
 		return null;
 	}
@@ -790,6 +803,7 @@ public class PhotoManagerUtilsV2 {
 		PREVIEW("PreviewVcfType"),
 		FaPiao("FaPiao"),
 		HOME_DEVICE_AVATOR("HomeDeviceAvatorType"),  //设备avator
+		IM_AVATOR_PREVIEW("IM_AVATOR_PREVIEW_TYPE"),
 		Baoxiucard_Salesman_Avator("Baoxiucard_Salesman_Avator");
 		private String mTypeName;
 		TaskType(String typeName) {

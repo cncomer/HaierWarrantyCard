@@ -1,16 +1,24 @@
 package com.bestjoy.app.haierwarrantycard.ui;
 
+import java.io.File;
+
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 
-import com.actionbarsherlock.internal.view.menu.MenuBuilder;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
+import com.bestjoy.app.haierwarrantycard.service.IMService;
 import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
 import com.bestjoy.app.haierwarrantycard.view.ModuleViewUtils;
+import com.shwy.bestjoy.utils.AsyncTaskUtils;
+import com.shwy.bestjoy.utils.FilesUtils;
 
 public class BlueStyleMainActivity extends BaseNoActionBarActivity{
 	
@@ -21,40 +29,102 @@ public class BlueStyleMainActivity extends BaseNoActionBarActivity{
 		setContentView(R.layout.activity_main_blue_style);
 		ModuleViewUtils.getInstance().setContext(mContext);
 		ModuleViewUtils.getInstance().initModules(this);
-		initActionMenu();
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		onPrepareOptionsMenu(getActionMenu());
-		invalidateActionMenu();
-	}
-	
-	private void initActionMenu() {
-		MenuBuilder menu = new MenuBuilder(this);
-		MenuHandlerUtils.onCreateOptionsMenu(menu);
-        initActionMenu(menu);
+		invalidateOptionsMenu();
 	}
 	
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
+		MenuHandlerUtils.onCreateOptionsMenu(menu); 
         return super.onCreateOptionsMenu(menu);
     }
 	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		menu.findItem(R.string.menu_exit).setVisible(MyAccountManager.getInstance().hasLoginned());
-		 menu.findItem(R.string.menu_refresh).setVisible(MyAccountManager.getInstance().hasLoginned());
+		MenuItem item = menu.findItem(R.string.menu_exit);
+		if (item != null) {
+			item.setVisible(MyAccountManager.getInstance().hasLoginned());
+		}
+		item = menu.findItem(R.string.menu_refresh);
+		if (item != null) {
+			item.setVisible(MyAccountManager.getInstance().hasLoginned());
+		}
 		return super.onPrepareOptionsMenu(menu);
 	}
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		if (!MenuHandlerUtils.onOptionsItemSelected(item, mContext)) {
-			super.onOptionsItemSelected(item);
+			switch(item.getItemId()){
+			case R.string.menu_exit:
+				 new AlertDialog.Builder(mContext)
+					.setMessage(R.string.msg_existing_system_confirm)
+					.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							deleteAccountAsync();
+						}
+					})
+					.setNegativeButton(android.R.string.cancel, null)
+					.show();
+				 return true;
+			 case R.string.menu_refresh:
+				 if (MyAccountManager.getInstance().hasLoginned()) {
+					 //做一次登陆操作
+					 //目前只删除本地的所有缓存文件
+					 File dir = MyApplication.getInstance().getCachedXinghaoInternalRoot();
+					 FilesUtils.deleteFile("Updating ", dir);
+					 
+					 dir = MyApplication.getInstance().getCachedXinghaoExternalRoot();
+					 if (dir != null) {
+						 FilesUtils.deleteFile("Updating ", dir);
+					 }
+				 }
+				 break;
+			}
 		}
 		return true;
 	}
+	
+	private DeleteAccountTask mDeleteAccountTask;
+	 private void deleteAccountAsync() {
+		 AsyncTaskUtils.cancelTask(mDeleteAccountTask);
+		 showDialog(DIALOG_PROGRESS);
+		 mDeleteAccountTask = new DeleteAccountTask();
+		 mDeleteAccountTask.execute();
+	 }
+	 private class DeleteAccountTask extends AsyncTask<Void, Void, Void> {
+
+		@Override
+		protected Void doInBackground(Void... params) {
+			IMService.disconnectIMService(mContext, MyAccountManager.getInstance().getAccountObject());
+			MyAccountManager.getInstance().deleteDefaultAccount();
+			MyAccountManager.getInstance().saveLastUsrTel("");
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Void result) {
+			super.onPostExecute(result);
+			dismissDialog(DIALOG_PROGRESS);
+			invalidateOptionsMenu();
+			MyApplication.getInstance().showMessage(R.string.msg_op_successed);
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			invalidateOptionsMenu();
+			dismissDialog(DIALOG_PROGRESS);
+		}
+		
+		
+		 
+	 }
 	
 	
 

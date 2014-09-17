@@ -19,14 +19,15 @@ import android.widget.BaseAdapter;
 import android.widget.CursorAdapter;
 import android.widget.TextView;
 
-import com.actionbarsherlock.view.Menu;
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2;
+import com.bestjoy.app.haierwarrantycard.service.PhotoManagerUtilsV2.TaskType;
 import com.bestjoy.app.haierwarrantycard.ui.PullToRefreshListPageActivity;
 import com.bestjoy.app.haierwarrantycard.utils.Query;
+import com.bestjoy.app.haierwarrantycard.view.AvatorImageView;
 import com.shwy.bestjoy.utils.AdapterWrapper;
 import com.shwy.bestjoy.utils.InfoInterface;
 import com.shwy.bestjoy.utils.PageInfo;
@@ -154,6 +155,7 @@ public class RelationshipActivity extends PullToRefreshListPageActivity{
 			viewHolder._workExperience = (TextView) view.findViewById(R.id.workexperience);
 			viewHolder._workplace = (TextView) view.findViewById(R.id.workplace);
 			viewHolder._leixing = (TextView) view.findViewById(R.id.typename);
+			viewHolder._avator = (AvatorImageView) view.findViewById(R.id.avator);
 			view.setTag(viewHolder);
 			return view;
 		}
@@ -174,12 +176,18 @@ public class RelationshipActivity extends PullToRefreshListPageActivity{
 			}
 			
 			viewHolder._leixing.setText(cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_LEIXING));
+			viewHolder._title.setText(cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_TITLE));
+			
+			if (viewHolder._relationshipObject.hasAvator()) {
+				PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TAG, viewHolder._avator, viewHolder._relationshipObject.mTargetAvator, null, TaskType.IM_AVATOR_PREVIEW);
+			}
 		}
 		
 	}
 	
 	private class ViewHolder {
 		private TextView _name, _leixing, _xinghao, _title, _workplace, _workExperience, _storeName;
+		private AvatorImageView _avator;
 		private RelationshipObject _relationshipObject;
 	}
 	@Override

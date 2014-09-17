@@ -1,5 +1,7 @@
 package com.bestjoy.app.haierwarrantycard.view;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.os.Parcelable;
@@ -213,17 +215,25 @@ View.OnKeyListener, ViewTreeObserver.OnGlobalLayoutListener, PopupWindow.OnDismi
     
     private class MenuAdapter extends BaseAdapter {
         private MenuBuilder mAdapterMenu;
+        private ArrayList<MenuItem> mMenuItems;
 
         public MenuAdapter(MenuBuilder menu) {
             mAdapterMenu = menu;
+            mMenuItems = new ArrayList<MenuItem>();
+            final int itemsSize = menu.size();
+            MenuItem item;
+            for (int i = 0; i < itemsSize; i++) {
+                item = menu.getItem(i);
+                if (item.isVisible()) mMenuItems.add(item);
+            }
         }
 
         public int getCount() {
-            return mAdapterMenu != null ? mAdapterMenu.size() : 0;
+            return mMenuItems.size();
         }
 
         public MenuItem getItem(int position) {
-            return mAdapterMenu.getItem(position);
+            return mMenuItems.get(position);
         }
 
         public long getItemId(int position) {

@@ -339,5 +339,21 @@ public class HaierServiceObject {
 		  sb.append("Start/GetServiceUserByUID.ashx?uid=").append(uid).append("&pwd=").append(pwd);
 		  return sb.toString();
 	  }
+	  /**
+	   * http://115.29.231.29/Haier/Start/GetMessageByUIDByTID.ashx?UID=607421&TID=42300&type=p2p
+	   * @param uid
+	   * @param target
+	   * @return
+	   */
+	  public static String getMessagesUrlByUidByTid(String uid, String target, String targetType) {
+		  UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder(SERVICE_URL);
+		  sb.append("Start/GetMessageByUIDByTID.ashx?uid=").append(uid).append("&TID=").append(target).append("&type=").append(targetType);
+		  return sb.toString();
+	  }
+	  public static String getMessagesUrlByUidByTid(String uid, String target, int targetType) {
+		  UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder(SERVICE_URL);
+		  sb.append("Start/GetMessageByUIDByTID.ashx?uid=").append(uid).append("&TID=").append(target).append("&type=").append(targetType);
+		  return sb.toString();
+	  }
 	  
 }
