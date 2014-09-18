@@ -8,9 +8,12 @@ import java.util.List;
 import org.apache.http.client.ClientProtocolException;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,6 +34,8 @@ import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
 import com.shwy.bestjoy.utils.NetworkUtils;
 import com.shwy.bestjoy.utils.PageInfo;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 public abstract class LoadMoreWithPageActivity extends BaseNoActionBarActivity implements AdapterView.OnItemClickListener{
 
@@ -68,6 +73,7 @@ public abstract class LoadMoreWithPageActivity extends BaseNoActionBarActivity i
 	private int mLoadMorePosition = LOAD_MORE_BOTTOM;
 	
 	private List<OnScrollListener> mOnScrollListenerList = new ArrayList<OnScrollListener>();
+	private WakeLock mWakeLock;
 	
 	//子类必须实现的方法
 	/**提供一个CursorAdapter类的包装对象*/
@@ -79,8 +85,8 @@ public abstract class LoadMoreWithPageActivity extends BaseNoActionBarActivity i
 	protected abstract int savedIntoDatabase(ContentResolver contentResolver, List<? extends InfoInterface> infoObjects);
 	protected abstract List<? extends InfoInterface> getServiceInfoList(InputStream is, PageInfo pageInfo);
 	protected abstract Query getQuery();
-	protected abstract void onRefreshStart();
-	protected abstract void onRefreshEnd();
+	protected abstract void onLoadMoreStart();
+	protected abstract void onLoadMoreEnd();
 	protected abstract int getContentLayout();
 	/***
 	 * 设置加载更多的位置，默认是底部，可以通过传值LOAD_MORE_TOP或者LOAD_MORE_BOTTOM来修改
@@ -178,10 +184,18 @@ public abstract class LoadMoreWithPageActivity extends BaseNoActionBarActivity i
 			
 		});
 		
+		PushAgent.getInstance(mContext).onAppStart();
+		PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+		mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+		
 	}
 	@Override
 	public void onResume() {
 		super.onResume();
+		MobclickAgent.onResume(this);
+		if (!mWakeLock.isHeld()) {
+			mWakeLock.acquire();
+		}
 		if (mFirstinit) {
 			//第一次进入的时候手动刷新一次
 			mPageInfo.reset();
@@ -193,8 +207,17 @@ public abstract class LoadMoreWithPageActivity extends BaseNoActionBarActivity i
 	}
 	
 	@Override
+	public void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
+	}
+	
+	@Override
 	public void onStop() {
 		super.onStop();
+		if (mWakeLock.isHeld()) {
+			mWakeLock.release();
+		}
 		
 	}
 	
@@ -265,10 +288,7 @@ public abstract class LoadMoreWithPageActivity extends BaseNoActionBarActivity i
 			mIsUpdate = true;
 			int insertOrUpdateCount = 0;
 			try {
-				if (mPageInfo.mPageIndex == PageInfo.DEFAULT_PAGEINDEX) {
-					//开始刷新
-					onRefreshStart();
-				}
+				onLoadMoreStart();
 				if (mFirstinit) {
 					mFirstinit = false;
 					DebugUtils.logD(TAG, "first load local data....");
@@ -365,7 +385,7 @@ public abstract class LoadMoreWithPageActivity extends BaseNoActionBarActivity i
 			}
 			mLastRefreshTime = System.currentTimeMillis();
 		    mIsUpdate = false;
-		    onRefreshEnd();
+		    onLoadMoreEnd();
 		}
 	}
 	

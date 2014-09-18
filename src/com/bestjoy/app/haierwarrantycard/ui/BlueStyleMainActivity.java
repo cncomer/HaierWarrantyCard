@@ -14,6 +14,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
+import com.bestjoy.app.haierwarrantycard.im.IMHelper;
 import com.bestjoy.app.haierwarrantycard.service.IMService;
 import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
 import com.bestjoy.app.haierwarrantycard.view.ModuleViewUtils;
@@ -50,6 +51,11 @@ public class BlueStyleMainActivity extends BaseNoActionBarActivity{
 			item.setVisible(MyAccountManager.getInstance().hasLoginned());
 		}
 		item = menu.findItem(R.string.menu_refresh);
+		if (item != null) {
+			item.setVisible(MyAccountManager.getInstance().hasLoginned());
+		}
+		
+		item = menu.findItem(R.string.menu_setting);
 		if (item != null) {
 			item.setVisible(MyAccountManager.getInstance().hasLoginned());
 		}
@@ -102,8 +108,11 @@ public class BlueStyleMainActivity extends BaseNoActionBarActivity{
 		@Override
 		protected Void doInBackground(Void... params) {
 			IMService.disconnectIMService(mContext, MyAccountManager.getInstance().getAccountObject());
+			//删除所有的账户相关的即时通信信息
+			IMHelper.deleteAllMessages(getContentResolver(), MyAccountManager.getInstance().getCurrentAccountId());
 			MyAccountManager.getInstance().deleteDefaultAccount();
 			MyAccountManager.getInstance().saveLastUsrTel("");
+			
 			return null;
 		}
 

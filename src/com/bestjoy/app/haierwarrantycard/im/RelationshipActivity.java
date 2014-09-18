@@ -20,6 +20,7 @@ import android.widget.CursorAdapter;
 import android.widget.TextView;
 
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
+import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
@@ -34,9 +35,11 @@ import com.shwy.bestjoy.utils.PageInfo;
 
 public class RelationshipActivity extends PullToRefreshListPageActivity{
 	private static final String TAG = "RelationshipActivity";
+	private static final String FIRST = "RelationshipActivity.FIRST";
 	private Handler mHandler;
 	private static final int WHAT_REFRESH_LIST = 1000;
 	private RelationshipAdapter mRelationshipAdapter;
+	private boolean mIsRefresh = false;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -59,6 +62,14 @@ public class RelationshipActivity extends PullToRefreshListPageActivity{
 			
 		};
 		PhotoManagerUtilsV2.getInstance().requestToken(TAG);
+	}
+	@Override
+	protected boolean isNeedForceRefreshOnResume() {
+		boolean first = MyApplication.getInstance().isFirstLaunch(FIRST, true);
+		if (first) {
+			MyApplication.getInstance().setFirstLaunch(FIRST, false);
+		}
+		return first;
 	}
 	
 	
@@ -135,6 +146,9 @@ public class RelationshipActivity extends PullToRefreshListPageActivity{
 
 		@Override
 		protected void onContentChanged() {
+			if (mIsRefresh) {
+				return;
+			}
 			mHandler.removeMessages(WHAT_REFRESH_LIST);
 			mHandler.sendEmptyMessageDelayed(WHAT_REFRESH_LIST, 500);
 		}
@@ -192,11 +206,12 @@ public class RelationshipActivity extends PullToRefreshListPageActivity{
 	}
 	@Override
 	protected void onRefreshStart() {
+		mIsRefresh = true;
 		BjnoteContent.RELATIONSHIP.delete(getContentResolver(), BjnoteContent.RELATIONSHIP.CONTENT_URI, BjnoteContent.RELATIONSHIP.UID_SELECTION, new String[]{MyAccountManager.getInstance().getCurrentAccountUid()});
 	}
 	@Override
 	protected void onRefreshEnd() {
-		
+		mIsRefresh = false;
 	}
 
 

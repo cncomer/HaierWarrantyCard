@@ -83,6 +83,19 @@ public class MyApplication extends Application{
 	public synchronized static MyApplication getInstance() {
 		return mInstance;
 	}
+	/***
+	 * 是否第一次载入
+	 * @param key
+	 * @param defaultValues
+	 * @return
+	 */
+	public boolean isFirstLaunch(String key, boolean defaultValues) {
+		return mPreferManager.getBoolean(key, defaultValues);
+	}
+	
+	public boolean setFirstLaunch(String key, boolean defaultValues) {
+		return mPreferManager.edit().putBoolean(key, defaultValues).commit();
+	}
 	
 	public File getCachedContactFile(String name) {
 		return new File(getFilesDir(), name+ ".vcf");

@@ -84,7 +84,7 @@ public class IMHelper {
 	
 //	public static final String UID_AND_TARGET_SELECTION = HaierDBHelper.IM_UID + "=? and " + HaierDBHelper.IM_TARGET_TYPE + "=? and " + HaierDBHelper.IM_TARGET + "=?";
 	public static final String QUN_SELECTION = HaierDBHelper.IM_TARGET_TYPE + "=? and " + HaierDBHelper.IM_TARGET + "=?";
-	
+	public static final String UID_SELECTION = HaierDBHelper.IM_UID + "=?";
 	public static final String FRIEND_SELECTION = HaierDBHelper.IM_UID + "=? and " + HaierDBHelper.IM_TARGET + "=?";
 	
 	public static final String SERVICEID_QUN_SELECTION = HaierDBHelper.IM_SERVICE_ID + "=? and " + QUN_SELECTION;
@@ -181,6 +181,14 @@ public class IMHelper {
 	 */
 	public static int update(ContentResolver cr, ContentValues values, String where, String[] selectionArgs) {
 		return cr.update(BjnoteContent.IM.CONTENT_URI, values, where, selectionArgs);
+	}
+	
+	public static void deleteAllMessages(ContentResolver cr, long uid) {
+		DebugUtils.logD(TAG, "deleteAllMessages for uid " + uid);
+		 int deleted = cr.delete(BjnoteContent.IM.CONTENT_URI_QUN, UID_SELECTION, new String[]{String.valueOf(uid)});
+		 DebugUtils.logD(TAG, "deleteAllQunMessages " + deleted);
+		 deleted = cr.delete(BjnoteContent.IM.CONTENT_URI_FRIEND, UID_SELECTION, new String[]{String.valueOf(uid)});
+		 DebugUtils.logD(TAG, "deleteAllFriendsMessages " + deleted);
 	}
 	
 	public static ConversationItemObject getConversationItemObject(JSONObject result) {

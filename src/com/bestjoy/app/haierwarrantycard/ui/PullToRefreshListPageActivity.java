@@ -7,9 +7,12 @@ import java.util.List;
 import org.apache.http.client.ClientProtocolException;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.text.TextUtils;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -30,10 +33,13 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.shwy.bestjoy.utils.AdapterWrapper;
+import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.InfoInterface;
 import com.shwy.bestjoy.utils.NetworkUtils;
 import com.shwy.bestjoy.utils.PageInfo;
+import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActivity implements AdapterView.OnItemClickListener{
 
@@ -46,16 +52,11 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 	private ContentResolver mContentResolver;
 	
 	private PullToRefreshListView mPullRefreshListView;
-	
-	private boolean mFirstinit= false;
+	/**第一次刷新*/
+	private boolean mIsFirstRefresh= false;
 	private boolean mDestroyed = false;
-	private static final int DEFAULT_PAGEINDEX = 0;
-	private static final int PER_PAGE_SIZE = 10;
-	private int mCurrentPageIndex = DEFAULT_PAGEINDEX;
-	
 	private View mLoadMoreFootView;
-	
-	private long mLastRefreshTime, mLastClickTitleTime;
+	private long mLastRefreshTime = -1, mLastClickTitleTime = -1;
 	/**如果导航回该界面，从上次刷新以来已经10分钟了，那么自动开始刷新*/
 	private static final int MAX_REFRESH_TIME = 1000 * 60 * 10;
 	
@@ -66,8 +67,9 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 	private PageInfo mPageInfo;
 	
 	private boolean isNeedRequestAgain = true;
-	/**如果当前在列表底部了，当有新消息到来的时候我们需要自动滚定到最新的消息处，否则提示下面有新的消息*/
+	/**如果当前在列表底部了*/
 	private boolean mIsAtListBottom = false;
+	private WakeLock mWakeLock;
 	
 	//子类必须实现的方法
 	/**提供一个CursorAdapter类的包装对象*/
@@ -131,7 +133,7 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 				int count = mAdapterWrapper.getCount();
 				mPageInfo.computePageSize(count);
 				// Do work to refresh the list here.
-				new QueryServiceTask().execute();
+				loadServerDataAsync();
 			}
 		});
 		
@@ -176,7 +178,7 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 		mListView.setEmptyView(mEmptyView);
 		removeFooterView();
 		mContext = this;
-		mFirstinit = true;
+		mIsFirstRefresh = true;
 		
 		mListView.setOnScrollListener(new OnScrollListener() {
 
@@ -212,32 +214,64 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 			
 		});
 		
+		PushAgent.getInstance(mContext).onAppStart();
+		PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+		mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
+		loadLocalDataAsync();
+		
 	}
 	@Override
 	public void onResume() {
 		super.onResume();
-		long resumTime = System.currentTimeMillis();
-		if (mFirstinit || resumTime - mLastRefreshTime > MAX_REFRESH_TIME) {
-			//第一次进入的时候手动刷新一次
-			mPullRefreshListView.setRefreshing();
-			mPageInfo.reset();
-			int count = mAdapterWrapper.getCount();
-			mPageInfo.computePageSize(count);
-			 //Do work to refresh the list here.
-			new QueryServiceTask().execute();
+		MobclickAgent.onResume(this);
+		if (!mWakeLock.isHeld()) {
+			mWakeLock.acquire();
 		}
+		if (isNeedForceRefreshOnResume()) {
+			//手动刷新一次
+			forceRefresh();
+		}
+	}
+	/**
+	 * 当Activity onResume时候是否要做一次强制刷新，默认实现是 如果导航回该界面，从上次刷新以来已经10分钟了，那么自动开始刷新
+	 * @return
+	 */
+	protected boolean isNeedForceRefreshOnResume() {
+		long resumTime = System.currentTimeMillis();
+		return resumTime - mLastRefreshTime > MAX_REFRESH_TIME;
+	}
+	
+	public void forceRefresh() {
+		//手动刷新一次
+		mPullRefreshListView.setRefreshing();
+		mPageInfo.reset();
+		int count = mAdapterWrapper.getCount();
+		mPageInfo.computePageSize(count);
+		 //Do work to refresh the list here.
+		isNeedRequestAgain = true;
+		loadServerDataAsync();
+	}
+	
+	@Override
+	public void onPause() {
+		super.onPause();
+		MobclickAgent.onPause(this);
 	}
 	
 	@Override
 	public void onStop() {
 		super.onStop();
-		
+		if (mWakeLock.isHeld()) {
+			mWakeLock.release();
+		}
 	}
 	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 		mDestroyed = true;
+		AsyncTaskUtils.cancelTask(mQueryServiceTask);
+		AsyncTaskUtils.cancelTask(mLoadLocalTask);
 		if (mAdapterWrapper != null) mAdapterWrapper.releaseAdapter();
 	}
 	
@@ -275,6 +309,45 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 		//子类实现具体的动作
 	}
 	
+	private LoadLocalTask mLoadLocalTask;
+	private void loadLocalDataAsync() {
+		AsyncTaskUtils.cancelTask(mLoadLocalTask);
+		mLoadLocalTask = new LoadLocalTask();
+		mLoadLocalTask.execute();
+	}
+	private class LoadLocalTask extends AsyncTask<Void, Void, Cursor> {
+
+		@Override
+		protected Cursor doInBackground(Void... params) {
+			DebugUtils.logD(TAG, "LoadLocalTask load local data....");
+			return loadLocal(mContentResolver);
+		}
+
+		@Override
+		protected void onPostExecute(Cursor result) {
+			super.onPostExecute(result);
+			mAdapterWrapper.changeCursor(result);
+			int requestCount = 0;
+			if (result != null) {
+				requestCount = result.getCount();
+			}
+			mPageInfo.computePageSize(requestCount);
+			DebugUtils.logD(TAG, "LoadLocalTask load local data finish....localCount is " + requestCount);
+		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+		}
+		
+	}
+	
+	private QueryServiceTask mQueryServiceTask;
+	private void loadServerDataAsync() {
+		AsyncTaskUtils.cancelTask(mQueryServiceTask);
+		mQueryServiceTask = new QueryServiceTask();
+		mQueryServiceTask.execute();
+	}
 
 	/**更新或是新增的总数 >0表示有更新数据，需要刷新，=-1网络问题， =-2 已是最新数据 =0 没有更多数据*/
 	private class QueryServiceTask extends AsyncTask<Void, Void, Integer> {
@@ -288,25 +361,25 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 					//开始刷新
 					onRefreshStart();
 				}
-				if (mFirstinit) {
-					mFirstinit = false;
-					DebugUtils.logD(TAG, "first load local data....");
-					final Cursor cursor = loadLocal(mContentResolver);
-					if (cursor != null && cursor.getCount() != 0) {
-						int requestCount = cursor.getCount();
-						MyApplication.getInstance().postAsync(new Runnable() {
-
-							@Override
-							public void run() {
-								mAdapterWrapper.changeCursor(cursor);
-							}
-							
-						});
-						
-						DebugUtils.logD(TAG, "load local data finish....localCount is " + requestCount);
-						mPageInfo.computePageSize(requestCount);
-					}
-				}
+//				if (mIsFirstRefresh) {
+//					mIsFirstRefresh = false;
+//					DebugUtils.logD(TAG, "first load local data....");
+//					final Cursor cursor = loadLocal(mContentResolver);
+//					if (cursor != null && cursor.getCount() != 0) {
+//						int requestCount = cursor.getCount();
+//						MyApplication.getInstance().postAsync(new Runnable() {
+//
+//							@Override
+//							public void run() {
+//								mAdapterWrapper.changeCursor(cursor);
+//							}
+//							
+//						});
+//						
+//						DebugUtils.logD(TAG, "load local data finish....localCount is " + requestCount);
+//						mPageInfo.computePageSize(requestCount);
+//					}
+//				}
 				
 //				while (isNeedRequestAgain) {
 					DebugUtils.logD(TAG, "openConnection....");
@@ -341,17 +414,17 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 					if (isNeedRequestAgain) {
 						mPageInfo.mPageIndex+=1;
 					}
-					final Cursor cursor = loadLocal(mContentResolver);
-					if (cursor != null && cursor.getCount() != 0) {
-						MyApplication.getInstance().postAsync(new Runnable() {
-
-							@Override
-							public void run() {
-								mAdapterWrapper.changeCursor(cursor);
-							}
-							
-						});
-					}
+//					final Cursor cursor = loadLocal(mContentResolver);
+//					if (cursor != null && cursor.getCount() != 0) {
+//						MyApplication.getInstance().postAsync(new Runnable() {
+//
+//							@Override
+//							public void run() {
+//								mAdapterWrapper.changeCursor(cursor);
+//							}
+//							
+//						});
+//					}
 //					mCurrentPageIndex++;
 					return insertOrUpdateCount;
 //				}
@@ -389,7 +462,15 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 //		    mLoadMoreFootView.setVisibility(View.GONE);
 		    mIsUpdate = false;
 		    onRefreshEnd();
+		    loadLocalDataAsync();
 		}
+
+		@Override
+		protected void onCancelled() {
+			super.onCancelled();
+			 onRefreshEnd();
+		}
+		
 	}
 	
 }

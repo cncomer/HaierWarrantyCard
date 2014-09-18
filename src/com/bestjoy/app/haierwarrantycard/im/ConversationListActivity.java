@@ -154,7 +154,10 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 
 		@Override
 		public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-			mCurrentPosition = firstVisibleItem;
+			if (!mIsRefreshing) {
+				mCurrentPosition = firstVisibleItem;
+				DebugUtils.logD(TAG, "onScroll() current item position=" + mCurrentPosition);
+			}
 		}
 	};
 	
@@ -364,6 +367,7 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 		mContext.unbindService(mServiceConnection);
 		removeOnScrollListenerList(mOnScrollListener);
 		NotifyRegistrant.getInstance().unRegister(mUiHandler);
+		mConversationAdapter.changeCursor(null);
 	}
 	
 	@Override
@@ -568,7 +572,7 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 				}
 			}
 		}
-		
+		DebugUtils.logD(TAG, "loadLocal() current item position=" + mCurrentPosition + ", id=" + mCurrentMessageId);
 		return cursor;
 	}
 
@@ -590,23 +594,24 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 	}
 
 	@Override
-	protected void onRefreshStart() {
+	protected void onLoadMoreStart() {
 		mIsRefreshing = true;
 //		mCurrentMessageId = -1;
-//		if (mConversationAdapter != null && mCurrentPosition < mConversationAdapter.getCount()) {
-//			Cursor c = mConversationAdapter.getCursor();
-//			if (c != null && c.moveToPosition(mCurrentPosition)) {
-//				mCurrentMessageId = c.getLong(IMHelper.INDEX_ID);
-//			}
-//			
-//		}
+		if (mConversationAdapter != null && mCurrentPosition != -1 && mCurrentPosition < mConversationAdapter.getCount()) {
+			Cursor c = mConversationAdapter.getCursor();
+			if (c != null && c.moveToPosition(mCurrentPosition)) {
+				mCurrentMessageId = c.getLong(IMHelper.INDEX_ID);
+			}
+			
+		}
 		DebugUtils.logD(TAG, "onRefreshStart() current item position=" + mCurrentPosition + ", id=" + mCurrentMessageId);
 	}
 
 	@Override
-	protected void onRefreshEnd() {
+	protected void onLoadMoreEnd() {
 		mIsRefreshing = false;
 		mListView.setSelection(mCurrentPosition);
+		DebugUtils.logD(TAG, "onLoadMoreEnd() current item position=" + mCurrentPosition + ", id=" + mCurrentMessageId);
 	}
 
 	@Override
