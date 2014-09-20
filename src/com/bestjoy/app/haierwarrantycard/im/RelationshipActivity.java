@@ -35,7 +35,7 @@ import com.shwy.bestjoy.utils.PageInfo;
 
 public class RelationshipActivity extends PullToRefreshListPageActivity{
 	private static final String TAG = "RelationshipActivity";
-	private static final String FIRST = "RelationshipActivity.FIRST";
+	public static final String FIRST = "RelationshipActivity.FIRST";
 	private Handler mHandler;
 	private static final int WHAT_REFRESH_LIST = 1000;
 	private RelationshipAdapter mRelationshipAdapter;
@@ -150,7 +150,7 @@ public class RelationshipActivity extends PullToRefreshListPageActivity{
 				return;
 			}
 			mHandler.removeMessages(WHAT_REFRESH_LIST);
-			mHandler.sendEmptyMessageDelayed(WHAT_REFRESH_LIST, 500);
+			mHandler.sendEmptyMessageDelayed(WHAT_REFRESH_LIST, 250);
 		}
 
 
@@ -193,7 +193,7 @@ public class RelationshipActivity extends PullToRefreshListPageActivity{
 			viewHolder._title.setText(cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_TITLE));
 			
 			if (viewHolder._relationshipObject.hasAvator()) {
-				PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TAG, viewHolder._avator, viewHolder._relationshipObject.mTargetAvator, null, TaskType.IM_AVATOR_PREVIEW);
+				PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TAG, viewHolder._avator, viewHolder._relationshipObject.mMM, null, TaskType.PREVIEW);
 			}
 		}
 		

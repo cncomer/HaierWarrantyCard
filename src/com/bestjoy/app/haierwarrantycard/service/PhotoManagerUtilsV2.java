@@ -657,7 +657,7 @@ public class PhotoManagerUtilsV2 {
 	public static String getServiceUrl(TaskType type, String photoId) {
 		switch(type) {
 		case PREVIEW:
-			return null;
+			return HaierServiceObject.getRelationshipAvatorUrl(photoId);
 		case HOME_DEVICE_AVATOR:
 			return HaierServiceObject.getProdcutAvatorUrl(photoId);
 		case FaPiao:

@@ -82,7 +82,7 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 			@Override
 			public void onServiceConnected(ComponentName name, IBinder service) {
 				mImService = ((IMService.MyBinder)service).getService();
-				mImService.setIsInConversationSession(true);
+				mImService.setIsInConversationSession(true, mRelationshipObject.mTarget);
 				if (mImService != null && mImService.isConnected()) {
 					mConnectedStatusView.setVisibility(View.GONE);
 				} else {
@@ -95,7 +95,7 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 			@Override
 			public void onServiceDisconnected(ComponentName name) {
 				NotifyRegistrant.getInstance().unRegister(mUiHandler);
-				mImService.setIsInConversationSession(false);
+				mImService.setIsInConversationSession(false, mRelationshipObject.mTarget);
 			}
 		};
 		Intent intent = new Intent(mContext, IMService.class);
@@ -111,19 +111,23 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 				case IMService.WHAT_SEND_MESSAGE_LOGIN:
 					if (mImService != null && mImService.isConnected()) {
 						mConnectedStatusView.setVisibility(View.GONE);
+						mImService.setIsInConversationSession(true, mRelationshipObject.mTarget);
 					} else {
 						mConnectedStatusView.setVisibility(View.VISIBLE);
 						mConnectedStatusView.setText(R.string.msg_im_status_logining);
+						if (mImService != null) mImService.setIsInConversationSession(false, mRelationshipObject.mTarget);
 					}
 					break;
 				case IMService.WHAT_SEND_MESSAGE_OFFLINE:
 					mConnectedStatusView.setVisibility(View.VISIBLE);
 					mConnectedStatusView.setText(R.string.msg_im_status_offline);
+					if (mImService != null) mImService.setIsInConversationSession(false, mRelationshipObject.mTarget);
 					break;
 				case IMService.WHAT_SEND_MESSAGE_EXIT:
 				case IMService.WHAT_SEND_MESSAGE_INVALID_USER:
 					mConnectedStatusView.setVisibility(View.VISIBLE);
 					mConnectedStatusView.setText(R.string.msg_im_status_offline);
+					if (mImService != null) mImService.setIsInConversationSession(false, mRelationshipObject.mTarget);
 					break;
 				case WHAT_REQUEST_REFRESH_LIST:
 					mConversationAdapter.callSuperOnContentChanged();
@@ -357,15 +361,18 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 	
 	private void doVoiceQuery(String query) {
 		DebugUtils.logD(TAG, "doVoiceQuery() query=" + query);
+		mInputEdit.getText().clear();
 		mInputEdit.append(query);
+		sendMessageLocked();
 		
 	}
 	
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mContext.unbindService(mServiceConnection);
 		removeOnScrollListenerList(mOnScrollListener);
+		if (mImService != null) mImService.setIsInConversationSession(false, mRelationshipObject.mTarget);
+		mContext.unbindService(mServiceConnection);
 		NotifyRegistrant.getInstance().unRegister(mUiHandler);
 		mConversationAdapter.changeCursor(null);
 	}

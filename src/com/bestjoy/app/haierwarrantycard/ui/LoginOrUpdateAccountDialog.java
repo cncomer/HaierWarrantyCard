@@ -19,6 +19,7 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.AccountObject;
 import com.bestjoy.app.haierwarrantycard.account.AccountParser;
 import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
+import com.bestjoy.app.haierwarrantycard.im.RelationshipActivity;
 import com.bestjoy.app.haierwarrantycard.service.IMService;
 import com.bestjoy.app.haierwarrantycard.update.UpdateService;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
@@ -117,6 +118,8 @@ public class LoginOrUpdateAccountDialog extends Activity{
 					YouMengMessageHelper.getInstance().saveDeviceTokenStatus(false);
 					//登录成功，我们需要检查是否能够上传设备Token到服务器绑定uid和token
 					UpdateService.startCheckDeviceTokenToService(LoginOrUpdateAccountDialog.this);
+					//每次登录我们都重新设置需要重新拉好友列表
+					MyApplication.getInstance().setFirstLaunch(RelationshipActivity.FIRST, true);
 				} else {
 					MyApplication.getInstance().showMessage(mAccountObject.mStatusMessage);
 					setResult(Activity.RESULT_CANCELED);

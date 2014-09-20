@@ -3,7 +3,7 @@
 
     <string name="app_name">海尔电子保修卡</string>
     <string name="app_name_2014">海尔电子保修卡 2014</string>
-    <string name="app_id">5350f3d3</string>
+    <string name="app_id">541a8d74</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     
@@ -235,6 +235,7 @@
     <string name="menu_new_card">新建保修卡</string>
      <string name="button_rescan">重新扫描</string>
      <string name="button_scan_exit">退出扫描</string>
+     <string name="get_cloud_url">查看云名片</string>
      <string name="button_scan_finish_return_result">下一步</string>
      <string name="msg_scan_finish_return_result_no_network">在返回之前会向服务器查询产品信息，请检查网络是否可用</string>
     <string name="menu_new_repair">预约维修</string>

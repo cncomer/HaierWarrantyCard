@@ -147,7 +147,8 @@ public class BjnoteContent {
     		HaierDBHelper.DATA6,  //11
     		HaierDBHelper.DATA7,  //12
     		HaierDBHelper.DATA8,  //13
-    		HaierDBHelper.DATE,   //14
+    		HaierDBHelper.DATA9,  //14
+    		HaierDBHelper.DATE,   //15
     	};
     	public static final int INDEX_RELASTIONSHIP_ID = 0;
     	public static final int INDEX_RELASTIONSHIP_SERVICE_ID = 1;
@@ -171,7 +172,9 @@ public class BjnoteContent {
     	public static final int INDEX_RELASTIONSHIP_LEIXING = 12;
     	/**DATA8, 型号*/
     	public static final int INDEX_RELASTIONSHIP_XINGHAO = 13;
-    	public static final int INDEX_RELASTIONSHIP_LOCAL_DATE = 14;
+    	/**DATA9, MM*/
+    	public static final int INDEX_RELASTIONSHIP_MM = 14;
+    	public static final int INDEX_RELASTIONSHIP_LOCAL_DATE = 15;
     	/**返回我的全部关系*/
     	public static Cursor getAllRelationships(ContentResolver cr, String uid) {
     		return cr.query(BjnoteContent.RELATIONSHIP.CONTENT_URI, RELATIONSHIP_PROJECTION, UID_SELECTION, new String[]{uid}, SORT_BY_ID);

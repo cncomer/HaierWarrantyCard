@@ -11,6 +11,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 import android.support.v4.app.NavUtils;
 import android.support.v4.app.TaskStackBuilder;
 import android.text.TextUtils;
@@ -38,6 +40,7 @@ import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.ImageHelper;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.PushAgent;
 
 public abstract class BaseNoActionBarActivity extends SherlockFragmentActivity implements MenuBuilder.Callback{
 	private static final String TAG = "BaseActivity";
@@ -53,6 +56,7 @@ public abstract class BaseNoActionBarActivity extends SherlockFragmentActivity i
 	private RelativeLayout mTitleLayout;
 	private FrameLayout mContent;
 	private IcsLinearLayout mActionMenuLayout;
+	private WakeLock mWakeLock;
 	
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -67,6 +71,10 @@ public abstract class BaseNoActionBarActivity extends SherlockFragmentActivity i
 		initTitleBar();
 		invalidateOptionsMenu();
 		setShowHomeUp(false);
+		
+		PushAgent.getInstance(mContext).onAppStart();
+		PowerManager pm = (PowerManager) this.getSystemService(Context.POWER_SERVICE);
+		mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, TAG);
 		
 	}
 	//add by chenkai, 兼容ActionBar和自定义的居中TitleBar on
@@ -121,12 +129,22 @@ public abstract class BaseNoActionBarActivity extends SherlockFragmentActivity i
 	public void onResume() {
 		super.onResume();
 		MobclickAgent.onResume(this);
+		if (!mWakeLock.isHeld()) {
+			mWakeLock.acquire();
+		}
 	}
 	
 	@Override
 	public void onPause() {
 		super.onPause();
 		MobclickAgent.onPause(this);
+	}
+	@Override
+	public void onStop() {
+		super.onStop();
+		if (mWakeLock.isHeld()) {
+			mWakeLock.release();
+		}
 	}
 	/**
 	 * 提供自定义的TitleBar布局

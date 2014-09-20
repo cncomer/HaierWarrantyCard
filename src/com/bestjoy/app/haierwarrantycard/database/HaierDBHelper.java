@@ -12,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 11;
+  private static final int DB_VERSION = 13;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -147,6 +147,8 @@ private static final String TAG = "HaierDBHelper";
   public static final String IM_SERVICE_ID = "service_id";
   /**消息正文*/
   public static final String IM_TEXT = "text";
+  /**消息是否已经看过了*/
+  public static final String IM_SEEN = "seen";
   /**消息对象，根据IM_TARGET_TYPE的值来区分对象*/
   public static final String IM_TARGET = "target";
   public static final String IM_TARGET_TYPE = "target_type";
@@ -174,6 +176,7 @@ private static final String TAG = "HaierDBHelper";
   public static final String DATA6 = "data6";
   public static final String DATA7 = "data7";
   public static final String DATA8 = "data8";
+  public static final String DATA9 = "data9";
   //好友关系 end
   
   public HaierDBHelper(Context context) {
@@ -403,6 +406,7 @@ private static final String TAG = "HaierDBHelper";
 	            IM_MESSAGE_STATUS + " INTEGER NOT NULL DEFAULT 0, " +  //信息发送状态
 	            IM_SERVICE_ID + " TEXT, " +
 	            IM_TEXT + " TEXT, " +
+	            IM_SEEN + " INTEGER, " +   //是否看过了
 	            IM_TARGET + " TEXT, " +
 	            IM_TARGET_TYPE + " INTEGER, " +
 	            IM_UID + " TEXT, " +
@@ -416,6 +420,7 @@ private static final String TAG = "HaierDBHelper";
 	            IM_MESSAGE_STATUS + " INTEGER NOT NULL DEFAULT 0, " +  //信息发送状态
 	            IM_SERVICE_ID + " TEXT, " +
 	            IM_TEXT + " TEXT, " +
+	            IM_SEEN + " INTEGER, " +   //是否看过了
 	            IM_TARGET + " TEXT, " +
 	            IM_TARGET_TYPE + " INTEGER, " +
 	            IM_UID + " TEXT, " +
@@ -441,6 +446,7 @@ private static final String TAG = "HaierDBHelper";
 	            DATA6 + " TEXT, " +
 	            DATA7 + " TEXT, " +
 	            DATA8 + " TEXT, " +
+	            DATA9 + " TEXT, " +
 	            DATE + " TEXT);");
   }
   
@@ -458,7 +464,7 @@ private static final String TAG = "HaierDBHelper";
   @Override
   public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 	  DebugUtils.logD(TAG, "onUpgrade oldVersion " + oldVersion + " newVersion " + newVersion);
-	  if (oldVersion < 11 ) {
+	  if (oldVersion < 13 ) {
 			sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_ACCOUNTS);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_HOMES);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CARDS);

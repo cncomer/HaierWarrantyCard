@@ -1,5 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:state_pressed="true" android:drawable = "@drawable/button_black_on"/>
-	<item android:state_pressed="false" android:drawable = "@drawable/button_black"/>
+    <item android:state_pressed="true">
+        <shape xmlns:android="http://schemas.android.com/apk/res/android" >
+
+		    <solid android:color="#ff717171" />
+		
+		    <padding
+		        android:bottom="0.5dp"
+		        android:left="0.5dp"
+		        android:right="0.5dp"
+		        android:top="0.5dp" />
+		
+		    <corners
+		        android:bottomLeftRadius="5dp"
+		        android:bottomRightRadius="5dp"
+		        android:topLeftRadius="5dp"
+		        android:topRightRadius="5dp" />
+		
+		</shape>
+    </item>
+	<item android:state_pressed="false">
+	    <shape>
+	    	<solid android:color="#ff1c1c1c" />
+		
+		    <padding
+		        android:bottom="0.5dp"
+		        android:left="0.5dp"
+		        android:right="0.5dp"
+		        android:top="0.5dp" />
+		
+		    <corners
+		        android:bottomLeftRadius="5dp"
+		        android:bottomRightRadius="5dp"
+		        android:topLeftRadius="5dp"
+		        android:topRightRadius="5dp" />
+		</shape>
+	</item>
 </selector>

@@ -806,8 +806,14 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			try {
 				JSONObject jsonObject = new JSONObject();
 				jsonObject.put("BID", mBaoxiuCardObject.mBID);
+				jsonObject.put("UID", mBaoxiuCardObject.mUID);
 				jsonObject.put("MMOne", _mmOne);
 				jsonObject.put("MMTwo", _mmTwo);
+				if (_type == 1) {
+					jsonObject.put("MM", _mmOne);
+				} else if (_type ==2) {
+					jsonObject.put("MM", _mmTwo);
+				}
 				jsonObject.put("type", _type);
 				jsonObject.put("token", SecurityUtils.MD5.md5(sb.toString()));
 				DebugUtils.logD(TAG, "UpdateSalesInfoAsyncTask jsonObject = " + jsonObject.toString());

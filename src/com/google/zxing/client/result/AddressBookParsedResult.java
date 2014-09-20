@@ -236,6 +236,9 @@ public class AddressBookParsedResult extends ParsedResult {
   public String[] getURL() {
     return url;
   }
+  public String getFirstURL() {
+	    return url[0];
+	  }
   
   public String getCloudUrl() {
 	  return Contents.MingDang.buildCloudUri(mCloudMM);

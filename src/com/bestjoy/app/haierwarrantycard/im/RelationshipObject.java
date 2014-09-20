@@ -29,7 +29,7 @@ public class RelationshipObject implements InfoInterface, Parcelable{
 	private static final String TAG = "RelationshipObject";
 
 	public String mUID, mTargetTitle, mTargetOrg, mTargetCell, mTargetAvator, mTarget, mTargetBrief, mTargetName, mTargetWorkplace, mRelationshipServiceId, mRelationshipId, mLocalDate;
-	public String mXinghao, mLeiXin;
+	public String mXinghao, mLeiXin, mMM;
 	public int mTargetType = IMHelper.TARGET_TYPE_P2P;
 
 	/**
@@ -78,6 +78,7 @@ public class RelationshipObject implements InfoInterface, Parcelable{
 		RelationshipObject relastionship = new RelationshipObject();
 		relastionship.mUID = row.getString("uid");
 		relastionship.mTarget = row.getString("suid");
+		relastionship.mMM = row.getString("mm");
 		relastionship.mTargetName = row.getString("sname");
 		relastionship.mTargetTitle = row.getString("title");
 		relastionship.mTargetOrg = row.getString("org");
@@ -113,6 +114,7 @@ public class RelationshipObject implements InfoInterface, Parcelable{
 		
 		object.mLeiXin = cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_LEIXING);
 		object.mXinghao = cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_XINGHAO);
+		object.mMM = cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_MM);
 		
 		return object;
 	}
@@ -135,6 +137,7 @@ public class RelationshipObject implements InfoInterface, Parcelable{
 		
 		values.put(HaierDBHelper.DATA7, mLeiXin);
 		values.put(HaierDBHelper.DATA8, mXinghao);
+		values.put(HaierDBHelper.DATA9, mMM);
 		
 		values.put(HaierDBHelper.DATE, new Date().getTime());
 		String[] selectionArgs = new String[]{mRelationshipServiceId, mUID, mTarget};
@@ -178,6 +181,7 @@ public class RelationshipObject implements InfoInterface, Parcelable{
 		mTargetAvator = in.readString();
 		mLeiXin = in.readString();
 		mXinghao= in.readString();
+		mMM= in.readString();
 	}
 	
 	public RelationshipObject(){};
@@ -205,6 +209,7 @@ public class RelationshipObject implements InfoInterface, Parcelable{
 		dest.writeString(mTargetAvator);
 		dest.writeString(mLeiXin);
 		dest.writeString(mXinghao);
+		dest.writeString(mMM);
 	}
 	
 	

@@ -355,5 +355,15 @@ public class HaierServiceObject {
 		  sb.append("Start/GetMessageByUIDByTID.ashx?uid=").append(uid).append("&TID=").append(target).append("&type=").append(targetType);
 		  return sb.toString();
 	  }
+	  /***
+	   * 获取指定MM的头像
+	   * @param mm
+	   * @return
+	   */
+	  public static String getRelationshipAvatorUrl(String mm) {
+		  UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder("http://115.29.231.29/userimg/");
+		  sb.append(mm).append(".jpg");
+		  return sb.toString();
+	  }
 	  
 }

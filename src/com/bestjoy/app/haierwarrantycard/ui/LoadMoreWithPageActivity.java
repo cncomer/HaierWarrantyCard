@@ -293,17 +293,16 @@ public abstract class LoadMoreWithPageActivity extends BaseNoActionBarActivity i
 					mFirstinit = false;
 					DebugUtils.logD(TAG, "first load local data....");
 					final Cursor cursor = loadLocal(mContentResolver);
+					MyApplication.getInstance().postAsync(new Runnable() {
+
+						@Override
+						public void run() {
+							mAdapterWrapper.changeCursor(cursor);
+						}
+						
+					});
 					if (cursor != null && cursor.getCount() != 0) {
 						int requestCount = cursor.getCount();
-						MyApplication.getInstance().postAsync(new Runnable() {
-
-							@Override
-							public void run() {
-								mAdapterWrapper.changeCursor(cursor);
-							}
-							
-						});
-						
 						DebugUtils.logD(TAG, "load local data finish....localCount is " + requestCount);
 						mPageInfo.computePageSize(requestCount);
 					}
@@ -343,16 +342,14 @@ public abstract class LoadMoreWithPageActivity extends BaseNoActionBarActivity i
 						mPageInfo.mPageIndex+=1;
 					}
 					final Cursor cursor = loadLocal(mContentResolver);
-					if (cursor != null && cursor.getCount() != 0) {
-						MyApplication.getInstance().postAsync(new Runnable() {
+					MyApplication.getInstance().postAsync(new Runnable() {
 
-							@Override
-							public void run() {
-								mAdapterWrapper.changeCursor(cursor);
-							}
-							
-						});
-					}
+						@Override
+						public void run() {
+							mAdapterWrapper.changeCursor(cursor);
+						}
+						
+					});
 //					mCurrentPageIndex++;
 					return insertOrUpdateCount;
 //				}

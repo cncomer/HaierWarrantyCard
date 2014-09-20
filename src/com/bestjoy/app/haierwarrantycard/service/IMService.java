@@ -62,6 +62,7 @@ public class IMService extends Service{
 	private boolean mIsConnected = false;
 	/**会话中信息不会显示成Notification*/
 	private boolean mIsInConversationSession = false;
+	private String mConversationSessionTarget = "";
 	
 	private ContentResolver mContentResolver;
 	WifiManager.MulticastLock mMulticastLock;
@@ -152,10 +153,12 @@ public class IMService extends Service{
 		if (intent != null) {
 			String action = intent.getAction();
 			if (ACTION_CONNECT_IM_SERVICE.equals(action)) {
+				setIsInConversationSession(false, "");
 				mWorkHandler.removeMessages(WHAT_SEND_MESSAGE_EXIT);
 				mWorkHandler.removeMessages(WHAT_SEND_MESSAGE_LOGIN);
 				mWorkHandler.sendEmptyMessageDelayed(WHAT_SEND_MESSAGE_LOGIN, 500);//立即登录一次
 			} else if (ACTION_DISCONNECT_IM_SERVICE.equals(action)) {
+				setIsInConversationSession(false, "");
 				Message msg = obtainExitMessage(intent);
 				mWorkHandler.removeMessages(WHAT_SEND_MESSAGE_LOGIN);
 				mWorkHandler.sendMessage(msg);
@@ -214,8 +217,9 @@ public class IMService extends Service{
 		return mIsConnected;
 	}
 	
-	public void setIsInConversationSession(boolean inConversationSession) {
+	public void setIsInConversationSession(boolean inConversationSession, String target) {
 		mIsInConversationSession = inConversationSession;
+		mConversationSessionTarget = target;
 	}
 	
 	public static void startService(Context context) {
@@ -297,6 +301,7 @@ public class IMService extends Service{
 					break;
 				case IMHelper.TYPE_EXIT: //退出登录成功
 					mIsConnected = false;
+					setIsInConversationSession(false, "");
 					NotifyRegistrant.getInstance().notify(WHAT_SEND_MESSAGE_EXIT);
 					break;
 				case IMHelper.TYPE_MESSAGE: //我发送的消息得到了返回
@@ -317,6 +322,20 @@ public class IMService extends Service{
 							//收到其他用户发来的消息，我们只要保存就好了
 							conversationItemObject.mId = -1;
 							conversationItemObject.mMessageStatus = 1; //对于收到的信息发送状态总是已发送的
+							if (mIsInConversationSession) {
+								//已在会话中，我们需要确定这条消息是否是当前会话的，是的话，标记为已读
+								if (conversationItemObject.mTarget.equals(MyAccountManager.getInstance().getCurrentAccountUid()) && 
+										mConversationSessionTarget.equals(conversationItemObject.mUid)) {
+									conversationItemObject.setReadStatus(ConversationItemObject.SEEN);
+									DebugUtils.logD(TAG, "mark seen " + conversationItemObject.mMessage);
+								} else {
+									DebugUtils.logD(TAG, "mark unseen " + conversationItemObject.mMessage);
+								}
+							} else {
+								//不在会话中，我们需要标记该消息未读
+								conversationItemObject.setReadStatus(ConversationItemObject.UN_SEEN);
+								DebugUtils.logD(TAG, "mark unseen " + conversationItemObject.mMessage);
+							}
 							conversationItemObject.saveInDatebase(mContentResolver, null);
 						}
 						if (!mIsInConversationSession) {

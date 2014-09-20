@@ -29,6 +29,7 @@
         android:layout_marginTop="2dip"
         android:layout_marginLeft="80dip"
         android:layout_marginRight="4dip"
+        android:autoLink="all"
         android:text="dsa dsa dsa dsa ds a dsa dsa dsa d sa dsa dsa d sa dsa ds a dsa dsa ds a dsa ds ad sa dsa d sa dsa das d sa dsa dsa  da dsa ds ad"
         />
     <TextView android:id="@+id/date"

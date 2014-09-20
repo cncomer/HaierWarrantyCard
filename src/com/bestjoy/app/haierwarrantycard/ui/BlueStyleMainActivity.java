@@ -16,7 +16,9 @@ import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.account.MyAccountManager;
 import com.bestjoy.app.haierwarrantycard.im.IMHelper;
 import com.bestjoy.app.haierwarrantycard.service.IMService;
+import com.bestjoy.app.haierwarrantycard.update.UpdateService;
 import com.bestjoy.app.haierwarrantycard.utils.MenuHandlerUtils;
+import com.bestjoy.app.haierwarrantycard.utils.YouMengMessageHelper;
 import com.bestjoy.app.haierwarrantycard.view.ModuleViewUtils;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.FilesUtils;
@@ -30,6 +32,9 @@ public class BlueStyleMainActivity extends BaseNoActionBarActivity{
 		setContentView(R.layout.activity_main_blue_style);
 		ModuleViewUtils.getInstance().setContext(mContext);
 		ModuleViewUtils.getInstance().initModules(this);
+		
+		UpdateService.startUpdateServiceOnAppLaunch(mContext);
+		YouMengMessageHelper.getInstance().startCheckDeviceTokenAsync();
 	}
 	
 	@Override

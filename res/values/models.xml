@@ -35,13 +35,13 @@
     <drawable name="model_my_store_n">#fff6a414</drawable>
     <drawable name="model_my_store_p">#ffbb7700</drawable>
     
-    <drawable name="model_install_n">#ff34bfb7</drawable>
+    <drawable name="model_install_n">#ff346fb7</drawable>
     <drawable name="model_install_p">#ff1a487f</drawable>
     
-    <drawable name="model_repair_n">#ff34bfb7</drawable>
+    <drawable name="model_repair_n">#ff346fb7</drawable>
     <drawable name="model_repair_p">#ff1a487f</drawable>
     
-    <drawable name="model_feedback_n">#ff34bfb7</drawable>
+    <drawable name="model_feedback_n">#ff346fb7</drawable>
     <drawable name="model_feedback_p">#ff1a487f</drawable>
     
 </resources>

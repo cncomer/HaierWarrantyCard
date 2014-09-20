@@ -110,6 +110,7 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 	private static final int PROVICE_NAME_INDEX = 3;
 	private static final int CITY_NAME_INDEX = 4;
 	private static final int AREA_NAME_INDEX = 5;
+	private static final int ADMIN_CODE_INDEX = 6;
 	//add by chenkai, 根据省市区一起查找区域码 end
 	public HaierProCityDisEditPopView(Context context, View view) {
 		mContext = context;
@@ -315,7 +316,7 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 				case MODE_DISTRICT:
 					mHomeObject.mHomeDis = mAddressAdapter.getItemTitle(position);
 					mDisEditView.setText(mHomeObject.mHomeDis);
-					mAdminCode = mAddressAdapter.getRegionCode(position);
+					mAdminCode = mAddressAdapter.getAdminCode(position);
 					break;
 				
 				}
@@ -329,9 +330,9 @@ public class HaierProCityDisEditPopView implements OnTouchListener {
 			super(context, c, autoRequery);
 		}
 		
-		public String getRegionCode(int position) {
-			long id = getItemId(position);
-			return String.valueOf(id);
+		public String getAdminCode(int position) {
+			Cursor c = (Cursor) getItem(position);
+			return String.valueOf(c.getLong(ADMIN_CODE_INDEX));
 		}
 
 		@Override

@@ -3,16 +3,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingLeft="8dip"
-    android:paddingRight="8dip"
     android:paddingBottom="8dip">
     <TextView android:id="@+id/title"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
         android:text="服务工程师"
-        android:textSize="20sp"
+        android:textSize="16sp"
         android:layout_alignParentRight="true"
-        android:padding="6dip"
-        android:background="@color/light_blue"
+        android:paddingTop="6dip"
+        android:paddingBottom="6dip"
+        android:paddingLeft="10dip"
+        android:paddingRight="10dip"
+        android:background="#ff16a78a"
         android:textColor="@color/wt" />
     <com.bestjoy.app.haierwarrantycard.view.AvatorImageView 
         android:id="@+id/avator"
@@ -20,6 +22,7 @@
         android:layout_width="67dip"
         android:layout_alignParentTop="true"
         android:layout_marginTop="8dip"
+        android:layout_marginRight="4dip"
         android:src="@drawable/baoxiuka_avator_default"/>
     <TextView android:id="@+id/name"
         android:layout_alignTop="@+id/avator"
@@ -99,6 +102,6 @@
         android:layout_marginTop="6dip"
         android:layout_height="wrap_content"
         android:layout_width="wrap_content"
-        android:text="@string/title_workplace_name"
+        android:text="dsadsadsadsadsadsadsadsadsadsadsadsdsadsasdasadsadsdsada dsadsa dsa ds ad sa dsa dsa ds ad sa dsa dsa ds a"
         android:textColor="@color/blk" />
 </RelativeLayout>

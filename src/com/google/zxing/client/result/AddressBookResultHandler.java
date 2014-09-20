@@ -31,6 +31,7 @@ import android.text.style.StyleSpan;
 
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.ui.CardViewActivity;
+import com.shwy.bestjoy.utils.Intents;
 
 /**
  * Handles address book entries.
@@ -89,8 +90,8 @@ public final class AddressBookResultHandler extends ResultHandler {
     fields[0] = true; // 返回扫描
     //Add contact is always available
     fields[1] = true;
-    fields[2] = false;  //下载并交换
-    fields[3] = hasBidMessage;
+    fields[2] = hasBidMessage;  //下载并交换
+    fields[3] = false;
 
     buttonCount = 0;
     for (int x = 0; x < MAX_BUTTON_COUNT; x++) {
@@ -102,7 +103,7 @@ public final class AddressBookResultHandler extends ResultHandler {
 
   @Override
   public int getButtonCount() {
-  if (mParseTask) {
+    if (mParseTask) {
 		return 2; //如果是解析任务，我们只显示两个按钮，返回扫描和确定商品信息
 	}
     return buttonCount;
@@ -116,6 +117,8 @@ public final class AddressBookResultHandler extends ResultHandler {
         return R.string.button_ignore;
       case 1:
     	  return R.string.button_scan_finish_return_result;
+      case 2:
+    	  return R.string.get_cloud_url;
       default:
         throw new ArrayIndexOutOfBoundsException();
     }
@@ -137,6 +140,9 @@ public final class AddressBookResultHandler extends ResultHandler {
     	  activity.setResult(Activity.RESULT_OK, data);
     	  CardViewActivity.mAddressResult = addressResult;
     	  activity.finish();
+    	  break;
+      case 2:
+    	  Intents.openURL(activity, addressResult.getFirstURL());
     	  break;
       default:
         break;

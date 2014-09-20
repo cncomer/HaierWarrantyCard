@@ -391,13 +391,13 @@
                         android:src="@drawable/title_scan_qr"/>
 
                     <Button android:id="@+id/button_scan"
-                        android:layout_width="80dip"
-                        android:layout_height="40dip"
+                        android:layout_width="110dip"
+                        android:layout_height="35dip"
                         android:background="@drawable/default_black_btn"
                         android:text="@string/model_my_scan"
                         android:textColor="@color/wt"
                         android:layout_toRightOf="@+id/icon"
-                        android:layout_marginLeft="60dip"/>
+                        android:layout_marginLeft="40dip"/>
                     <TextView
                         android:id="@+id/en_title"
                         android:layout_width="wrap_content"
@@ -408,7 +408,7 @@
                         android:layout_below="@+id/button_scan"
                         android:text="@string/model_my_scan_en"
                         android:textColor="@color/wt"
-                        android:textSize="10sp"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
 
                 </com.bestjoy.app.haierwarrantycard.view.ModuleView>
