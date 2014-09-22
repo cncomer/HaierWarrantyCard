@@ -70,8 +70,9 @@ public class MyAccountManager {
 		long homeAid = -1;
 		if (mHaierAccount != null && mHaierAccount.mAccountHomes.size() > 0) {
 			homeAid = mHaierAccount.mAccountHomes.get(position).mHomeAid;
+			DebugUtils.logD(TAG, "getHomeAIdAtPosition() position=" + position + ", mHaierAccount=" + mHaierAccount + ", mAccountHomes=" + mHaierAccount.mAccountHomes.size() + ", homeAid=" + homeAid);
 		}
-		DebugUtils.logD(TAG, "getHomeAIdAtPosition() position=" + position + ", mHaierAccount=" + mHaierAccount + ", mAccountHomes=" + mHaierAccount.mAccountHomes.size() + ", homeAid=" + homeAid);
+		DebugUtils.logD(TAG, "getHomeAIdAtPosition() position=" + position + ", mHaierAccount=" + mHaierAccount + ", mAccountHomes = null" + ", homeAid=" + homeAid);
 		return homeAid;
 	}
 	public long getCurrentAccountId() {

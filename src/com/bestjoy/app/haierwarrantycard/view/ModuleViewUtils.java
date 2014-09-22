@@ -75,9 +75,13 @@ public class ModuleViewUtils {
 				mContext.startActivity(scanIntent);
 				return;
 			case R.id.model_my_community:
-				MyApplication.getInstance().showUnsupportMessage();
+				Intents.openURL(mContext,  "http://m.haier.com/bbs/index.shtml");
 				return;
 			case R.id.model_my_business: //Haier Eshop
+				if (false) {
+					MyApplication.getInstance().showUnsupportMessage();
+					return;
+				}
 				if (MyAccountManager.getInstance().hasLoginned()) {
 					RelationshipActivity.startActivity(mContext);
 				} else {
@@ -88,10 +92,10 @@ public class ModuleViewUtils {
 				YMessageListActivity.startActivity(mContext);
 				return;
 			case R.id.model_my_store: //Haier Navigation
-				MyApplication.getInstance().showUnsupportMessage();
+				Intents.openURL(mContext,  "http://m.haier.com/cn/");
 				return;
 			case R.id.model_feedback:
-				BrowserActivity.startActivity(mContext, "http://m.rrs.com/rrsm/track/verify.html", null);
+				Intents.openURL(mContext,  "http://m.rrs.com/rrsm/track/verify.html");
 				return;
 			case R.id.model_my_card:
 				bundle = createMyCardDefaultBundle(mContext);

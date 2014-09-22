@@ -44,8 +44,12 @@ public class BlueStyleMainActivity extends BaseNoActionBarActivity{
 	}
 	
 	@Override
+    public boolean onCreateTitleBarOptionsMenu(Menu menu) {
+		 MenuHandlerUtils.onCreateOptionsMenu(menu);
+		 return true;
+    }
+	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
-		MenuHandlerUtils.onCreateOptionsMenu(menu); 
         return super.onCreateOptionsMenu(menu);
     }
 	
