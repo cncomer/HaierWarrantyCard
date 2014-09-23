@@ -195,6 +195,13 @@ public class AddressBookParsedResult extends ParsedResult {
 	  
   }
 
+  public String getFirstPhoneNumer() {
+	  if (phoneNumbers == null) {
+		  return "";
+	  }
+	  return phoneNumbers[0];
+  }
+  
   public String[] getEmails() {
     return emails;
   }

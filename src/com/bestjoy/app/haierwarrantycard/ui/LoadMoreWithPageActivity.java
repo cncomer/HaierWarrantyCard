@@ -374,7 +374,8 @@ public abstract class LoadMoreWithPageActivity extends BaseNoActionBarActivity i
 			} else if (result == -2) {
 				MyApplication.getInstance().showMessage(R.string.msg_nonew_for_receive);
 			} else if (result == 0) {
-				MyApplication.getInstance().showMessage(R.string.msg_nomore_for_receive);
+//				MyApplication.getInstance().showMessage(R.string.msg_nomore_for_receive);
+				DebugUtils.logD(TAG, "no more for receive");
 			}
 			if (!isNeedRequestAgain) {
 				removeLoadMoreStatusView();

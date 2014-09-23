@@ -31,6 +31,7 @@ import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.database.BjnoteContent;
 import com.bestjoy.app.haierwarrantycard.database.HaierDBHelper;
+import com.bestjoy.app.haierwarrantycard.im.RelationshipObject;
 import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.shwy.bestjoy.utils.Base64;
 import com.shwy.bestjoy.utils.ImageHelper;
@@ -109,13 +110,17 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public int mRewardStatus = 0;
 	 //add by chenkai, 锁定认证字段 20140701 end
 	
-	public String mMMOne, mMMOneTel,mMMOneName;
-	public String mMMTwo, mMMTwoTel,mMMTwoName;
+//	public String mMMOne, mMMOneTel,mMMOneName, mMMOneUid;
+//	public String mMMTwo, mMMTwoTel,mMMTwoName, mMMTwoUid;
+	/**对应关系表中的service_id*/
+	public String mMMOne="", mMMTwo="";
+	RelationshipObject mMMOneRelationshipObject;
+	RelationshipObject mMMTwoRelationshipObject;
 	/**用来构建保修卡设备预览图，如mPKY.jpg*/
 	public String mPKY;
 	
 	public static final String[] PROJECTION = new String[]{
-		HaierDBHelper.ID,
+		HaierDBHelper.ID,              //0
 		HaierDBHelper.CARD_TYPE, 
 		HaierDBHelper.CARD_PINPAI,
 		HaierDBHelper.CARD_MODEL,
@@ -137,13 +142,9 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		HaierDBHelper.CARD_KY,               //19
 		HaierDBHelper.REWARD_STATUS,         //20 add by chenkai, 锁定认证字段 20140701 begin
 		HaierDBHelper.CARD_FPname,           //21 add by chenkai, FaPiao's name 20140701 begin
-		HaierDBHelper.CARD_MM_ONE,            //22
-		HaierDBHelper.CARD_MM_ONE_TEL,            //23
-		HaierDBHelper.CARD_MM_ONE_NAME,            //24
-		HaierDBHelper.CARD_MM_TWO,            //25
-		HaierDBHelper.CARD_MM_TWO_TEL,            //26
-		HaierDBHelper.CARD_MM_TWO_NAME,            //27
-		HaierDBHelper.CARD_PKY,           //28
+		HaierDBHelper.CARD_PKY,           //22
+		HaierDBHelper.CARD_MM_ONE,        //23
+		HaierDBHelper.CARD_MM_TWO,        //24
 	};
 	
 	public static final int KEY_CARD_ID = 0;
@@ -170,14 +171,11 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 	public static final int KEY_CARD_REWARDSTATUS = 20; //add by chenkai, 锁定认证字段 20140701
 	public static final int KEY_CARD_FPname = 21; //add by chenkai, FaPiao's name.
 	
-	public static final int KEY_CARD_MM_ONE = 22;
-	public static final int KEY_CARD_MM_ONE_TEL = 23;
-	public static final int KEY_CARD_MM_ONE_NAME = 24;
-	public static final int KEY_CARD_MM_TWO = 25;
-	public static final int KEY_CARD_MM_TWO_TEL = 26;
-	public static final int KEY_CARD_MM_TWO_NAME = 27;
+	public static final int KEY_CARD_PKY = 22;
 	
-	public static final int KEY_CARD_PKY = 28;
+	public static final int KEY_CARD_MMONE = 23;
+	public static final int KEY_CARD_MMTWO = 24;
+	
 	public static final String WHERE_UID = HaierDBHelper.CARD_UID + "=?";
 	public static final String WHERE_AID = HaierDBHelper.CARD_AID + "=?";
 	public static final String WHERE_BID = HaierDBHelper.CARD_BID + "=?";
@@ -292,16 +290,16 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		}
 		 //add by chenkai, 锁定认证字段 20140701 end
 		
-		JSONObject vcf = jsonObject.optJSONObject("vcf");
-		if (vcf != null) {
-			cardObject.mMMOne = vcf.optString("MMOne", "");
-			cardObject.mMMOneTel = vcf.optString("UserCell", "");
-			cardObject.mMMOneName = vcf.optString("UserName", "");
-			
-			cardObject.mMMTwo = vcf.optString("MMTwo", "");
-			cardObject.mMMTwoTel = vcf.optString("hcell", "");
-			cardObject.mMMTwoName = vcf.optString("hname", "");
+		JSONObject mmone = jsonObject.optJSONObject("MMOne");
+		if (mmone != null) {
+			cardObject.mMMOneRelationshipObject = RelationshipObject.parse(mmone);
 		}
+		
+		mmone = jsonObject.optJSONObject("MMTwo");
+		if (mmone != null) {
+			cardObject.mMMTwoRelationshipObject = RelationshipObject.parse(mmone);
+		}
+		
 		cardObject.mPKY = jsonObject.optString("pky", BaoxiuCardObject.DEFAULT_BAOXIUCARD_IMAGE_KEY);
 		if ("null".equalsIgnoreCase(cardObject.mPKY)) {
 			cardObject.mPKY = BaoxiuCardObject.DEFAULT_BAOXIUCARD_IMAGE_KEY;
@@ -387,13 +385,10 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		newBaoxiuCardObject.mRewardStatus = mRewardStatus;
 		 //add by chenkai, 锁定认证字段 20140701 end
 		
-		newBaoxiuCardObject.mMMOne = mMMOne;
-		newBaoxiuCardObject.mMMOneName = mMMOneName;
-		newBaoxiuCardObject.mMMOneTel = mMMOneTel;
-		newBaoxiuCardObject.mMMTwo = mMMTwo;
-		newBaoxiuCardObject.mMMTwoName = mMMTwoName;
-		newBaoxiuCardObject.mMMTwoTel = mMMTwoTel;
 		newBaoxiuCardObject.mPKY = mPKY;
+		
+		newBaoxiuCardObject.mMMOne = mMMOne;
+		newBaoxiuCardObject.mMMTwo = mMMTwo;
 		return newBaoxiuCardObject;
 	}
 	
@@ -522,12 +517,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		bundle.putInt("mRewardStatus", mRewardStatus);
 		
 		bundle.putString("mMMOne", mMMOne);
-		bundle.putString("mMMOneTel", mMMOneTel);
-		bundle.putString("mMMOneName", mMMOneName);
-		
 		bundle.putString("mMMTwo", mMMTwo);
-		bundle.putString("mMMTwoTel", mMMTwoTel);
-		bundle.putString("mMMTwoName", mMMTwoName);
 		return bundle;
 	}
 	
@@ -564,12 +554,8 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		baoxiuCardObject.mRewardStatus = bundle.getInt("mRewardStatus");
 		
 		baoxiuCardObject.mMMOne = bundle.getString("mMMOne");
-		baoxiuCardObject.mMMOneTel = bundle.getString("mMMOneTel");
-		baoxiuCardObject.mMMOneName = bundle.getString("mMMOneName");
 		
 		baoxiuCardObject.mMMTwo = bundle.getString("mMMTwo");
-		baoxiuCardObject.mMMTwoTel = bundle.getString("mMMTwoTel");
-		baoxiuCardObject.mMMTwoName = bundle.getString("mMMTwoName");
 		
 		return baoxiuCardObject;
 	}
@@ -603,13 +589,10 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
     	baoxiuCardObject.mRewardStatus =c.getInt(KEY_CARD_REWARDSTATUS);
 		 //add by chenkai, 锁定认证字段 20140701 end
     	
-    	baoxiuCardObject.mMMOne =c.getString(KEY_CARD_MM_ONE);
-    	baoxiuCardObject.mMMOneTel =c.getString(KEY_CARD_MM_ONE_TEL);
-    	baoxiuCardObject.mMMOneName =c.getString(KEY_CARD_MM_ONE_NAME);
-    	baoxiuCardObject.mMMTwo =c.getString(KEY_CARD_MM_TWO);
-    	baoxiuCardObject.mMMTwoTel =c.getString(KEY_CARD_MM_TWO_TEL);
-    	baoxiuCardObject.mMMTwoName =c.getString(KEY_CARD_MM_TWO_NAME);
     	baoxiuCardObject.mPKY = c.getString(KEY_CARD_PKY);
+    	
+    	baoxiuCardObject.mMMOne =c.getString(KEY_CARD_MMONE);
+    	baoxiuCardObject.mMMTwo =c.getString(KEY_CARD_MMTWO);
 		return baoxiuCardObject;
 	}
 
@@ -643,11 +626,7 @@ public class BaoxiuCardObject extends InfoInterfaceImpl {
 		
 		
 		values.put(HaierDBHelper.CARD_MM_ONE, mMMOne);
-		values.put(HaierDBHelper.CARD_MM_ONE_TEL, mMMOneTel);
-		values.put(HaierDBHelper.CARD_MM_ONE_NAME, mMMOneName);
 		values.put(HaierDBHelper.CARD_MM_TWO, mMMTwo);
-		values.put(HaierDBHelper.CARD_MM_TWO_TEL, mMMTwoTel);
-		values.put(HaierDBHelper.CARD_MM_TWO_NAME, mMMTwoName);
 		
 		values.put(HaierDBHelper.DATE, new Date().getTime());
 		

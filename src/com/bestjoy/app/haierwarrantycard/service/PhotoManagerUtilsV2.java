@@ -37,6 +37,7 @@ import android.widget.ImageView;
 import com.bestjoy.app.haierwarrantycard.HaierServiceObject;
 import com.bestjoy.app.haierwarrantycard.MyApplication;
 import com.bestjoy.app.haierwarrantycard.R;
+import com.shwy.bestjoy.utils.Contents;
 import com.shwy.bestjoy.utils.DebugUtils;
 import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
@@ -46,12 +47,10 @@ public class PhotoManagerUtilsV2 {
 	private static final String TAG ="PhotoManagerUtils";
 	private static PhotoManagerUtilsV2 INSTANCE = new PhotoManagerUtilsV2();
 	private static Bitmap mDefaultBitmap;
-	private static Bitmap mDefaultCircleTopicBitmap;
-	private static Bitmap mDefaultCirclePhotoBitmap;
 	private static Bitmap mDefaultLoadBitmap;
 	
 	private static Bitmap mDefaultKyBitmap;
-	private static Bitmap mDefaultBaoxiucardAvator;
+	public static Bitmap mDefaultAvatorBitmap;
 	private Context mContext;
 	private Resources mResources;
 	private static final int MAX_CAPACITY = 100;
@@ -149,7 +148,7 @@ public class PhotoManagerUtilsV2 {
 			MAX_RESULT_IMAGE_SIZE = mContext.getResources().getDimension(R.dimen.barcode_image_view_size);
 			mCurrentImageSize = MAX_RESULT_IMAGE_SIZE;
 			mDefaultKyBitmap = BitmapFactory.decodeResource(mResources, R.drawable.ky_default);
-			mDefaultBaoxiucardAvator = BitmapFactory.decodeResource(mResources, R.drawable.baoxiuka_avator_default);
+			mDefaultAvatorBitmap = BitmapFactory.decodeResource(mResources, R.drawable.baoxiuka_avator_default);
 		}
 		
 //		initCache();
@@ -352,8 +351,8 @@ public class PhotoManagerUtilsV2 {
 		case HOME_DEVICE_AVATOR:
 			return mDefaultKyBitmap;
 		case Baoxiucard_Salesman_Avator:
-			return mDefaultBaoxiucardAvator;
 		case PREVIEW:
+			return mDefaultAvatorBitmap;
 			default:
 				return mDefaultBitmap; 
 		}
@@ -657,7 +656,7 @@ public class PhotoManagerUtilsV2 {
 	public static String getServiceUrl(TaskType type, String photoId) {
 		switch(type) {
 		case PREVIEW:
-			return HaierServiceObject.getRelationshipAvatorUrl(photoId);
+			return Contents.MingDang.buildAvatorUrl(photoId);
 		case HOME_DEVICE_AVATOR:
 			return HaierServiceObject.getProdcutAvatorUrl(photoId);
 		case FaPiao:

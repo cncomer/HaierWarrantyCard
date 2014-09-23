@@ -236,6 +236,7 @@
      <string name="button_rescan">重新扫描</string>
      <string name="button_scan_exit">退出扫描</string>
      <string name="get_cloud_url">查看云名片</string>
+     <string name="button_save_contact">保存联系人</string>
      <string name="button_scan_finish_return_result">下一步</string>
      <string name="msg_scan_finish_return_result_no_network">在返回之前会向服务器查询产品信息，请检查网络是否可用</string>
     <string name="menu_new_repair">预约维修</string>
@@ -430,7 +431,7 @@
    		<string name="msg_download_card_success">名片下载成功</string>
     <string name="msg_download_card_canceled">名片下载取消</string>
     <string name="msg_save_card_success">名片保存成功</string>
-    
+    <string name="msg_download_mm_wait">正在下载名片数据，请稍等...</string>
     <string name="msg_vcf_read_error">"返回的VCF文件预览时读取错误，请检查"</string>
      <string name="msg_vcf_format_error">"抱歉，暂时无法获取名号对应的vcf文件，稍后重试或是换个名号试试~"</string>
      

@@ -131,7 +131,7 @@ public class BjnoteContent {
     public static class RELATIONSHIP extends BjnoteContent{
     	public static final Uri CONTENT_URI = Uri.withAppendedPath(BjnoteContent.CONTENT_URI, "relationship");
     	public static final String UID_SELECTION = HaierDBHelper.RELATIONSHIP_UID + "=?";
-    	public static final String SORT_BY_ID = HaierDBHelper.ID + " asc";
+    	public static final String SORT_BY_SID = HaierDBHelper.RELATIONSHIP_SERVICE_ID + " asc";
     	public static final String[] RELATIONSHIP_PROJECTION = new String[]{
     		HaierDBHelper.ID,              //0
     		HaierDBHelper.RELATIONSHIP_SERVICE_ID,   //1
@@ -177,7 +177,7 @@ public class BjnoteContent {
     	public static final int INDEX_RELASTIONSHIP_LOCAL_DATE = 15;
     	/**返回我的全部关系*/
     	public static Cursor getAllRelationships(ContentResolver cr, String uid) {
-    		return cr.query(BjnoteContent.RELATIONSHIP.CONTENT_URI, RELATIONSHIP_PROJECTION, UID_SELECTION, new String[]{uid}, SORT_BY_ID);
+    		return cr.query(BjnoteContent.RELATIONSHIP.CONTENT_URI, RELATIONSHIP_PROJECTION, UID_SELECTION, new String[]{uid}, SORT_BY_SID);
     	}
     	
     }

@@ -31,7 +31,7 @@ public class RelationshipObject implements InfoInterface, Parcelable{
 	public String mUID, mTargetTitle, mTargetOrg, mTargetCell, mTargetAvator, mTarget, mTargetBrief, mTargetName, mTargetWorkplace, mRelationshipServiceId, mRelationshipId, mLocalDate;
 	public String mXinghao, mLeiXin, mMM;
 	public int mTargetType = IMHelper.TARGET_TYPE_P2P;
-
+	
 	/**
 	 * 是否有头像
 	 * @return
@@ -118,6 +118,24 @@ public class RelationshipObject implements InfoInterface, Parcelable{
 		
 		return object;
 	}
+	/***
+	 * 根据保修卡id查询关系
+	 * @param cr
+	 * @param bid
+	 * @return
+	 */
+	public static RelationshipObject getFromCursorByServiceId(ContentResolver cr, String uid, String serviceId) {
+		RelationshipObject object = null;
+		Cursor c = cr.query(BjnoteContent.RELATIONSHIP.CONTENT_URI, BjnoteContent.RELATIONSHIP.RELATIONSHIP_PROJECTION, WHERE_UID_AND_SID, new String[]{uid, serviceId}, null);
+		if (c != null) {
+			if (c.moveToNext()) {
+				object = getFromCursor(c);
+			}
+			c.close();
+		}
+		return object;
+	}
+	public static final String WHERE_UID_AND_SID = HaierDBHelper.RELATIONSHIP_UID + "=? and " + HaierDBHelper.RELATIONSHIP_SERVICE_ID + "=?";
 
 	public static final String WHERE = HaierDBHelper.RELATIONSHIP_SERVICE_ID + "=? and " + HaierDBHelper.RELATIONSHIP_UID + "=? and " + HaierDBHelper.RELATIONSHIP_TARGET + "=?";
 	@Override
@@ -145,7 +163,7 @@ public class RelationshipObject implements InfoInterface, Parcelable{
 		long id = BjnoteContent.existed(cr, BjnoteContent.RELATIONSHIP.CONTENT_URI, WHERE, selectionArgs);
 		if (id > -1) {
 			//已存在，我们仅仅是更新操作
-			int update = BjnoteContent.update(cr, BjnoteContent.RELATIONSHIP.CONTENT_URI, values, BjnoteContent.ID_SELECTION, new String[]{});
+			int update = BjnoteContent.update(cr, BjnoteContent.RELATIONSHIP.CONTENT_URI, values, BjnoteContent.ID_SELECTION, new String[]{String.valueOf(id)});
 			DebugUtils.logD(TAG, "saveInDatebase() update exsited serviceId# " + mRelationshipServiceId + ", name=" + mTargetName + ", updated " + update);
 			return update > 0;
 		} else {

@@ -12,7 +12,7 @@ import com.shwy.bestjoy.utils.DebugUtils;
  */
 public final class HaierDBHelper extends SQLiteOpenHelper {
 private static final String TAG = "HaierDBHelper";
-  private static final int DB_VERSION = 13;
+  private static final int DB_VERSION = 14;
   private static final String DB_NAME = "haier.db";
   public static final String ID = "_id";
  
@@ -91,14 +91,12 @@ private static final String TAG = "HaierDBHelper";
   public static final String DEVICE_WARRANTY_PERIOD = "warranty_period";
   /**配件保修*/
   public static final String CARD_COMPONENT_VALIDITY = "component_validity";
-  
+  /**对应TABLE_ACCOUNT_RELATIONSHIP表的RELATIONSHIP_SERVICE_ID*/
   public static final String CARD_MM_ONE = "mmone";
-  public static final String CARD_MM_ONE_TEL = "mmone_tel";
-  public static final String CARD_MM_ONE_NAME = "mmone_name";
-  
+  /**对应TABLE_ACCOUNT_RELATIONSHIP表的RELATIONSHIP_SERVICE_ID*/
   public static final String CARD_MM_TWO = "mmtwo";
-  public static final String CARD_MM_TWO_TEL = "mmtwo_tel";
-  public static final String CARD_MM_TWO_NAME = "mmtwo_name";
+  
+  
   
   /**用来构建保修卡设备预览图*/
   public static final String CARD_PKY = "pky";
@@ -161,6 +159,8 @@ private static final String TAG = "HaierDBHelper";
   
  //好友关系 begin
   public static final String TABLE_ACCOUNT_RELATIONSHIP = "account_relationship";
+  public static final String RELATIONSHIP_BID = CARD_BID;
+  public static final String RELATIONSHIP_BID_MM_TYPE = "mmtype";
   public static final String RELATIONSHIP_TYPE = IM_TARGET_TYPE;
   public static final String RELATIONSHIP_TARGET = IM_TARGET;
   public static final String RELATIONSHIP_NAME = IM_UNAME;
@@ -344,11 +344,7 @@ private static final String TAG = "HaierDBHelper";
 	            CARD_KY + " TEXT, " +
 	            CARD_PKY + " TEXT, " +
 	            CARD_MM_ONE + " TEXT, " +
-	            CARD_MM_ONE_TEL + " TEXT, " +
-	            CARD_MM_ONE_NAME + " TEXT, " +
 	            CARD_MM_TWO + " TEXT, " +
-	            CARD_MM_TWO_TEL + " TEXT, " +
-	            CARD_MM_TWO_NAME + " TEXT, " +
 	            CARD_YANBAO_TIME + " TEXT, " +
 	            CARD_YANBAO_TIME_COMPANY + " TEXT, " +
 	            CARD_YANBAO_TIME_COPMANY_TEL + " TEXT, " +
@@ -433,6 +429,8 @@ private static final String TAG = "HaierDBHelper";
 	  sqLiteDatabase.execSQL(
 	            "CREATE TABLE " + TABLE_ACCOUNT_RELATIONSHIP + " (" +
 	            ID + " INTEGER PRIMARY KEY, " +
+	            RELATIONSHIP_BID + " TEXT, " +
+	            RELATIONSHIP_BID_MM_TYPE + " INTEGER, " +
 	            RELATIONSHIP_TYPE + " INTEGER, " + 
 	            RELATIONSHIP_TARGET + " TEXT, " +
 	            RELATIONSHIP_NAME + " TEXT, " +
@@ -464,7 +462,7 @@ private static final String TAG = "HaierDBHelper";
   @Override
   public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
 	  DebugUtils.logD(TAG, "onUpgrade oldVersion " + oldVersion + " newVersion " + newVersion);
-	  if (oldVersion < 13 ) {
+	  if (oldVersion < 14 ) {
 			sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_ACCOUNTS);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_HOMES);
 		    sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME_CARDS);

@@ -9,8 +9,6 @@ import java.text.ParseException;
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
 import org.apache.http.client.ClientProtocolException;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.vudroid.pdfdroid.PdfViewerActivity;
 
 import android.app.Activity;
@@ -27,7 +25,6 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,26 +42,20 @@ import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
 import com.bestjoy.app.haierwarrantycard.utils.DialogUtils;
 import com.bestjoy.app.haierwarrantycard.utils.FilesLengthUtils;
 import com.bestjoy.app.haierwarrantycard.utils.SpeechRecognizerEngine;
-import com.bestjoy.app.haierwarrantycard.utils.VcfAsyncDownloadUtils;
-import com.bestjoy.app.haierwarrantycard.utils.VcfAsyncDownloadUtils.VcfAsyncDownloadHandler;
 import com.bestjoy.app.haierwarrantycard.view.BaoxiuCardViewSalemanInfoView;
-import com.google.zxing.client.result.AddressBookParsedResult;
 import com.shwy.bestjoy.utils.AsyncTaskUtils;
 import com.shwy.bestjoy.utils.ComConnectivityManager;
 import com.shwy.bestjoy.utils.Intents;
 import com.shwy.bestjoy.utils.NetworkUtils;
 import com.shwy.bestjoy.utils.NotifyRegistrant;
-import com.shwy.bestjoy.utils.SecurityUtils;
 
 public class CardViewActivity extends BaseActionbarActivity implements View.OnClickListener{
 	public static final String TOKEN = CardViewActivity.class.getName();
 	private static final String TAG = "CardViewActivity";
-	private EditText mAskInput;
 	//private Handler mHandler;
-	private Button mSpeakButton;
 	private SpeechRecognizerEngine mSpeechRecognizerEngine;
 	//按钮
-	private Button mSaveBtn, mOnekeyInstallBtn, mOnekeyRepairBtn, mOnekeyMaintainenceBtn;
+	private Button mOnekeyInstallBtn, mOnekeyRepairBtn, mOnekeyMaintainenceBtn;
 	//商品信息
 	private TextView mNameInput, mPinpaiInput, mModelInput, mBianhaoInput, mBaoxiuTelInput;
 	private TextView mDatePickBtn, mPriceInput, mTujingInput, mYanbaoTimeInput, mYanbaoComponyInput, mYanbaoTelInput;
@@ -82,15 +73,8 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	private ImageView mFapiaoDownloadView;
 	
 	/**是否显示销售人员信息*/
-	private static final boolean SHOW_SALES_INFO = false;
+	private static final boolean SHOW_SALES_INFO = true;
 	private BaoxiuCardViewSalemanInfoView mMMOne, mMMTwo;
-	
-	public static AddressBookParsedResult mAddressResult;
-	private VcfAsyncDownloadHandler mVcfAsyncDownloadHandler;
-	/**MM联系人布局的ID,对应getId()&0x0000ffff*/
-	private long mMMLayoutViewId = -1;
-	/**当前的MM*/
-	private String mMM = "";
 	private static final int WHAT_SHOW_FAPIAO_WAIT = 12;
 
 	@Override
@@ -99,7 +83,6 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 		if (isFinishing()) {
 			return;
 		}
-		mAddressResult = null;
 		if (savedInstanceState != null) {
 			mBundles = savedInstanceState.getBundle(TAG);
 			DebugUtils.logD(TAG, "onCreate() savedInstanceState != null, restore mBundle=" + mBundles);
@@ -220,71 +203,22 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 			 view.setVisibility(SHOW_SALES_INFO?View.VISIBLE:View.GONE);
 		 }
 		 if (SHOW_SALES_INFO) {
-			 mVcfAsyncDownloadHandler = new VcfAsyncDownloadHandler() {
-
-					@Override
-					public void onDownloadStart() {
-						//实现该方法忽略默认的下载中提示信息
-					}
-
-					@Override
-					public void onDownloadFinished(
-							AddressBookParsedResult addressBookParsedResult,
-							String outMsg) {
-						super.onDownloadFinished(addressBookParsedResult, outMsg);
-						dismissDialog(DIALOG_PROGRESS);
-						if (addressBookParsedResult != null) {
-							//update bid and aid
-				   			UpdateSalesInfoAsyncTask task = new UpdateSalesInfoAsyncTask();
-				   			if (mMMLayoutViewId == (mMMOne.getId() & 0x0000ffff)) {
-				   				mMMOne.setAddressBookParsedResult(addressBookParsedResult, TOKEN);
-				   				task.setType(1);
-				   				task.setMMOne(addressBookParsedResult.getBid());
-				   				if (addressBookParsedResult.hasPhoneNumbers()) {
-				   					task.setMMOneTel(addressBookParsedResult.getPhoneNumbers()[0]);
-				   				}
-				   				if (addressBookParsedResult.getFirstName() != null) {
-				   					task.setMMOneName(addressBookParsedResult.getFirstName());
-				   				}
-				   			} else if (mMMLayoutViewId == (mMMTwo.getId() & 0x0000ffff)) {
-				   				mMMTwo.setAddressBookParsedResult(addressBookParsedResult, TOKEN);
-				   				task.setType(2);
-				   				task.setMMTwo(addressBookParsedResult.getBid());
-				   				if (addressBookParsedResult.hasPhoneNumbers()) {
-				   					task.setMMTwoTel(addressBookParsedResult.getPhoneNumbers()[0]);
-				   				}
-				   				if (addressBookParsedResult.getFirstName() != null) {
-				   					task.setMMTwoName(addressBookParsedResult.getFirstName());
-				   				}
-				   			} 
-				   			task.execute();
-						}
-						
-						mMMLayoutViewId = -1;
-						mMM = "";
-					}
-
-					@Override
-					public boolean onDownloadFinishedInterrupted() {
-						return true;
-					}
-					
-				};
 			 mMMOne = (BaoxiuCardViewSalemanInfoView) findViewById(R.id.mmone);
 			//销售员
 			 mMMOne.setTitle(R.string.salesman_title);
+			 mMMOne.setMmType(BaoxiuCardViewSalemanInfoView.TYPE_MM_ONE);
 			 
 			 //服务员
 			 mMMTwo = (BaoxiuCardViewSalemanInfoView) findViewById(R.id.mmtwo);
 			 mMMTwo.setTitle(R.string.serverman_title);
+			 mMMTwo.setMmType(BaoxiuCardViewSalemanInfoView.TYPE_MM_TWO);
+			 
 			 if (!TextUtils.isEmpty(mBaoxiuCardObject.mMMOne)) {
-				 AddressBookParsedResult resultOne = new AddressBookParsedResult(new String[]{mBaoxiuCardObject.mMMOneName}, null, new String[]{mBaoxiuCardObject.mMMOneTel}, null, null, null, null, null, null, null, null, mBaoxiuCardObject.mMMOne, null, null);
-				 mMMOne.setAddressBookParsedResult(resultOne, TOKEN);
+				 mMMOne.setSalesPersonInfo(mBaoxiuCardObject, TOKEN);
 			 }
 			 
 			 if (!TextUtils.isEmpty(mBaoxiuCardObject.mMMTwo)) {
-				 AddressBookParsedResult resultTwo = new AddressBookParsedResult(new String[]{mBaoxiuCardObject.mMMTwoName}, null, new String[]{mBaoxiuCardObject.mMMTwoTel}, null, null, null, null, null, null, null, null, mBaoxiuCardObject.mMMTwo, null, null);
-				 mMMTwo.setAddressBookParsedResult(resultTwo, TOKEN);
+				 mMMTwo.setSalesPersonInfo(mBaoxiuCardObject, TOKEN);
 			 }
 		 }
 		 
@@ -533,12 +467,6 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	 @Override
 	 public void onResume() {
 		 super.onResume();
-		 if (mMMLayoutViewId  > 0 && !TextUtils.isEmpty(mMM)) {
-			 showDialog(DIALOG_PROGRESS);
-			 //扫描进来，我们需要下载MM.vcf文件
-			 VcfAsyncDownloadUtils.getInstance().executeTaskSimply(mMM, false, mVcfAsyncDownloadHandler,  PhotoManagerUtilsV2.TaskType.PREVIEW);
-		 }
-		 
 	 }
 
 	@Override
@@ -735,127 +663,16 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
    	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
    		super.onActivityResult(requestCode, resultCode, data);
    		if (resultCode == Activity.RESULT_OK) {
-   			
-   			if (mAddressResult != null && !TextUtils.isEmpty(mAddressResult.getBid())) {
-   				mMMLayoutViewId = requestCode;
-   				mMM = mAddressResult.getBid();
-   	   		 } else {
-   	   			DebugUtils.logE(TAG, "onActivityResult return mAddressResult=" + mAddressResult);
+   			//扫描到了mm号
+   			String mm = data.getStringExtra(Intents.EXTRA_BID);
+   			DebugUtils.logD(TAG, "onActivityResult return mm=" + mm);
+   			if (!TextUtils.isEmpty(mm)) {
+   				if (requestCode == BaoxiuCardViewSalemanInfoView.TYPE_MM_ONE) {
+   					mMMOne.downloadSalesPersonInfo(mBaoxiuCardObject, mm, TOKEN);
+   				} else if (requestCode == BaoxiuCardViewSalemanInfoView.TYPE_MM_TWO) {
+   					mMMTwo.downloadSalesPersonInfo(mBaoxiuCardObject, mm, TOKEN);
+   				}
    	   		 }
-   			mAddressResult = null;
-//   			//update bid and aid
-//   			UpdateSalesInfoAsyncTask task = new UpdateSalesInfoAsyncTask();
-//   			if (requestCode == (mMMOne.getId() & 0x0000ffff)) {
-//   				mMMOne.setAddressBookParsedResult(mAddressResult, TOKEN);
-//   				task.setType(1);
-//   				task.setMMOne(mAddressResult.getBid());
-//   				if (mAddressResult.hasPhoneNumbers()) {
-//   					task.setMMOneTel(mAddressResult.getPhoneNumbers()[0]);
-//   				}
-//   				if (mAddressResult.getFirstName() != null) {
-//   					task.setMMOneName(mAddressResult.getFirstName());
-//   				}
-//   			} else if (requestCode == (mMMTwo.getId() & 0x0000ffff)) {
-//   				mMMTwo.setAddressBookParsedResult(mAddressResult, TOKEN);
-//   				task.setType(2);
-//   				task.setMMTwo(mAddressResult.getBid());
-//   				if (mAddressResult.hasPhoneNumbers()) {
-//   					task.setMMTwoTel(mAddressResult.getPhoneNumbers()[0]);
-//   				}
-//   				if (mAddressResult.getFirstName() != null) {
-//   					task.setMMTwoName(mAddressResult.getFirstName());
-//   				}
-//   			} 
-//   			mAddressResult = null;
-//   			task.execute();
    		}
    	}
-	
-	private class UpdateSalesInfoAsyncTask extends AsyncTask<Void, Void, Void> {
-
-		private String _mmOne="", _mmTwo="", _mmOneTel="", _mmOneName="", _mmTwoTel="", _mmTwoName="";
-		private int _type = 0;
-		public void setMMOne(String mm) {
-			_mmOne = mm;
-		}
-		public void setMMTwo(String mm) {
-			_mmTwo = mm;
-		}
-		public void setType(int type) {
-			_type = type;
-		}
-		public void setMMOneTel(String tel) {
-			_mmOneTel = tel;
-		}
-        public void setMMOneName(String name) {
-        	_mmOneName = name;
-		}
-		public void setMMTwoTel(String tel) {
-			_mmTwoTel = tel;
-		}
-        public void setMMTwoName(String name) {
-        	_mmTwoName = name;
-		}
-		@Override
-		protected Void doInBackground(Void... arg0) {
-			
-			//这里我们先尝试去下载名片信息
-			InputStream is = null;
-			StringBuilder sb = new StringBuilder();
-			sb.append(mBaoxiuCardObject.mBID).append("_").append(_mmOne).append("_").append(_mmTwo);
-			try {
-				JSONObject jsonObject = new JSONObject();
-				jsonObject.put("BID", mBaoxiuCardObject.mBID);
-				jsonObject.put("UID", mBaoxiuCardObject.mUID);
-				jsonObject.put("MMOne", _mmOne);
-				jsonObject.put("MMTwo", _mmTwo);
-				if (_type == 1) {
-					jsonObject.put("MM", _mmOne);
-				} else if (_type ==2) {
-					jsonObject.put("MM", _mmTwo);
-				}
-				jsonObject.put("type", _type);
-				jsonObject.put("token", SecurityUtils.MD5.md5(sb.toString()));
-				DebugUtils.logD(TAG, "UpdateSalesInfoAsyncTask jsonObject = " + jsonObject.toString());
-				is = NetworkUtils.openContectionLocked(HaierServiceObject.updateBaoxiucardSalesmanInfo("para", jsonObject.toString()), MyApplication.getInstance().getSecurityKeyValuesObject());
-				HaierResultObject serviceResultObject = HaierResultObject.parse(NetworkUtils.getContentFromInput(is));
-				if (serviceResultObject.isOpSuccessfully()) {
-					if (_type == 1) {
-						mBaoxiuCardObject.mMMOne = _mmOne;
-						mBaoxiuCardObject.mMMOneTel = _mmOneTel;
-						mBaoxiuCardObject.mMMOneName = _mmOneName;
-					} else if (_type == 2) {
-						mBaoxiuCardObject.mMMTwo = _mmTwo;
-						mBaoxiuCardObject.mMMTwoTel = _mmTwoTel;
-						mBaoxiuCardObject.mMMTwoName = _mmTwoName;
-					}
-					
-					boolean saved = mBaoxiuCardObject.saveInDatebase(getContentResolver(), null);
-					DebugUtils.logD(TAG, "UpdateSalesInfoAsyncTask save BaoxiuCard " +saved);
-				}
-			} catch (ClientProtocolException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (JSONException e) {
-				e.printStackTrace();
-			} finally {
-				NetworkUtils.closeInputStream(is);
-			}
-			return null;
-		}
-
-		@Override
-		protected void onCancelled() {
-			super.onCancelled();
-		}
-
-		@Override
-		protected void onPostExecute(Void result) {
-			super.onPostExecute(result);
-		}
-		
-		
-	}
-
 }

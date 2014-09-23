@@ -31,6 +31,7 @@ import android.text.style.StyleSpan;
 
 import com.bestjoy.app.haierwarrantycard.R;
 import com.bestjoy.app.haierwarrantycard.ui.CardViewActivity;
+import com.shwy.bestjoy.contacts.AddrBookUtils;
 import com.shwy.bestjoy.utils.Intents;
 
 /**
@@ -116,7 +117,7 @@ public final class AddressBookResultHandler extends ResultHandler {
       case 0:
         return R.string.button_ignore;
       case 1:
-    	  return R.string.button_scan_finish_return_result;
+    	  return mParseTask?R.string.button_scan_finish_return_result:R.string.button_save_contact;
       case 2:
     	  return R.string.get_cloud_url;
       default:
@@ -135,11 +136,16 @@ public final class AddressBookResultHandler extends ResultHandler {
     	gobackAndScan();
         break;
       case 1:
-    	  //设置联系人信息
-    	  Intent data = new Intent();
-    	  activity.setResult(Activity.RESULT_OK, data);
-    	  CardViewActivity.mAddressResult = addressResult;
-    	  activity.finish();
+    	  if (mParseTask) {
+    		//设置联系人信息
+        	  Intent data = new Intent();
+        	  activity.setResult(Activity.RESULT_OK, data);
+        	  data.putExtra(Intents.EXTRA_BID, addressResult.getMM());
+        	  activity.finish();
+    	  } else {
+    		  //保存联系人
+    		  AddrBookUtils.getInstance().downloadAndViewContactLock(addressResult.getBid(), true);
+    	  }
     	  break;
       case 2:
     	  Intents.openURL(activity, addressResult.getFirstURL());

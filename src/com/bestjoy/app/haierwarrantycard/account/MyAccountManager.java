@@ -33,7 +33,7 @@ public class MyAccountManager {
 		}
 	}
 	
-	public void initAccountHomes() {
+	public synchronized void initAccountHomes() {
 		if (mHaierAccount != null) {
 			mHaierAccount.mAccountHomes = HomeObject.getAllHomeObjects(mContext.getContentResolver(), mHaierAccount.mAccountUid);
 			//XXX 如果保修卡数据太多，这里太耗时了，我们不做加载,在我的家的时候再做加载

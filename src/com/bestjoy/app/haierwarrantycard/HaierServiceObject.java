@@ -332,7 +332,7 @@ public class HaierServiceObject {
 	  }
 	  /**
 	   * 获取suid的关系
-	   *  http://115.29.231.29/Haier/Start/GetServiceUserByUID.ashx?uid==682038&pwd=844605
+	   *  http://115.29.231.29/Haier/Start/GetServiceUserByUID.ashx?uid=682038&pwd=844605
 	   */
 	  public static String getRelationshipUrl(String uid, String pwd) {
 		  UrlEncodeStringBuilder sb = new UrlEncodeStringBuilder(SERVICE_URL);
