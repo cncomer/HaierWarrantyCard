@@ -44,8 +44,8 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 	private static final String TAG = "HomeManagerActivity";
 	private ListView mHomeListView;
 	private HomeManagerAdapter mHomeManagerAdapter;
-	private static boolean mIsEditMode;
-	private static HashMap<Long, Boolean> deleteHomeIDList = new HashMap<Long, Boolean>();
+	private boolean mIsEditMode;
+	private HashMap<Long, Boolean> deleteHomeIDList = new HashMap<Long, Boolean>();
 	private boolean mIsFirstOnresume = true;
 	
 	@Override
