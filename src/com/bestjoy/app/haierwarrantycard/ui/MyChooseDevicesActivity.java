@@ -45,6 +45,8 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 	private MyPagerAdapter mMyPagerAdapter;
 	
 	private ContentObserver mContentObserver;
+	
+	private boolean mNeedUpdateHomes = false;
 
 	@Override
 	protected boolean checkIntent(Intent intent) {
@@ -85,11 +87,20 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 			public void onChange(boolean selfChange) {
 				super.onChange(selfChange);
 				DebugUtils.logD(TAG, "mContentObserver.onChange()");
-				loadHomesAsync();
+				mNeedUpdateHomes = true;
 			}
 		};
 		//监听Home数据表的变化，一旦变化了，我们重新查询一次家
 		getContentResolver().registerContentObserver(BjnoteContent.Homes.CONTENT_URI, true, mContentObserver);
+	}
+	
+	@Override
+	public void onResume(){ 
+		super.onResume();
+		if (mNeedUpdateHomes) {
+			mNeedUpdateHomes = false;
+			loadHomesAsync();
+		}
 	}
 	
 	@Override
@@ -157,6 +168,8 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 			mMyPagerAdapter.notifyDataSetChanged();
 			if (mHomeSelected < mMyPagerAdapter.getCount() && mHomeSelected != mViewPager.getCurrentItem()) {
 				mViewPager.setCurrentItem(mHomeSelected);
+			} else if (mHomeSelected >= mMyPagerAdapter.getCount()) {
+				mViewPager.setCurrentItem(mMyPagerAdapter.getCount() - 1);
 			}
 			
 		}
@@ -179,6 +192,9 @@ public class MyChooseDevicesActivity extends BaseActionbarActivity implements Ho
 
 		@Override
 		public CharSequence getPageTitle(int position) {
+			if (position > getCount()) {
+				return "";
+			}
 			return getHome(position).getHomeTag(mContext);
 		}
 		
