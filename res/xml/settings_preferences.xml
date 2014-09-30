@@ -21,6 +21,11 @@
     <PreferenceCategory
             android:title="@string/preference_key_account_title">
 
+        <Preference
+                android:key="preference_key_account_uid"
+                android:persistent="false"
+                android:enabled="false"
+                android:title="@string/preference_key_account_uid_title" />
          <EditTextPreference
                 android:key="preference_key_account_name"
                 android:title="@string/preference_key_account_name_title" />
@@ -29,6 +34,12 @@
                 android:key="preference_key_account_password"
                 android:persistent="false"
                 android:title="@string/preference_key_account_password_title" />
+          
+          <Preference
+                android:key="preference_key_account_tel"
+                android:persistent="false"
+                android:enabled="false"
+                android:title="@string/preference_key_account_tel_title" />
 
     </PreferenceCategory>
 </PreferenceScreen>

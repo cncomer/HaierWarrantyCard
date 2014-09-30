@@ -83,6 +83,9 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 	protected abstract Query getQuery();
 	protected abstract void onRefreshStart();
 	protected abstract void onRefreshEnd();
+	protected void onRefreshLoadEnd() {
+		
+	}
 	protected abstract int getContentLayout();
 	protected ListView getListView() {
 		return mListView;
@@ -394,7 +397,7 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 					List<? extends InfoInterface> serviceInfoList = getServiceInfoList(is, mPageInfo);
 					int newCount = serviceInfoList.size();
 					DebugUtils.logD(TAG, "find new date #count = " + newCount + " totalSize = " + mPageInfo.mTotalCount);
-					
+					onRefreshLoadEnd();
 					if (newCount == 0) {
 						DebugUtils.logD(TAG, "no more date");
 						isNeedRequestAgain = false;
@@ -411,9 +414,6 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 //					if (!isNeedRequestAgain || insertOrUpdateCount >= PER_PAGE_SIZE / 2) {
 //						return insertOrUpdateCount;
 //					}
-					if (isNeedRequestAgain) {
-						mPageInfo.mPageIndex+=1;
-					}
 //					final Cursor cursor = loadLocal(mContentResolver);
 //					if (cursor != null && cursor.getCount() != 0) {
 //						MyApplication.getInstance().postAsync(new Runnable() {
@@ -463,6 +463,9 @@ public abstract class PullToRefreshListPageActivity extends BaseNoActionBarActiv
 		    mIsUpdate = false;
 		    onRefreshEnd();
 		    loadLocalDataAsync();
+		    if (isNeedRequestAgain) {
+				mPageInfo.mPageIndex+=1;
+			}
 		}
 
 		@Override

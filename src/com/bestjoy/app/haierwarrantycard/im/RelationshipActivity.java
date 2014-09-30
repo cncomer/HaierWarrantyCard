@@ -190,9 +190,15 @@ public class RelationshipActivity extends PullToRefreshListPageActivity{
 			}
 			
 			viewHolder._leixing.setText(cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_LEIXING));
-			viewHolder._title.setText(cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_TITLE));
+			String title = cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_TITLE);
+			if (!TextUtils.isEmpty(title)) {
+				viewHolder._title.setText(cursor.getString(BjnoteContent.RELATIONSHIP.INDEX_RELASTIONSHIP_TITLE));
+				viewHolder._title.setVisibility(View.VISIBLE);
+			} else {
+				viewHolder._title.setVisibility(View.GONE);
+			}
 			
-			if (viewHolder._relationshipObject.hasAvator()) {
+			if (!TextUtils.isEmpty(viewHolder._relationshipObject.mMM)) {
 				PhotoManagerUtilsV2.getInstance().loadPhotoAsync(TAG, viewHolder._avator, viewHolder._relationshipObject.mMM, null, TaskType.PREVIEW);
 			}
 		}
@@ -207,11 +213,15 @@ public class RelationshipActivity extends PullToRefreshListPageActivity{
 	@Override
 	protected void onRefreshStart() {
 		mIsRefresh = true;
-		BjnoteContent.RELATIONSHIP.delete(getContentResolver(), BjnoteContent.RELATIONSHIP.CONTENT_URI, BjnoteContent.RELATIONSHIP.UID_SELECTION, new String[]{MyAccountManager.getInstance().getCurrentAccountUid()});
 	}
 	@Override
 	protected void onRefreshEnd() {
 		mIsRefresh = false;
+	}
+	
+	@Override
+	protected void onRefreshLoadEnd() {
+		BjnoteContent.RELATIONSHIP.delete(getContentResolver(), BjnoteContent.RELATIONSHIP.CONTENT_URI, BjnoteContent.RELATIONSHIP.UID_SELECTION, new String[]{MyAccountManager.getInstance().getCurrentAccountUid()});
 	}
 
 

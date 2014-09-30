@@ -345,6 +345,8 @@
          <string name="preference_key_account_title">账户设置</string>
          <string name="preference_key_account_name_title">修改用户名</string>
          <string name="preference_key_account_password_title">修改账户密码</string>
+         <string name="preference_key_account_tel_title">登陆手机号码</string>
+         <string name="preference_key_account_uid_title">UID</string>
          <string name="hint_input_old_password">请输入你的当前密码</string>
          <string name="hint_input_new_password">请输入你的新密码</string>
          <string name="hint_reinput_new_password">请再次输入你的新密码</string>

@@ -307,8 +307,8 @@ public class HomeObject implements InfoInterface{
 		homeObject.mHomeDis = c.getString(KEY_HOME_DIS_NAME);
 		homeObject.mHomePlaceDetail = c.getString(KEY_HOME_DETAIL);
 		homeObject.mHomePosition = c.getInt(KEY_HOME_POSITION);
-//		homeObject.mHomeCardCount = c.getInt(KEY_HOME_CARD_COUNT);
-		homeObject.mHomeCardCount = BaoxiuCardObject.getAllBaoxiuCardsCount(cr, homeObject.mHomeUid, homeObject.mHomeAid);
+		homeObject.mHomeCardCount = c.getInt(KEY_HOME_CARD_COUNT);
+//		homeObject.mHomeCardCount = BaoxiuCardObject.getAllBaoxiuCardsCount(cr, homeObject.mHomeUid, homeObject.mHomeAid);
 		homeObject.mIsDefault = c.getInt(KEY_HOME_DEFAULT) == 1;
 		return homeObject;
 	}

@@ -314,7 +314,12 @@ public class HomeManagerActivity extends BaseActionbarActivity{
 			if(mIsEditMode) {
 				ViewHolder viewHolder = (ViewHolder) view.getTag();
 				viewHolder._check.setChecked(!viewHolder._check.isChecked());
-				deleteHomeIDList.put(viewHolder._aid, viewHolder._check.isChecked());
+				if (viewHolder._check.isChecked()) {
+					deleteHomeIDList.put(viewHolder._aid, viewHolder._check.isChecked());
+				} else {
+					deleteHomeIDList.remove(viewHolder._aid);
+				}
+				
 				invalidateOptionsMenu();
 			} else {
 				HomeObject.setHomeObject(MyAccountManager.getInstance().getAccountObject().mAccountHomes.get(pos));

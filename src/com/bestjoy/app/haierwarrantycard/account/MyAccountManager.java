@@ -1,10 +1,13 @@
 package com.bestjoy.app.haierwarrantycard.account;
 
-import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.bestjoy.app.haierwarrantycard.MyApplication;
+import com.bestjoy.app.haierwarrantycard.utils.DebugUtils;
+import com.shwy.bestjoy.utils.SecurityUtils;
+import com.shwy.bestjoy.utils.SecurityUtils.SecurityKeyValuesObject;
 
 public class MyAccountManager {
 	private static final String TAG = "HaierAccountManager";
@@ -31,6 +34,19 @@ public class MyAccountManager {
 			mHaierAccount = AccountObject.getHaierAccountFromDatabase(mContext);
 			initAccountHomes();
 		}
+		
+		SecurityKeyValuesObject securityKeyValuesObject = SecurityKeyValuesObject.getSecurityKeyValuesObject();
+		securityKeyValuesObject.put("uid", String.valueOf(getCurrentAccountId()));
+		//cell + password
+		if (getCurrentAccountId() == -1) {
+			securityKeyValuesObject.put("token", "");
+		} else {
+			securityKeyValuesObject.put("token", SecurityUtils.MD5.md5(mHaierAccount.mAccountTel + mHaierAccount.mAccountPwd));
+		}
+		if (mHaierAccount != null) {
+			MyApplication.getInstance().setSecurityKeyValuesObject(securityKeyValuesObject);
+		}
+		
 	}
 	
 	public synchronized void initAccountHomes() {

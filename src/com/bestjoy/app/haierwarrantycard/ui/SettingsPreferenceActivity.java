@@ -55,11 +55,13 @@ public class SettingsPreferenceActivity extends SherlockPreferenceActivity imple
 	private static final String TAG = "SettingsPreferenceActivity";
 	private static final String KEY_ACCOUNT_NAME = "preference_key_account_name";
 	private static final String KEY_ACCOUNT_PASSWORD = "preference_key_account_password";
+	private static final String KEY_ACCOUNT_UID = "preference_key_account_uid";
+	private static final String KEY_ACCOUNT_TEL = "preference_key_account_tel";
 	public static final int DIALOG_DATA_NOT_CONNECTED = 10006;//数据连接不可用
 	public static final int DIALOG_MOBILE_TYPE_CONFIRM = 10007;//
 	public static final int DIALOG_PROGRESS = 10008;
 	private EditTextPreference mAccountName;
-	private Preference mAccountPassword;
+	private Preference mAccountPassword, mAccountTel, mAccountUid;
 	
 	private String mOldName, mOldPassword;
 	private Context mContext;
@@ -80,6 +82,12 @@ public class SettingsPreferenceActivity extends SherlockPreferenceActivity imple
 		
 		mAccountName = (EditTextPreference) getPreferenceScreen().findPreference(KEY_ACCOUNT_NAME);
 		mAccountPassword = (Preference) getPreferenceScreen().findPreference(KEY_ACCOUNT_PASSWORD);
+		
+		mAccountTel = (Preference) getPreferenceScreen().findPreference(KEY_ACCOUNT_TEL);
+		mAccountUid = (Preference) getPreferenceScreen().findPreference(KEY_ACCOUNT_UID);
+		
+		mAccountTel.setSummary(MyAccountManager.getInstance().getAccountObject().mAccountTel);
+		mAccountUid.setSummary(MyAccountManager.getInstance().getCurrentAccountUid());
 		
 		updateAccountName(MyAccountManager.getInstance().getAccountObject().mAccountName);
 		mAccountName.setOnPreferenceChangeListener(this);
