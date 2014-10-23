@@ -446,6 +446,7 @@
      <string name="title_business">海尔商圈</string>
      <string name="new_msg_comming">下面有新的消息</string>
      <string name="msg_sending">发送中....</string>
+     <string name="msg_sending_failed">发送失败</string>
      <string name="msg_offline_confirm">你现在处于离线中，是否重新连接通讯服务器</string>
      <string name="msg_im_status_logining">正在连接..</string>
      <string name="msg_im_status_offline">离线</string>
@@ -471,4 +472,8 @@
       <string name="hint_voice_input_wait">正在识别....</string>
       <string name="hint_voice_input">请开始说话</string>
       <string name="hint_voice_input_canceled">已取消</string>
+      
+      <string name="im_resend">重新发送</string>
+      <string name="im_send_cancel">删除</string>
+      <string name="msg_offline_no_network">请检查网络并稍后重试</string>
 </resources>

@@ -4,9 +4,11 @@ import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.content.ComponentName;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.database.Cursor;
@@ -77,6 +79,7 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 		}
 		setShowHomeUp(true);
 		setLoadMorePosition(LOAD_MORE_TOP);
+		
 		mServiceConnection = new ServiceConnection() {
 
 			@Override
@@ -89,12 +92,11 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 					mConnectedStatusView.setVisibility(View.VISIBLE);
 					mConnectedStatusView.setText(R.string.msg_offline_confirm_click);
 				}
-				NotifyRegistrant.getInstance().register(mUiHandler);
+				
 			}
 
 			@Override
 			public void onServiceDisconnected(ComponentName name) {
-				NotifyRegistrant.getInstance().unRegister(mUiHandler);
 				mImService.setIsInConversationSession(false, mRelationshipObject.mTarget);
 			}
 		};
@@ -118,6 +120,11 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 						if (mImService != null) mImService.setIsInConversationSession(false, mRelationshipObject.mTarget);
 					}
 					break;
+				case IMService.WHAT_SEND_MESSAGE_NO_NETWORK:
+					mConnectedStatusView.setVisibility(View.VISIBLE);
+					mConnectedStatusView.setText(R.string.msg_offline_no_network);
+					if (mImService != null) mImService.setIsInConversationSession(false, mRelationshipObject.mTarget);
+					break;
 				case IMService.WHAT_SEND_MESSAGE_OFFLINE:
 					mConnectedStatusView.setVisibility(View.VISIBLE);
 					mConnectedStatusView.setText(R.string.msg_im_status_offline);
@@ -140,7 +147,7 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 				}
 			}
 		};
-		
+		NotifyRegistrant.getInstance().register(mUiHandler);
 		IMService.connectIMService(this);
 		
 		initEditLayout();
@@ -418,10 +425,27 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 			message.mUName = MyAccountManager.getInstance().getAccountObject().mAccountName;
 			message.mTargetType = mRelationshipObject.mTargetType;
 			message.mTarget = mRelationshipObject.mTarget;
+			//由于按照服务器时间排序的，所以我们这里先假定服务器时间为手机当前时间
+			message.mServiceDate = new Date().getTime();
 			message.mMessage = text;
 			message.mMessageStatus = 0;
+			message.mSeen = ConversationItemObject.SEEN;
 			mImService.sendMessageAsync(message);
 		}
+	}
+	
+	private void sendMessageLocked(ConversationItemObject message) {
+		if (!ComConnectivityManager.getInstance().isConnected()) {
+			MyApplication.getInstance().showMessage(MyApplication.getInstance().getGernalNetworkError());
+			return;
+		}
+		if (!mImService.isConnected()) {
+			MyApplication.getInstance().showMessage(R.string.msg_im_status_logining);
+			return;
+		}
+		//由于按照服务器时间排序的，所以我们这里先假定服务器时间为手机当前时间
+		message.mServiceDate = new Date().getTime();
+		mImService.sendMessageAsync(message);
 	}
 	
 	@Override
@@ -478,6 +502,7 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 				view = LayoutInflater.from(context).inflate(R.layout.conversation_item_right, parent, false);
 			}
 			viewHolder._avator = (ImageView) view.findViewById(R.id.avator);
+			viewHolder._error = (ImageView) view.findViewById(R.id.error);
 			viewHolder._name = (TextView) view.findViewById(R.id.name);
 			viewHolder._content = (TextView) view.findViewById(R.id.content);
 			viewHolder._time = (TextView) view.findViewById(R.id.date);
@@ -490,8 +515,17 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 			ViewHolder viewHolder = (ViewHolder) view.getTag();
 			viewHolder._name.setText(cursor.getString(IMHelper.INDEX_UNAME));
 			viewHolder._content.setText(cursor.getString(IMHelper.INDEX_TEXT));
+			viewHolder._error.setVisibility(View.GONE);
+			viewHolder._conversationItemObject = ConversationItemObject.getConversationItemObjectFromCursor(cursor);
 			if (cursor.getInt(IMHelper.INDEX_STATUS) == 0) {
 				viewHolder._time.setText(R.string.msg_sending);
+			} else if (cursor.getInt(IMHelper.INDEX_STATUS) == 2) {
+				//发送失败
+				viewHolder._time.setText(R.string.msg_sending_failed);
+				//显示发送失败icon
+				viewHolder._error.setVisibility(View.VISIBLE);
+				viewHolder._error.setTag(viewHolder);
+				viewHolder._error.setOnClickListener(mErrorOnclickListener);
 			} else {
 				viewHolder._time.setText(IMHelper.LOCAL_DATE_TIME_FORMAT.format(new Date(Long.valueOf(cursor.getString(IMHelper.INDEX_SERVICE_TIME)))));
 			}
@@ -519,8 +553,9 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 	}
 	
 	private static class ViewHolder {
-		private ImageView _avator;
+		private ImageView _avator, _error;
 		private TextView _name, _content, _time;
+		private ConversationItemObject _conversationItemObject;
 	}
 	
 //	private LocalMessageAsyncTask mLocalMessageAsyncTask;
@@ -627,5 +662,34 @@ public class ConversationListActivity extends LoadMoreWithPageActivity implement
 	protected int getContentLayout() {
 		return R.layout.activity_im_conversation;
 	}
+	
+	private View.OnClickListener mErrorOnclickListener = new View.OnClickListener() {
+
+		@Override
+		public void onClick(View v) {
+			final ViewHolder viewHolder = (ViewHolder) v.getTag();
+			
+			new AlertDialog.Builder(mContext)
+			.setPositiveButton(android.R.string.cancel, null)
+			.setItems(R.array.im_resend_items, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					switch(which) {
+					case 0:  //重新发送
+						viewHolder._conversationItemObject.deleteMessage(getContentResolver());
+						sendMessageLocked(viewHolder._conversationItemObject);
+						break;
+					case 1: //删除
+						viewHolder._conversationItemObject.deleteMessage(getContentResolver());
+						break;
+					}
+					
+				}
+			})
+			.show();
+		}
+		
+	};
 
 }

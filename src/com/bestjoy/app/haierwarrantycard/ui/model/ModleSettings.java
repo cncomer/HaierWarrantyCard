@@ -124,6 +124,10 @@ public class ModleSettings {
 				bundle = createMyRepairDefaultBundle(_context);
 				break;
 			case R.id.model_my_business:
+				if (true) {
+					MyApplication.getInstance().showUnsupportMessage();
+					return;
+				}
 				if (MyAccountManager.getInstance().hasLoginned()) {
 					RelationshipActivity.startActivity(_context);
 				} else{

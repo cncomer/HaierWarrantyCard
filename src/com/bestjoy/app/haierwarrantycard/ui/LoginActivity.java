@@ -206,7 +206,7 @@ public class LoginActivity extends BaseActionbarActivity implements View.OnClick
 			if (result.isOpSuccessfully()) {
 				MyApplication.getInstance().showMessage(result.mStatusMessage);
 			} else {
-				DialogUtils.createSimpleConfirmAlertDialog(mContext, mContext.getString(R.string.tel_not_register), null);
+				DialogUtils.createSimpleConfirmAlertDialog(mContext, result.mStatusMessage, null);
 			}
 			
 		}

@@ -85,7 +85,7 @@ public class HomeBaoxiuCardFragment extends SherlockFragment implements OnItemCl
 		mListView.setAdapter(mCardsAdapter);
 		mListView.setOnItemClickListener(this);
 //		getActivity().getContentResolver().registerContentObserver(BjnoteContent.BaoxiuCard.CONTENT_URI, true, mContentObserver);
-		mNewAdd = true;
+		mNewAdd = false;
 		return view;
 	}
 	

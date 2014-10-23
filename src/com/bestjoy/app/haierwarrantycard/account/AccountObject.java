@@ -194,7 +194,23 @@ public class AccountObject implements InfoInterface{
 					result = homeObject.saveInDatebase(cr, null);
 					if (result) {
 						for(BaoxiuCardObject baoxiuCardObject : homeObject.mBaoxiuCards) {
-							baoxiuCardObject.saveInDatebase(cr, null);
+							//设置MMOne和MMTwo对应的关系表数据
+							if (baoxiuCardObject.mMMOneRelationshipObject != null) {
+								baoxiuCardObject.mMMOne = baoxiuCardObject.mMMOneRelationshipObject.mRelationshipServiceId;
+							}
+							if (baoxiuCardObject.mMMTwoRelationshipObject != null) {
+								baoxiuCardObject.mMMTwo = baoxiuCardObject.mMMTwoRelationshipObject.mRelationshipServiceId;
+							}
+							result = baoxiuCardObject.saveInDatebase(cr, null);
+							if (result) {
+								//保存成功，我们还要保存关系数据
+								if (baoxiuCardObject.mMMOneRelationshipObject != null) {
+									baoxiuCardObject.mMMOneRelationshipObject.saveInDatebase(cr, null);
+								}
+								if (baoxiuCardObject.mMMTwoRelationshipObject != null) {
+									baoxiuCardObject.mMMTwoRelationshipObject.saveInDatebase(cr, null);
+								}
+							}
 						}
 					}
 				}
