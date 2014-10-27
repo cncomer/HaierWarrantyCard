@@ -28,8 +28,8 @@ public class BlueStyleMainActivity extends BaseNoActionBarActivity{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setShowHomeUp(true);
 		setContentView(R.layout.activity_main_blue_style);
+		setShowHomeUp(false);
 		ModuleViewUtils.getInstance().setContext(mContext);
 		ModuleViewUtils.getInstance().initModules(this);
 		

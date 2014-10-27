@@ -73,7 +73,7 @@ public class CardViewActivity extends BaseActionbarActivity implements View.OnCl
 	private ImageView mFapiaoDownloadView;
 	
 	/**是否显示销售人员信息*/
-	private static final boolean SHOW_SALES_INFO = false;
+	private static final boolean SHOW_SALES_INFO = true;
 	private BaoxiuCardViewSalemanInfoView mMMOne, mMMTwo;
 	private static final int WHAT_SHOW_FAPIAO_WAIT = 12;
 

@@ -78,7 +78,7 @@ public class ModuleViewUtils {
 				Intents.openURL(mContext,  "http://m.haier.com/bbs/index.shtml");
 				return;
 			case R.id.model_my_business: //Haier Eshop
-				if (false) {
+				if (true) {
 					MyApplication.getInstance().showUnsupportMessage();
 					return;
 				}

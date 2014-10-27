@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-	<string name="model_my_card">我的保修卡</string>
+	<string name="model_my_card">我的家电档案</string>
     <string name="model_install">一键安装</string>
     <string name="model_repair">一键维修</string>
     <string name="model_feedback">一键评价</string>
     <string name="model_my_messages">消息中心</string>
     <string name="model_my_community">海尔社区</string>
-    <string name="model_my_business">在线服务圈</string>
+    <string name="model_my_business">在线家电\n服务顾问</string>
     <string name="model_my_store">卖场导航</string>
     <string name="model_my_scan">扫一扫</string>
     
@@ -16,7 +16,7 @@
     <string name="model_feedback_en">Evaluation</string>
     <string name="model_my_messages_en">Message center</string>
     <string name="model_my_community_en">Haier community</string>
-    <string name="model_my_business_en">Haier Eshop</string>
+    <string name="model_my_business_en">Online Service</string>
     <string name="model_my_store_en">Market navigation</string>
     <string name="model_my_scan_en">扫描海尔产品二维码\n获取产品信息</string>
     
@@ -35,13 +35,13 @@
     <drawable name="model_my_store_n">#fff6a414</drawable>
     <drawable name="model_my_store_p">#ffbb7700</drawable>
     
-    <drawable name="model_install_n">#ff346fb7</drawable>
-    <drawable name="model_install_p">#ff1a487f</drawable>
+    <drawable name="model_install_n">#b2346fb7</drawable>
+    <drawable name="model_install_p">#b21a487f</drawable>
     
-    <drawable name="model_repair_n">#ff346fb7</drawable>
-    <drawable name="model_repair_p">#ff1a487f</drawable>
+    <drawable name="model_repair_n">#b2346fb7</drawable>
+    <drawable name="model_repair_p">#b21a487f</drawable>
     
-    <drawable name="model_feedback_n">#ff346fb7</drawable>
-    <drawable name="model_feedback_p">#ff1a487f</drawable>
+    <drawable name="model_feedback_n">#b2346fb7</drawable>
+    <drawable name="model_feedback_p">#b21a487f</drawable>
     
 </resources>

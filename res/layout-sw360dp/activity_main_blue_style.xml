@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="330dip"
     android:layout_height="fill_parent"
-    android:layout_gravity="center_horizontal"
-    android:layout_marginLeft="15dip"
-    android:layout_marginRight="15dip"
-    android:layout_marginTop="5dip"
-    android:orientation="vertical"
+   android:layout_width="fill_parent"
     tools:context=".MainActivity" >
-
+	<ImageView android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/bottom_city_bg"
+        android:scaleType="fitXY"
+        android:layout_gravity="bottom"/>
     <ScrollView
-        android:layout_width="fill_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_width="330dip"
         android:layout_height="fill_parent"
         android:scrollbars="none"
+        android:layout_marginLeft="15dip"
+       android:layout_marginRight="15dip"
+       android:layout_marginTop="5dip"
         android:fillViewport="true" >
 
         <LinearLayout
@@ -249,13 +252,54 @@
                 android:layout_marginTop="10dip"
                 android:gravity="center_vertical"
                 android:orientation="horizontal" >
+                
+				<!-- maitenance -->
 
+                <com.bestjoy.app.haierwarrantycard.view.ModuleView
+                    android:id="@+id/model_repair"
+                    android:layout_width="104dip"
+                    android:layout_height="104dip"
+                    android:background="@drawable/model_repair"
+                    android:orientation="vertical"
+                    android:padding="8dip" >
+
+                    <TextView
+                        android:id="@+id/title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:text="@string/model_repair"
+                        android:textColor="@color/wt"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/en_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignRight="@+id/title"
+                        android:layout_below="@+id/title"
+                        android:text="@string/model_repair_en"
+                        android:textColor="@color/wt"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:id="@+id/icon"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="8dip"
+                        android:src="@drawable/model_repair_icon" />
+                </com.bestjoy.app.haierwarrantycard.view.ModuleView>
+                
                 <!-- installation -->
 
                 <com.bestjoy.app.haierwarrantycard.view.ModuleView
                     android:id="@+id/model_install"
                     android:layout_width="104dip"
                     android:layout_height="104dip"
+                    android:layout_marginLeft="9dip"
                     android:background="@drawable/model_install"
                     android:orientation="vertical"
                     android:padding="8dip" >
@@ -289,47 +333,6 @@
                         android:layout_marginLeft="8dip"
                         android:src="@drawable/model_install_icon"
                         android:textSize="16sp" />
-                </com.bestjoy.app.haierwarrantycard.view.ModuleView>
-
-                <!-- maitenance -->
-
-                <com.bestjoy.app.haierwarrantycard.view.ModuleView
-                    android:id="@+id/model_repair"
-                    android:layout_width="104dip"
-                    android:layout_height="104dip"
-                    android:layout_marginLeft="9dip"
-                    android:background="@drawable/model_repair"
-                    android:orientation="vertical"
-                    android:padding="8dip" >
-
-                    <TextView
-                        android:id="@+id/title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentRight="true"
-                        android:text="@string/model_repair"
-                        android:textColor="@color/wt"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/en_title"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignRight="@+id/title"
-                        android:layout_below="@+id/title"
-                        android:text="@string/model_repair_en"
-                        android:textColor="@color/wt"
-                        android:textSize="10sp"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:id="@+id/icon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginLeft="8dip"
-                        android:src="@drawable/model_repair_icon" />
                 </com.bestjoy.app.haierwarrantycard.view.ModuleView>
 
                 <!-- feedback -->
@@ -377,7 +380,7 @@
             <com.bestjoy.app.haierwarrantycard.view.ModuleView
                     android:id="@+id/model_my_scan"
                     android:layout_width="fill_parent"
-                    android:layout_height="90dip"
+                    android:layout_height="120dip"
                     android:layout_marginTop="10dip"
                     android:background="@drawable/model_feedback_n"
                     android:orientation="vertical"
@@ -417,4 +420,4 @@
         </LinearLayout>
     </ScrollView>
 
-</LinearLayout>
+</FrameLayout>
